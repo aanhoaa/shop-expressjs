@@ -1,0 +1,117 @@
+<% include ../../partials/header %>
+<link rel="stylesheet" href="/stylesheets/css/user_info.css">
+
+<section class="container clearfix" style="margin-top: 50px;">
+    <div class="row col-sm-12" style="margin: 100px 0 80px 0px; padding: 0;">
+        <form action="/user/edit" method="POST">
+		<div class="infomation_user" style="position: relative;">
+			<div class="avatar_name_user clearfix">
+				<div class="div_picture_profile" style="position: absolute;">
+					<img class="picture_profile" src="/images/man.png" alt="">
+				</div>
+				
+				<label class="info_user_name"><%-user.username%></label>
+			</div>
+		
+			<div class="">
+
+				<input type="hidden" name="userId" value="<%-user._id%>">
+
+				<div class="detail_info form-group" style="margin-left: 5%; margin-top: 25px; display: block;" >
+					<label style="float: left;">Email: </label>
+					<input class="form-control" name="email" placeholder="Nhập địa chỉ email" value="<%-user.email%>" required disabled/>
+				</div>
+
+				<div class="detail_info form-group" style="margin-left: 5%; margin-top: 25px; display: block;" >
+					<label style="float: left;">Tên khách hàng </label>
+					<input id="fullname" type="text" class="form-control" name="fullname" value="<%-user.fullname%>" required autofocus>
+				</div>
+
+				<div class="detail_info form-group" style="margin-left: 5%; display: block;" >
+					<label style="float: left;">Giới tính: </label>
+					<div class="">
+						<select class="form-control " name="gender" required>
+							<option value="Male" <%user.gender == "Male"?'selected':''%>>Male</option>  
+							<option value="Female" <%user.gender == "Female"?'selected':''%>>Female</option>
+							<option value="Others" <%user.gender == "Others"?'selected':''%>>Others</option>    
+						</select>
+						
+					</div>
+				</div>
+				<div class="detail_info form-group" style="margin-left: 5%; display: block;" >
+					<label style="float: left;">Điện thoại: </label>
+					<input id="phone" type="phone" class="form-control" name="phone" value="<%-user.phone%>" required>
+				</div>
+				<div class="detail_info form-group" style="margin-left: 5%; display: block;" >
+					<label style="float: left;">Địa chỉ: </label>
+					<input id="address" type="address" class="form-control" name="address" value="<%-user.address%>" required>
+				</div>
+				<div class="detail_info" style="margin-left: 28%; display: block; border: none;" >
+					<button type="submit" class="btn btn-success">Cập nhật thông tin</button>	
+                </div>
+			</div>
+			
+        </div>
+    </form>
+
+		<div class="history_orders">
+            <% if (userOrder == 0) {%> 
+            <%} else {%>
+			<div class="one_history_order clearfix">
+				<div class="col-sm-2">
+					<div style="margin-top: 20px;">
+						<div>
+							<p>{!! date('d',strtotime($row->date_order)); !!}</p>
+						</div>
+						<div>
+							<p style="padding-bottom: 15px; padding-top: 5px;">{!! date('F',strtotime($row->date_order)); !!}</p>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-10" style="position: relative;">
+					<p>ORDER  #413513{!! $row->id !!}</p>
+					<span>{!! number_format($row->total) !!}đ</span>
+					<i class="fas fa-map-marker-alt"></i>
+
+					<address>{!! Auth::user()->address !!}</address>
+					<hr>
+					<div class="view_detail">
+						<label>Trạng thái: </label>
+						<label>{!! $row->status !!}</label>
+						<a href="{!! URL::route('user-pageTrans', $row->id) !!}">View</a>
+					</div>
+				</div>
+			</div>
+			<%}%>
+			<!-- <div class="one_history_order clearfix">
+				<div class="col-sm-2">
+					<div style="margin-top: 20px;">
+						<div>
+							<p>5</p>
+						</div>
+						<div>
+							<p style="padding-bottom: 15px; padding-top: 5px;">July</p>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-10" style="position: relative;">
+					<p>ORDER  #4135135</p>
+					<span>$ 980</span>
+					<i class="fas fa-map-marker-alt"></i>
+
+					<address>126 Lê Đại Hành, quận 10, tp.HCM</address>
+					<hr>
+					<div class="view_detail">
+						<label>Trạng thái: </label>
+						<label>Đã giao hàng</label>
+						<a href="">View</a>
+					</div>
+				</div>
+			</div> -->
+
+		</div>
+	</div>
+</section>
+
+
+<% include ../../partials/footer %>

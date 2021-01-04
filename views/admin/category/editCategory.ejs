@@ -1,0 +1,58 @@
+
+<% include ../../partials/header_admin %>
+
+<div style="margin-left: 5%;">
+    <div class="col-lg-12">
+        <h1 class="page-header" style="margin-left: 55px;">Category
+            <small>Edit</small>
+        </h1>
+    </div>
+
+    <form action="" method="POST">
+        <input type="hidden" name="_token" value="{!! csrf_token() !!}">
+        <div class="col-lg-10" style=" display: flex;">  
+            <div class="col-sm-11" style="margin-left: 55px;">
+                <label class="font_text">
+            Thông tin chung <small style="margin-left: 10px; color: gray;">Cung cấp thông tin cơ bản về danh mục sản phẩm</small></label> 
+                <div class="form-group">
+                <label class="font_text_details">Danh mục cha</label>
+              
+                <select class="form-control" name="id" required>
+                    <option value="">Please Choose Parent Category</option>
+                    <% 
+                         var childName = '';
+                    %>
+                    <% data.forEach((cate)=>{ %>
+                    <%
+                        if (parentId == cate._id)
+                        {
+                            cate.childCateName.forEach((item)=> {
+                                if (childId == item._id)
+                                    {
+                                        childName = item.childName;
+                                    }
+                            });
+                        }
+                    %>
+                      <option value="<%-cate._id%>" <%-parentId == cate._id ? 'selected' : ''%> ><%-cate.name%></option>
+                    <% })%>
+                </select>
+            </div>
+                <div class="form-group">
+                    <label class="font_text_details">* Tên danh mục</label>
+                    <input class="form-control" name="childCateName" value="<%-childName%>" required/>
+                </div>
+                <div class="form-group">
+                    <label class="font_text_details">Mô tả</label>
+                    <input class="form-control" name="description" placeholder="Nhập mô tả"/>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12" style="margin-top: 30px; margin-bottom: 40px; margin-left: 55px;">
+           <button type="submit" class="btn btn-primary" style="width: 18%;">Cập nhật</button>
+        </div>      
+    </form>
+</div>
+
+<% include ../../partials/footer_admin %>

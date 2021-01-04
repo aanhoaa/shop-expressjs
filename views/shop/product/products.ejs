@@ -1,0 +1,407 @@
+
+<% include ../../partials/header %>
+<link rel="stylesheet" href="/stylesheets/css/first_page.css">
+
+<div class="container-fluid container content_first_page">
+    <div class="row" style="width: 1300px; margin: 0">
+        <div class="col-sm-12 clearfix">
+            <div class="box" style="width: unset;">
+                <div class="list col-sm-3" style="float: left;/*margin-right: 50px; margin-left: 70px; */margin-top: 86px;">
+                    <div class="categories">
+                        <div >
+                            <h5 class="title_categories">Danh Mục</h5>
+                        </div>
+                        <div class="menu_categories">
+                            <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>"> 
+                            <ul class="list-group" style="list-style-type:none;">
+                              <li class="nav-item dropdown active">
+                                <a class="nav-link" title="ao_nam" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Áo Nam<span class="sr-only">(current)</span></a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                  <a class="dropdown-item categories_child" title="ao_nam" value="1" href="#">Áo Sơ Mi Nam</a>
+                                  <a class="dropdown-item categories_child" title="ao_nam" value="2" href="#">Áo Khoác Nam</a>
+                                  <a class="dropdown-item categories_child" title="ao_nam" value="3" href="#">Áo Thun Nam</a>
+                                  <a class="dropdown-item categories_child" title="ao_nam" value="4" href="#">Áo Len Nam</a>
+                                </ul>
+                              </li>
+                              <li class="nav-item dropdown">
+                                <a class="nav-link" href="#" id="navbarDropdownMenuLink1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Quần Nam</a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink1">
+                                  <a class="dropdown-item categories_child" value="5" href="#">Quần Jean Nam</a>
+                                  <a class="dropdown-item categories_child" value="6" href="#">Quần Kaki Nam</a>
+                                  <a class="dropdown-item categories_child" value="7" href="#">Quần Vải Nam</a>
+                                  <a class="dropdown-item categories_child" value="8" href="#">Quần Short Nam</a>
+                                </ul>
+                              </li>
+                              <li class="nav-item dropdown">
+                                <a class="nav-link" href="#" id="navbarDropdownMenuLink2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Giày Dép Nam</a>
+         <!--                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink2">
+                                  <a class="dropdown-item categories_child" href="#">Shirt</a>
+                                  <a class="dropdown-item categories_child" href="#">Tshirt</a>
+                                  <a class="dropdown-item categories_child" href="#">Jackets</a>
+                                  <a class="dropdown-item categories_child" href="#">Jeans</a>
+                                </ul> -->
+                              </li>
+                              <li class="nav-item dropdown">
+                                <a class="nav-link" href="#" id="navbarDropdownMenuLink3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Phụ Kiện</a>
+                                <ul class="dropdown-menu"aria-labelledby="navbarDropdownMenuLink3">
+                                  <a class="dropdown-item categories_child" value="9" href="#">Mũ Nam</a>
+                                  <a class="dropdown-item categories_child" value="10" href="#">Thắt Lưng Nam</a>
+                                  <a class="dropdown-item categories_child" value="11" href="#">Ví Nam</a>
+                                  <a class="dropdown-item categories_child" value="12" href="#">Caravat Nam</a>
+                                </ul>
+                              </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="filter_product">
+                        <div class="sort_by">
+                            <h3 class="title_filter">Bộ lọc</h3>
+                        </div>
+                        <div class="filter_brand">
+                            <h5 class="filter_brand_text">Thương hiệu</h5>
+                            <div class="filter_brand_box">
+                                <ul class="filter_brand_ul clearfix">
+                                    <li class="child_filter_brand_checkbox col-sm-6" style="float: left;">
+                                        <div class="checkboxFive">
+                                            <input type="checkbox" value="1" id="checkboxFiveInput1" name="group_brand[]" checked="checked"/>
+                                            <label for="checkboxFiveInput1"></label>
+                                        </div>
+                                        <a class="brand_box" href=""><span class="brand_label">Zara</span></a>
+                                    </li>
+                                    <li class="child_filter_brand_checkbox col-sm-6" style="float: left;">
+                                        <div class="checkboxFive">
+                                            <input type="checkbox" value="2" id="checkboxFiveInput2" name="group_brand[]" />
+                                            <label for="checkboxFiveInput2"></label>
+                                        </div>
+                                        <a class="brand_box" href=""><span class="brand_label">Mango</span></a>
+                                    </li>
+                                    <li class="child_filter_brand_checkbox col-sm-6" style="float: left;">
+                                        <div class="checkboxFive">
+                                            <input type="checkbox" value="3" id="checkboxFiveInput3" name="group_brand[]" />
+                                            <label for="checkboxFiveInput3"></label>
+                                        </div>
+                                        <a class="brand_box" href=""><span class="brand_label">Gucci</span></a>
+                                    </li>
+                                    <li class="child_filter_brand_checkbox col-sm-6" style="float: left;">
+                                        <div class="checkboxFive">
+                                            <input type="checkbox" value="4" id="checkboxFiveInput4" name="group_brand[]" />
+                                            <label for="checkboxFiveInput4"></label>
+                                        </div>
+                                        <a class="brand_box" href=""><span class="brand_label">Supreme</span></a>
+                                    </li>
+                                    <li class="child_filter_brand_checkbox col-sm-6" style="float: left;">
+                                        <div class="checkboxFive">
+                                            <input type="checkbox" value="0" id="checkboxFiveInput0" name="group_brand[]" />
+                                            <label for="checkboxFiveInput0"></label>
+                                        </div>
+                                        <a class="brand_box" href=""><span class="brand_label">Khác</span></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="filter_color">
+                            <h5 class="filter_color_text">Màu sắc</h5>
+                            <div class="filter_color_box">
+                                <ul class="filter_color_ul">
+                                    <li class="child_filter_color_checkbox" value="ared">
+                                        <div class="checkboxColor clearfix">
+                                            <input type="checkbox" value="red" id="checkboxColorInput1" name="group_color[]"/>
+                                            <label class="color red" for="checkboxColorInput1"></label>
+                                            <i class="fas fa-check"></i>
+                                        </div>
+                                    </li>
+                                    <li class="child_filter_color_checkbox" value="a">
+                                        <div class="checkboxColor clearfix">
+                                            <input type="checkbox" value="orange" id="checkboxColorInput2" name="group_color[]"/>
+                                            <label class="color orange" for="checkboxColorInput2"></label>
+                                            <i class="fas fa-check"></i>
+                                        </div>
+                                    </li>
+                                    <li class="child_filter_color_checkbox">
+                                        <div class="checkboxColor clearfix">
+                                            <input type="checkbox" value="yellow" id="checkboxColorInput3" name="group_color[]" />
+                                            <label class="color yellow" for="checkboxColorInput3"></label>
+                                            <i class="fas fa-check"></i>
+                                        </div>
+                                    </li>
+                                    <li class="child_filter_color_checkbox">
+                                        <div class="checkboxColor clearfix">
+                                            <input type="checkbox" value="green" id="checkboxColorInput4" name="group_color[]" />
+                                            <label class="color green" for="checkboxColorInput4"></label>
+                                            <i class="fas fa-check"></i>
+                                        </div>
+                                    </li>
+                                    <li class="child_filter_color_checkbox">
+                                        <div class="checkboxColor clearfix">
+                                            <input type="checkbox" value="blue" id="checkboxColorInput5" name="group_color[]" />
+                                            <label class="color blue" for="checkboxColorInput5"></label>
+                                            <i class="fas fa-check"></i>
+                                        </div>
+                                    </li>
+                                    <li class="child_filter_color_checkbox">
+                                        <div class="checkboxColor clearfix">
+                                            <input type="checkbox" value="olivaceous" id="checkboxColorInput6" name="group_color[]" />
+                                            <label class="color olivaceous" for="checkboxColorInput6"></label>
+                                            <i class="fas fa-check"></i>
+                                        </div>
+                                    </li>
+                                    <li class="child_filter_color_checkbox">
+                                        <div class="checkboxColor clearfix">
+                                            <input type="checkbox" value="greenish" id="checkboxColorInput7" name="group_color[]" />
+                                            <label class="color greenish" for="checkboxColorInput7"></label>
+                                            <i class="fas fa-check"></i>
+                                        </div>
+                                    </li>
+                                    <!-- <li class="child_filter_color_checkbox">
+                                        <div class="checkboxColor clearfix">
+                                            <input type="checkbox" value="sky" id="checkboxColorInput8" name="group_color[]" />
+                                            <label class="color sky" for="checkboxColorInput8"></label>
+                                            <i class="fas fa-check"></i>
+                                        </div>
+                                    </li> -->
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="filter_size">
+                            <h5 class="filter_size_text">Kích thước</h5>
+                            <div class="filter_size_box">
+                                <ul class="filter_size_ul clearfix">
+                                    <li class="child_filter_size_checkbox" style="float: left;">
+                                        <div class="checkboxSize">
+                                            <input type="checkbox" value="S" id="checkboxSizeS" name="group_size[]" checked="checked"/>
+                                            <label for="checkboxSizeS">S</label>
+                                        </div>
+                                    </li>
+                                    <li class="child_filter_size_checkbox" style="float: left;">
+                                        <div class="checkboxSize">
+                                            <input type="checkbox" value="M" id="checkboxSizeM" name="group_size[]" />
+                                            <label for="checkboxSizeM">M</label>
+                                        </div>
+                                    </li>
+                                    <li class="child_filter_size_checkbox" style="float: left;">
+                                        <div class="checkboxSize">
+                                            <input type="checkbox" value="L" id="checkboxSizeL" name="group_size[]" />
+                                            <label for="checkboxSizeL">L</label>
+                                        </div>
+                                    </li>
+                                    <li class="child_filter_size_checkbox" style="float: left;">
+                                        <div class="checkboxSize">
+                                            <input type="checkbox" value="X" id="checkboxSizeX" name="group_size[]" />
+                                            <label for="checkboxSizeX">X</label>
+                                        </div>
+                                    </li>
+                                    <li class="child_filter_size_checkbox" style="float: left;">
+                                        <div class="checkboxSize">
+                                            <input type="checkbox" value="XL" id="checkboxSizeXL" name="group_size[]" />
+                                            <label for="checkboxSizeXL">XL</label>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <!-- <div class="filter_size_box">
+                                <div id="sizeBlock">
+                                    <div class="checkboxSize">
+                                        <input type="checkbox" value="S" id="checkboxSize1" name="group_size[]" checked="checked" />
+                                        <label for="ckeckboxSize1">S</label>
+                                    </div>
+                                    <div class="checkboxSize">
+                                        <input type="checkbox" value="M" id="checkboxSize2" name="group_size[]"/>
+                                        <label for="ckeckboxSize1">M</label>
+                                    </div>
+                                    <div class="checkboxSize">
+                                        <input type="checkbox" value="L" id="checkboxSize2" name="group_size[]"/>
+                                        <label for="ckeckboxSize1">L</label>
+                                    </div>
+                                    <div>
+                                        <label class="btn btn-sm btn-outline-danger size_fix" for="sizeInput1"></label>
+                                        <input type="checkbox" value="S" id="sizeInput1" name="group_size[]" />
+                                    </div>
+
+                                    <label class="btn btn-sm btn-outline-danger size_fix">
+                                        <input type="radio" value="M" name="group_size[]" />
+                                        <span>M</span>
+                                    </label>
+                                    <label class="btn btn-sm btn-outline-danger size_fix">
+                                        <input type="radio" value="L" name="group_size[]" />
+                                        <span>L</span>
+                                    </label>
+                                    <label class="btn btn-sm btn-outline-danger size_fix">
+                                        <input type="radio" value="X" name="group_size[]" />
+                                        <span>X</span>
+                                    </label>
+                                    <label class="btn btn-sm btn-outline-danger size_fix">
+                                        <input type="radio" value="XL" name="group_size[]" />
+                                        <span>XL</span>
+                                    </label>
+                                </div>
+                            </div> -->
+                        </div>
+                        <div class="filter_material">
+                            <h5 class="filter_material_text">Chất liệu</h5>
+                            <div class="filter_material_box">
+                                <ul class="filter_material_ul clearfix">
+                                    <li class="child_filter_brand_checkbox col-sm-6" style="float: left;">
+                                        <div class="checkboxFive">
+                                            <input type="checkbox" value="1" id="cb_material1" name="group_material[]" checked="checked" />
+                                            <label for="cb_material1"></label>
+                                        </div>
+                                        <a class="brand_box" href=""><span class="brand_label">Cotton</span></a>
+                                    </li>
+                                    <li class="child_filter_brand_checkbox col-sm-6" style="float: left;">
+                                        <div class="checkboxFive">
+                                            <input type="checkbox" value="2" id="cb_material2" name="group_material[]"/>
+                                            <label for="cb_material2"></label>
+                                        </div>
+                                        <a class="brand_box" href=""><span class="brand_label">Len</span></a>
+                                    </li>
+                                    <li class="child_filter_brand_checkbox col-sm-6" style="float: left;">
+                                        <div class="checkboxFive">
+                                            <input type="checkbox" value="3" id="cb_material3" name="group_material[]"/>
+                                            <label for="cb_material3"></label>
+                                        </div>
+                                        <a class="brand_box" href=""><span class="brand_label">Lông cừu</span></a>
+                                    </li>
+                                    <li class="child_filter_brand_checkbox col-sm-6" style="float: left;">
+                                        <div class="checkboxFive">
+                                            <input type="checkbox" value="4" id="cb_material4" name="group_material[]"/>
+                                            <label for="cb_material4"></label>
+                                        </div>
+                                        <a class="brand_box" href=""><span class="brand_label">Kaki</span></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="filter_price" style="border-bottom: unset;">
+                            <h5 class="filter_price_text">Khoảng giá</h5>
+                            <div class="filter_price_box">
+                                <ul class="filter_price_ul clearfix">
+                                    <li class="child_filter_brand_checkbox">
+                                        <div class="checkboxFive">
+                                            <input type="checkbox" value="price_all" id="cb_price_all" name="group_price[]" checked="checked"/>
+                                            <label for="cb_price_all"></label>
+                                        </div>
+                                        <a class="price_box" href=""><span class="price">Tất cả</span></a>
+                                    </li>
+                                    <li class="child_filter_brand_checkbox">
+                                        <div class="checkboxFive">
+                                            <input type="checkbox" value="price_1" id="cb_price1" name="group_price[]"/>
+                                            <label for="cb_price1"></label>
+                                        </div>
+                                        <a class="price_box" href=""><span class="price">Dưới 300,000VNĐ</span></a>
+                                    </li>
+                                    <li class="child_filter_brand_checkbox">
+                                        <div class="checkboxFive">
+                                            <input type="checkbox" value="price_2" id="cb_price2" name="group_price[]"/>
+                                            <label for="cb_price2"></label>
+                                        </div>
+                                        <a class="price_box" href=""><span class="price">Từ 300,000VNĐ - 500,000VNĐ</span></a>
+                                    </li>
+                                    <li class="child_filter_brand_checkbox">
+                                        <div class="checkboxFive">
+                                            <input type="checkbox" value="price_3" id="cb_price3" name="group_price[]"/>
+                                            <label for="cb_price3"></label>
+                                        </div>
+                                        <a class="price_box" href=""><span class="price">Từ 500,000VNĐ - 1,000,000VNĐ</span></a>
+                                    </li>
+                                    <li class="child_filter_brand_checkbox">
+                                        <div class="checkboxFive">
+                                            <input type="checkbox" value="price_4" id="cb_price4" name="group_price[]"/>
+                                            <label for="cb_price4"></label>
+                                        </div>
+                                        <a class="price_box" href=""><span class="price">Lớn hơn 1,000,000VNĐ</span></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="special_details">
+                        <div>
+                        <h5 class="special_details_css">Sản phẩm nổi bật</h3>
+                        </div>
+                        <div style="margin-top: 30px; padding-bottom: 20px;">
+                            <% products.forEach((prod) => {%>
+                            <div class="block_product_special" style="margin: 10px; margin-top: 20px; display: flex;">
+                                <div class="col-sm-5" style="padding: 0;">
+                                    <img class="special_details_image" src="/uploads/<%-prod.images%>" style="width: 100%;" alt="">
+                                </div>
+                                <div class="col-sm-7 special_details_info">
+                                    <h6 class="special_details_name" style="color: #504d4d; font-family: Lora; font-size: 17px;"><%-prod.name%></h6>
+                                    <p class="special_details_price"><%-prod.price%>₫</p>
+                                    <a href="/shop/product/<%-prod._id%>" style="color: #F65E39; text-decoration: underline;">Xem chi tiết</a>
+                                </div>
+                            </div>
+                            <%})%>
+                        </div>
+                    </div>   
+                </div>
+                <div class="khoichua col-sm-9">
+                    <div class="select_product clearfix" style="border-bottom: solid 1px #bfbfbf; margin-bottom: 30px;">
+                        <div class="row clearfix" style="padding: 0 15px 15px 15px;">
+                            <div class="style_view_products" style="float: left;">
+                                <label class="label_view">VIEW</label>
+                                <a href=""><i class="fas fa-list"></i></a>
+                                <a href=""><img src="https://img.icons8.com/ios/50/000000/squared-menu-filled.png"></a>
+                            </div>
+                            <div class="div_number_products">
+                                <input type="hidden" id="category_id" value="<?php if(isset($category_id)) {echo $category_id; } else { echo 2; } ?>">
+                                <h5 style="float: left;">Tìm thấy <span id="count_product">{{ count($products)}}</span> sản phẩm</h5>
+                            </div>
+                            <div class="custom_select_box">
+                                <select class="custom-select" id="SortBy" style="float: right;">
+                                    <option selected disabled="">Open this select menu</option>
+                                    <option value="price_ascending">Giá từ thấp tới cao</option>
+                                    <option value="price_descending">Giá từ cao tới thấp</option>
+                                    <option value="created_descending">Mới nhất</option>
+                                    <option value="created_ascending">Cũ nhất</option>
+                                </select>
+                                <label class="lable-sort-by" style="float: right;">Sort By</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="khoi_sp" style="height: 200px;">
+                        <% products.forEach((prod) => {%>
+                        <!-- <a href="{!! url('view',[$row->id]) !!}"> -->
+                            
+                            <div class="khoi col-sm-3">
+                                <div class="card" style="border-color: white; line-height: 0.5;">
+                                    <div class="khoi_image" style="position: relative;">
+                                        <img class="card-img-top hinhsanpham" src="/uploads/<%-prod.images%>" alt="Card image cap">
+                                       
+                                        <!--<img src="{!! asset('sale.png') !!}" alt="" style="position: absolute; top: 7px; left: -5px; width: 61px; height: 30px;"> 
+                                        <label style="position: absolute; top: 16px; left: 10px; font-weight: 501; color: #fff">
+                                        </label>-->
+                                       
+                                        
+                                    </div>
+                                    <ul class="social" id="social">
+                                        <li><a href="product/<%-prod._id%>" data-tip="Quick View"><i class="fa fa-eye"></i></a></li>
+                                        <li><a href="#" data-tip="Add to Wishlist"><i class="fa fa-shopping-bag"></i></a></li>
+                                        <li><a href="#" data-tip="Add to Cart"><i class="fa fa-shopping-cart"></i></a></li>
+                                    </ul>
+                                    <div class="card-block">
+                                        <h6 class="card-title tensanpham" id="tensanpham" name="tensanpham"><%-prod.name%></h6>
+                                        
+                                        <!--<p class="card-text giatien" name="giatien" style="color: #333;; font-weight: bold; font-size: 14px;">
+                                        <span style="color: red;">{{number_format($row->current_price)}}₫</span>
+                                        <span style="text-decoration: line-through; text-decoration-color: #333;">{{number_format($row->price)}}₫</span>
+                                        </p> -->
+                                       
+                                        <p class="card-text giatien" name="giatien" style="color: #333;; font-weight: bold; font-size: 14px;"><%-prod.price.toLocaleString()%>₫</p>
+                                        
+                                        <!-- <button class="add_cart btn btn-dark"><i class="fas fa-cart-arrow-down"></i></button> -->
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- </a> -->
+                            <%})%>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+            </div>
+        </div>
+    </div>
+
+<% include ../../partials/footer %>

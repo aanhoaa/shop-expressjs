@@ -1,0 +1,55 @@
+<% include ../../partials/header_admin %>
+
+<div style="margin-left: 5%;">
+    <div class="col-lg-12">
+        <h1 class="page-header">Supplier
+            <small>List</small>
+            <div style="float: right;">
+                <a href="{!! url('admin/supplier/add') !!}" class="btn btn-success" style="font-size: 18px;"><i class="fas fa-plus-square" style="margin-right: 5px;"></i> Thêm mới nhà cung cấp</a>
+            </div>
+        </h1>
+    </div>
+    <!-- /.col-lg-12 -->
+    <table id="dataTables-example" class="mdl-data-table" style="width:100%">
+        <thead>
+            <tr align="center">
+                <th>STT</th>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>Address</th>
+                <th>Area</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <%var i = 0%>
+            <% data.forEach((supp)=>{
+                i++;
+             %>
+            <% 
+            var city = '';
+                if (supp.area == 'hcm')
+                    city = "Tp Hồ Chí Minh";
+                else city = "Hà Nội"; 
+            %>
+            <tr class="odd gradeX" align="center">
+                <td><%-i%></td>
+                <td><%-supp.name%></td>
+                <td><%-supp.phone%></td>
+                <td><%-supp.email%></td>
+                <td><%-supp.address%></td>
+                <td><%-city%></td>
+                <td class="center">
+                    <div class="btn-group">
+                        <a href="/admin/supplier/edit/<%-supp._id%>" class="btn btn-warning"><i class="fas fa-edit"></i> Edit</a>
+                        <a href="{!! URL::route('admin.supplier.getDelete', $item['id']) !!}" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Delete</a>
+                    </div>
+                </td>
+            </tr>
+            <% })%>
+        </tbody>
+    </table>
+</div>
+
+<% include ../../partials/footer_admin %>

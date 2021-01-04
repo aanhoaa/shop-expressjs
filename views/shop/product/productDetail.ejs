@@ -1,0 +1,386 @@
+<% include ../../partials/header %>
+<link rel="stylesheet" href="/stylesheets/css/view.css">
+<link rel="stylesheet" href="/stylesheets/jquery.exzoom.css" type="text/css">
+<script src="https://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="https://code.jquery.com/ui/1.9.2/jquery-ui.js"></script> 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-zoom/1.7.21/jquery.zoom.js"></script> 
+<script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
+<script src="/javascripts/jquery.exzoom.js"></script>
+<script src="/javascripts/js/zoom.js"></script>
+
+<div class="container" style="margin: 60px auto 0px; max-width: 1300px;">
+    <div class="row">
+        <div class="col-sm-4" style="display: flex;">
+            <input type="hidden" id="product_id" value="<%-data._id%>">
+            <div class="list_gallery">
+                <%subImg.forEach((img) => {%>
+                <div class="gallery">
+                    <img class="image_gallery" src="/uploads/<%-img%>" alt="Cinque Terre" width="100%" height="100%" style="margin-top: 5px;">
+                </div>
+                <%})%>
+            </div>
+            <div class="" style="width: 75%; padding-top: 15px;">
+                <div class="exzoom" id="exzoom">
+                    <div class="exzoom_img_box">
+                        <div class='exzoom_img_ul'>
+                            <div><img id="image_zoom" style="width: 100%;" src="/uploads/<%-img%>"/></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-5 product_details">
+            <h3 class="product_details_name"><%-data.name%></h3>
+            <div class="product_details_block_info" style="display: flex;">
+                <span style="flex: 0.45;">Mã sản phẩm: SM116</span>
+                <span style="flex: 0.4;">Thương hiệu: <%-brand%></span>
+                <span style="flex: 0.3;">Loại: <%-material%></span>
+            </div>
+            <div style="border-bottom: 1px #80808042 dashed; margin: 5px;"></div>
+            <h5 style="margin-top: 15px;">
+                <span class="product_details_price_zero"><%-data.price.toLocaleString()%>₫</span>
+               <!--
+                <span class="product_details_new_price">{{number_format($products->current_price)}}₫</span>
+                <span class="product_details_price">{{number_format($products->price)}}₫</span>
+                
+               
+                
+                
+                <div class="product_details_save_price">
+                    <span>(Bạn đã tiết kiệm được {{number_format($products->price - $products->current_price)}}₫)</span>
+                </div>
+                -->
+            </h5>
+            <div class="product_details_description">
+                <span></span>
+            </div>
+            <div style="border-bottom: 1px #80808042 dashed; margin: 5px;"></div>
+            <div class="product_details_color">
+                <div class="product_details_color_text">
+                    <span>Màu sắc:</span>
+                </div>
+                <div class="btn-group btn-group-toggle btn_color" data-toggle="buttons" style="display: inline-block;">
+                    <% var bind = ''%>
+                    <% for (let i = 0; i < color.length; i++) {%>
+                        <%bind = ''%>
+                        <% for (let j = 0; j < list.length; j++) {
+                            if (color[i].name === list[j].color)
+                            {
+                                if (list[j].amount == 0 || list[j].price == 0)
+                                    bind+= list[j].size + ' ';
+                            }
+                        }%>
+                    <label style="margin-bottom: 10px; margin-left: 1px;" class="btn btn-lg btn-outline-default color_fix color_bind <%-bind%><%-color[i].code%> ">
+                        
+                    <input type="radio" name="options" autocomplete="off" class="color_child" value="<%-color[i].name%>">
+                    </label>
+                    <%}%>
+                </div>
+            </div>
+            <div class="product_details_size">
+                <div class="product_details_size_text">
+                    <span>Kích cỡ:</span>
+                </div>
+                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                    <% var bind = '';%>
+                    <% for (let i = 0; i < size.length; i++) {%>
+                        <%bind = ''%>
+                        <% for (let j = 0; j < list.length; j++) {
+                            if (size[i].name === list[j].size)
+                            {
+                                if (list[j].amount == 0 || list[j].price == 0)
+                                    bind+= list[j].color + ' ';
+                            }
+                        }%>
+                    <label class="btn btn-sm btn-outline-danger size_fix size_bind <%-bind%>">
+                    <input type="radio" name="options"  autocomplete="off" class="size_child" value="<%-size[i].name%>"><%-size[i].name%>
+                    </label>
+                    <%}%> 
+                    
+                </div>
+            </div>
+            <div class="product_details_amount">
+                <div class="product_details_amount_text">
+                    <span>Số lượng:</span>
+                </div>
+                <div class="input-group" style="width: 30%;">
+                    <span class="input-group-btn">
+                    <button type="button" class="btn btn-number" style="background-color: #80808091; height: 30px;" disabled="disabled" data-type="minus" data-field="quant[1]">
+                    <span class="fa fa-minus"></span>
+                    </button>
+                    </span>
+                    <input type="text" name="quant[1]" class="form-control input-number" value="1" min="1" max="10" style="max-height: 30px; max-width: 45px;">
+                    <span class="input-group-btn">
+                    <button type="button" class="btn btn-number" style="background-color: #80808091; height: 30px;" data-type="plus" data-field="quant[1]">
+                    <span class="fa fa-plus"></span>
+                    </button>
+                    </span>
+                </div>
+                <span style="color: #d53333; font-weight: 700;" class="quantity"></span>
+                <input type="hidden" id="qtt" value="">
+            </div>
+            <div class="block_pay">
+                <form class="form-vertical" role="form" action="" method="POST">
+                    <input type="hidden" name="_token" value="{!! csrf_token() !!}">
+                    <input type="hidden" name="id_product" value="{{$products->id}}">
+                    <input type="hidden" id="amount" name="amount">
+                    <input type="hidden" id="img" name="img_main" value="/uploads/<%-img%>">
+                    <input type="hidden" id="price" name="price" value="">
+                    <input type="hidden" id="color" name="color" value="">
+                    <input type="hidden" id="size" name="size" value="">
+                    <input type="hidden" id="name" name="name_prod" value="<%-data.name%>">
+                    
+                    <!--
+                    <div style="font-size: 13px;">
+                        (Còn lại <span style="color: #d53333; font-weight: 700;">{!! $inventory->amount !!}</span> sản phẩm!)
+                    </div>
+                    <button id="them_gio_hang_disabled" class="btn btn-default" disabled="disabled">Not In Available</button>
+                    <a href="" style="visibility: hidden;"><button id="them_gio_hang_click" class="btn btn-dark" disabled="disabled"></button></a>
+                     
+                    <div style="font-size: 13px;">
+                        (Còn lại <span style="color: #d53333; font-weight: 700;">{!! $inventory->amount - $inventory->cart_get_pro !!}</span> sản phẩm!)
+                    </div>
+                    <button id="them_gio_hang" class="btn btn-dark">Mua ngay</button>
+                    <a href="" style="visibility: hidden;"><button id="them_gio_hang_click" class="btn btn-dark"></button></a>
+                    -->
+                    <!-- <div style="font-size: 13px;">
+                        <span style="color: #d53333; font-weight: 700;" class="quantity"></span>
+                    </div> -->
+                    <button id="them_gio_hang" class="btn btn-dark">Mua ngay</button>
+                    <a href="" style="visibility: hidden;"><button id="them_gio_hang_click" class="btn btn-dark"></button></a> 
+                    <% if (cart) {
+                        cart.forEach((item) => {
+                            if (item.name == data.name) %>
+                        <input type="hidden" id="<%-item.size + item.color%>" value="<%-item.amount%>">
+                        <%})}%>
+                    
+                </form>
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="share_block">
+                <h5 class="share_block_text" style="margin-top: 16px;">Chia Sẻ:</h5>
+            </div>
+            <div class="shipping_block">
+                <h5 class="shipping_block_text" style="margin-top: 16px;">Sản phẩm này sẽ tới tay bạn chỉ trong 3-5 ngày làm việc</h5>
+                <div class="shipping_block_under_line"></div>
+                <ul class="shipping_block_ul">
+                    <li class="shipping_block_li" style="margin-top: 10px;">
+                        <div class="shipping_block_image">
+                            <img src="https://cdn3.iconfinder.com/data/icons/shipping-security-glyph/48/Sed-09-512.png" width="64px" height="64px" alt="">
+                        </div>
+                        <div class="shipping_block_info">
+                            <h5>Miễn phí giao hàng</h5>
+                            <p>Nhận hàng trong vòng 3 ngày</p>
+                        </div>
+                    </li>
+                    <li class="shipping_block_li" style="padding-left: 5px;">
+                        <div class="shipping_block_image">
+                            <img src="https://cdn0.iconfinder.com/data/icons/business-office-finance-set-1/64/icon_22_64_px-512.png" width="50px" height="50px" alt="" style="margin-right: 10px;">
+                        </div>
+                        <div class="shipping_block_info">
+                            <h5>Chất lượng đảm bảo</h5>
+                            <p>Top 10 thương hiệu uy tín 2019</p>
+                        </div>
+                    </li>
+                    <li class="shipping_block_li">
+                        <div class="shipping_block_image">
+                            <img src="https://cdn2.iconfinder.com/data/icons/e-commerce-icon-set-2/100/ecommerce-collection-outlines-27-512.png" width="58px" height="58px" alt=""  style="margin-right: 7px; margin-left: 2px;">
+                        </div>
+                        <div class="shipping_block_info">
+                            <h5>Đổi trả dễ dàng</h5>
+                            <p>Trả lại hàng nếu không ưng ý</p>
+                        </div>
+                    </li>
+                    <li class="shipping_block_li">
+                        <div class="shipping_block_image">
+                            <img src="https://image.flaticon.com/icons/svg/34/34067.svg" width="50px" height="50px" alt=""  style="margin-right: 7.5px; margin-left: 7px;">
+                        </div>
+                        <div class="shipping_block_info">
+                            <h5>Hotline hỗ trợ</h5>
+                            <p>Gọi ngay <strong>1900-10xx</strong></p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="arcodion_block" id="accordion_collapse">
+        <div class="arcodion">
+            <div class="arcodion_description arcodion_hover" data-toggle="collapse" data-target="#content_description" style="flex: 0 0 13%;">
+                <h5 class="arcodion_description_text">Mô tả sản phẩm</h5>
+                <div class="arcodion_under_line"></div>
+            </div>
+            <div class="arcodion_orientation arcodion_hover" data-toggle="collapse" data-target="#content_orientation" style="flex: 0 0 16%;">
+                <h5 class="arcodion_orientation_text">Hướng dẫn sử dụng</h5>
+                <div class="arcodion_under_line"></div>
+            </div>
+            <div class="arcodion_shipping arcodion_hover" data-toggle="collapse" data-target="#content_shipping" style="flex: 0 0 9%;">
+                <h5 class="arcodion_shipping_text">Giao hàng</h5>
+                <div class="arcodion_under_line"></div>
+            </div>
+            <div class="arcodion_reback arcodion_hover" data-toggle="collapse" data-target="#content_reback" style="flex: 0 0 16%;">
+                <h5 class="arcodion_reback_text">Chính sách hoàn trả</h5>
+                <div class="arcodion_under_line"></div>
+            </div>
+        </div>
+        <div class="arcodion_content">
+            <div class="arcodion_content_description collapse show" id="content_description" data-parent="#accordion_collapse">
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr class="arcodion_content_description_row">
+                            <td class="key">Thương hiệu:</td>
+                            <td class="value">Zara</td>
+                        </tr>
+                        <tr class="arcodion_content_description_row">
+                            <td class="key">Màu sắc:</td>
+                            <td class="value">Nhiều Màu</td>
+                        </tr>
+                        <tr class="arcodion_content_description_row">
+                            <td class="key">Thành phần:</td>
+                            <td class="value">30% Bông, 65% Polyester, 5% Spandex</td>
+                        </tr>
+                        <tr class="arcodion_content_description_row">
+                            <td class="key">Mùa:</td>
+                            <td class="value">Mùa xuân</td>
+                        </tr>
+                        <tr class="arcodion_content_description_row">
+                            <td class="key">Chất liệu:</td>
+                            <td class="value">Cotton</td>
+                        </tr>
+                        <tr class="arcodion_content_description_row">
+                            <td class="key">Phong cách:</td>
+                            <td class="value">Phong cách Campus</td>
+                        </tr>
+                        <tr class="arcodion_content_description_row">
+                            <td class="key">Hình bóng:</td>
+                            <td class="value">Bodycon</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="arcodion_content_orientation collapse" id="content_orientation" data-parent="#accordion_collapse">
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr class="arcodion_content_orientation_row">
+                            <td class="key">SKU (simple):</td>
+                            <td class="value">SM116</td>
+                        </tr>
+                        <tr class="arcodion_content_orientation_row">
+                            <td class="key">Màu sắc:</td>
+                            <td class="value">Xanh rêu</td>
+                        </tr>
+                        <tr class="arcodion_content_orientation_row">
+                            <td class="key">Hướng dẫn sử dụng:</td>
+                            <td class="value">Giặt máy với nhiệt độ không quá 30°C<br>Không được tẩy<br>Ủi với nhiệt độ không quá 110°C<br>Không giặt khô<br>Không được sấy khô
+                            </td>
+                        </tr>
+                        <tr class="arcodion_content_orientation_row">
+                            <td class="key">Material:</td>
+                            <td class="value">100% cotton</td>
+                        </tr>
+                        <tr class="arcodion_content_orientation_row">
+                            <td class="key">Xuất xứ:</td>
+                            <td class="value">Bangladesh</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="arcodion_content_shipping collapse" id="content_shipping" data-parent="#accordion_collapse">
+                <span class="arcodion_content_shipping_row_1">Giao Hàng Miễn Phí Theo Đơn Hàng Trên 1.000.000₫</span>
+                <p class="arcodion_content_shipping_row_2">Giao Hàng Tiêu Chuẩn: 5 - 7 Ngày Làm Việc</p>
+                <p class="arcodion_content_shipping_row_3">Giao Hàng Tiết Kiệm: 10 - 15 Ngày Làm Việc</p>
+                <p class="arcodion_content_shipping_row_4">Thời gian nhận hàng = thời gian xác nhận đơn hàng + thời gian xử lý + thời gian vận chuyển</p>
+            </div>
+            <div class="arcodion_content_reback collapse" id="content_reback" data-parent="#accordion_collapse">
+                <span class="arcodion_content_reback_row_1">Đảm bảo của chúng tôi</span><br>
+                <span class="arcodion_content_reback_row_2">Trả lại hoặc đổi mới trong vòng 30 ngày kể từ ngày giao hàng.</span><br>
+                <span class="arcodion_content_reback_row_3">Điều kiện:<br>
+                1. Mặt hàng đổi trả có thời hạn trong vòng 30 ngày kể từ ngày giao hàng.<br>
+                2. Mặt hàng đổi trả không bị hư hỏng và trong gói ban đầu.<br>
+                3. Người dùng phải trả thêm chi phí đổi trả (Chi phí đổi trả = 5% giá mặt hàng hiện tại).<br>
+                4. Phí vận chuyển và đổi trả hàng được thanh toán bởi người mua.
+            </div>
+        </div>
+    </div>
+    </div>
+    
+    </div>
+    <section class="commend_feedback container">
+      <div class="customer_feedback clearfix">
+        <div class="clearfix" style="height: 80px;">
+          <h5 class="customer_feedback_text clearfix">Khách hàng đánh giá</h5>
+        </div>
+        <div class="customer_feedback_block clearfix" style="max-width: 100%;">
+          <div class="col-sm-6" style="padding-left: 10%; float: left;">
+            <div class="" style="float: left; margin-top: 6px; padding-right: 10px;"><span class="customer_feedback_avager">Đánh giá trung bình</span></div>
+            
+            <div class="rate_star" style="padding-left: 0; margin-top: 5px;" >
+              <span><img class="star_image" src="https://png.pngtree.com/svg/20170629/7301c2f99d.svg" width="16px" height="18px;" alt=""></span>
+              <span><img class="star_image" src="https://png.pngtree.com/svg/20170629/7301c2f99d.svg" width="16px" height="18px;" alt=""></span>
+              <span><img class="star_image" src="https://png.pngtree.com/svg/20170629/7301c2f99d.svg" width="16px" height="18px;" alt=""></span>
+              <span><img class="star_image" src="https://png.pngtree.com/svg/20170629/7301c2f99d.svg" width="16px" height="18px;" alt=""></span>
+              <span><img class="star_image" src="https://png.pngtree.com/svg/20170629/7301c2f99d.svg" width="16px" height="18px;" alt=""></span>
+            </div>
+          </div>
+          <div class="col-sm-6" style="padding-right: 10%;">
+              <select class="custom-select" id="SortByPrice" style="width: 60%; float: right;">
+                  <option selected disabled="">Open this select menu</option>
+                  <option value="price_ascending">Giá từ thấp tới cao</option>
+                  <option value="price_descending">Giá từ cao tới thấp</option>
+                  <option value="created_descending">Mới nhất</option>
+                  <option value="created_ascending">Cũ nhất</option>
+              </select>
+          </div>
+        </div>
+      </div>
+      <hr>
+      <div class="user_comment">
+        <h4>Bình Luận</h4>
+        @if (!Auth::guest())
+        <form class="form_comment clearfix" action="{!! url('comment') !!}" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="_token" value="{!! csrf_token() !!}">
+            <input type="hidden" name="productId" value="{{$products->id}}">
+            <input type="hidden" name="userId" value="{{Auth::user()->id}}">
+            <textarea placeholder="Để lại bình luận hoặc đánh giá sản phẩm tại đây!" name="comment_content" class="text_comment"></textarea>
+            <input type="submit" class="btn btn-primary btn_send" value="Send">
+        </form>
+        @endif
+        <div class="" style="margin-left: 10%; margin-right: 10%;">
+            <span class="total_comments">Lượt bình luận ({!! $comment->count() !!})</span>
+            @foreach ($comment as $row)
+            <div class="detail_comment">
+                <div class="clearfix" style="float: left; margin-right: 15px;">
+                <img src="" alt="" style="width: 50px; height: 50px; border-radius: 50%;">
+                </div>
+                <div>
+                    <a href="" class="user_name">
+                        {{$row->full_name}}
+                    </a>
+                    <span class="comment_time">4m ago</span>
+                    <p class="comment_content">{{$row->description}}</p>
+                </div>
+            </div>
+            @endforeach
+        </div>
+      </div>
+      <hr>
+    </section>
+    
+    <div class="container clearfix">
+      <div class="khoi_chua_sp_lienquan clearfix" style="display: block;">
+          <h5 style="margin-left: 10px; margin-bottom: 20px; font-size: 30px;">Sản phẩm liên quan</h5>
+          @foreach ($related_products as $row)
+          <div class="khoi_sp_lienquan" id="effect_1" style="position: relative;">
+              <img style="width: 98%;" src=""/>
+              <div class="khoi_sp_lienquan_info">
+                  <p>{{$row->name}}</p>
+                  <p>{{number_format($row->price)}}₫</p>
+                  <a href="{!! url('view',[$row->id]) !!}">Xem chi tiết</a>
+              </div>
+          </div>
+          @endforeach 
+      </div>
+    </div>
+
+<% include ../../partials/footer %>

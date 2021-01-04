@@ -1,0 +1,59 @@
+@import url('https://fonts.googleapis.com/css?family=Alegreya|Playfair+Display&display=swap');
+*{margin: 0;padding: 0;}
+
+.block_report{
+  background-color: #fff; 
+  box-shadow: 0 0 0 1px rgba(63,63,68,.05), 0 1px 3px 0 rgba(63,63,68,.15);
+  border-radius: 3px;
+  padding: 20px;
+  margin-bottom: 0px;
+  border: 1px solid #f5f5f5;
+  box-shadow: 0px 0px 12px 0px rgba(0,0,0, 0.14);
+}
+
+.addition_block, .supplier_block{
+  padding-bottom: 20px;
+}
+
+.supplier_info{
+    border-top: 1px solid #c4cdd5;
+    padding: 18px 20px;
+    margin-bottom: 20px;
+}
+
+.product_block, .table_block_info, .payment_block, .addition_block{
+  margin-bottom: 20px;
+}
+
+.block_report .block_report_text{
+  font-weight: 500;
+  font-size: 15.4px;
+  font-family: 'Playfair Display', serif;
+}
+
+.payment_block .title, .warehouse_block .title{
+  text-transform: uppercase;
+  font-size: 13px;
+  font-weight: 502;
+}
+
+.main_container{
+  width: 100%;
+  margin: 4% -1%;
+}
+
+.report{
+  width: 107%;
+  padding-left: 48px;
+}
+
+.col-sm-10{
+  background-color: #fff;
+  width: 83%;
+}
+
+
+
+
+
+

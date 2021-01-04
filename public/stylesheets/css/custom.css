@@ -1,0 +1,10 @@
+.status {
+    margin-left: 50px;
+    padding: 30px;
+}
+
+.table-custom thead>tr>th.sorting,
+table.table-custom {
+    padding-right: 25px !important;
+    padding-left: 2px !important;
+}

@@ -1,0 +1,144 @@
+<link rel="stylesheet" href="/stylesheets/css/register.css">
+<title><%- title%></title>
+<% include ../partials/header %>
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2" style="margin-top: 20px;">
+            <div class="card">
+                <div class="card-header">Register</div>
+                <%if (message != "undefined") { 
+                    if (message != '') {    
+                %>
+                <div class="message alert-danger">
+                    <%= message %>
+                </div>
+                <% }}%>
+                <div class="card-body">
+                    <form class="form-horizontal" method="POST" action="/register">
+                      
+
+                        <div class="row">
+                            <div class="form-group{{ $errors->has('username') ? ' has-error' : '' }} col-md-6">
+                                <label for="username" class="col-md-6 control-label">Tên tài khoản</label>
+
+                                <div class="col-md-12">
+                                    <input id="username" type="text" class="form-control" name="username" value="" required autofocus>
+                                        <span class="help-block">
+                                            <strong></strong>
+                                        </span>
+                                   
+                                </div>
+                            </div>
+
+                            <div class="form-group{{ $errors->has('fullname') ? ' has-error' : '' }} col-md-6">
+                                <label for="fullname" class="col-md-6 control-label">Tên khách hàng</label>
+
+                                <div class="col-md-12">
+                                    <input id="fullname" type="text" class="form-control" name="fullname" value="" required autofocus>
+
+                                  
+                                        <span class="help-block">
+                                            <strong></strong>
+                                        </span>
+                                   
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }} col-md-6">
+                                <label for="email" class="col-md-6 control-label">E-Mail Address</label>
+
+                                <div class="col-md-12">
+                                    <input id="email" type="email" class="form-control" name="email" value="" required>
+
+                                   
+                                        <span class="help-block">
+                                            <strong></strong>
+                                        </span>
+                                
+                                </div>
+                            </div>
+                            <div class="form-group{{ $errors->has('gender') ? ' has-error' : '' }} col-md-6">
+                                <label for="gender" class="col-md-6 control-label">Gender</label>
+
+                                <div class="col-md-12">
+                                    <select class="form-control " name="gender" required>
+                                        <option value="Male">Male</option>  
+                                        <option value="Female">Female</option>
+                                        <option value="Others">Others</option>    
+                                    </select>
+                                    
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group{{ $errors->has('address') ? ' has-error' : '' }} col-md-6">
+                                <label for="address" class="col-md-6 control-label">Address</label>
+
+                                <div class="col-md-12">
+                                    <input id="address" type="address" class="form-control" name="address" value="" required>
+
+                                   
+                                        <span class="help-block">
+                                            <strong></strong>
+                                        </span>
+                                   
+                                </div>
+                            </div>
+                            <div class="form-group{{ $errors->has('phone') ? ' has-error' : '' }} col-md-6">
+                                <label for="phone" class="col-md-6 control-label">Phone</label>
+
+                                <div class="col-md-12">
+                                    <input id="phone" type="phone" class="form-control" name="phone" value="" required>
+
+                                   
+                                        <span class="help-block">
+                                            <strong></strong>
+                                        </span>
+                                   
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }} col-md-6">
+                                <label for="password" class="col-md-6 control-label">Password</label>
+
+                                <div class="col-md-12">
+                                    <input id="password" type="password" class="form-control" name="password" required>
+
+                                   
+                                        <span class="help-block">
+                                            <strong></strong>
+                                        </span>
+                                   
+                                </div>
+                            </div>
+
+                            <div class="form-group col-md-6">
+                                <label for="password-confirm" class="col-md-6 control-label">Confirm Password</label>
+
+                                <div class="col-md-12">
+                                    <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-6 col-md-offset-4">
+                                <button type="submit" class="btn btn-success">
+                                    Register
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<% include ../partials/footer%>

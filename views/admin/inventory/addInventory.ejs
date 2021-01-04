@@ -1,0 +1,317 @@
+<% include ../../partials/header_admin %>
+<link rel="stylesheet" href="/stylesheets/css/inventory.css">
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"> </script>
+<script src="/javascripts/js/admin/addInventory.js"></script>
+
+<div style="margin-left: 5%;">
+    <div class="col-lg-12">
+        <h1 class="page-header">Inventory
+            <small>Add</small>
+        </h1>
+    </div>
+
+    <form action="search" method="POST" class="search_product">
+        <div class="col-lg-9" style="padding-bottom:10px;">
+            <input type="hidden" name="_token" value="<%-token%>">
+             
+            <input type="hidden" name="array_inventory_id" value="<%-inventId%>">
+
+            <div class="product_block">
+                <div class="form-group">
+                    <label class="product_block_text">Thông tin danh mục</label>
+                    <select class="form-control" id="cateChoose" name="cateName" required>
+                        <option value="" disabled selected>Please Choose Category</option>
+                        <% data.forEach((cate) => { %>
+                          <option value="<%-cate._id%>"><%-cate.name %></option>
+                        <% }) %>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="product_block_text">Thông tin sản phẩm</label>
+                    <select class="form-control productChoose" id="productChoose" name="product" required>
+                        <option value="" >Please Choose Product</option>
+                    </select>
+                </div>
+                <div class="form-group size_block">
+                    <label>Kích thước</label>
+                    <select class="form-control sizeChoose" id="sizeChoose" name="size" required>
+                        <option value="c">Please Choose Size</option>
+                    </select>
+                </div>
+                <div class="form-group color_block">
+                    <label>Màu sắc</label>
+                    <select class="form-control colorChoose" id="colorChoose" name="color" required>
+                        <option value="empty">Please Choose Color</option>
+                    </select>
+                </div>
+               <!--  <div class="form-group">
+                    <label>Số lượng nhập</label>
+                    <input type="number" min="0" max="1000" class="form-control" name="amount" placeholder="Please Enter Product Amount" value="{!! old('amount') !!}" required/>
+                </div> -->
+
+                <button type="submit" class="btn btn-primary" id="search-product" style="margin-bottom: 10px;">Search Products</button>
+            </div>
+        </div>
+    </form>
+        
+    <form action="add" method="POST" class="import-product">
+        <input type="hidden" name="_token" value="{!! csrf_token() !!}">
+       
+            <input type="hidden" value="{!! $item->productId !!}">
+            <input type="hidden" value="{!! $item->sizeId !!}">
+            <input type="hidden" value="{!! $item->colorId !!}">
+        
+        <div class="col-lg-9" style="padding-bottom:120px;">
+            <table class="mdl-data-table product_block_list" style="width:100%">
+                <thead>
+                    <tr align="center">
+                        <th class="fix-th">STT</th>
+                        <th>Tên sản phẩm</th>
+                        <th>Giá tồn kho</th>
+                        <th>Số lượng tồn</th>
+                        <th>Giá nhập</th>
+                        <th>Số lượng nhập</th>
+                        <th>Giá vốn</th>
+                        <th>Thành tiền</th>
+                    </tr>
+                </thead>
+               
+               
+                <tbody>
+                    
+                    <% if (inventInfor != 1) { %>
+                        <% var i = 1;%>
+                    <% inventInfor.forEach((inventory) => {%>
+                    
+                    <tr class="odd gradeX" align="center">
+                        <input type="hidden" class="inventory_Id" name="inventory_Id[]" value="{!! $item->id !!}">
+                        <input type="hidden" class="inventoryId" name="inventoryId" value="<%-inventory.id%>">
+                       
+                        <td class="fix-td"><%-i++%></td>
+                        <td style="white-space: pre-line; width: 219px;">
+                           <%-inventory.productName + ' ('%> <%-inventory.productSize + ' - '%><%-inventory.productColor + ')'%>
+                        </td>
+                        <td><%-inventory.inventoryPrice%></td>
+                        <input type="hidden" id="old_price" name="old_price" value="<%-inventory.inventoryPrice%>">
+                        <td>
+                            <span class="slt" id="slt"><%-inventory.inventoryAmount%></span>
+                        </td>
+                        <input type="hidden" class="line_<%-i-2%>">
+                        <td class="fix-price">
+                            <input type="text" class="form-control form-control-inline-input-price" name="price_input" value="" value="0" required style="width: 107%; text-align: center;" />
+                        </td>
+                        <input type="hidden" class="lineAmount_<%-i-2%>">
+                        <td class="fix-amount">
+                            <input type="number" min="0" max="1000" class="form-control form-control-inline" id="form-control-inline" name="amount_input" value="0" required style="width: 65%; text-align: center;"/>
+                        </td>
+                        <td>
+                            <span class="gia_von">0</span>
+                        </td>
+                        <input type="hidden" class="gia_von" name="gia_von">
+                        <td class="total">0</td>
+                        <input type="hidden" class="line_<%-i-2%>">
+                    </tr>
+                    <% }) %>
+                    <% }%>
+                </tbody>  
+            </table>
+                <% if (inventInfor == 1) {%>
+                <div class="col-md-12 no-item" style="padding: 0% 40%;">
+                    <img src="../../images/no-product.png" style="width: 100%; margin-top: 60px;">
+                    <p style="margin-left: 14%; color: #0b6c99cf; font-size: 15px; font-weight: bold;">Sản phẩm không tồn tại</p>
+                </div>
+               <% } %>
+           
+            <div class="col-md-12 table_block_info">
+                <div class="list-info-money">
+                    <div class="item-info-money">
+                        <label>Tổng số lượng</label>
+                        <div class="value">
+                            <span class="product_amount">0</span>
+                            <input type="hidden" name="totalAmount" class="total_amount" value="">
+                        </div>
+                    </div>
+                    <div class="item-info-money">
+                        <label>Tổng cộng</label>
+                        <div class="value">
+                            <span class="total_price">0</span>
+                        </div>
+                    </div>
+                    <div class="list-tax"></div>
+                    <div class="item-info-money">
+                        <label>
+                            <a href="javascript:" data-toggle="popover" id="btn-discount-purchase-order" data-original-title="" title="">
+                                Thuế (F10)
+                                <i class="fa fa-caret-down" aria-hidden="true"></i>
+                            </a>
+                        </label>
+                        <div class="value">
+                            <span>0</span>
+                        </div>
+                    </div>
+                    <div class="item-info-money">
+                        <label>
+                            <a href="javascript:" bind-event-click="openPopupCosts()" id="btn-cost-purchase-order">
+                                Chi phí phụ (F11)
+                                <i class="fa fa-caret-down" aria-hidden="true"></i>
+                            </a>
+                        </label>
+                        <div class="value">
+                            <span>0</span>
+                        </div>
+                    </div>
+                    <div class="item-info-money">
+                        <label>
+                            <b>Tổng tiền thanh toán</b>
+                        </label>
+                        <div class="value">
+                            <span class="pricePay">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="supplier_block">
+                <div class="form-group">
+                    <label class="supplier_block_text">Thông tin nhà cung cấp</label>
+                    <select class="form-control supplier" name="supplier" id="supplier" required>
+                        <option value="" disabled="disabled">Please Choose Supplier</option>
+                        <% supplier.forEach((supp) => { %>
+                          <option value="{!! $row->id !!}"><%-supp.name%></option>
+                        <% }) %>
+                    </select>
+                </div>
+            </div>
+
+            <div class="supplier_info_details">
+               
+                <div class="supplier_info" style="display: flex; flex-wrap: wrap;">
+                    <div class="col-sm-6">
+                        <label class="text-uppercase font-weight-300 mb-2">
+                                Địa chỉ xuất hàng
+                        </label>
+                        <div class="content mb-2" id="importAddress">
+                            <div>Giao hàng</div>
+                            <% supplier.forEach((supp) => { %>
+                                <input type="hidden" name="supplierId" value="<%-supp._id%>">
+                            <div class="w100"><%-supp.phone%></div>
+                            <div class="w100"><%-supp.email%></div>
+                            <div class="w100">
+                                <span><%-supp.address%></span>
+                                <span> - <%-supp.area%></span>
+                            </div>
+                            <% }) %>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="text-uppercase font-weight-300 mb-2">
+                                Địa chỉ xuất hóa đơn
+                        </label>
+                        <div class="content mb-2" id="exportAddress">
+                            <div>Giao hàng</div>
+                            <% supplier.forEach((supp) => { %>
+                                <div class="w100"><%-supp.phone%></div>
+                                <div class="w100"><%-supp.email%></div>
+                                <div class="w100">
+                                    <span><%-supp.address%></span>
+                                    <span> - <%-supp.area%></span>
+                                </div>
+                                <% }) %>
+                        </div>
+                    </div>
+                </div> 
+            </div>
+            
+            <div class="col-md-12 payment_block">
+                <div class="col-md-12" style="margin-bottom: 10px;">
+                    <div class="col-sm-8">
+                        <i class="fas fa-money-check fa-1x"></i>
+                        <label class="title">Thanh toán</label>
+                    </div>
+                    <div class="col-sm-4">
+                        <input type="checkbox" id="show_payment" style="margin-right: 5px;">
+                        <label class="payment_block_text">Thanh toán với nhà cung cấp</label>
+                    </div>
+                </div>
+
+                <div class="payment_block_show" style="display: none;">
+                    <div class="form-group col-sm-6">
+                        <label class="payment_block_text">Hình thức thanh toán</label>
+                        <select class="form-control" name="product" required>
+                            <option value="" disabled="disabled">Chọn hình thức thanh toán</option>
+                            <option value="tien_mat">Tiền mặt</option>
+                        </select>
+                    </div>
+                
+                    <div class="form-group col-sm-6">
+                        <label class="payment_block_text">Số tiền thanh toán</label>
+                        <input type="text" class="form-control pricePayment_show" disabled="disabled" />
+                        <input type="hidden" class="pricePayment" name="pricePayment"/>
+                    </div>
+
+                    <div class="form-group col-sm-6">
+                        <label class="payment_block_text">Tham chiếu</label>
+                        <input type="text" class="form-control" name="reference" placeholder="Please Enter Reference" value=""/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12 warehouse_block">
+                <div class="col-md-12" style="margin-bottom: 10px;">
+                    <div class="col-sm-9">
+                        <i class="fas fa-shipping-fast fa-1x"></i>
+                        <label class="title">Nhập kho</label>
+                    </div>
+                    <div class="col-sm-3">
+                        <input type="checkbox" checked="checked" style="margin-right: 5px;">
+                        <label class="warehouse_block_text">Nhập hàng vào kho</label>
+                    </div>
+                </div>
+            </div>
+                   
+            
+            <button type="submit" class="btn btn-primary import-goods" style="width: 30%; margin-top: 30px;">Import Goods</button> 
+            
+        </div> 
+        <div class="col-lg-3">
+            <div class="addition_block">
+                <label class="addition_block_text">Thông tin đơn nhập hàng</label>
+                <div class="form-group">
+                    <span class="addition_block_text_mini">Địa chỉ nhập kho</span>
+                    <select class="form-control" name="branch" required>
+                        <option value="default_branch" selected="selected">WH0001 | Kho tổng</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <span class="addition_block_text_mini">Hình thức nhập kho</span>
+                    <select class="form-control" name="formInputInven" required>
+                        <option value="formInputInven" selected="selected">Nhận mua hàng từ nhà cung cấp</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <span class="addition_block_text_mini">Áp dụng thuế</span>
+                    <select class="form-control" name="tax" required>
+                        <option value="default_tax" selected="selected">Giá chưa bao gồm thuế</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <span class="addition_block_text_mini">Ngày hẹn giao</span>
+                    <input type="date" class="form-control" name="ship_date" value="{!! old('ship_date') !!}" style=" line-height: 20px;" required/>
+                </div>
+            </div>
+
+            <div class="addition_block_tag">
+                <div class="form-group">
+                    <label class="addition_block_tag_text">Ghi chú</label>
+                    <textarea class="form-control" rows="2" name="note"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="addition_block_tag_text">Mô tả</label>
+                    <textarea class="form-control" rows="2" name="tag"></textarea>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<% include ../../partials/footer_admin %>

@@ -1,0 +1,41 @@
+<% include ../../partials/header_admin %>
+
+<div style="margin-left: 5%;">
+    <div class="col-lg-12">
+        <h1 class="page-header">Inventory
+            <small>List</small>
+        </h1>
+    </div>
+    <!-- /.col-lg-12 -->
+    <table id="dataTables-example" class="mdl-data-table" style="width:100%">
+        <thead>
+            <tr align="center">
+                <th>STT</th>
+                <th>Name</th>>
+                <th>Status</th>
+                <th>Category</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <%var i = 0%>
+            <% data.forEach((listProduct) => { i++ %>
+            <tr class="odd gradeX" align="center">
+                <td><%-i%></td>
+                <td><%-listProduct.name%></td>
+                <td></td>
+                <td>
+                    <%-listProduct.productType.main.name%>
+                    /
+                    <%-listProduct.productType.sub.name%>
+                </td>
+                <td class="center">
+                    <a href="/admin/inventory/detail/<%-listProduct._id%>" class="btn btn-success"><i class="fas fa-eye"></i> View</a>
+                </td>
+            </tr>
+           <% }) %>
+        </tbody>
+    </table>
+</div>
+
+<% include ../../partials/footer_admin %>

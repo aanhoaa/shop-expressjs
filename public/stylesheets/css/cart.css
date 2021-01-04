@@ -1,0 +1,159 @@
+*{margin: 0;padding: 0;}
+
+.khoimenu_title>div
+{
+  text-align: left;
+}
+
+.khoimenu img.hinhsanpham{
+  max-width: 100px;
+  height: 100px;
+}
+
+.khoimenu .tensanpham{
+  /*width: 400px;*/
+  margin-top: 15px;
+}
+
+.khoimenu .product_info .product_info_text{
+  font-family: 'Open Sans', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+.khoimenu_title .khoimenu_title_text{
+  font-family: "Abril Fatface",Arial,Helvetica,sans-serif;
+  /*font-size: 24px;*/
+  color: rgba(37,65,53,1);
+  font-weight: normal;
+  font-style: normal;
+  text-decoration: none;
+  letter-spacing: 0.05em;
+  word-spacing: 0.00em;
+  text-transform: none;
+  font-variant: normal;
+  line-height: 317%;
+}
+
+.khoimenu{
+  margin-top: 10px;
+}
+
+.khoimenu .product_info .product_info_description{
+  font-family: "Roboto", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  color: #777;
+}
+
+.khoimenu .product_info .product_info_text small{
+  color: #777;
+  font-weight: 400;
+  opacity: 2.44;
+  font-size: .9em;
+}
+
+.khoi .card{
+  width: 300px;
+  margin-right: 13px;
+  background-color: #00f3ff52;
+  border-radius: 10px 10px;
+}
+.khoi .card .card-block h4{
+  font-size: 24px;
+  color:maroon;
+  
+}
+.khoimenu p{
+  font-size: 16px;
+  color: #171717;
+}
+
+.khoimenu .khoibutton
+{
+  width: 150px;
+}
+
+.gio_hang{
+  font-family: "Abril Fatface",Arial,Helvetica,sans-serif;
+  font-size: 24px;
+  color: rgba(37,65,53,1);
+  font-weight: normal;
+  font-style: normal;
+  text-decoration: none;
+  letter-spacing: 0.05em;
+  word-spacing: 0.00em;
+  text-transform: none;
+  font-variant: normal;
+  line-height: 120%;
+  margin: 30px;
+}
+
+.cart_title{
+  font-family: "Abril Fatface",Arial,Helvetica,sans-serif;
+  font-size: 10px;
+  color: rgba(37,65,53,1);
+  font-weight: normal;
+  font-style: normal;
+  text-decoration: none;
+  letter-spacing: 0.05em;
+  word-spacing: 0.00em;
+  text-transform: none;
+  font-variant: normal;
+  line-height: 120%;
+ 
+}
+
+.total{
+  margin-left: 50px;
+}
+
+.totals{
+  padding: 1px 0px;
+}
+.border_cart{
+  border: 1px gray solid;
+}
+
+/*.khoimenu tbody tr > td, .khoimenu thead tr > th{
+  padding: 5px 10px 5px 5px; 
+  text-align: center;
+}*/
+
+.product_info{
+  max-width: 300px;
+  display: flex;
+  flex-direction: column;
+}
+
+.product_info .product_info_description > span{
+  max-width: 100%;
+}
+
+.khoi_sp_lienquan{
+      float: left;
+      width: 23%;
+      margin-left: 0px;
+  }
+
+.khoi_chua_sp_lienquan{
+    width: 100%;
+    margin-bottom: 70px;
+}
+
+.khoi_sp_lienquan_info{
+ font-family: 'Open Sans', sans-serif; 
+ font-weight: 600; 
+ font-size: 14px;
+}
+
+.border_cart{
+  font-family: 'Abril Fatface',Arial,Helvetica,sans-serif; 
+  font-size: 20px; 
+  margin-bottom: 28px;
+}
+
+.check-out{
+  width: 100%;
+  margin-bottom: 8px;
+}

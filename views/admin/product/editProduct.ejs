@@ -1,0 +1,176 @@
+<% include ../../partials/header_admin %>
+<link rel="stylesheet" href="/stylesheets/css/add_product.css">
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"> </script>
+<script src="/javascripts/js/addProduct.js"></script>
+
+<div style="margin-left: 5%;">
+    <div class="col-lg-12">
+        <h1 class="page-header">Product
+            <small>Edit</small>
+        </h1>
+    </div>
+
+
+    <form action="" method="POST" name="frmEditProduct" enctype="multipart/form-data">
+        <div class="col-lg-7" style="padding-bottom:120px">
+            <input type="hidden" name="_token" value="{!! csrf_token() !!}">
+            <div class="form-group">
+                <label>Thương hiệu</label>
+                <select class="form-control" name="brand" required>
+                    <option value="">Please Choose Brand</option>
+                    <% brand.forEach(brd=>{%>
+                        <option value="<%-brd.id%>" <%-data.brand == brd.id ? 'selected' : ''%>><%-brd.name%></option>
+                   <%})%>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Danh mục lớn</label>
+                <select class="form-control par-cate" name="parentCate" required>
+                    <option value="">Please Choose Category</option>
+                    <% parentCate.forEach(cat=>{%>
+                        <option value="<%-cat.id%>" <%-data.productType.main.id == cat.id ? 'selected' : ''%>><%-cat.name%></option>
+                    <%})%>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Danh mục nhỏ</label>
+                <select class="form-control child-cate" name="childCate" required>
+                    <option value="">Please Choose Child Category</option>   
+                    <% subCate.forEach(cat=>{%>
+                        <option class="option-child" value="<%-cat.id%>" <%-data.productType.sub.id == cat.id ? 'selected' : ''%>><%-cat.name%></option>
+                    <%})%>   
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Chất liệu</label>
+                <select class="form-control" name="material" required>
+                    <option value="">Please Choose Material</option>
+                    <% material.forEach(mat=>{%>
+                      <option value="<%-mat.id%>" <%-data.materials == mat.id ? 'selected' : ''%>><%-mat.name%></option>
+                    <%})%> 
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Tên sản phẩm</label>
+                <input class="form-control" name="name" placeholder="Please Enter Product Name" value="<%-data.name%>" required/>
+            </div>
+            <div class="form-group">
+                <label>Miêu tả</label>
+                <textarea class="form-control ckeditor" rows="3" name="description" id="description" placeholder="Please Enter Product Description"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Nội dung</label>
+                <textarea class="form-control ckeditor" rows="3" name="content" id="content"></textarea>
+            </div>
+            <!-- <div class="form-group">
+                <label>Hình ảnh</label>
+                <input type="file" name="image_product" value="{!! old('image_product') !!}" required>
+            </div> -->
+
+            <h5>File Upload & Image Preview</h5>
+            <!-- Upload  -->
+            <div class="col-md-8">
+                
+                <div id="file-upload-form" class="uploader">
+                  <input id="file-upload" type="file" name="image_product" onchange="readMainURL(this);" value="<%-data.images%>" style="display: block;">
+                  <label for="file-upload" id="file-drag">
+                    <img id="file-image" src="#" alt="Preview" class="hidden">
+                    <div id="start">
+                      <i class="fa fa-download" aria-hidden="true"></i>
+                      <div>Select a file or drag here</div>
+                      <div id="notimage" class="hidden">Please select an image</div>
+                      <span id="file-upload-btn" class="btn btn-primary">Select a file</span>
+                    </div>
+                  </label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <img id="blah" src="../../../uploads/<%-data.images%>" alt="your image" style="width: 100%; height: 13%;" />
+            </div>
+            
+            <div class="col-md-12">
+               <button type="submit" class="btn btn-default">Product Edit</button>
+               <button type="reset" class="btn btn-default">Reset</button> 
+            </div>
+        </div>
+        <div class="col-md-1"></div>
+        <div class="col-md-3">
+            <!-- @for($i = 1; $i <= 3 ; $i++)
+            <div class="form-group image_block" style="margin-top: 10px;">
+                <label>Product Image Detail</label>
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" name="image_product_multiple[]" id="validatedCustomFile" required>
+                    <label class="custom-file-label" required for="validatedCustomFile">Choose file...</label>
+                </div>
+            </div>
+            @endfor -->
+            <% var imgCount = 0;%>
+            <%data.subImages.forEach((img) => { imgCount++;%>
+            <div class="form-group" id="subImg<%-imgCount%>">
+                <label>Product Image Detail <%-imgCount%></label>
+                <img src="../../../uploads/<%-img%>" class="img_detail" idImg="<%-imgCount%>" id="subImg<%-imgCount%>" width="160px" height="170px">
+                <a href="javascript:void(0)" id="del_image" type="button" class="btn btn-danger btn-circle icon_del"><i class="fa fa-times"></i></a>
+            </div>
+            
+            <% })%>
+
+            <div id="insertImage"></div>
+            <button type="button" id="addImages" class="btn btn-danger" style="margin-bottom: 10px;">Add Images</button>
+             
+            <div id="insertSize">
+                
+                <!-- <?php  var_dump($array_size); ?> -->
+                <div class="form-group size_block">
+                    <label>Kích thước</label>           
+                    <select class="form-control size_product" name="size_product_list[]" multiple="multiple" style="margin-top: 10px;" required>
+                        <% data.subId.size.forEach(size => {%>
+                        <option value="S" <%-size.name === 'S' ? 'selected' : ''%>>Size S</option>
+                        <option value="S" <%-size.name === 'M' ? 'selected' : ''%>>Size M</option>
+                        <option value="L" <%-size.name === 'L' ? 'selected' : ''%>>Size L</option>
+                        <option value="X" <%-size.name === 'X' ? 'selected' : ''%>>Size X</option>
+                        <option value="XL"<%-size.name === 'XL' ? 'selected' : ''%>>Size XL</option>
+                        <%})%>
+                    </select>
+                </div> 
+            </div>
+
+            <div id="insertColor">
+                <div class="form-group color_block">
+                    <label>Màu sắc</label>
+                    <select class="form-control color_product" name="color_product_list[]" style="margin-top: 10px;" multiple="multiple" required>
+                        <% data.subId.size[0].color.forEach(color => {%>
+                        <option value="orange" <%-color.name === 'orange' ? 'selected' : ''%>>Orange</option>
+                        <option value="olivaceous" <%-color.name === 'olivaceous' ? 'selected' : ''%>>Olivaceous</option>
+                        <option value="green" <%-color.name === 'green' ? 'selected' : ''%>>Green</option>
+                        <option value="blue" <%-color.name === 'blue' ? 'selected' : ''%>>Blue</option>
+                        <option value="sky" <%-color.name === 'sky' ? 'selected' : ''%>>Sky</option>
+                        <option value="yellow" <%-color.name === 'yellow' ? 'selected' : ''%>>Yellow</option>
+                        <option value="greenish" <%-color.name === 'greenish' ? 'selected' : ''%>>Greenish</option>
+                        <option value="red" <%-color.name === 'red' ? 'selected' : ''%>>Red</option>
+                        <%})%>
+                    </select>
+                </div>
+            </div>
+            
+        </div>
+    </form>
+</div>
+
+<script>
+    function readMainURL(input) {
+       if (input.files && input.files[0]) {
+           var reader = new FileReader();
+
+           reader.onload = function (e) {
+               $('#blah')
+                   .attr('src', e.target.result);
+           };
+
+           reader.readAsDataURL(input.files[0]);
+       }
+   }
+</script>
+
+<% include ../../partials/footer_admin %>

@@ -1,0 +1,117 @@
+<% include ../../partials/header_admin %>
+<link rel="stylesheet" href="/stylesheets/css/supplier.css">
+
+<div style="margin-left: 5%;">
+    <div class="col-lg-12">
+        <h1 class="page-header" style="margin-left: 55px;">Supplier
+            <small>Add</small>
+        </h1>
+    </div>
+
+    <form action="" method="POST">
+        <input type="hidden" name="_token" value="{!! csrf_token() !!}">
+        <div class="col-lg-10" style=" display: flex;">  
+            <div class="col-sm-6" style="margin-left: 55px;">
+                <label class="font_text">
+            Thông tin chung <small style="margin-left: 10px; color: gray;">Cung cấp thông tin cơ bản về nhà cung cấp</small></label> 
+                <div class="form-group">
+                    <label class="font_text_details">* Tên nhà cung cấp</label>
+                    <input class="form-control" name="name" placeholder="Nhập tên nhà cung cấp" value="" required/>
+                </div>
+                <div class="form-group">
+                    <label class="font_text_details">Số điện thoại</label>
+                    <input class="form-control" name="phone" placeholder="Nhập số điện thoại" value="" required/>
+                </div>
+                <div class="form-group">
+                    <label class="font_text_details">Email</label>
+                    <input class="form-control" name="email" placeholder="Nhập địa chỉ email" value="" required/>
+                </div>
+                <div class="form-group" style="margin-bottom: 30px;">
+                    <label class="font_text_details">Website</label>
+                    <input class="form-control" name="website" placeholder="Nhập địa chỉ Website" value=""/>
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <label class="font_text">
+                Thông tin liên hệ <small style="margin-left: 10px; color: gray;">Thông tin về địa chỉ nhà cung cấp</small></label> 
+                <div class="form-group">
+                    <label class="font_text_details">Nhãn</label>
+                    <input class="form-control" name="nhan" placeholder="Nơi thanh toán, giao hàng" value=""/>
+                </div>
+                <div class="form-group">
+                    <label class="font_text_details">Địa chỉ</label>
+                    <input class="form-control" name="address" placeholder="Nhập địa chỉ" value="" required/>
+                </div>
+                <div class="form-group">
+                    <label class="font_text_details">Khu vực</label>
+                    <select class="form-control area" id="area" name="area" required>
+                        <option value="" disabled="disabled">Chọn khu vực</option>  
+                        <option value="hcm">Tp.HCM</option>
+                        <option value="hn">Hà Nội</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-10" style=" display: flex; padding-top: 20px;">  
+            <div class="col-sm-6" style="margin-left: 55px;">
+                <label class="font_text">
+                Cài đặt nâng cao <small style="margin-left: 10px; color: gray;">Thiết lập các thông số tự động dùng trong các giao dịch</small></label> 
+                <div class="form-group">
+                    <label class="font_text_details">Giá mặc định</label>
+                    <select class="form-control default_price" id="default_price" name="default_price">
+                        <option value="" disabled="disabled">Chọn giá mặc định</option>  
+                        <option value="">Giá nhập</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="font_text_details">Thuế mặc định</label>
+                    <select class="form-control default_tax" id="default_tax" name="default_tax">
+                        <option value="" disabled="disabled">Chọn thuế mặc định</option>  
+                        <option value="">Thuế nhập hàng</option>
+                        <option value="">Không áp dụng thuế</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="font_text_details">Phương thức thanh toán</label>
+                    <select class="form-control default_payment" id="default_payment" name="default_payment">
+                        <option value="" disabled="disabled">Chọn phương thức</option>  
+                        <option value="">Tiền mặt</option>
+                    </select>
+                </div>
+                <div class="form-group" style="margin-bottom: 30px;">
+                    <label class="font_text_details">Kì hạn thanh toán</label>
+                    <select class="form-control default_date" id="default_date" name="default_date">
+                        <option value="" disabled="disabled">Chọn kì hạn thanh toán</option>  
+                        <option value="">Thanh toán trong 1 tháng</option>
+                        <option value="">Thanh toán trong 1 tuần</option>
+                        <option value="">Thanh toán trong ngay</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-sm-6" >
+                <label class="font_text">
+            Thông tin khác <small style="margin-left: 10px; color: gray;">Thông tin bổ sung để liên hệ & trao đổi</small></label> 
+                <div class="form-group">
+                    <label class="font_text_details">Nhân viên phụ trách</label>
+                    <input class="form-control" name="employee" value=""/>
+                </div>
+                <div class="form-group">
+                    <label class="font_text_details">Mô tả</label>
+                    <input class="form-control" name="description" placeholder="Mô tả" value=""/>
+                </div>
+                <div class="form-group">
+                    <label class="font_text_details">Tags</label>
+                    <input class="form-control" name="tag" value=""/>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12" style="margin-top: 30px; margin-bottom: 40px; margin-left: 55px;">
+           <button type="submit" class="btn btn-primary" style="width: 18%;">Xác nhận</button>
+        </div>      
+    </form>
+</div>
+
+<% include ../../partials/footer_admin %>

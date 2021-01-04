@@ -1,0 +1,147 @@
+<% include ../../partials/header_admin %>
+<link rel="stylesheet" href="/stylesheets/css/supplier.css">
+
+<div style="margin-left: 5%;">
+    <div class="col-lg-12">
+        <h1 class="page-header" style="margin-left: 55px;">Voucher
+            <small>Add</small>
+        </h1>
+    </div>
+
+    <form action="{!! url('/admin/voucher/add') !!}" method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="_token" value="{!! csrf_token() !!}">
+        <div class="col-lg-10" style=" display: flex;">  
+            <div class="col-sm-6" style="margin-left: 55px;">
+                <label class="font_text">
+            Thông tin chung <small style="margin-left: 10px; color: gray;">Cung cấp thông tin cơ bản về khuyến mãi</small></label> 
+                <div class="form-group">
+                    <label class="font_text_details">Hình thức khuyến mãi</label>
+                    <select class="form-control formvoucher" id="formvoucher" name="formvoucher" required>
+                        <option value="" disabled="disabled">Chọn hình thức KM</option>  
+                        <option value="1">Mã khuyến mãi (Coupon)</option>
+                        <option value="2">Chương trình khuyến mãi (CTKM)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="font_text_details">Dành cho</label>
+                    <select class="form-control voucherObject" id="voucherObject" name="voucherObject" required>
+                        <option value="" disabled="disabled">Chọn đối tượng KM</option>  
+                        <option value="all">Tất cả</option>
+                    </select>
+                </div>  
+            </div>
+
+            <div class="col-sm-6">
+                <label class="font_text">
+                <small style="margin-left: 10px; color: gray;"></small></label> 
+                <div class="form-group">
+                    <label class="font_text_details">Tên chương trình</label>
+                    <input class="form-control" name="nameVoucher" placeholder="Tên chương trình khuyến mãi" required/>
+                </div>
+                <a href="#" class="generate_code"><span class="font_text_details" style="float: right;">Sinh mã ngẫu nhiên</span></a>
+                <div class="form-group voucherCode">
+                    <div>
+                        <label class="font_text_details" style="float: left;">Mã khuyến mãi</label>
+                        <!-- <a href="#" class="generate_code"><span class="font_text_details" style="float: right;">Sinh mã ngẫu nhiên</span></a> -->
+                    </div> 
+                    <input class="form-control codeVoucher" name="codeVoucher" placeholder="Ví dụ: COUPON10%" style="margin-bottom: 5px;" required/>
+                    <span style="color: gray;">Khách hàng sẽ nhập mã khuyến mãi này khi ở màn hình thanh toán</span>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-10" style=" display: flex; padding-top: 20px;">  
+            <div class="col-sm-6" style="margin-left: 55px;">
+                <label class="font_text">
+            Tùy chọn khuyến mãi <small style="margin-left: 10px; color: gray;">Thông tin chi tiết về khuyến mãi</small></label> 
+                <div class="form-group">
+                    <label class="font_text_details">Loại khuyến mãi</label>
+                    <select class="form-control typeofVoucher" id="typeofVoucher" name="typeofVoucher" required>
+                        <option value="" disabled="disabled">Chọn loại KM</option>  
+                        <option value="decrease_value">Giảm giá trị</option>
+                    </select>
+                </div>
+                <div class="form-group followVoucherPro_block ctkm">
+                    <label class="font_text_details">Khuyến mãi theo</label>
+                    <select class="form-control followVoucherPro" id="followVoucherPro" name="followVoucherPro">
+                        <option value="" disabled="disabled">Chọn loại CTKM</option>  
+                        <option value="dm">Danh mục</option>
+                        <option value="sp">Sản phẩm</option>
+                    </select>
+                </div>
+                <div class="form-group numberUse_block">
+                    <label class="font_text_details">Số lần sử dụng</label>
+                    <input class="form-control" name="numberofUse" placeholder="Số lần sử dụng" style="margin-bottom: 5px;" required/>
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <label class="font_text">
+                <small style="margin-left: 10px; color: gray;"></small></label> 
+                <div class="form-group">
+                    <label class="font_text_details">Giá trị khuyến mãi</label>
+                    <select class="form-control area" id="valueVoucher" name="valueVoucher">
+                        <option value="" disabled="disabled">Chọn giá trị</option>  
+                        <option value="10">10%</option>
+                        <option value="20">20%</option>
+                        <option value="30">30%</option>
+                        <option value="50">50%</option>
+                    </select>
+                </div>
+                <div class="form-group followVoucherCategory">
+                    <label class="font_text_details">Danh mục</label>
+                    <select class="form-control followVoucherCategory_list" name="followVoucherCategory_list[]" style="margin-top: 10px; line-height: 2;" multiple="multiple">
+                        @foreach ($category as $row)
+                          <option value="{!! $row['id'] !!}">{!! $row['name'] !!}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group followVoucherProduct">
+                    <label class="font_text_details">Sản phẩm</label>
+                    <select class="form-control followVoucherProduct_list" name="followVoucherProduct_list[]" style="margin-top: 10px; line-height: 2;" multiple="multiple">
+                        @foreach ($product as $row)
+                          <option value="{!! $row['id'] !!}">{!! $row['name'] !!}</option>
+                        @endforeach 
+                    </select>
+                </div>
+                <div class="form-group numberVoucher_block">
+                    <label class="font_text_details">Số lượng mã</label>
+                    <input class="form-control" name="numberofVoucher" placeholder="Số lượng mã" style="margin-bottom: 5px;" required/>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-10" style=" display: flex; padding-top: 20px;">  
+            <div class="col-sm-6" style="margin-left: 55px;">
+                <label class="font_text">
+            Khung thời gian <small style="margin-left: 10px; color: gray;">Thông tin về thời hạn khuyến mãi và tình trạng</small></label> 
+                <div class="form-group">
+                    <label class="font_text_details">Ngày bắt đầu</label>
+                    <input class="form-control" type="date" name="dateStart" placeholder="Ngày bắt đầu" style="margin-bottom: 5px; line-height: 1.55;" required/>
+                </div>
+                <div class="form-group">
+                    <label class="font_text_details">Ngày kết thúc</label>
+                    <input class="form-control" type="date" name="dateEnd" placeholder="Ngày kết thúc" style="margin-bottom: 5px; line-height: 1.55;" required/>
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <label class="font_text">
+                <small style="margin-left: 10px; color: gray;"></small></label> 
+                <div class="form-group">
+                    <label class="font_text_details">Thời điểm</label>
+                    <input class="form-control" id="timepicker" name="timeStart" placeholder="Thời gian bắt đầu" required/>
+                </div>
+                <div class="form-group">
+                    <label class="font_text_details">Thời điểm</label>
+                    <input class="form-control" id="timepicker1" name="timeEnd" placeholder="Thời gian kết thúc" required/>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12" style="margin-top: 30px; margin-bottom: 40px; margin-left: 55px;">
+           <button type="submit" class="btn btn-primary" style="width: 18%;">Xác nhận</button>
+        </div>  
+    </form>
+</div>
+
+<% include ../../partials/footer_admin %>

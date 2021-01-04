@@ -1,0 +1,117 @@
+<% include ../../partials/header %>
+<link rel="stylesheet" href="/stylesheets/css/user_info.css">
+
+<section class="container clearfix" style="margin-top: 50px;">
+	<div class="row col-sm-12" style="margin: 100px 0 80px 0px; padding: 0;">
+		<div class="infomation_user" style="position: relative;">
+			<div class="avatar_name_user clearfix">
+				<div class="div_picture_profile" style="position: absolute;">
+					<img class="picture_profile" src="./images/man.png" alt="">
+				</div>
+				
+				<label class="info_user_name"><%-user.username%></label>
+			</div>
+			<div class="">
+				<div class="detail_info" style="margin-left: 5%; margin-top: 25px; display: block;" >
+					<label style="float: left;">Email: </label>
+					<p style="margin-left: 75px; margin-right: 5%"><%-user.email%></p>
+				</div>
+				<div class="detail_info" style="margin-left: 5%; margin-top: 25px; display: block;" >
+					<label style="float: left;">Họ và tên: </label>
+					<p style="margin-left: 75px; margin-right: 5%"><%-user.fullname%></p>
+				</div>
+				<div class="detail_info" style="margin-left: 5%; display: block;" >
+					<label style="float: left;">Giới tính: </label>
+					<p style="margin-left: 75px; margin-right: 5%"><%-user.gender%></p>
+				</div>
+				<div class="detail_info" style="margin-left: 5%; display: block;" >
+					<label style="float: left;">Điện thoại: </label>
+					<p style="margin-left: 75px; margin-right: 5%"><%-user.phone%></p>
+				</div>
+				<div class="detail_info" style="margin-left: 5%; display: block;" >
+					<label style="float: left;">Địa chỉ: </label>
+					<p style="margin-left: 75px; margin-right: 5%;"><!-- Lorem ipsum dolor sit amet, consectetur adipisicing elit.Lorem ipsum dolor sit amet, consectetur adipisicing elit.Lorem ipsum dolor sit amet, consectetur adipisicing elit.Lorem ipsum dolor sit amet! -->
+						<%-user.address%>
+					</p>
+				</div>
+				<div class="detail_info" style="margin-left: 28%; display: block; border: none;" >
+					<a href="/logout" class="btn btn-danger" style="margin-right: 4px;">Đăng xuất</a>
+					<a href="/user/edit" class="btn btn-warning">Chỉnh sửa thông tin</a>
+					<a href="/" class="btn btn-success">Trở về trang chủ</a>
+				</div>
+			</div>
+		</div>
+
+		<div class="history_orders">
+           
+				<%oData.forEach((item) => { 
+					let current_datetime = item.date;
+					let formatted_date = current_datetime.getDate() + "-" + (current_datetime.getMonth() + 1) + "-" + current_datetime.getFullYear();
+				%>
+			
+            
+			<div class="one_history_order clearfix">
+				<div class="col-sm-2">
+					<div style="margin-top: 20px;">
+						<div>
+							<p></p>
+						</div>
+						<div>
+							<p style="padding-bottom: 15px; padding-top: 5px;"><%-formatted_date%></p>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-10" style="position: relative;">
+					<p>ORDER</p>
+					<span><%-item.total%>đ</span>
+					<i class="fas fa-map-marker-alt"></i>
+
+					<address><%-item.address%></address>
+					<hr>
+					<div class="view_detail">
+						<label>Trạng thái: </label>
+						<label>
+							<% if (item.status == 0) {%>
+								Đang xử lý
+							<%} else { %>
+								Đã giao hàng
+							<%} %>
+						</label>
+						<a href="/user/<%-item.orderId%>">View</a>
+					</div>
+				</div>
+			</div>
+			<%})%>
+			
+			<!-- <div class="one_history_order clearfix">
+				<div class="col-sm-2">
+					<div style="margin-top: 20px;">
+						<div>
+							<p>5</p>
+						</div>
+						<div>
+							<p style="padding-bottom: 15px; padding-top: 5px;">July</p>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-10" style="position: relative;">
+					<p>ORDER  #4135135</p>
+					<span>$ 980</span>
+					<i class="fas fa-map-marker-alt"></i>
+
+					<address>126 Lê Đại Hành, quận 10, tp.HCM</address>
+					<hr>
+					<div class="view_detail">
+						<label>Trạng thái: </label>
+						<label>Đã giao hàng</label>
+						<a href="">View</a>
+					</div>
+				</div>
+			</div> -->
+
+		</div>
+	</div>
+</section>
+
+
+<% include ../../partials/footer %>

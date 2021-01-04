@@ -1,0 +1,46 @@
+<% include ../../partials/header_admin %>
+
+<div style="margin-left: 5%;">
+    <div class="col-lg-12">
+        <h1 class="page-header">Product
+            <small>Detail</small>
+        </h1>
+    </div>
+    <!-- /.col-lg-12 -->
+    <table id="dataTables-example" class="mdl-data-table" style="width:100%">
+        <thead>
+            <tr align="center">
+                <th>STT</th>
+                <th>Tên</th>
+                <th>Giá vốn</th>
+                <th>Giá mới</th>
+                <th>Kích thước</th>
+                <th>Màu sắc</th>
+                <th>Số lượng tồn</th>
+            </tr>
+        </thead>
+        <tbody>
+            <%let i = 0%>
+            <% info.forEach((subItem) => { i++;%>
+            <tr class="odd gradeX" align="center">
+                <td><%-i%></td>
+                <td><%-data%></td>
+                <td><%-subItem.investment%></td>
+                <td>
+                    <div class="form-group">
+                        <input class="form-control gia_ban" name="price" placeholder=" Enter Product Price" 
+                        data-productId = "<%-productId%>" data-size = "<%-subItem.size%>" data-color = "<%-subItem.color%>" data-investment = "<%-subItem.investment%>"
+                        value="<%-subItem.price%>" <%-subItem.amount > 0 ? '' : 'disabled'%> />
+                        
+                    </div>
+                </td>
+                <td><%-subItem.size%></td>
+                <td><%-subItem.color%></td>
+                <td><%-subItem.amount%></td>
+            </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</div>
+
+<% include ../../partials/footer_admin %>

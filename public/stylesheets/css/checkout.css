@@ -1,0 +1,130 @@
+@import url('https://fonts.googleapis.com/css?family=Play&display=swap&subset=vietnamese');
+
+*{margin: 0;padding: 0;}
+
+.checkout_block, .checkout_block_info, .checkout_block_small, .checkout_block_total, .payment_block{
+  background-color: #fff; 
+  box-shadow: 0 0 0 1px rgba(63,63,68,.05), 0 1px 3px 0 rgba(63,63,68,.15);
+  border-radius: 3px;
+  padding: 20px;
+  margin-bottom: 0px;
+  padding-bottom: 3px;
+  font-family: "Roboto", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.checkout_block, .payment_block{
+  margin-bottom: 30px;
+}
+
+.checkout_block .checkout_block_child, .payment_block .payment_block_child{
+  padding-bottom: 14px;
+}
+
+.checkout_block_info{
+
+  border-bottom: 1px gray solid;
+}
+
+.checkout_block_small .checkout_block_small_text, .checkout_block_total .checkout_block_total_text, .payment_block .payment_block_text{
+  font-weight: 300;
+  font-size: 15px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  font-family: "Roboto", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.checkout_block .checkout_block_text{
+  font-weight: 300;
+  font-size: 15px;
+  padding-bottom: 3px;
+  font-family: "Roboto", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.khoimenu img.hinhsanpham{
+  max-width: 100px;
+  height: 100px;
+}
+
+.khoimenu .tensanpham{
+  /*width: 400px;*/
+  margin-top: 15px;
+}
+
+.khoimenu .product_info .product_info_text{
+  font-family: 'Open Sans', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+.khoimenu_title .khoimenu_title_text{
+  font-family: "Abril Fatface",Arial,Helvetica,sans-serif;
+  /*font-size: 24px;*/
+  color: rgba(37,65,53,1);
+  font-weight: normal;
+  font-style: normal;
+  text-decoration: none;
+  letter-spacing: 0.05em;
+  word-spacing: 0.00em;
+  text-transform: none;
+  font-variant: normal;
+  line-height: 317%;
+}
+
+.khoimenu{
+  margin-top: 10px;
+  margin-bottom: 40px;
+}
+
+.khoimenu .product_info .product_info_description{
+  font-family: "Roboto", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  color: #777;
+}
+
+.khoimenu .product_info .product_info_text small{
+  color: #777;
+  font-weight: 400;
+  opacity: 2.44;
+  font-size: .9em;
+}
+
+
+.btn-primary{
+  background-color: #3e5a91 !important;
+  border-color: #3e5a91 !important;
+}
+
+.info_voucher_block{
+  margin-top: 17px;
+}
+
+.info_voucher_block .info_voucher{
+  color: #0c0c0cba;
+  font-family: 'Play', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.info_voucher_block .info_voucher .info_details{
+  color: #ff0000ba;
+}
+
+#paypal_child{
+  display: flex; 
+  margin-left: 20px; 
+  margin-top: 57px;
+}
+
+#paypal_child .col-lg-3{
+  border: 1px #80808066  solid; 
+  height: 89%;
+}
+
+#paypal_child .col-lg-3 img{
+  width: 100%;
+}
+
+#tien_mat_child{
+  display: none;
+}

@@ -1,0 +1,204 @@
+<% include ../../partials/header_admin %>
+<link rel="stylesheet" href="/stylesheets/css/report.css">
+<style>
+    /* remove border between controls */
+.add-on .input-group-btn > .btn {
+    border-left-width: 0;
+    left:-2px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+/* stop the glowing blue shadow */
+.add-on .form-control:focus {
+    -webkit-box-shadow: none; 
+            box-shadow: none;
+    border-color:#cccccc; 
+}
+
+.input-group-btn:last-child > .btn{
+    min-height: 34px;
+    margin-top: -4px;
+}
+</style>
+
+<div class="report">
+    <h1 class="page-header">Report
+        <small>List</small>
+    </h1>
+
+    <form action="" method="POST" style="margin-left: 12%">
+        <input type="hidden" name="_token" value="{!! csrf_token() !!}">
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="form-group">
+                    <label class="font_text_details">Từ</label>
+                    <div class="input-group">
+                        <input class="form-control month-date" type="date" max="2020-06" name="reportStart" style="margin-bottom: 5px; line-height: 1.55;" required/>
+                        <div class="input-group-btn">
+                            <button class="btn btn-primary">
+                                <i class="far fa-calendar-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="form-group">
+                    <label class="font_text_details">Đến</label>
+                    <div class="input-group">
+                        <input class="form-control month-date" type="date" max="2020-06" name="reportEnd" style="margin-bottom: 5px; line-height: 1.55;" required/>
+                        <div class="input-group-btn">
+                            <button class="btn btn-primary">
+                                <i class="far fa-calendar-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="form-group">
+                    <label class="font_text_details">Chi nhánh</label>
+                    <select class="form-control" name="branch" required>
+                        <option value="default_branch" selected="selected">Chi nhánh mặc định</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="form-group">
+                    <label class="font_text_details">Nguồn tìm kiếm</label>
+                    <select class="form-control" name="resourece" required>
+                        <option selected="selected">Kho hàng mặc định</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4" style="margin-left: 16%;">
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 25px;">Xem báo cáo</button>
+            </div>
+        </div>
+        
+    </form>
+
+<div class="col-lg-12" style="margin: 22px 62px;">
+    <!-- <?php $amountInput = 0 ?>
+    <?php $amountInput_price = 0 ?>
+    <?php $exportAmount = 0 ?>
+    <?php $exportAmount_price = 0 ?>
+    <?php $goodsExists = 0 ?>
+    <?php $goodsExists_price = 0 ?>
+    @foreach($product as $item)
+    <?php $amountInput += $item->import_goods; ?>
+    <?php $amountInput_price += $item->value_increase; ?>
+    <?php $exportAmount += $item->sales+$item->reback_goods ?>
+    <?php $exportAmount_price += $item->value_decrease ?>
+    <?php $goodsExists += $item->goods_exists ?>
+    <?php $goodsExists_price += $item->goods_exists_price ?>
+    @endforeach -->
+    <%
+        var amountInput = 0;
+        var amountInput_price = 0;
+    %>
+    <%data.forEach((imp) => {
+        amountInput += imp.amountGoods;
+        amountInput_price += imp.totalPayment;
+    });%>
+    <div class="col-lg-3">
+        <div class="block_report" style="display: flex;">
+            <div class="col-lg-6" style="border-right: 1px solid #80808059;">
+                <label class="block_report_text">Thống kê SL nhập</label><br>
+                <label class="block_report_text"><%=amountInput%></label>
+            </div>
+            <div class="col-lg-6">
+                <label class="block_report_text">Giá trị tăng</label><br>
+                <label class="block_report_text"><%-amountInput_price%>đ</label>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3">
+       <div class="block_report" style="display: flex;">
+            <div class="col-lg-6" style="border-right: 1px solid #80808059;">
+                <label class="block_report_text">Thống kê SL xuất</label><br>
+                <label class="block_report_text"><%-amountExport%></label>
+            </div>
+            <div class="col-lg-6">
+                <label class="block_report_text">Giá trị giảm</label><br>
+                <label class="block_report_text"><%-totalValueExport%>đ</label>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3">
+       <div class="block_report" style="display: flex;">
+            <div class="col-lg-6" style="border-right: 1px solid #80808059;">
+                <label class="block_report_text">Thống kê SL tồn</label><br>
+                <label class="block_report_text"><%-amountInput - amountExport%></label>
+            </div>
+            <div class="col-lg-6">
+                <label class="block_report_text">Giá trị</label><br>
+                <label class="block_report_text"><%-amountInput_price-totalValueExport%>đ</label>
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+<!-- /.col-lg-12 -->
+<div class="col-lg-10">
+    <!-- @if(!empty($reportStart) && !empty($reportEnd))
+    <a href="{!! URL::route('admin.report.saveReportInEx', ['dateStart' => $reportStart, 'dateEnd' => $reportEnd]) !!}" class="btn btn-primary" style="float: right; font-size: 17px; margin-bottom: 10px;">In hóa đơn</a>
+    @else -->
+    <a href="{!! URL::route('admin.report.saveReportInExAll') !!}" class="btn btn-primary" style="float: right; font-size: 17px; margin-bottom: 10px;">In hóa đơn</a>
+   
+    <table id="dataTables-example" class="mdl-data-table" style="width:100%">
+        <thead>
+            <tr align="center">
+                <th>STT</th>
+                <th>Mã SP</th>
+                <th>Phiên bản sản phẩm</th>
+                <th>Đơn vị bán</th>
+                <th>SL Nhập</th>
+                <th>SL bán ra</th>
+                <th>SL trả NCC</th>
+                <th>Giá trị tăng</th>
+                <th>Giá trị giảm</th>
+                <!-- <th>SL tồn hiện tại</th>
+                <th>Giá trị tồn hiện tại</th> -->
+            </tr>
+        </thead>
+        <tbody>
+           <% var i = 0;%>
+            <% ioData.forEach((item) => {i++;%>
+            <tr class="odd gradeX" align="center">
+                <td><%-i%></td>
+                <td style="width: 15%;">
+                    
+                </td>
+                <td style="width: 15%;">
+                    <%-item.name%>
+                </td>
+                <td style="width: 15%;">Chi nhánh mặc định</td>
+                <td>
+                    <%-item.amountImport%>
+                </td>
+                <td>
+                    <%-item.amountOutport%>
+                </td>
+                <td>
+                    
+                </td>
+                <td>
+                    <%-item.valueImport%>đ
+                </td>
+                <td>
+                    <%-item.valueOutPort%> đ
+                </td>
+            </tr>
+            <%})%>
+        </tbody>
+    </table>
+</div>
+</div>
+
+<% include ../../partials/footer_admin %>

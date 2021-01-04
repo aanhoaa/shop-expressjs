@@ -1,0 +1,97 @@
+<% include ../partials/header_admin %>
+
+<div style="margin-left: 5%;">
+    <div class="col-lg-12">
+        <h1 class="page-header">Product
+            <small>List</small>
+            <div style="float: right;">
+                <a href="{!! url('admin/product/add_excel') !!}" class="btn btn-success" data-toggle="modal" data-target="#inputPro" style="font-size: 18px;"><i class="fas fa-upload" style="margin-right: 5px;"></i> Nhập danh sách</a>
+                <a href="{!! url('admin/product/add') !!}" class="btn btn-success" style="font-size: 18px;"><i class="fas fa-plus-square" style="margin-right: 5px;"></i> Thêm mới sản phẩm</a>
+            </div>
+        </h1>
+    </div>
+
+    <div class="modal fade" id="inputPro" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h5 class="modal-title" id="myModalLabel">Thêm mới dữ liệu sản phẩm</h5>
+          </div>
+          <div class="modal-body" style="overflow: hidden;">
+                <div class="card bg-light mt-3">
+                    <div class="card-header">
+                        
+                    </div>
+                    <div class="card-body">
+                        <form action="{{ route('importPro') }}" method="POST" enctype="multipart/form-data">
+                            <input type="hidden" name="_token" value="{!! csrf_token() !!}">
+                            <div class="form-group col-sm-12">
+                                <label class="supplier_block_text">Danh Mục Sản Phẩm</label>
+                                <select class="form-control" name="category" required>
+                                    <option value="" disabled="disabled">Please Choose Category</option>
+                                    @foreach ($category as $row)
+                                      <option value="{!! $row['id'] !!}">{!! $row['name'] !!}</option>
+                                    @endforeach 
+                                </select>
+                            </div>
+                            
+                            <p style="margin-left: 20px; display: block;">
+                                Chú ý:<br>
+                                - Chuyển đổi file nhập dưới dạng .XLS hoặc .XLSX trước tải dữ liệu.<br>
+                                - File nhập có dung lượng tối đa là 2MB và 500 bản ghi. 
+                            </p>
+                            <input type="file" name="file" class="form-control">
+                            <br>
+                            <button class="btn btn-success">Import Product Data</button>
+                        </form>
+                    </div>
+                </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- /.col-lg-12 -->
+    <table id="dataTables-example" class="mdl-data-table" style="width:100%">
+        <thead>
+            <tr align="center">
+                <th>STT</th>
+                <th>Tên sản phẩm</th>
+                <th>Giá bán (VNĐ)</th>
+                <th>Giá vốn (VNĐ)</th>
+                <th>Trạng thái</th>
+                <th>Danh mục</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <%var i = 0%>
+            <% data.forEach((product)=>{
+                i++;
+             %>
+
+            <tr class="odd gradeX" align="center">
+                <td><%-i%></td>
+                <td><%-product.name%></td>
+                <td>
+                    <input type="number" min="0" class="form-control gia_ban" data-id="{!! $item["id"] !!}" data-gia_von="{!! $item["gia_von"] !!}" value= style="width: 50%;">
+                </td>
+                <td><%-product.price%> đ</td>
+                <td><%-product.stock != 0? 'OverStock' : 'Out of Stock'%></td>
+                <td>
+                    <%-product.productType.main.name%>
+                    <%-product.productType.sub.name%>
+                </td>
+                <td class="center"><a href="admin/product/edit/<%-product._id%>" class="btn btn-warning"><i class="fas fa-edit"></i> Edit</a></td>
+            </tr>
+            <%})%>
+        </tbody>
+    </table>
+</div>
+
+<% include ../partials/footer_admin %>

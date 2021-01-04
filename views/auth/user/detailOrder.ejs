@@ -1,0 +1,121 @@
+<% include ../../partials/header %>
+<link rel="stylesheet" href="/stylesheets/css/user_info.css">
+
+<section class="container clearfix" style="margin-top: 50px;">
+	<div class="row col-sm-12" style="margin: 100px 0 80px 0px; padding: 0;">
+		<div class="infomation_user" style="position: relative;">
+			<div class="avatar_name_user clearfix">
+				<div class="div_picture_profile" style="position: absolute;">
+					<img class="picture_profile" src="../images/man.png" alt="">
+				</div>
+				
+				<label class="info_user_name"><%-user.username%></label>
+			</div>
+			<div class="">
+				<div class="detail_info" style="margin-left: 5%; margin-top: 25px; display: block;" >
+					<label style="float: left;">Email: </label>
+					<p style="margin-left: 75px; margin-right: 5%"><%-user.email%></p>
+				</div>
+				<div class="detail_info" style="margin-left: 5%; margin-top: 25px; display: block;" >
+					<label style="float: left;">Họ và tên: </label>
+					<p style="margin-left: 75px; margin-right: 5%"><%-user.fullname%></p>
+				</div>
+				<div class="detail_info" style="margin-left: 5%; display: block;" >
+					<label style="float: left;">Giới tính: </label>
+					<p style="margin-left: 75px; margin-right: 5%"><%-user.gender%></p>
+				</div>
+				<div class="detail_info" style="margin-left: 5%; display: block;" >
+					<label style="float: left;">Điện thoại: </label>
+					<p style="margin-left: 75px; margin-right: 5%"><%-user.phone%></p>
+				</div>
+				<div class="detail_info" style="margin-left: 5%; display: block;" >
+					<label style="float: left;">Địa chỉ: </label>
+					<p style="margin-left: 75px; margin-right: 5%;"><!-- Lorem ipsum dolor sit amet, consectetur adipisicing elit.Lorem ipsum dolor sit amet, consectetur adipisicing elit.Lorem ipsum dolor sit amet, consectetur adipisicing elit.Lorem ipsum dolor sit amet! -->
+						<%-user.address%>
+					</p>
+				</div>
+				<div class="detail_info" style="margin-left: 28%; display: block; border: none;" >
+					<a href="/logout" class="btn btn-danger" style="margin-right: 4px;">Đăng xuất</a>
+					<a href="/user/edit" class="btn btn-warning">Chỉnh sửa thông tin</a>
+					<a href="/" class="btn btn-success">Trở về trang chủ</a>
+				</div>
+			</div>
+		</div>
+
+		<div class="history_orders" >
+			<div class="checkout_block_info">
+	          
+	          
+	          <label class="checkout_block_title">DANH SÁCH SẢN PHẨM</label>
+	          <div class="khoimenu_title" style="display: flex;">
+	          	<div class="col-sm-3">
+	          		<label class="product_info_text">Sản phẩm</label>
+	          	</div>
+	          	<div class="col-sm-3">
+	          		<label class="product_info_text">Mô tả</label>
+	          	</div>
+	          	<div class="col-sm-3">
+	          		<label class="product_info_text">Giá gốc</label>
+	          	</div>
+	          	<div class="col-sm-3">
+	          		<label class="product_info_text">Thành tiền</label>
+	          	</div>
+	          </div>
+             <% var total = 0;%>
+              <%oData.forEach((item) => { 
+                  item.cart.forEach((order) => {
+              %>
+            
+	            <div class="khoimenu" style="display: flex; margin-bottom: 30px; margin-top: 30px;">         
+	              <div class="col-sm-3">
+	                <img class="hinhsanpham" src="<%-order.imgSrc%>" alt="">
+	              </div>
+	              <div class="col-sm-3">
+	                <div class="product_info"> 
+	                  <label class="product_info_text"><%-order.name%><small style="color: gray;"> (<%-order.color%>)</small></label>
+	                  <div class="product_info_description">
+	                    <!-- @if(!Auth::check())
+	                    <span>Số lượng: {!! $row->amount_contact !!}</span>
+	                    @else -->
+	                    <span>Số lượng: <%-order.amount%></span>
+	                   
+	                  </div>
+	                </div>
+	              </div>
+	              <div class="col-sm-3">
+	              		<!-- @if((int)$row->current_price === 0)
+	               		<span>{!! number_format($row->price)!!} ₫</span>
+	               		@else -->
+	               		<span><%-order.price%> ₫</span>
+	               		
+	              </div>  
+	              <div class="col-sm-3">
+	              		<!-- @if((int)$row->current_price === 0)
+	               		<span>{!! number_format($row->price * $row->amount_order )!!} ₫</span>
+	               		@else -->
+	               		<span><%-parseInt(order.amount, 10) * parseInt(order.price, 10)%> ₫</span>
+	               		
+	              </div>            
+	            </div>
+                <%
+                    total = parseInt(order.amount, 10) * parseInt(order.price, 10) + parseInt(total, 10) ;
+                %>
+                <%})%>
+	            <%})%>
+	          
+	        </div>
+	        
+	        <div class="checkout_block_total" style="display: flex;">
+	            <div class="col-sm-7 checkout_block_total_text">
+	                  
+	            </div>
+	            <div class="col-sm-5 checkout_block_total_text">
+	            	<label style="font-weight: 600; color: #ff054c; margin-right: 10px; font-size: 18px;">Tổng hóa đơn:</label>
+	                <label style="color: #10089b; font-weight: 501; font-family: 17px;"><%-total%> ₫</label>
+	            </div>
+	        </div>
+		</div>
+	</div>
+</section>
+
+<% include ../../partials/footer %>

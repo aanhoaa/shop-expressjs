@@ -1,0 +1,161 @@
+*{margin: 0;padding: 0;}
+
+.admin_block{
+  max-width: 13%; 
+  background-color: #212120;
+  min-height: 1544px;
+}
+
+.panel-default > .panel-heading{
+  background-color: #212120;
+}
+
+.panel-default > .panel-heading:hover{
+  background-color: #0c0e2a;
+}
+
+.change_color{
+  background-color: #0c0e2a !important;
+}
+
+.panel-heading > .panel-title{
+  color: #6e6e6e;
+  font-size: 22px;
+}
+
+.img_circle{
+  width: 80%;
+  background: #fff;
+  z-index: 1000;
+  position: inherit;
+  border: 1px solid rgba(52,73,94,.44);
+  border-radius: 50%;
+}
+
+    
+
+.panel-heading .panel-title .panel-title-label{
+  padding-left: 12px;
+  color: #bcb8b5;
+  text-transform: uppercase;
+  cursor: pointer;
+  font-size: 12px;
+  line-height: 30px;
+  font-family: 'Source Sans Pro','Helvetica Neue',Helvetica,Arial,sans-serif;
+}
+
+.panel-heading > .panel-title > a:hover{
+  text-decoration-line: none;
+}
+
+.panel-group .panel + .panel{
+  margin: 0;
+  border: none;
+}
+  
+#accordion .card{
+  border: none;
+  background-color: #212120;
+}
+
+#accordion .card .card-header .card-link{
+  font-family: 'Source Sans Pro','Helvetica Neue',Helvetica,Arial,sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #fff;
+}
+
+#accordion .card .card-body .card-link{
+  font-family: 'Source Sans Pro','Helvetica Neue',Helvetica,Arial,sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #8aa4af;
+}
+
+#accordion .card .card-header:hover{
+  background-color: #122730;
+}
+
+#accordion .card .card-body .card-link:hover{
+  color: #fff;
+}
+
+#accordion .card .active{
+  color: #fff;
+}
+
+.custom-search-form{
+  background-color: #8aa4af; 
+  border-radius: 5px 5px;
+  margin: 20px 0;
+}
+
+.navbar-default{
+  background-color: #1a1818;
+  border: none;
+}
+
+.navbar{
+  margin: 0;
+  border-radius: 0;
+}
+
+
+.custom-search-form .search_input, .btn-default{
+  background-color: #8aa4af; 
+  border: none;
+}
+
+.btn-default{
+  color: #374850; 
+}
+
+.admin_info{
+  min-height: 57px;
+}
+
+.admin_info .admin_info_details{
+  font-size: 12px; 
+  margin: 5% auto;
+  margin-left: 30%;
+}
+
+.admin_info .admin_info_details a > .fas{
+  color: #3c763d;
+}
+
+
+.admin_info .admin_info_details > a{
+  color: #fff;
+}
+
+.admin_info .admin_info_avatar{
+  margin-right: 10px;
+}
+
+.admin_info .admin_info_name{
+  font-family: 'Source Sans Pro','Helvetica Neue',Helvetica,Arial,sans-serif;
+  font-size: 17px;
+  font-weight: 400;
+  color: #8aa4af;
+}
+
+.admin_info .admin_info_name > label{
+  color: #fff;
+}
+
+.admin_block .admin_title{
+  font-family: 'Source Sans Pro','Helvetica Neue',Helvetica,Arial,sans-serif;
+  font-size: 29px;
+  font-weight: 400;
+  color: #8aa4af;
+  cursor: pointer;
+  margin: 30px 0;
+  border-bottom: 1px gray solid;
+  padding-bottom: 15px;
+}
+
+.bg-dark{
+  background-color: #1c2630 !important;
+}
+

@@ -1,0 +1,175 @@
+@import url('https://fonts.googleapis.com/css?family=DM+Serif+Display&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Noto+Serif&display=swap&subset=vietnamese');
+
+*{margin: 0;padding: 0;}
+
+body {
+    font-family: DejaVu Sans;
+}
+
+.font_text{
+    padding: 20px 0 15px;
+    border-bottom: 1px solid #e2e6e8;
+    margin: 0 0 25px;
+    font-size: 19px;
+    font-weight: normal; 
+    width: 100%;
+    font-family: 'Noto Serif', serif;
+    color: #ff0d05d1;
+}
+
+.block_customer{
+  font-family: 'Noto Serif', serif;
+  margin-bottom: 10px;
+}
+
+.block_customer .content_customer{
+  margin-left: 10px;
+}
+
+.blk-shipping-address{
+  display: flex;
+}
+
+.block_customer-addr{
+  font-family: 'Noto Serif', serif;
+  margin-bottom: 5px;
+}
+
+.block_customer-addr:nth-child(1),
+.block_customer-addr:nth-child(2){
+  background-color: #f3f6f9; 
+  padding-top: 34px;
+  border-top: 1px solid #c4cdd5;
+  border-bottom: 1px solid #c4cdd5;
+  border-top-right-radius: 4px;
+}
+
+.block_customer-addr:nth-child(1){
+  border-left: 1px solid #c4cdd5;
+}
+
+.block_customer-addr:nth-child(2){
+  border-right: 1px solid #c4cdd5;
+}
+
+
+
+.block_customer-addr .shipping_size{
+  width: 20%; 
+  display: inline;
+}
+
+.block_customer-addr input,
+.block_customer-addr select{
+  margin-top: 10px;
+}
+
+
+.block_date .font_date{
+  color: #0042b4ba; 
+  font-size: 18px;
+}
+
+.font_text > small{
+  margin-left: 10px; 
+  color: #808080ba;
+}
+
+.font_text_details{
+  font-size: 16px;
+  font-weight: normal;
+  color: #192683e0;
+}
+
+.font_text_details_addr{
+  font-size: 14px;
+  color: #444343;
+  font-weight: 300;
+}
+
+.col-sm-6{
+  background-color: #fff; 
+  padding-right: 60px;
+}
+
+.block_table{
+  background-color: #fff;
+  margin-left: 71px;
+  padding-left: 2.2%;
+  padding-right: 2.2%;
+  padding-bottom: 1.2%;
+}
+
+.block_action{
+  margin-top: 40px;
+  margin-bottom: 20px;
+}
+
+.block_payment {
+  margin-top: 19px;
+}
+
+.block_payment .block_payment_text{
+  font-family: 'Noto Serif', serif;
+  float: right;
+  color: #f60035e0;
+  font-size: 21px;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th, td {
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even){background-color: #f2f2f2}
+
+th {
+  background-color: #4CAF50E0;
+  color: white;
+}
+
+.mdl-data-table th{
+  color: white !important;
+}
+
+.page_text{
+  margin-left: 5.5%;
+  color: #0042b4ba;
+  font-size: 40px;
+  padding: 45px 0px;
+}
+
+.table > tbody > tr > td, .table > tbody > tr > th
+, .table > tfoot > tr > td, .table > tfoot > tr > th
+, .table > thead > tr > td, .table > thead > tr > th{
+  text-align: center;
+  vertical-align: middle !important;
+}
+
+.type_shipping_content_privacy{
+  overflow: hidden;
+}
+
+.type_shipping_content_privacy .col-sm-5{
+  padding-left: 0;
+}
+
+.type_shipping_content_privacy .col-sm-5 select,
+.type_shipping_content_privacy .col-sm-5 input{
+  margin-top: 10px;
+}
+
+.partner-type-show{
+  display: none;
+}
+
+/*#content_table tbody tr{
+  opacity: 0.5;
+}*/
+

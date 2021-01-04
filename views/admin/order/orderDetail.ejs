@@ -1,0 +1,421 @@
+<% include ../../partials/header_admin %>
+<link rel="stylesheet" href="/stylesheets/css/bill.css">
+<link rel="stylesheet" href="/stylesheets/css/inventory.css">
+
+<div style="margin-left: 5%;">
+    <a href="/admin/order">Back</a>
+    <div class="col-lg-12">
+        <h1 class="page-header" style="margin-left: 55px;">Order
+            <small>Info</small>
+            <a href="{!! URL::route('admin.bill.saveBill', $order->id) !!}" class="btn btn-primary" style="float: right; margin-right: 2.6%; font-size: 21px;">In hóa đơn</a>
+        </h1>
+    </div>
+
+    <div class="col-lg-11 block_table">  
+        <div class="col-sm-12">
+            
+            <label class="font_text">
+        THÔNG TIN KHÁCH HÀNG <small>Sơ lược cơ bản về khách hàng</small></label> 
+            <div class="block_customer">
+                <label class="font_text_details">Họ tên:</label>
+                <label class="font_text_details content_customer"><%-userInfo.fullname%></label>
+            </div>
+            <div class="block_customer">
+                <label class="font_text_details">Giới tính:</label>
+                <label class="font_text_details content_customer"><%-userInfo.gender%></label>
+            </div>
+            <div class="block_customer">
+                <label class="font_text_details">Điện thoại:</label>
+                <label class="font_text_details content_customer"><%-userInfo.phone%></label>
+            </div>
+            <div class="block_customer">
+                <label class="font_text_details">Tỉnh/Thành phố:</label>
+                <label class="font_text_details content_customer">Tp.HCM</label>
+            </div>
+            <div class="block_customer">
+                <label class="font_text_details">Địa chỉ giao hàng:</label>
+                <label class="font_text_details content_customer"><%-userInfo.address%></label>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-11 block_table" style="padding-left: 2.2%; padding-right: 2.2%;">
+        <div class="block_date" style="display: flex;">
+            <label class="font_text" style="margin-right: 65%;">
+            SẢN PHẨM ĐÃ MUA</label> 
+            <label class="font_date font_text">
+                <%
+                let current_datetime = data.createdAt;
+                let formatted_date = current_datetime.getDate() + "-" + (current_datetime.getMonth() + 1) + "-" + current_datetime.getFullYear();
+                %>
+            Ngày đặt hàng: <%-formatted_date%></label> 
+        </div>
+        <table class="mdl-data-table" style="width:100%;">
+            <thead>
+                <tr align="center">
+                    <th>ID</th>
+                    <th>Mã SP</th>
+                    <th>Tên sản phẩm</th>
+                    <th>Màu sắc</th>
+                    <th>Kích cỡ</th>
+                    <th>Số lượng</th>
+                    <th>Đơn giá</th>
+                    <th>Thành tiền</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% var i = total = 0;%>
+                <%data.cart.forEach((cart) => { i++;
+                    total = parseInt(total, 10) + parseInt(cart.price, 10) * parseInt(cart.amount, 10);
+                %>
+                <tr class="odd gradeX" align="center">
+                    <td><%-i%></td>
+                    <td></td>
+                    <td><%-cart.name%></td>
+                    <td><%-cart.color%></td>
+                    <td><%-cart.size%></td>
+                    <td><%-cart.amount%></td>
+                    <td>
+                        <%-cart.price%>
+                    </td>
+                    <td>
+                        <%-parseInt(cart.price, 10) * parseInt(cart.amount, 10)%>đ
+                    </td>
+                </tr>
+               
+               <%})%>
+            </tbody>
+        </table>
+
+        <div class="block_payment">
+            <div class="block_payment_text">
+                <label style="margin-right: 7px;">Tổng tiền: </label>
+                <label><%-total%>đ</label>
+            </div>
+        </div>
+        
+       
+
+        <!-- Handled shipp-->
+       <% if (data.status === 2 || data.status === 1) {%>
+            <% if (data.statusDelivery === 1) {%>
+            <label class="font_text">
+                THÔNG TIN GIAO HÀNG</label> 
+            <div class="col-md-6 warehouse_block" style="padding-left: 0;">
+                <div class="col-md-12" style="margin-bottom: 10px; padding-left: 0;">
+                    <div class="col-sm-12">
+                        <div style="border-bottom: 1px gray solid; padding-bottom: 10px;">
+                            <i class="fas fa-shipping-fast fa-1x"></i>
+                            <label class="title">Thông tin giao hàng</label>
+                        </div>
+                        
+                        <div class="warehouse_block_text_child" style="margin-top: 5px;">
+                            <label class="warehouse_block_title" style="font-size: 17px;">Trạng thái: <span class="label label-success">Đã giao hàng</span></label>
+                                
+                        </div>
+                        <div class="warehouse_block_text_child" style="display: flex;">
+                            <div style="flex: 0.7;">
+                                <label class="warehouse_block_title">Mã phiếu</label><br>
+                                <label>PGH000</label>
+                            </div>
+                            <div style="flex: 0.3;">
+                                <label class="warehouse_block_title">Tổng tiền</label><br>
+                                <label><%-total%>đ</label>
+                            </div>
+                        </div>
+                        <div class="warehouse_block_text_child">
+                            <label class="warehouse_block_title">Ngày nhận hàng</label><br>
+                            <%
+                                 var arriveDate = current_datetime;
+                                 arriveDate.setDate(arriveDate.getDate() + 3);
+                                 let formatted_date_arrive = arriveDate.getDate() + "-" + (arriveDate.getMonth() + 1) + "-" + arriveDate.getFullYear();
+                                %>
+                            <label><%-formatted_date_arrive%></label>
+                        </div>  
+                        <div class="warehouse_block_text_child">
+                            <label class="warehouse_block_title" style="margin-bottom: 5px;">Sản phẩm</label><br>
+                            
+                            <%data.cart.forEach((cart) => { %>
+                                <label style="color: #243b9c; font-weight: 501;"><%-cart.amount%> x <%-cart.name%>- size <%-cart.size%> - <%-cart.color%></label><br>
+                                <%})%>
+                        </div>  
+                    </div>
+                </div>
+            </div>
+            <%} else {%>
+            <label class="font_text">
+                THÔNG TIN GIAO HÀNG</label> 
+            <div class="col-md-6 warehouse_block" style="padding-left: 0;">
+                <div class="col-md-12" style="margin-bottom: 10px; padding-left: 0;">
+                    <div class="col-sm-12">
+                        <div style="border-bottom: 1px gray solid; padding-bottom: 10px;">
+                            <i class="fas fa-shipping-fast fa-1x"></i>
+                            <label class="title">Thông tin giao hàng</label>
+                        </div>
+                        
+                        <div class="warehouse_block_text_child" style="margin-top: 5px;">
+                            <label class="warehouse_block_title" style="font-size: 17px;">Trạng thái: <span class="label label-primary">Đang xử lý</span></label>
+                                
+                        </div>
+                        <div class="warehouse_block_text_child" style="display: flex;">
+                            <div style="flex: 0.7;">
+                                <label class="warehouse_block_title">Mã phiếu</label><br>
+                                <label>PGH000</label>
+                            </div>
+                            <div style="flex: 0.3;">
+                                <label class="warehouse_block_title">Tổng tiền</label><br>
+                                <label><%-total%>đ</label>
+                            </div>
+                        </div>
+                        <div class="warehouse_block_text_child" style="display: flex;">
+                            <div style="flex: 0.7;">
+                                <label class="warehouse_block_title">Dự kiến giao hàng</label><br>
+                                <%
+                                 var arriveDate = current_datetime;
+                                 arriveDate.setDate(arriveDate.getDate() + 3);
+                                 let formatted_date_arrive = arriveDate.getDate() + "-" + (arriveDate.getMonth() + 1) + "-" + arriveDate.getFullYear();
+                                %>
+                                <label>Trong vòng 3 ngày</label>
+                            </div>
+                            <div style="flex: 0.3;">
+                                <label class="warehouse_block_title">Ngày nhận hàng</label><br>
+                                <label><%-formatted_date_arrive%></label>
+                            </div>  
+                        </div>
+                        
+                        <div class="warehouse_block_text_child">
+                            <label class="warehouse_block_title" style="margin-bottom: 5px;">Sản phẩm</label><br>
+                            
+                            <%data.cart.forEach((cart) => { %>
+                            <label style="color: #243b9c; font-weight: 501;"><%-cart.amount%> x <%-cart.name%>- size <%-cart.size%> - <%-cart.color%></label><br>
+                            <%})%>
+                        </div>  
+                    </div>
+                   <% if (data.statusToStore !== 1) {%>
+                    <a href="/admin/order/confirm-arrive/<%-data._id%>" class="btn btn-primary" style="width: 27%; font-weight: bold; margin-left: 14px; margin-top: 16px;">Xác nhận giao hàng</a>
+                   <%} else {%>
+                    <a href="#" class="btn btn-success" style="width: 20%; font-weight: bold; margin-left: 14px; margin-top: 16px;">Đã giao hàng</a>
+                   <%}%>
+                </div>
+            </div>
+            <div class="col-md-5 warehouse_block" style="margin-left: 22px;">
+                    <div class="col-md-12" style="margin-bottom: 10px; padding-left: 0;">
+                        <div class="col-sm-12">
+                            <div style="border-bottom: 1px gray solid; padding-bottom: 10px;">
+                                <i class="fas fa-shipping-fast fa-1x"></i>
+                                <label class="title">Thông tin kho hàng</label>
+                            </div>
+                           
+                            <div class="warehouse_block_text_child" style="display: flex;">
+                                <div style="flex: 0.7;">
+                                    <label class="warehouse_block_title">Đối tác vận chuyển</label><br>
+                                    <label style="color: #243b9c; font-weight: 501;">Viettel Post</label>
+                                </div>
+                                <div style="flex: 0.3;">
+                                    <label class="warehouse_block_title">Dịch vụ giao hàng</label><br>
+                                    <label>Dịch vụ của Viettel Post</label>
+                                </div>
+                            </div> 
+                            
+                            
+                            <div class="warehouse_block_text_child" style="display: flex;">
+                                <div style="flex: 0.7;">
+                                    <label class="warehouse_block_title">Tên cửa hàng</label><br>
+                                    <label>
+                                       ABC Shop
+                                    </label>
+                                </div>
+                                <div style="flex: 0.3;">
+                                    <label class="warehouse_block_title">Địa chỉ</label><br>
+                                    <label>
+                                        ABC Pastel, Quận 1, TP. HCM
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="warehouse_block_text_child" style="display: flex;">
+                                <div style="flex: 0.7;">
+                                    <label class="warehouse_block_title">Email</label><br>
+                                    <label>
+                                        abc456@gmail.com
+                                    </label>
+                                </div>
+                                <div style="flex: 0.3;">
+                                    <label class="warehouse_block_title">Số điện thoại</label><br>
+                                    <label>
+                                        0542895686
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="warehouse_block_text_child" style="display: flex; margin-bottom: 40px;">
+                                <div style="flex: 0.7;">
+                                    <label class="warehouse_block_title">Tiền thu hộ (COD)</label><br>
+                                    <label>35,000đ</label>
+                                </div>
+                                <div style="flex: 0.3;">
+                                    <label class="warehouse_block_title">Phí Ship cần trả</label><br>
+                                    <label>35,000đ</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <%}%>
+        <%} else {%>
+         <!-- Unhandled shipp-->
+        <form action="" method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="_token" value="{!! csrf_token() !!}">
+        <input type="hidden" name="id_order" value="{!! $order->id !!}">
+            <label class="font_text">
+            ĐÓNG GÓI VÀ GIAO HÀNG <small>Sơ lược về dịch vụ giao hàng</small></label> 
+            <div class="blk-shipping-address">
+                <div class="block_customer-addr col-sm-2">
+                    <label class="font_text_details_addr">Họ tên:</label>
+                    <label class="font_text_details_addr content_customer"><%-userInfo.fullname%></label><br>
+                    <label class="font_text_details_addr">Giới tính:</label>
+                    <label class="font_text_details_addr content_customer"><%-userInfo.gender%></label><br>
+                    <label class="font_text_details_addr">Tỉnh/Thành phố:</label>
+                    <label class="font_text_details_addr content_customer">Tp.HCM</label>
+                </div>
+                <div class="block_customer-addr col-sm-3">
+                    <label class="font_text_details_addr">Điện thoại:</label>
+                    <label class="font_text_details_addr content_customer"><%-userInfo.phone%></label><br>
+                    <label class="font_text_details_addr">Địa chỉ giao hàng:</label>
+                    <label class="font_text_details_addr content_customer"><%-userInfo.address%></label>
+                </div>
+
+                <div class="block_customer-addr col-sm-7">
+                    <div class="form-group col-sm-6">
+                        <span class="store_block_text" style="margin-top: 10px;">Tiền thu hộ:</span><br>
+                        <input type="text" class="form-control" placeholder="2.000.000 đ" value="<%-total%>đ">
+                        <input type="hidden" name="total_price_for_ship" value="<?php echo $total; ?>">
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <span class="address_block_text">Khối lượng (g):</span><br>
+                        <input type="text" class="form-control" name="mass_ship" placeholder="100">
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <span class="store_block_text">Kích thước:</span><br>
+                        <span class="store_block_text">Dài:</span>
+                        <input type="number" class="form-control shipping_size" name="dai" placeholder="0">
+                        <span class="store_block_text">Rộng:</span>
+                        <input type="number" class="form-control shipping_size" name="rong" placeholder="0">
+                        <span class="store_block_text">Cao:</span>
+                        <input type="number" class="form-control shipping_size" name="cao" placeholder="0">
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <span class="address_block_text">Yêu cầu:</span><br>
+                        <select class="form-control policy" name="policy" id="policy" required>
+                            <option value="" disabled="disabled">Chọn loại đối tác</option>
+                            <option value="0">Cho xem hàng, không cho thử</option>
+                            <option value="1">Cho xem hàng, cho thử</option>
+                            <option value="2">Cho cho phép thử</option>
+                        </select>
+                    </div>
+                </div>        
+            </div>
+
+            <label class="font_text">
+            THÔNG TIN GIAO HÀNG <small>Chọn hình thức giao hàng</small></label> 
+            <div class="blk-shipping-address">
+                <div class="form-group col-sm-5" style="padding-left: 0;">
+                    <select class="form-control type_shipping" name="type_shipping" id="type_shipping" required>
+                        <option value="" disabled="disabled">Chọn hình thức giao hàng</option>
+                        <option value="0">Dịch vụ vận chuyển tích hợp</option>
+                        <option value="1">Shipper cửa hàng</option>
+                        <option value="2">Nhận tại cửa hàng</option>
+                    </select>
+                </div>
+            </div>
+            <input type="hidden" name="shipper_type_id" id="shipper_type_id" value="1000">
+
+            <div class="type_shipping_content_privacy partner-type-show">
+                <h6 style="font-weight: bold; color: #000000a3;">Thông tin giao hàng</h6>
+                <div class="form-group col-sm-5">
+                    <span class="store_block_text">Đối tác:</span><br>
+                    <select class="form-control type_partner" name="type_partner" id="type_partner" required>
+                        <option value="" disabled="disabled">Chọn đối tác</option>
+                        <?php $partner = DB::table('partner')->where('shipper_type',2)->get(); ?>
+                        @foreach ($partner as $row)
+                          <option value="{!! $row->id !!}">{!! $row->name !!}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group col-sm-5" style="padding-left: 20px;">
+                    <span class="store_block_text">Người trả phí:</span><br>
+                    <select class="form-control type_ship_pay" name="type_ship_pay" id="type_ship_pay" required>
+                        <option value="" disabled="disabled">Chọn hình thức thanh toán</option>
+                        <option value="0">Cửa hàng thanh toán</option>
+                        <option value="1">Khách hàng thanh toán</option>
+                    </select>
+                </div>
+                <div class="form-group col-sm-5">
+                    <span class="store_block_text">Phí ship:</span><br>
+                    <input type="text" class="form-control" name="shipping_price" placeholder="40.000 đ">
+                </div>
+            </div>
+            <div class="type_shipping_content partner-type-show">
+                <input type="hidden" name="partner_show_th_id_for_use" id="partner_show_th_id_for_use">
+                <h6 style="font-weight: bold; color: #000000a3;">Chi phí vận chuyển ước tính của các gói cước</h6>
+                <table class="table table-bordered" id="content_table">
+                    <thead class="thead-dark">
+                      <tr>
+                        <th>Đối tác vận chuyển</th>
+                        <th>Dịch vụ</th>
+                        <th>Thời gian dự kiến</th>
+                        <th>Phí dự kiến</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <?php $partner_show_th = DB::table('partner')->where('shipper_type',1)->get(); ?>
+                      @foreach($partner_show_th as $item)
+                      <tr>
+                        <td>
+                            <img src="" alt="" style="width: 150px; height: 92px;">
+                        </td>
+                        <td>
+                            <span>Gói Chuẩn vận chuyển bởi </span>{!! $item->name !!}<br>
+                            <a href="#">Xem chính sách</a>
+                        </td>
+                        <td>
+                            <span>Giao hàng trong 3 ngày</span>
+                        </td>
+                        <td>
+                            <span>{!! number_format($item->default_price) !!} đ</span>
+                        </td>
+                        <td>
+                            <input type="radio" name="optradio" onclick="checkRadio()">
+                            <input type="hidden" name="partner_show_th_id" class="partner_show_th_id" value="{!! $item->id !!}">
+                        </td>
+                      </tr>
+                      @endforeach
+                    </tbody>
+                </table>
+            </div>
+            <button type="submit" class="btn btn-primary">Lưu thông tin</button>
+        </form>
+        <%}%>
+        
+        <% if (data.status === 2) {%>
+        <div class="block_action col-md-12" style="padding-left: 0;">
+            <label class="font_text">
+            THÔNG TIN XÁC NHẬN</label> 
+           <a href="/admin/order/confirm/<%-data._id%>" class="btn btn-primary" style="width: 18%;">Xác nhận thanh toán</a>
+           <a href="{!! URL::route('admin.bill.getDestroy', $order->id) !!}" class="btn btn-danger" style="width: 18%;">Hủy đơn hàng</a> 
+        </div> 
+        <%} else if (data.status === 1) {%>
+        <div class="block_action col-md-12" style="padding-left: 0;">
+            <label class="font_text">
+            TRẠNG THÁI ĐƠN HÀNG:  <span class="label label-success" style="font-size: 17px;">ĐÃ THANH TOÁN</span></label> 
+        </div> 
+       <%}%> 
+       <!-- <div class="block_action col-md-12" style="padding-left: 0;">
+        <label class="font_text">
+        TRẠNG THÁI ĐƠN HÀNG:  <span class="label label-danger" style="font-size: 17px;">ĐÃ HỦY</span></label> 
+        </div>  -->
+    </div>   
+</div>
+
+<% include ../../partials/footer_admin %>

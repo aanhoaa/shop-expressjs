@@ -1,0 +1,115 @@
+<% include ../../partials/header_admin %>
+
+<div style="margin-left: 5%;">
+    <div class="col-lg-12">
+        <h1 class="page-header">Order
+            <small>List</small>
+        </h1>
+    </div>
+    <!-- /.col-lg-12 -->
+    <table id="dataTables-example" class="mdl-data-table table-custom" style="width:100%">
+        <thead>
+            <tr align="center">
+                <th>ID</th>
+                <th>Mã đơn hàng</th>
+                <th>Số lượng bán ra</th>
+                <th>Tiền hàng</th>
+                <th>Tổng chiết khấu</th>
+                <th>Thuế</th>
+                <th>Trạng thái đơn hàng</th>
+                <th>Trạng thái giao hàng</th>
+                <th>Tổng hóa đơn</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% var i = 0;%>
+            
+           <%data.forEach((order) => {i++;%>
+            <% var total = amount = 0;%>
+            <tr class="odd gradeX" align="center">
+                <td><%-i%></td>
+                <td></td>
+                <td>
+                    <%order.cart.forEach((item) => {
+                        
+                        amount = parseInt(amount, 10) + parseInt(item.amount,10);
+                        total = parseInt(total, 10) + parseInt(item.amount,10) * parseInt(item.price,10);
+                    });%>
+
+                    <%-amount%> cái
+                </td>
+                <td><%-total%> đ</td>
+                <td>0đ</td>
+                <td>0đ</td>
+                <td>
+                    <% if (order.status === 0 || order.status === 2) {%>
+                    <span class="label label-primary" style="font-size: 11px;">Đang xử lý</span>
+                    <% } else if (order.status === 1) {%>
+                    <span class="label label-success" style="font-size: 11px;">Đã thanh toán</span>
+                    <% } else if (order.status === -1) {%>
+                    <span class="label label-danger" style="font-size: 11px;">Đã hủy</span>
+                    <%}%>
+                </td>
+                <td>
+                    <% if (order.status !== -1) {%>
+                        <% if (order.statusDelivery === 0) {%>
+                        <span class="label label-primary" style="font-size: 11px;">Đang xử lý</span>
+                        <% } else {%>
+                            <% if (order.statusToStore === 0) {%>
+                            <span class="label label-warning" style="font-size: 11px;">Chờ giao hàng</span>
+                            <%} else {%>
+                            <span class="label label-success" style="font-size: 11px;">Đã giao hàng</span>
+                            <%}%>
+                            <%}%>
+                     <%} else {%>
+                        <span class="label label-danger" style="font-size: 11px;">Đã hủy</span>
+                        <%}%>
+                </td>
+                <td><%-total%> đ</td>
+                <td class="center"><i class="fa fa-pencil fa-fw"></i> <a href="/admin/order/detail/<%-order._id%>" class="btn btn-success"><i class="fas fa-eye"></i> View</a></td>
+            </tr>
+            <%})%>
+            <!-- @foreach($contact_order as $item)
+            <tr class="odd gradeX" align="center">
+                <td>{!! $stt = $stt + 1 !!}</td>
+                <td>OCT000{!! $item->id !!}</td>
+                <td>
+                    cái
+                </td>
+                <td>{!! number_format($item->total,0,",",".") !!} đ</td>
+                <td>0đ</td>
+                <td>0đ</td>
+                <td>
+                    
+                    <span class="label label-primary" style="font-size: 11px;">Đang xử lý</span>
+                   
+                    <span class="label label-success" style="font-size: 11px;">Đã thanh toán</span>
+                    
+                    <span class="label label-danger" style="font-size: 11px;">Đã hủy</span>
+                   
+                </td>
+                <td>
+                    @if((int)$item->contact_status !== -1)
+                        @if((int)$item->shipping_status === 0)
+                        <span class="label label-primary" style="font-size: 11px;">Đang xử lý</span>
+                        @else
+                            @if((int)$item->invent_connect_store === 0)
+                            <span class="label label-warning" style="font-size: 11px;">Chờ giao hàng</span>
+                            @else
+                            <span class="label label-success" style="font-size: 11px;">Đã giao hàng</span>
+                            @endif
+                        @endif
+                    @else
+                        <span class="label label-danger" style="font-size: 11px;">Đã hủy</span>
+                    @endif
+                </td>
+                <td>{!! number_format($item->total,0,",",".") !!} đ</td>
+                <td class="center"><a href="{!! URL::route('admin.bill.getEditContact', $item['id']) !!}" class="btn btn-success"><i class="fas fa-eye"></i> View</a></td>
+            </tr>
+            @endforeach -->
+        </tbody>
+    </table>
+</div>
+
+<% include ../../partials/footer_admin %>

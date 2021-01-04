@@ -1,0 +1,98 @@
+<% include ../../partials/header_admin %>
+
+<div style="margin-left: 5%;">
+    <div class="col-lg-12">
+        <h1 class="page-header">Inventory
+            <small>List Ballot</small>
+            <div style="float: right;">
+                <a href="{!! url('admin/inventory/add_excel') !!}" class="btn btn-success" data-toggle="modal" data-target="#inputInventory" style="font-size: 18px;"><i class="fas fa-upload" style="margin-right: 5px;"></i> Nhập danh sách</a>
+                <a href="{!! url('admin/inventory/add') !!}" class="btn btn-success" style="font-size: 18px;"><i class="fas fa-plus-square" style="margin-right: 5px;"></i> Tạo phiếu nhập hàng</a>
+            </div>
+        </h1>
+    </div>
+
+    <div class="modal fade" id="inputInventory" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h5 class="modal-title" id="myModalLabel">Thêm mới dữ liệu đơn nhập hàng</h5>
+          </div>
+          <div class="modal-body" style="overflow: hidden;">
+                <div class="card bg-light mt-3">
+                    <div class="card-header">
+                        Laravel 5.7 Import Export Excel to database Example
+                    </div>
+                    <div class="card-body">
+                        <form action="{{ route('import') }}" method="POST" enctype="multipart/form-data">
+                            <input type="hidden" name="_token" value="{!! csrf_token() !!}">
+                            <div class="form-group col-sm-6">
+                                <label class="supplier_block_text">Chọn chi nhánh</label>
+                                <select class="form-control branch" name="branch" id="branch" required>
+                                    <option value="" disabled="disabled">Please Choose Branch</option>
+                                      <option value="default_branch">Chi nhánh mặc định</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label class="supplier_block_text">Chọn nhà cung cấp</label>
+                                <select class="form-control supplier" name="supplier" id="supplier" required>
+                                    <option value="" disabled="disabled">Please Choose Supplier</option>
+                                    <?php $supplier = DB::table('supplier')->get(); ?>
+                                    @foreach ($supplier as $row)
+                                      <option value="{!! $row->id !!}">{!! $row->name !!}</option>
+                                    @endforeach 
+                                </select>
+                            </div>
+                            <p style="margin-left: 20px;">
+                                Chú ý:<br>
+                                - Chuyển đổi file nhập dưới dạng .XLS hoặc .XLSX trước tải dữ liệu.<br>
+                                - File nhập có dung lượng tối đa là 2MB và 500 bản ghi. 
+                            </p>
+                            <input type="file" name="file" class="form-control">
+                            <br>
+                            <button class="btn btn-success">Import User Data</button>
+                        </form>
+                    </div>
+                </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- /.col-lg-12 -->
+    <table id="dataTables-example" class="mdl-data-table" style="width:100%">
+        <thead>
+            <tr align="center">
+                <th>ID</th>
+                <th>Hình thức thanh toán</th>
+                <th>Ngày giao hàng</th>
+                <th>Tổng tiền</th>
+                <th>Trạng thái</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% var i = 0;%>
+           <% data.forEach((item) => {%>
+            <%i++;%>
+            <tr class="odd gradeX" align="center">
+                <td><%-i%></td>
+                <td><%-item.paymentForm%></td>
+                <td><%-item.date%></td>
+                <td><%-item.totalPayment%></td>
+                <td><%-item.status == 0 ? "Đang xử lý" : "Đã nhập kho"%></td>
+                <td class="center">
+                    <a href="/admin/inventory/import/edit/<%-item._id%>" class="btn btn-warning"><i class="fas fa-edit"></i> Edit</a>
+                </td>
+            </tr>
+           <%})%>
+        </tbody>
+    </table>
+</div>
+
+<% include ../../partials/footer_admin %>
