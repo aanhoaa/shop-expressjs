@@ -556,3 +556,13 @@
  .khoi_sp .khoi .social li a:hover:after,.khoi_sp .khoi .social li a:hover:before{
  	opacity:1;
  }
+
+ @media (min-width: 576px)
+{
+	.col-sm-3 {
+		max-width: 24% !important;
+	}
+}
+.active2 {
+	background: khaki;
+}

@@ -60,11 +60,12 @@ $(document).ready(function(){
     var gSize = '';
 
   $(document).on('click', '.product_details_size .size_bind', function(e) {
-
     // e.preventDefault();
          var size_val = $(this).find('.size_child').val();
          var color_val = $('.product_details_color .active').find('.color_child').val();
          var product_id = $('#product_id').val();
+        // $('.lbl-dsb').children('input').attr('disabled','disabled');
+         console.log($('.lbl-dsb').children('input'))
           //console.log(size_val +color_val);
           //console.log(gSize);
           if (gSize === size_val)
@@ -72,6 +73,8 @@ $(document).ready(function(){
              $('.size_fix').removeClass('focus active');
              $('.color_fix').removeClass('lbl-dsb');
              $('.color_fix').addClass('color_bind');
+             $('.lbl-dsb').children('input').removeAttr('disabled','disabled');
+             
              gSize = '';
              $('.quantity').text('');
           }
@@ -96,7 +99,7 @@ $(document).ready(function(){
               $('.color_fix').removeClass('lbl-dsb');
               $('.' + size_val).addClass('lbl-dsb');
               $('.' + size_val).removeClass('color_bind');
-
+              $('.lbl-dsb').children('input').attr('disabled','disabled');
                if (data != '')
               {
                 $('.input-number').val(1);
@@ -338,7 +341,6 @@ $(".arcodion .arcodion_hover").hover(function(){
     });
   });
 
-
   $('#select-payment').change(function(e) {
     e.preventDefault();
         var val = $("#select-payment option:selected").val();
@@ -355,7 +357,4 @@ $(".arcodion .arcodion_hover").hover(function(){
         }
         
     });
-
-  
-
 });

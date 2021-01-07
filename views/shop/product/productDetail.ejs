@@ -323,7 +323,7 @@
               <span><img class="star_image" src="https://png.pngtree.com/svg/20170629/7301c2f99d.svg" width="16px" height="18px;" alt=""></span>
             </div>
           </div>
-          <div class="col-sm-6" style="padding-right: 10%;">
+          <!-- <div class="col-sm-6" style="padding-right: 10%;">
               <select class="custom-select" id="SortByPrice" style="width: 60%; float: right;">
                   <option selected disabled="">Open this select menu</option>
                   <option value="price_ascending">Giá từ thấp tới cao</option>
@@ -331,13 +331,13 @@
                   <option value="created_descending">Mới nhất</option>
                   <option value="created_ascending">Cũ nhất</option>
               </select>
-          </div>
+          </div> -->
         </div>
       </div>
       <hr>
       <div class="user_comment">
         <h4>Bình Luận</h4>
-        @if (!Auth::guest())
+       <%if (user) {%>
         <form class="form_comment clearfix" action="{!! url('comment') !!}" method="POST" enctype="multipart/form-data">
             <input type="hidden" name="_token" value="{!! csrf_token() !!}">
             <input type="hidden" name="productId" value="{{$products->id}}">
@@ -345,7 +345,7 @@
             <textarea placeholder="Để lại bình luận hoặc đánh giá sản phẩm tại đây!" name="comment_content" class="text_comment"></textarea>
             <input type="submit" class="btn btn-primary btn_send" value="Send">
         </form>
-        @endif
+       <%} else {%>
         <div class="" style="margin-left: 10%; margin-right: 10%;">
             <span class="total_comments">Lượt bình luận ({!! $comment->count() !!})</span>
             @foreach ($comment as $row)
@@ -361,7 +361,7 @@
                     <p class="comment_content">{{$row->description}}</p>
                 </div>
             </div>
-            @endforeach
+           <%}%>
         </div>
       </div>
       <hr>
@@ -370,16 +370,16 @@
     <div class="container clearfix">
       <div class="khoi_chua_sp_lienquan clearfix" style="display: block;">
           <h5 style="margin-left: 10px; margin-bottom: 20px; font-size: 30px;">Sản phẩm liên quan</h5>
-          @foreach ($related_products as $row)
+          <% listRelative.forEach((item) => {%>
           <div class="khoi_sp_lienquan" id="effect_1" style="position: relative;">
-              <img style="width: 98%;" src=""/>
+              <img style="width: 98%;" src="/uploads/<%-item.images%>"/>
               <div class="khoi_sp_lienquan_info">
-                  <p>{{$row->name}}</p>
-                  <p>{{number_format($row->price)}}₫</p>
-                  <a href="{!! url('view',[$row->id]) !!}">Xem chi tiết</a>
+                  <p><%-item.name%></p>
+                  <p><%-item.price%>₫</p>
+                  <a href="/shop/product/<%-item._id%>">Xem chi tiết</a>
               </div>
           </div>
-          @endforeach 
+          <%})%>
       </div>
     </div>
 

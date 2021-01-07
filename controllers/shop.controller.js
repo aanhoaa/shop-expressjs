@@ -5,6 +5,7 @@ const Brand = require("../models/brand.model");
 const Material = require("../models/material.model");
 const Inventory = require("../models/inventory.model");
 const Order = require("../models/order.model");
+const paypal = require('paypal-rest-sdk');
 
 exports.getIndexShop = (req, res, next) => {
     Order.find().then((data) => {
@@ -15,7 +16,32 @@ exports.getIndexShop = (req, res, next) => {
 
 exports.getProducts = (req, res, next) => {
   var listProduct = [];  
-  
+  var listBrand = [];
+  var listMaterial = [];
+  var listCate = [];
+
+  Brand.find().then((data) => {
+    data.forEach((item) => {
+      listBrand.push({id: item._id, name: item.name})
+    })
+  });
+
+  Material.find().then((data) => {
+    data.forEach((item) => {
+      listMaterial.push({id: item._id, name: item.name})
+    })
+  });
+
+  Category.find().then((data) => {
+    data.forEach((item) => {
+      var listChild = [];
+        item.childCateName.forEach((child) => {
+          listChild.push({id: child._id, name: child.childName})
+        })
+        listCate.push({name: item.name, id: item._id, list: listChild})
+    })
+  });
+
     Product.find()
     .limit(8)
     .then(products => {
@@ -31,13 +57,16 @@ exports.getProducts = (req, res, next) => {
                 //console.log(prod)
                }
             })
-           
+
             res.render("./shop/product/products", {
               title: "Trang chủ",
               user: req.user,
               trendings: products,
               products: listProduct,
-              cart: req.session.cart
+              cart: req.session.cart,
+              listBrand: listBrand,
+              listMaterial: listMaterial,
+              listCate: listCate
             });
         });
     })
@@ -53,6 +82,9 @@ exports.getProductDetail = (req, res, next) => {
   var material = '';
   var listSize = [];
   var listColor = new Array;
+  var listRelative = [];
+
+  
   
   Product.findById(productId, function(err, data) {
     if (err) console.log(err);
@@ -60,7 +92,21 @@ exports.getProductDetail = (req, res, next) => {
     {
       data.viewCounts += 1/2;
       data.save();
-    
+      
+      Product.find().then((data2) => {
+        data2.forEach((item) => {
+          if (item.price > 0)
+          {
+            if (item._id != productId)
+            {
+              if (item.productType.main.id === data.productType.main.id)
+              {
+                listRelative.push(item);
+              }
+            }
+          }
+        })
+      })
         promises.push(
           Brand.findById(data.brand, function(err, brd) {
             if (err) console.log(err);
@@ -154,7 +200,8 @@ exports.getProductDetail = (req, res, next) => {
             size: listSize,
             color: listColor,
             list: list,
-            cart: req.session.cart
+            cart: req.session.cart,
+            listRelative: listRelative
           })
         );
     }
@@ -248,33 +295,358 @@ exports.postProductBuy = (req, res, next) => {
   res.redirect('/shop/cart');
 }
 
-exports.getProductFilter = (req, res, next) => {
+exports.postProductFilter = (req, res, next) => {
   var listProduct = [];
+  var listBrand = [];
+  var listMaterial = [];
+  var listCate = [];
+
+  Brand.find().then((data) => {
+    data.forEach((item) => {
+      listBrand.push({id: item._id, name: item.name})
+    })
+  });
+
+  Material.find().then((data) => {
+    data.forEach((item) => {
+      listMaterial.push({id: item._id, name: item.name})
+    })
+  });
+
+  Category.find().then((data) => {
+    data.forEach((item) => {
+      var listChild = [];
+        item.childCateName.forEach((child) => {
+          listChild.push({name: child.childName})
+        })
+        listCate.push({name: item.name, list: listChild})
+    })
+  });
+
+  var 
+      brand = req.body.group_brand,
+      color = req.body.group_color, 
+      size = req.body.group_size, 
+      material = req.body.group_material,
+      price = req.body.group_price,
+      category = req.body.category_id;
+  console.log(price)
   Product.find()
     .limit(8)
     .then(products => {
       Product.find()
-        .limit(2)
+        .limit(8)
         .sort({"viewCounts": -1})
         .then(products2 => {
       
             products2.forEach((prod) => {
                 if (prod.price > 0)
                {
-                listProduct.push(prod);
-                
+                if (brand !== undefined)
+                {
+                  if (prod.brand === brand)
+                      listProduct.push(prod);
+                }
+                else
+                {
+                  listProduct.push(prod);
+                }
+                if (material !== undefined)
+                {
+                  for(let i =0; i < listProduct.length; i++)
+                  {
+                    if (listProduct[i].materials !== material)
+                    {
+                      if (i == 0)
+                      {
+                        listProduct.shift();
+                      }
+                      else
+                      {
+                        listProduct.splice(1, i);
+                      }
+                    }
+                  }
+               }
+               if (color !== undefined)
+               {
+                  for(let i = 0; i < listProduct.length; i++)
+                  {
+                    var count = listProduct[i].subId.size[0].color.length;
+                    listProduct[i].subId.size[0].color.forEach((subColor) => {
+                      if (subColor.name !== color)
+                      {
+                        count --;
+                      }
+
+                      if (count === 0)
+                      {
+                        if (i == 0)
+                        {
+                          listProduct.shift();
+                        }
+                        else
+                        {
+                          listProduct.splice(1, i);
+                        }
+                      }
+                    })
+                  }
+                }
+                if (size !== undefined)
+                {
+                  for(let i = 0; i < listProduct.length; i++)
+                  {
+                    var count = listProduct[i].subId.size.length;
+                    listProduct[i].subId.size.forEach((subSize) => {
+                      if (subSize.name !== size)
+                      {
+                        count --;
+                      }
+                      if (count === 0)
+                      {
+                        if (i == 0)
+                        {
+                          listProduct.shift();
+                        }
+                        else
+                        {
+                          listProduct.splice(1, i);
+                        }
+                      }
+                    })
+                  }
+                }
+
+                if (price !== undefined)
+                {
+                  for(let i = 0; i < listProduct.length; i++)
+                  {
+                    var count = listProduct[i].subId.size.length;
+                    listProduct[i].subId.size.forEach((subSize) => {
+                      switch (price) 
+                      {
+                        case '1':
+                        {
+                          if (subSize.price > 3000000) count --;
+                          if (count === 0)
+                          {
+                            if (i == 0)
+                            {
+                              listProduct.shift();
+                            }
+                            else
+                            {
+                              listProduct.splice(1, i);
+                            }
+                          }
+                          break;
+                        }
+                        case '2':
+                        {
+                          console.log('here')
+                          if (subSize.price < 3000000 || subSize.price > 500000) count --;
+                          if (count === 0)
+                          {
+                            if (i == 0)
+                            {
+                              listProduct.shift();
+                            }
+                            else
+                            {
+                              listProduct.splice(1, i);
+                            }
+                          }
+                          break;
+                        }
+                        case '3':
+                        {
+                          if (subSize.price < 500000 || subSize.price > 1000000) count --;
+                          if (count === 0)
+                          {
+                            if (i == 0)
+                            {
+                              listProduct.shift();
+                            }
+                            else
+                            {
+                              listProduct.splice(1, i);
+                            }
+                          }
+                          break;
+                        }
+                        case '4':
+                        {
+                          if (subSize.price < 10000000) count --;
+                          if (count === 0)
+                          {
+                            if (i == 0)
+                            {
+                              listProduct.shift();
+                            }
+                            else
+                            {
+                              listProduct.splice(1, i);
+                            }
+                          }
+                          break;
+                        }
+                      }
+                    })
+                  }
+                }
+
                }
             })
 
-            res.sendFile(path.join(__dirname, '../public', 'shop/product/products.ejs'), listProduct)
+            res.render("./shop/product/products", {
+              title: "Trang chủ",
+              user: req.user,
+              trendings: products,
+              products: listProduct,
+              cart: req.session.cart,
+              listBrand: listBrand,
+              listMaterial: listMaterial
+            });
+        });
+    })
+    .catch(err => {
+      console.log(err);
+    });
+}
+
+exports.postProductSortBy = (req, res, next) => {
+  var listProduct = [];  
+  var listBrand = [];
+  var listMaterial = [];
+  var listCate = [];
+  var option = req.body.optionSelect;
+  var sortby = req.body.sortby;
+  var sort = {};
+  sort[option] = sortby;
+
+  Brand.find().then((data) => {
+    data.forEach((item) => {
+      listBrand.push({id: item._id, name: item.name})
+    })
+  });
+
+  Material.find().then((data) => {
+    data.forEach((item) => {
+      listMaterial.push({id: item._id, name: item.name})
+    })
+  });
+
+  Category.find().then((data) => {
+    data.forEach((item) => {
+      var listChild = [];
+        item.childCateName.forEach((child) => {
+          listChild.push({id: child._id, name: child.childName})
+        })
+        listCate.push({name: item.name, id: item._id, list: listChild})
+    })
+  });
+
+    Product.find()
+    .limit(8)
+    .then(products => {
+      Product.find()
+        .limit(8)
+        .sort(sort)
+        .then(products2 => {
+      
+            products2.forEach((prod) => {
+                if (prod.price > 0)
+                {
+                  listProduct.push(prod);
+                }
+            })
            
-            // res.render("./shop/product/products", {
-            //   title: "Trang chủ",
-            //   user: req.user,
-            //   trendings: products,
-            //   products: listProduct,
-            //   cart: req.session.cart
-            // });
+            res.render("./shop/product/products", {
+              title: "Trang chủ",
+              user: req.user,
+              trendings: products,
+              products: listProduct,
+              cart: req.session.cart,
+              listBrand: listBrand,
+              listMaterial: listMaterial
+            });
+        });
+    })
+    .catch(err => {
+      console.log(err);
+    });
+}
+
+exports.postProductCateFilter = (req, res, next) => {
+  var listProduct = [];  
+  var listBrand = [];
+  var listMaterial = [];
+  var listCate = [];
+  var cate = req.body.cate;
+  var child = req.body.child;
+
+  Brand.find().then((data) => {
+    data.forEach((item) => {
+      listBrand.push({id: item._id, name: item.name})
+    })
+  });
+
+  Material.find().then((data) => {
+    data.forEach((item) => {
+      listMaterial.push({id: item._id, name: item.name})
+    })
+  });
+
+  Category.find().then((data) => {
+    data.forEach((item) => {
+      var listChild = [];
+        item.childCateName.forEach((child) => {
+          listChild.push({id: child._id, name: child.childName})
+        })
+        listCate.push({name: item.name, id: item._id, list: listChild})
+    })
+  });
+
+    Product.find()
+    .limit(8)
+    .then(products => {
+      Product.find()
+        .limit(8)
+        .sort({"viewCounts": -1})
+        .then(products2 => {
+      
+            products2.forEach((prod) => {
+                if (prod.price > 0)
+               {
+                
+                if (prod.productType.main.id === cate)
+                {
+                  if (child)
+                  {
+                    if (prod.productType.sub.id === child)
+                    {
+                      listProduct.push(prod);
+                    }
+                  }
+                  else
+                  {
+                    listProduct.push(prod);
+                  }
+                }
+               }
+            })
+
+            res.render("./shop/product/products", {
+              title: "Trang chủ",
+              user: req.user,
+              trendings: products,
+              products: listProduct,
+              cart: req.session.cart,
+              listBrand: listBrand,
+              listMaterial: listMaterial,
+              listCate: listCate
+            });
         });
     })
     .catch(err => {
@@ -295,10 +667,9 @@ exports.getCart = (req, res, next) => {
       
             products2.forEach((prod) => {
                 if (prod.price > 0)
-               {
-                listProduct.push(prod);
-                //console.log(prod)
-               }
+                {
+                  listProduct.push(prod);
+                }
             })
            
             res.render("./shop/cart/cart", {
@@ -341,6 +712,63 @@ exports.getCheckout = (req, res, next) => {
 
 exports.postCheckout = (req, res, next) => {
   var promises = [];
+  var okay = 0;
+  var type = req.body.type_of_payment;
+  var item = [];
+  var total = 0;
+
+  req.session.cart.forEach((subCart) => {
+    item.push(
+      {
+        name: subCart.name, 
+        sku: 'item', 
+        price: Number(parseInt(subCart.price, 10)/23000).toFixed(2).toString(),
+        currency: "USD",
+        quantity: parseInt(subCart.amount, 10)
+      }
+      )
+
+      total += parseInt(subCart.price, 10)/23000 * parseInt(subCart.amount, 10);
+  })
+
+ // console.log(item)
+if (type === 'paypal')
+{
+  var create_payment_json = {
+    "intent": "authorize",
+    "payer": {
+        "payment_method": "paypal"
+    },
+    "redirect_urls": {
+      "return_url": "http://localhost:3000/shop/checkouted",
+      "cancel_url": "http://cancel.url"
+  },
+    "transactions": [{
+        "item_list": {
+            "items": item
+        },
+        "amount": {
+            "currency": "USD",
+            "total": Number(total).toFixed(2).toString()
+        },
+        "description": "This is the payment description."
+    }]
+  };
+  
+  paypal.payment.create(create_payment_json, function (error, payment) {
+    if (error) {
+        throw error;
+    } else {
+        for(let i = 0;i < payment.links.length;i++){
+          if(payment.links[i].rel === 'approval_url'){
+            res.redirect(payment.links[i].href);
+          }
+        }
+    }
+  });
+}
+else
+{
   var order = new Order({
     user: req.user._id,
     cart: req.session.cart,
@@ -393,9 +821,96 @@ exports.postCheckout = (req, res, next) => {
     else
     {
       req.session.cart = null;
-      res.redirect('/shop');
+      res.redirect(`/user/${order._id}`);
     } 
   })
   );
+}
 
+}
+
+exports.getCheckouted = (req, res, next) => {
+  var promises = [];
+  const payerId = req.query.PayerID;
+  const paymentId = req.query.paymentId;
+  var total = 0;
+
+  req.session.cart.forEach((subCart) => {
+    total += parseInt(subCart.price, 10)/23000 * parseInt(subCart.amount, 10);
+  })
+
+  const execute_payment_json = {
+    "payer_id": payerId,
+    "transactions": [{
+        "amount": {
+            "currency": "USD",
+            "total": Number(total.toFixed(2).toString())
+        }
+    }]
+  };
+
+  paypal.payment.execute(paymentId, execute_payment_json, function (error, payment) {
+    if (error) 
+    {
+       res.render('cancle');
+    } 
+    else 
+    {
+        var order = new Order({
+          user: req.user._id,
+          cart: req.session.cart,
+          status: 1,
+          statusDelivery: 0,
+          statusToStore: -1
+        });
+      
+        //update data in product, inventory
+        req.session.cart.forEach((prod) => {
+          promises.push(
+            Product.findById(prod.productId, function(err, data) {
+              if (err) console.log(err);
+              else{
+                data.subId.size.forEach((subSize) => {
+                  if (prod.size === subSize.name)
+                  {
+                    subSize.color.forEach((subColor) => {
+                      if (prod.color === subColor.name)
+                      {
+                        subColor.amount -= prod.amount;
+                        data.save();
+                      }
+                    })
+                  }
+        
+                  for (let i = 0; i < data.listInventory.length; i++) {
+                    Inventory.findById(data.listInventory[i], function(err, ivent) {
+                      if (err) console.log(err);
+                      else{
+                        if (prod.size === ivent.sizeId && prod.color === ivent.colorId)
+                        {
+                          ivent.amount -= prod.amount;
+                          ivent.save();
+                        }
+                      }
+                    })
+                    
+                  }
+                })
+              }
+            })
+          )
+        })
+      
+        Promise.all(promises).then(() => 
+        order.save((err)=>{
+          if (err) throw err;
+          else
+          {
+            req.session.cart = null;
+            res.redirect('/user');
+          } 
+        })
+        );
+      }
+})
 }

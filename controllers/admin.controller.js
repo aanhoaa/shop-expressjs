@@ -216,9 +216,18 @@ exports.postAddProduct = (req, res, next) => {
             ]
         });
         
-        var size = Array, color = Array;
-        size = req.body.size;
-        color = req.body.color;
+        var size = [], color = [];
+
+        if (typeof(req.body.size) === 'string')
+            size.push(req.body.size);
+        else
+            size = req.body.size;
+
+        if (typeof(req.body.color) === 'string')
+            color.push(req.body.color);
+        else
+            color = req.body.color;
+        
         countInventory = size.length * color.length;
 
         size.forEach((listSize) => {

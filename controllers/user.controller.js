@@ -8,9 +8,9 @@ var total = 0;
 promises.push(
     Order.find().then((data) => {
       data.forEach((order) => {
+        total = 0;
         if (order.user == req.user._id)
         {
-        
           order.cart.forEach((item) => {
             total = parseInt(total, 10) + parseInt(item.price, 10) * parseInt(item.amount, 10);
           })
@@ -23,13 +23,11 @@ promises.push(
               address: req.user.address, 
               total: total
             })
-         
+        
         }
       })
     })
     )
-  
-    
     Promise.all(promises).then(() => 
     
     res.render('auth/user/userInfo', { 
@@ -70,31 +68,23 @@ exports.postEditUserInfo = (req, res, next) => {
 
 exports.getDetailOrder = (req, res, next) => {
   const promises = [];
+  var orderId = req.params.orderId;
   var oData = [];
   var total = 0;
-  promises.push(
-    Order.find().then((data) => {
-      data.forEach((order) => {
-        if (order.user == req.user._id)
-        {
-          order.cart.forEach((item) => {
-            total = parseInt(total, 10) + parseInt(item.price, 10) * parseInt(item.amount, 10);
-          })
 
+  promises.push(
+    Order.findById(orderId, function(err, data){
           oData.push(
             {
-              date: order.createdAt, 
-              status: order.status, 
-              orderId: order._id,
+              date: data.createdAt, 
+              status: data.status, 
+              orderId: data._id,
               address: req.user.address, 
-              total: total,
-              cart: order.cart
+              total: 1,
+              cart: data.cart
             })
-         
-        }
-      })
     })
-    )
+  )
   
     Promise.all(promises).then(() => 
     res.render('auth/user/detailOrder', { 
