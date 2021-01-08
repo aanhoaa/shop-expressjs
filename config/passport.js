@@ -1,5 +1,6 @@
 var User = require('../models/user.model');
 var LocalStrategy = require('passport-local').Strategy;
+const GoogleStrategy = require("passport-google-oauth20").Strategy;
 var bcrypt = require('bcryptjs');
 var passport = require('passport');
 var nodemailer = require('nodemailer');
@@ -20,6 +21,39 @@ module.exports = function(passport) {
           console.log(err);
         });
     });
+
+    passport.use(
+    'google',
+      new GoogleStrategy(
+        {
+          clientID: '1093682894868-v7bugcd1iu4q8p8s8424afjjch5pqevf.apps.googleusercontent.com',
+          clientSecret: '1Afjtvmqzj3F2N2_bN6b8ULG',
+          callbackURL: "/auth/google/callback"
+        }, (accessToken, refreshToken, profile, done) => {
+          // passport callback function
+          //check if user already exists in our db with the given profile ID
+          User.findOne({googleId: profile.id}, function(err, user) {
+            if (err) {
+              return done(err);
+            }
+            if (user) {
+              return done(null, user);
+            }
+            
+            const newUser = new User({
+              googleId: profile.id,
+              email: profile.emails[0].value,
+              fullname: profile.name.familyName + ' ' + profile.name.givenName
+            });
+            // save the user
+            newUser.save(function(err) {
+              if (err) return done(err);
+              return done(null, newUser);
+            });
+           
+          })
+        })
+    );
   
     passport.use(
       'local-signin',

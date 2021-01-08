@@ -18,7 +18,7 @@ promises.push(
           oData.push(
             {
               date: order.createdAt, 
-              status: order.status, 
+              status: order.statusDelivery, 
               orderId: order._id,
               address: req.user.address, 
               total: total

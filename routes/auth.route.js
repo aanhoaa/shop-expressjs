@@ -6,6 +6,8 @@ var router = express.Router();
 
 
 router.get("/login", authController.getLogin);
+router.get("/auth/google", authController.getLoginByGoogle);
+router.get("/auth/google/callback", authController.getLoginByGoogleCallBack);
 router.post("/login", authController.postLogin);
 router.get("/logout", authController.getLogout);
 router.get("/register", authController.getSignUp);

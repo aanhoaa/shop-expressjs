@@ -14,24 +14,24 @@
 			<div class="">
 				<div class="detail_info" style="margin-left: 5%; margin-top: 25px; display: block;" >
 					<label style="float: left;">Email: </label>
-					<p style="margin-left: 75px; margin-right: 5%"><%-user.email%></p>
+					<p style="margin-left: 75px; margin-right: 5%"><%-user.email?user.email:'null'%></p>
 				</div>
 				<div class="detail_info" style="margin-left: 5%; margin-top: 25px; display: block;" >
 					<label style="float: left;">Họ và tên: </label>
-					<p style="margin-left: 75px; margin-right: 5%"><%-user.fullname%></p>
+					<p style="margin-left: 75px; margin-right: 5%"><%-user.fullname?user.fullname:'null'%></p>
 				</div>
 				<div class="detail_info" style="margin-left: 5%; display: block;" >
 					<label style="float: left;">Giới tính: </label>
-					<p style="margin-left: 75px; margin-right: 5%"><%-user.gender%></p>
+					<p style="margin-left: 75px; margin-right: 5%"><%-user.gender?user.gender:'null'%></p>
 				</div>
 				<div class="detail_info" style="margin-left: 5%; display: block;" >
 					<label style="float: left;">Điện thoại: </label>
-					<p style="margin-left: 75px; margin-right: 5%"><%-user.phone%></p>
+					<p style="margin-left: 75px; margin-right: 5%"><%-user.phone?user.phone:'null'%></p>
 				</div>
 				<div class="detail_info" style="margin-left: 5%; display: block;" >
 					<label style="float: left;">Địa chỉ: </label>
 					<p style="margin-left: 75px; margin-right: 5%;"><!-- Lorem ipsum dolor sit amet, consectetur adipisicing elit.Lorem ipsum dolor sit amet, consectetur adipisicing elit.Lorem ipsum dolor sit amet, consectetur adipisicing elit.Lorem ipsum dolor sit amet! -->
-						<%-user.address%>
+						<%-user.address?user.address:'null'%>
 					</p>
 				</div>
 				<div class="detail_info" style="margin-left: 28%; display: block; border: none;" >

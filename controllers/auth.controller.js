@@ -35,6 +35,19 @@ exports.getLogin = (req, res, next) => {
     }
   };
   
+  exports.getLoginByGoogle = (req, res, next) => {
+    passport.authenticate('google', { scope:
+      [ 'email', 'profile' ] }
+    )(req, res, next);
+  }
+
+  exports.getLoginByGoogleCallBack = (req, res, next) => {
+    passport.authenticate( 'google', {
+      successRedirect: '/user',
+      failureRedirect: '/login'
+    })(req, res, next);
+  }
+
   exports.postLogin = (req, res, next) => {
     passport.authenticate("local-signin", function(error, user, info) {
       if (error) {

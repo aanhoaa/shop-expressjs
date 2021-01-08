@@ -24,6 +24,8 @@ router.get("/cart/delete", authController.isLogin, shopController.getDeleteCart)
 router.get("/checkout", authController.isLogin, shopController.getCheckout);
 router.post("/checkout", authController.isLogin, shopController.postCheckout);
 router.get("/checkouted", authController.isLogin, shopController.getCheckouted);
+router.get("/checkouted/vnpay_return", authController.isLogin, shopController.getCheckoutedReturn);
+router.get("/checkouted/vnpay_ipn", authController.isLogin, shopController.getCheckoutedIpn);
 
 
 
