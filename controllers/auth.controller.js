@@ -2,6 +2,8 @@ const passport = require("passport");
 const Users = require("../models/user.model");
 var bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
+const jwtHelper = require("../helpers/jwt.helper"); 
+const db = require('../helpers/db.helper')
 
 function makeid(length) {
   var result           = '';
@@ -22,7 +24,7 @@ exports.getLogin = (req, res, next) => {
     //   cartProduct = cart.generateArray();
     // }
      const message = req.flash("error")[0];
-    if (!req.isAuthenticated()) {
+    if (!get_cookies(req)['Token']) {
       res.render("./auth/login", {
         title: "Đăng nhập",
         //message: `${message}`,
@@ -35,22 +37,29 @@ exports.getLogin = (req, res, next) => {
     }
   };
   
-  exports.postLogin = (req, res, next) => {
-    passport.authenticate("local-signin", function(error, user, info) {
-      if (error) {
-        return res.status(500).json(error);
-      }
-      if (!user) {
-        return res.status(401).json(info.message);
-      }
-      req.login(user, function (err) {
-        if (err) {
-          return res.status(500).json(error);
-        } else {
-          return res.status(200).json(user);
+  exports.postLogin = async (req, res, next) => {
+    const {username, password} = req.body;
+   
+    const data = await db.checkUserExist(2, [username]); 
+    if (data) {
+      const userPass = await db.getUserInfo(2,[username]);
+      const checkPass = await bcrypt.compare(password, userPass.password);
+      
+      if (checkPass) {
+        const userInfo = {
+          id: userPass.id,
+          username: username,
+          role: userPass.role
         }
-      });
-    })(req, res, next);
+        const accessToken = await jwtHelper.generateToken(userInfo, 'secret', '1h');
+
+        res.cookie('Token',accessToken, { maxAge: 90000000, httpOnly: true });
+        // res.headers(123);
+        return res.status(200).json({accessToken});
+      }
+    }
+
+    return res.status(500).json();
   };
   
   exports.getLogout = (req, res, next) => {
@@ -58,6 +67,7 @@ exports.getLogin = (req, res, next) => {
       req.session.cart = null;
     }
     req.logout();
+    res.clearCookie('Token');
     res.redirect("/");
   };
   
@@ -70,7 +80,7 @@ exports.getLogin = (req, res, next) => {
     //   var cart = new Cart(req.session.cart);
     //   cartProduct = cart.generateArray();
     // }
-    
+  
     if (!req.isAuthenticated()) {
       res.render("./auth/register", {
         title: "Đăng ký",
@@ -218,3 +228,64 @@ exports.getLogin = (req, res, next) => {
   }
     res.redirect("/login");
   }
+
+  exports.isAuth = async (req, res, next) => {
+   
+    // Lấy token được gửi lên từ phía client, thông thường tốt nhất là các bạn nên truyền token vào header
+    const tokenFromClient = req.body.token || req.query.token || get_cookies(req)['Token'];
+    if (tokenFromClient) {
+      // Nếu tồn tại token
+      try {
+        // Thực hiện giải mã token xem có hợp lệ hay không?
+        const decoded = await jwtHelper.verifyToken(tokenFromClient, 'secret');
+        
+        // Nếu token hợp lệ, lưu thông tin giải mã được vào đối tượng req, dùng cho các xử lý ở phía sau.
+        req.jwtDecoded = decoded;
+        // Cho phép req đi tiếp sang controller.
+        next();
+      } catch (error) {
+        // Nếu giải mã gặp lỗi: Không đúng, hết hạn...etc:
+        // Lưu ý trong dự án thực tế hãy bỏ dòng debug bên dưới, mình để đây để debug lỗi cho các bạn xem thôi
+        
+        return res.status(401).json({
+          message: 'Unauthorized.',
+        });
+      }
+    } else {
+      // Không tìm thấy token trong request
+      return res.status(403).send({
+        message: 'No token provided.',
+      });
+    }
+  }
+
+  exports.isUser = async (req, res, next) => {
+    const decoded = await jwtHelper.verifyToken(get_cookies(req)['Token'], 'secret');
+    
+    if (decoded.data.role == 'user')
+      next();
+      else
+      {
+        return res.status(401).json({
+        message: 'Unauthorized.',
+      });
+    }
+  }
+
+  exports.isShop = async (req, res, next) => {
+    const decoded = await jwtHelper.verifyToken(get_cookies(req)['Token'], 'secret');
+  
+    if (decoded.data.role == 'shop')
+      next();
+    else
+    return res.redirect('/');
+  }
+
+  var get_cookies = function(request) {
+    var cookies = {};
+    request.headers && request.headers.cookie.split(';').forEach(function(cookie) {
+      var parts = cookie.match(/(.*?)=(.*)$/)
+      cookies[ parts[1].trim() ] = (parts[2] || '').trim();
+    });
+    return cookies;
+  };

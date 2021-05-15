@@ -4,21 +4,23 @@ var passport = require("passport");
 const authController = require("../controllers/auth.controller");
 const adminController = require("../controllers/admin.controller");
 
-router.get("/" , authController.isAdmin, adminController.getHome);
+router.get("/" , authController.isAuth,authController.isShop, adminController.getHome);
 
-router.get("/category" , authController.isAdmin, adminController.getCategory);
-router.get("/category/add" , authController.isAdmin, adminController.getAddCategory);
-router.post("/category/add" , authController.isAdmin, adminController.postAddCategory);
-router.get("/category/edit/:parentId/:childId" , authController.isAdmin, adminController.getEditCategory);
-router.post("/category/edit/:parentId/:childId" , authController.isAdmin, adminController.postEditCategory);
-router.get("/category/delete/:parentId/:childId" , authController.isAdmin, adminController.getDeleteCategory);
+router.get("/category" , authController.isAuth, authController.isShop, adminController.getCategory);
+router.get("/category/add" , authController.isAuth, authController.isShop, adminController.getAddCategory);
+router.post("/category/add" , authController.isAuth, authController.isShop, adminController.postAddCategory);
+router.get("/category/edit/:parentId/:childId" , authController.isAuth, authController.isShop, adminController.getEditCategory);
+router.post("/category/edit/:parentId/:childId" , authController.isAuth, authController.isShop, adminController.postEditCategory);
+router.get("/category/delete/:parentId/:childId" , authController.isAuth, authController.isShop, adminController.getDeleteCategory);
 
-router.get("/product/add" , authController.isAdmin, adminController.getAddProduct);
-router.get("/product/add/binding/:parentId" , authController.isAdmin, adminController.getBindingCategory);
-router.post("/product/add" , authController.isAdmin, adminController.handleImg, adminController.postAddProduct);
-router.get("/product/edit/:productId" , authController.isAdmin, adminController.getEditProduct);
-router.post("/product/edit/:productId" , authController.isAdmin, adminController.handleImg, adminController.postEditProduct);
-router.post("/product/setPrice" , authController.isAdmin, adminController.postSetPrice);
+router.get("/product/add" , authController.isAuth, authController.isShop, adminController.getAddProduct);
+router.get("/product/add/binding/:parentId" ,authController.isAuth, authController.isShop, adminController.getBindingCategory);
+router.post("/product/add" , authController.isAuth, authController.isShop, adminController.handleImg, adminController.postAddProduct);
+router.get("/product/edit/:productId" , authController.isAuth, authController.isShop, adminController.getEditProduct);
+router.post("/product/edit/:productId" , authController.isAuth, authController.isShop, adminController.handleImg, adminController.postEditProduct);
+router.get("/product/edit/variant/:productId" , authController.isAuth, authController.isShop, adminController.getEditProductVariant);
+router.post("/product/edit/variant/:productId" , authController.isAuth, authController.isShop, adminController.postEditProductVariant);
+router.post("/product/setPrice" , authController.isAuth, authController.isShop, adminController.postSetPrice);
 
 router.get("/supplier" , authController.isAdmin, adminController.getSupplier);
 router.get("/supplier/add" , authController.isAdmin, adminController.getAddSupplier);

@@ -10,16 +10,17 @@ const Inventory = require("../models/inventory.model");
 const Import = require("../models/import.model");
 const { count } = require("../models/user.model");
 const Order = require("../models/order.model");
+const db = require('../helpers/db.helper');
+const cloudinary = require('cloudinary');
+
+cloudinary.config({
+    cloud_name: 'do3we3jk1',
+    api_key: 554259798325127,
+    api_secret: 'EidUs6TZ54dIS1HRxdurHuQS4hw'
+});
 
 // SET STORAGE
-var storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, './public/uploads')
-    },
-    filename: function (req, file, cb) {
-      cb(null,Date.now() + '-' + file.originalname)
-    }
-})
+var storage = multer.diskStorage({});
 
 var upload = multer({ storage: storage });
 
@@ -42,24 +43,29 @@ exports.handleImg = upload.fields([
     }
 ])
 
-exports.getHome = (req, res, next) => {
-    Product.find().then((data) =>{
-        res.render('./admin/index', {data: data, user: req.user});
-    })
+exports.getHome = async (req, res, next) => {
+    const shopId = req.jwtDecoded.data.id;
+    var oData = new Array;
+    const data = await db.getProductByShop([shopId]);
+    
+    for(let i = 0; i< data.length; i++) {
+        var info = await db.getProductVariantInfo([data[i].id])
+        oData.push({name: data[i].name, classify: info, id: data[i].id})
+    }
+    
+    console.log('data', oData)
+    res.render('./admin/index', {data: oData})
+
+   // 
 }
 
 exports.getCategory = (req, res, next) => {
-    
-    Category.find().then((data) =>{
-        res.render('./admin/category/category', {data: data});
-    })
+    res.render('./admin/category/category');
 }
 
 exports.getAddCategory = (req, res, next) => {
     const message = req.flash("error")[0];
-    Category.find().then((data)=>{
-        res.render('./admin/category/addCategory', {data: data,  message: `${message}`});
-    })
+    res.render('./admin/category/addCategory');
 }
 
 exports.postAddCategory = (req, res, next) => { 
@@ -126,256 +132,285 @@ exports.getDeleteCategory = (req, res, next) => {
     })
 }
 
-exports.getAddProduct = (req, res, next) => {
-    let parentCate = [];
-    let material = [];
-    let brand = [];
-
-    Category.find({}, (err, cats) => {
-        cats.forEach(cat => {
-            parentCate.push({name: cat.name, id: cat._id});
-        });
-    });
-
-    Material.find({}, (err, mates) => {
-        mates.forEach(mate => {
-            material.push({name: mate.name, id: mate._id});
-        });
-    });
-
-    Brand.find({}, (err, brds) => {
-        brds.forEach(brd => {
-            brand.push({name: brd.name, id: brd._id});
-        });
-    });
+exports.getAddProduct = async (req, res, next) => {
+   
+    const data = await db.getCategoryLevelOne();
     
-    Category.find().then(data=>{
-        res.render('./admin/product/addProduct', {parentCate: parentCate, material: material, brand: brand});
-    })
+    res.render('./admin/product/addProduct', {data: data});
 }
 
-exports.getBindingCategory = (req, res, next) => {
+exports.getBindingCategory = async (req, res, next) => {
     var parentId = req.params.parentId;
     var bind = new Array;
 
-    Category.findById(parentId, function(err, data){
-        if (err) console.log(err);
-        else {
-              data.childCateName.forEach((item)=>{
-                bind.push({id: item._id, name: item.childName});
-            })
-        }
-
-        res.send(JSON.stringify(bind));
+    const data = await db.getCategoryLevelTwo([parentId]);
+    data.forEach(item => {
+        bind.push({id: item.id, name: item.name});
     })
+
+    res.send(JSON.stringify(bind));
 }
 
-exports.postAddProduct = (req, res, next) => {
-    var parentId = req.body.parentCate;
-    var childId = req.body.childCate;
-    var parentCateName = '';
-    var childCateName = '';
-    var countInventory = 0;
-    var arrayInventory = new Array;
+exports.postAddProduct = async (req, res, next) => {
+    const shopId = req.jwtDecoded.data.id;
+    const SKU = '';
+    const price = 0;
+    const stock = 0;
+    const status = 0;
+    const {brand, cate1, cate2, material, name, sku, description, size, color} = req.body;
+    var arrSize, arrColor;
+    var arrImg = [];
+    var arrVariantId = [];
 
-    Category.findById(parentId, function(err, data){
-        if (err) console.log(err);
-        else {
-            data.childCateName.forEach((item)=>{
-                if (item._id == childId)
-                {
-                    childCateName = item.childName;
-                    parentCateName = data.name;
-                }
-            })
-        }
+    const imgCover = req.files.path;
 
-        var product = new Product({
-            stock: 0,
-            price: 0,
-            name: req.body.name,
-            color: req.body.color,
-            size: req.body.size,
-            materials: req.body.material,
-            brand: req.body.brand,
-            productType: {
-                main: {
-                    id: parentId,
-                    name: parentCateName
-                },
-                sub: {
-                    id: childId,
-                    name: childCateName
-                }
-            },
-            images: req.files['image_product'][0].filename,
-            subImages: [
-                req.files['image_product_multiple1'][0].filename,
-                req.files['image_product_multiple2'][0].filename,
-                req.files['image_product_multiple3'][0].filename,
-            ]
-        });
+    //check before save db
+    if (brand == '' || cate1 == '' || cate2 == '' || name == '' || material == '' || imgCover == '')
+        return res.status(500).json();
+
+    if (size != '' || color != '') {
+        //save to variant detail
+        if (size != '')
+            arrSize = size.split(',');
+        if (color != '')
+            arrColor = color.split(',');
         
-        var size = [], color = [];
-
-        if (typeof(req.body.size) === 'string')
-            size.push(req.body.size);
-        else
-            size = req.body.size;
-
-        if (typeof(req.body.color) === 'string')
-            color.push(req.body.color);
-        else
-            color = req.body.color;
-        
-        countInventory = size.length * color.length;
-
-        size.forEach((listSize) => {
-            var obj = {};
-            obj['id'] = listSize;
-            obj['name'] = listSize;
-            obj['price'] = 0;
-            product.subId.size.push(obj);
-        })
-
-        color.forEach((listColor) => {
-            product.subId.size.forEach((list)=>{
-                var obj = {};
-                obj['id'] = listColor;
-                obj['name'] = listColor;
-                obj['amount'] = 0;
-                list.color.push(obj);
+        arrSize.forEach(item => {
+            arrColor.forEach(async i => {
+                var saveVD = [{Size: item, Color: i}];
+                
+                var variantId = await db.insertVariantDetail(saveVD);
+                if (variantId) arrVariantId.push(variantId);
+                else return res.status(500).json();
             })
         })
         
-        product.save((err)=>{
-            if (err) throw err;
-        });
+    }
 
-        size.forEach((listSize) => {
-            color.forEach((listColor) => {
-                var inventory = new Inventory({
-                    productId: product._id,
-                    productName: product.name,
-                    sizeId: listSize,
-                    colorId: listColor,
-                    amount: 0,
-                    investment: 0
-                });
+    //save to product
+    const savePD = [cate1, cate2, shopId, name , description, status, material, sku];
+    const productId = await db.insertProduct(savePD);
 
-                countInventory--;
-                inventory.save((err)=>{
-                    if (err) throw err;
-                })
+   if (productId) {
+    //save to images
+    const saveImgCover =  await cloudinary.v2.uploader.upload(req.files['image_product'][0].path);
+    const imgCover = saveImgCover.secure_url;
+    var sub1 = '';
+    var sub2 = '';
+    var sub3 = '';
 
-                arrayInventory.push(inventory._id);
-            });
-        });
+    if (req.files['image_product_multiple1']) {
+        var saveImgSub =  await cloudinary.v2.uploader.upload(req.files['image_product_multiple1'][0].path);
+        sub1 = saveImgSub.secure_url;
+    }
+    else sub1 = '';
 
-        if (countInventory === 0)
-        {
-            product.listInventory = arrayInventory;
-            product.save();
+    if (req.files['image_product_multiple2']) {
+        var saveImgSub =  await cloudinary.v2.uploader.upload(req.files['image_product_multiple2'][0].path);
+        sub2 = saveImgSub.secure_url;
+    }
+    else sub2 = '';
 
-            req.flash('success_msg', 'Đã Thêm Thành Công');
-            res.redirect('/admin/product/add'); 
-        }
+    if (req.files['image_product_multiple3']) {
+        var saveImgSub =  await cloudinary.v2.uploader.upload(req.files['image_product_multiple3'][0].path);
+        sub3 = saveImgSub.secure_url;
+    }
+    else sub3 = '';
+    
+   var imgSave = {cover: imgCover, sub1: sub1, sub2: sub2, sub3: sub3};
+
+   var saveToImg = await db.insertImages([productId, imgSave]);
+
+    //save to product variant
+    if (arrVariantId != '') {
+        arrVariantId.forEach(async variant_id => {
+            var savePDV = [productId, variant_id, name, SKU, price, stock];
+            var productVariantId = await db.insertProductVariant(savePDV);
+        })
+    }
+   }
+
+   res.redirect('/admin'); 
+}
+
+exports.getEditProduct = async (req, res, next) => {
+    var productId = req.params.productId;
+    var oData = new Array;
+    var arrSize = [];
+    var arrColor = [];
+    var strSize = '';
+    var strColor= '';
+
+    const data = await db.getProductVariantInfo([productId]);
+    const productInfo = await db.getProductById([productId]);
+    const cate1 = await db.getCategoryLevelOne();
+    const cate2 = await db.getCategoryLevelTwo([productInfo[0].categorylevel1_id])
+    const img = await db.getImages([productId]);
+    
+    data.forEach(item => {
+        oData.push(item.attribute);
     })
+
+    oData.forEach(i => {
+        arrSize.push(i.Size);
+        arrColor.push(i.Color);
+    })
+    
+    arrColor = [...new Set(arrColor)];
+    arrSize = [...new Set(arrSize)];
+
+    arrSize.forEach(i => {
+        strSize += i + ',';
+    })
+
+    arrColor.forEach(i => {
+        strColor += i + ',';
+    })
+    
+    var arrImgSub = [img[0].url.sub1,img[0].url.sub2,img[0].url.sub3];
+    
+    res.render('./admin/product/editProduct', {
+        name: productInfo[0].name,
+        category1: cate1,
+        category2: cate2,
+        cate1: productInfo[0].categorylevel1_id,
+        cate2: productInfo[0].categorylevel2_id,
+        sku: productInfo[0].sku,
+        size: strSize, 
+        color: strColor,
+        imgCover: img[0].url.cover,
+        imgSub: arrImgSub
+    }); 
 }
 
-exports.getEditProduct = (req, res, next) => {
+exports.postEditProduct = async (req, res, next) => {
     var productId = req.params.productId;
-    let parentCate = [];
-    let material = [];
-    let brand = [];
-    let subCate = [];
+    const {cate1, cate2, material, name, sku, description} = req.body;
+    var arrImg = [];
 
-    Category.find({}, (err, cats) => {
-        cats.forEach(cat => {
-            parentCate.push({name: cat.name, id: cat._id});
-        });
-    });
+    //check before update
+    if (cate1 == '' || cate2 == '' || name == '' || material == '')
+        return res.status(500).json();
 
-    Material.find({}, (err, mates) => {
-        mates.forEach(mate => {
-            material.push({name: mate.name, id: mate._id});
-        });
-    });
+    const uProduct = [name, cate1, cate2, sku, material, description, productId];
+    const update = await db.updateProduct(uProduct);
 
-    Brand.find({}, (err, brds) => {
-        brds.forEach(brd => {
-            brand.push({name: brd.name, id: brd._id});
-        });
-    });
+    //handle img
+    const img = await db.getImages([productId]);
 
-    Product.findById(productId, function(err, data) {
-        if (err) console.log(err);
-        else
-        {
-            Category.findById(data.productType.main.id, function(err, cat) {
-                if (err) console.log(err);
-                else
-                {
-                    cat.childCateName.forEach((sub) => {
-                        subCate.push({name: sub.childName, id: sub._id});
-                    });
-                    
-                    res.render('./admin/product/editProduct', {data: data, parentCate: parentCate, brand : brand, material: material, subCate: subCate}); 
-                }
-            });
-        }
-    });
-}
+    var sub1 = img[0].url.sub1;
+    var sub2 = img[0].url.sub2;
+    var sub3 = img[0].url.sub3;
+    var saveImgCover = img[0].url.cover;
 
-exports.postEditProduct = (req, res, next) => {
-    var productId = req.params.productId;
+    if (req.files['image_product'])
+    {
+        const upToCloud =  await cloudinary.v2.uploader.upload(req.files['image_product'][0].path);
+        saveImgCover = upToCloud.secure_url;
+    }
 
-    Product.findById(productId, function(err, data) {
-        if (err) console.log(err);
-        else
-        {
-            data.name = req.body.name;
-            data.materials = req.body.material;
-            data.brand = req.body.brand;
+    if (sub1 != '') {
+        if (!req.body.img1)
+            sub1 = '';
+    }
 
-            if (req.files['image_product'])
-            {
-                data.images = req.files['image_product'][0].filename;
-            }
+    if (sub2 != '') {
+        if (!req.body.img2)
+            sub2 = '';
+    }
 
-            if (req.files['image_product_multiple1'])
-            {
-                data.subImages.shift();
-                data.subImages[0] = req.files['image_product_multiple1'][0].filename;
-            }
+    if (sub2 != '') {
+        if (!req.body.img2)
+            sub2 = '';
+    }
 
-            if (req.files['image_product_multiple2'])
-            {
-                data.subImages.splice(1,1)
-                data.subImages[1] = req.files['image_product_multiple2'][0].filename;
-            }
+    if (req.files['image_product_multiple1']) {
+        var saveImgSub =  await cloudinary.v2.uploader.upload(req.files['image_product_multiple1'][0].path);
+        sub1 = saveImgSub.secure_url;
+    }
 
-            if (req.files['image_product_multiple3'])
-            {
-                data.subImages.splice(2,1);
-                data.subImages[2] = req.files['image_product_multiple3'][0].filename;
-            }
+    if (req.files['image_product_multiple2']) {
+        var saveImgSub =  await cloudinary.v2.uploader.upload(req.files['image_product_multiple2'][0].path);
+        sub2 = saveImgSub.secure_url;
+    }
 
-            // data.subImages = [
-            //     req.files['image_product_multiple1'][0].filename,
-            //     req.files['image_product_multiple2'][0].filename,
-            //     req.files['image_product_multiple3'][0].filename,
-            // ]
+    if (req.files['image_product_multiple3']) {
+        var saveImgSub =  await cloudinary.v2.uploader.upload(req.files['image_product_multiple3'][0].path);
+        sub3 = saveImgSub.secure_url;
+    }
+    
+   var imgUpdate = {cover: saveImgCover, sub1: sub1, sub2: sub2, sub3: sub3};
+
+   const updateImg = await db.updateImages([imgUpdate, productId]);
+    
+    if (update && updateImg) res.redirect('/admin');
+    else return res.status(500).json();
+
+
+    // Product.findById(productId, function(err, data) {
+    //     if (err) console.log(err);
+    //     else
+    //     {
+    //         data.name = req.body.name;
+    //         data.materials = req.body.material;
+    //         data.brand = req.body.brand;
+
+    //         if (req.files['image_product'])
+    //         {
+    //             data.images = req.files['image_product'][0].filename;
+    //         }
+
+    //         if (req.files['image_product_multiple1'])
+    //         {
+    //             data.subImages.shift();
+    //             data.subImages[0] = req.files['image_product_multiple1'][0].filename;
+    //         }
+
+    //         if (req.files['image_product_multiple2'])
+    //         {
+    //             data.subImages.splice(1,1)
+    //             data.subImages[1] = req.files['image_product_multiple2'][0].filename;
+    //         }
+
+    //         if (req.files['image_product_multiple3'])
+    //         {
+    //             data.subImages.splice(2,1);
+    //             data.subImages[2] = req.files['image_product_multiple3'][0].filename;
+    //         }
+
+    //         // data.subImages = [
+    //         //     req.files['image_product_multiple1'][0].filename,
+    //         //     req.files['image_product_multiple2'][0].filename,
+    //         //     req.files['image_product_multiple3'][0].filename,
+    //         // ]
         
-            // get ra so sánh 3 cái image thử
-            //data.subImages[0] = '1607335670751-cute.png';
-            data.save();
-            res.redirect('/admin');
+    //         // get ra so sánh 3 cái image thử
+    //         //data.subImages[0] = '1607335670751-cute.png';
+    //         data.save();
+    //         res.redirect('/admin');
             
            
-        }
-    });
+    //     }
+    // });
    // console.log(req.body.brand)
+}
+
+exports.getEditProductVariant = async (req, res, next) => {
+    const productId = req.params.productId;
+    const data = await db.getProductVariantInfo([productId]);
+
+    res.render('./admin/inventory/inventoryDetail', {data: data})
+}
+
+exports.postEditProductVariant = async (req, res, next) => {
+    const productId = req.params.productId;
+    const {sku, price, stock} = req.body;
+    
+    const dataUpdate = [sku, price, stock, productId];
+    const updateDB = db.updateProductVariant(dataUpdate);
+
+    if (updateDB) res.send({ state: 'success' });
+    else res.send({ state: 'fail' });
 }
 
 exports.postSetPrice = (req, res, next) => {

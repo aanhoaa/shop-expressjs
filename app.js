@@ -24,16 +24,16 @@ var shopRouter = require('./routes/shop.route');
 //const addBrand = require('./util/addBrand');
 
 var app = express();
- const MongoDBStore = require('connect-mongodb-session')(session);
+const MongoDBStore = require('connect-mongodb-session')(session);
 
 const urlConnect = process.env.DB;
 // Connect to database
-mongoose.connect(urlConnect, { useNewUrlParser: true, useUnifiedTopology: true }, err => {
-  if (err) {
-    console.log("Fail to connect db");
-  }
-  console.log('Connect successfullyy!!');
-});
+// mongoose.connect(urlConnect, { useNewUrlParser: true, useUnifiedTopology: true }, err => {
+//   if (err) {
+//     console.log("Fail to connect db");
+//   }
+//   console.log('Connect successfullyy!!');
+// });
 
 // pass passport for configuration
 require('./config/passport')(passport);

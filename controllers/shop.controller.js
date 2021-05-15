@@ -6,6 +6,9 @@ const Material = require("../models/material.model");
 const Inventory = require("../models/inventory.model");
 const Order = require("../models/order.model");
 const paypal = require('paypal-rest-sdk');
+const jwtHelper = require("../helpers/jwt.helper"); 
+const db = require('../helpers/db.helper');
+var bcrypt = require("bcryptjs");
 
 exports.getIndexShop = (req, res, next) => {
     Order.find().then((data) => {
@@ -913,4 +916,34 @@ exports.getCheckouted = (req, res, next) => {
         );
       }
 })
+}
+
+//magege shop
+exports.getShop = (req, res, next) => {
+  res.render('shop/admin/login');
+}
+
+exports.postShop = async (req, res, next) => {
+  const {username, password} = req.body;
+   
+    const data = await db.checkUserExist(3, [username]); 
+    if (data) {
+      const userPass = await db.getUserInfo(3,[username]);
+      const checkPass = await bcrypt.compare(password, userPass.password);
+      
+      if (checkPass) {
+        const userInfo = {
+          id: userPass.id,
+          username: username,
+          role: userPass.role
+        }
+        const accessToken = await jwtHelper.generateToken(userInfo, 'secret', '1h');
+
+        res.cookie('Token',accessToken, { maxAge: 1900000, httpOnly: true });
+        // res.headers(123);
+        return res.status(200).json({accessToken});
+      }
+    }
+
+    return res.status(500).json();
 }

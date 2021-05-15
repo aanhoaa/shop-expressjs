@@ -7,26 +7,37 @@
             <small>Add</small>
         </h1>
     </div>
-    <% if (message != 'undefined') {%>
-        <div class="status">
-            <span><%=message%></span>
-        </div>
-    <% } %>
+    
     <form action="" method="POST">
         <input type="hidden" name="_token" value="{!! csrf_token() !!}">
         <div class="col-lg-10" style=" display: flex;">  
             <div class="col-sm-11" style="margin-left: 55px;">
                 <label class="font_text">
             Thông tin chung <small style="margin-left: 10px; color: gray;">Cung cấp thông tin cơ bản về danh mục sản phẩm</small></label> 
-                <div class="form-group">
+            <!-- <div class="form-group">
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                    <label class="form-check-label" for="exampleCheck1">Check me out</label>
+                  </div>
+            </div> -->
+            <div class="form-group">
+                <label class="font_text_details">Cấp</label>
+            
+                <select class="form-control" name="levle" id="getLevel" required>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                </select>
+            </div>
+
+            <div class="form-group">
                 <label class="font_text_details">Danh mục cha</label>
-               
+            
                 <select class="form-control" name="id" required>
-                   
+                
                     <option value="">Please Choose Parent Category</option>
-                    <% data.forEach((cate)=>{ %>
-                    <option value="<%- cate['_id']%>"><%- cate['name']%></option>
-                   <% })%>
+                
+                    <option value=""></option>
+                
                 </select>
             </div>
                 <div class="form-group">
@@ -45,5 +56,10 @@
         </div>      
     </form>
 </div>
-
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"> </script>
+<script>
+    $(document).ready(function () {
+        
+    });
+</script>
 <% include ../../partials/footer_admin %>

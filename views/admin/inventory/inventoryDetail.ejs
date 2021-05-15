@@ -1,5 +1,5 @@
 <% include ../../partials/header_admin %>
-
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <div style="margin-left: 5%;">
     <div class="col-lg-12">
         <h1 class="page-header">Product
@@ -11,36 +11,52 @@
         <thead>
             <tr align="center">
                 <th>STT</th>
-                <th>Tên</th>
-                <th>Giá vốn</th>
-                <th>Giá mới</th>
-                <th>Kích thước</th>
-                <th>Màu sắc</th>
-                <th>Số lượng tồn</th>
+                <th>Tên Sản phẩm</th>
+                <th>SKU</th>
+                <th>Phân loại hàng</th>
+                <th>Giá</th>
+                <th>Kho hàng</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
-            <%let i = 0%>
-            <% info.forEach((subItem) => { i++;%>
+           <%if (data) {
+               var i = 0;
+               data.forEach(item => {i++;
+            %>
             <tr class="odd gradeX" align="center">
+                <input type="text" value="<%-item.id%>" hidden name="id" id="id">
                 <td><%-i%></td>
-                <td><%-data%></td>
-                <td><%-subItem.investment%></td>
+                <td><%-item.name%></td>
                 <td>
-                    <div class="form-group">
-                        <input class="form-control gia_ban" name="price" placeholder=" Enter Product Price" 
-                        data-productId = "<%-productId%>" data-size = "<%-subItem.size%>" data-color = "<%-subItem.color%>" data-investment = "<%-subItem.investment%>"
-                        value="<%-subItem.price%>" <%-subItem.amount > 0 ? '' : 'disabled'%> />
-                        
+                    <div class="form-group edit-variant">
+                        <input type="text" class="form-control" id="sku" 
+                        onkeypress="changeVariant()"
+                        value="<%-item.sku == '' ? '--': item.sku%>"/>  
                     </div>
                 </td>
-                <td><%-subItem.size%></td>
-                <td><%-subItem.color%></td>
-                <td><%-subItem.amount%></td>
+                <td><%-item.attribute.Color%>, <%-item.attribute.Size%></td>
+                <td>
+                    <div class="form-group edit-variant">
+                        <input class="form-control gia_ban" id="price" placeholder=" Enter Product Price" 
+                       id="price"
+                        value="<%-item.price%>" type="number" onkeypress="changeVariant()"/>  
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group edit-variant">
+                        <input class="form-control" id="stock"
+                        value="<%-item.stockamount%>" type="number" onkeypress="changeVariant()"/>  
+                    </div>
+                </td>
+                <td style="display: none;" class="center act-update"><a href="" class="btn btn-warning" onclick="updateVariant()">
+                    <i class="fas fa-edit"></i> Update</a>
+                </td>
             </tr>
-            <% }) %>
+           <%})}%>
         </tbody>
     </table>
 </div>
-
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+<script src="/javascripts/js/admin/changeInfoVariant.js"></script>
 <% include ../../partials/footer_admin %>

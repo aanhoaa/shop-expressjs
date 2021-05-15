@@ -62,34 +62,56 @@
             <tr align="center">
                 <th>STT</th>
                 <th>Tên sản phẩm</th>
-                <th>Giá bán (VNĐ)</th>
-                <th>Giá vốn (VNĐ)</th>
-                <th>Trạng thái</th>
-                <th>Danh mục</th>
+                <th>SKU</th>
+                <th>Phân loại hàng</th>
+                <th>Giá</th>
+                <th>Kho hàng</th>
                 <th>Action</th>
             </tr>
         </thead>
         <tbody>
-            <%var i = 0%>
-            <% data.forEach((product)=>{
-                i++;
-             %>
-
+            <% if (data) { var i = 0;%>
+           <%data.forEach(item => { i++;%>
             <tr class="odd gradeX" align="center">
                 <td><%-i%></td>
-                <td><%-product.name%></td>
+                <td><%-item.name%></td>
                 <td>
-                    <input type="number" min="0" class="form-control gia_ban" data-id="{!! $item["id"] !!}" data-gia_von="{!! $item["gia_von"] !!}" value= style="width: 50%;">
+                   <%item.classify.forEach(it => {%>
+                        <div>
+                            <input type="text" value="<%-it.sku%>" class="form-control form-edit">
+                        </div>
+                    <%})%>
                 </td>
-                <td><%-product.price%> đ</td>
-                <td><%-product.stock != 0? 'OverStock' : 'Out of Stock'%></td>
+                <td> 
+                    <%item.classify.forEach(it => {%>
+                        <div>
+                            <p><%-it.attribute.Color%>, <%-it.attribute.Size%></p>
+                        </div>
+                    <%})%>
+                </td>
                 <td>
-                    <%-product.productType.main.name%>
-                    <%-product.productType.sub.name%>
+                    <%item.classify.forEach(it => {%>
+                        <div>
+                            <input type="number" value=<%-it.price%> class="form-control form-edit">
+                        </div>
+                    <%})%>
                 </td>
-                <td class="center"><a href="admin/product/edit/<%-product._id%>" class="btn btn-warning"><i class="fas fa-edit"></i> Edit</a></td>
+                <td>
+                    <%item.classify.forEach(it => {%>
+                        <div>
+                            <input type="number" value=<%-it.stockamount%> class="form-control form-edit">
+                        </div>
+                    <%})%>
+                </td>
+                <td class="center"><a href="admin/product/edit/<%-item.id%>" class="btn btn-warning">
+                    <i class="fas fa-edit"></i> Edit</a>
+                </td>
+                <td class="center"><a href="admin/product/edit/variant/<%-item.id%>" class="btn btn-warning">
+                    <i class="fas fa-edit"></i> Edit Variant</a>
+                </td>
             </tr>
-            <%})%>
+           <%})%>
+           <%}%>
         </tbody>
     </table>
 </div>

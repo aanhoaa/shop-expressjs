@@ -5,38 +5,39 @@ exports.getUserInfo = (req, res, next) => {
 const promises = [];
 var oData = [];
 var total = 0;
-promises.push(
-    Order.find().then((data) => {
-      data.forEach((order) => {
-        total = 0;
-        if (order.user == req.user._id)
-        {
-          order.cart.forEach((item) => {
-            total = parseInt(total, 10) + parseInt(item.price, 10) * parseInt(item.amount, 10);
-          })
+res.send('123');
+// promises.push(
+//     Order.find().then((data) => {
+//       data.forEach((order) => {
+//         total = 0;
+//         if (order.user == req.user._id)
+//         {
+//           order.cart.forEach((item) => {
+//             total = parseInt(total, 10) + parseInt(item.price, 10) * parseInt(item.amount, 10);
+//           })
 
-          oData.push(
-            {
-              date: order.createdAt, 
-              status: order.status, 
-              orderId: order._id,
-              address: req.user.address, 
-              total: total
-            })
+//           oData.push(
+//             {
+//               date: order.createdAt, 
+//               status: order.status, 
+//               orderId: order._id,
+//               address: req.user.address, 
+//               total: total
+//             })
         
-        }
-      })
-    })
-    )
-    Promise.all(promises).then(() => 
+//         }
+//       })
+//     })
+//     )
+//     Promise.all(promises).then(() => 
     
-    res.render('auth/user/userInfo', { 
-      title: 'Shop', 
-      user: req.user, 
-      cart: req.session.cart, 
-      oData: oData,
-    })
-    );
+//     res.render('auth/user/userInfo', { 
+//       title: 'Shop', 
+//       user: req.user, 
+//       cart: req.session.cart, 
+//       oData: oData,
+//     })
+//     );
     
 };
 

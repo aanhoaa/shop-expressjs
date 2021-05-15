@@ -8,3 +8,17 @@ table.table-custom {
     padding-right: 25px !important;
     padding-left: 2px !important;
 }
+
+.form-edit {
+    margin-bottom: 5px;
+    width: 100% !important;
+}
+
+.edit-variant input{
+    width: 70% !important;
+}
+
+#dataTables-example td,
+#dataTables-example th {
+    text-align: left;
+}

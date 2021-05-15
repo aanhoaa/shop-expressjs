@@ -4,9 +4,12 @@ $(document).ready(function(){
 
   function addImgAfterDelete(i)
   {
-      /* Act on the event */
-          $('#insertImage').append('<div class="form-group image_block" style="margin-top: 10px;"><label>Product Image Detail '+i+'</label><div class="custom-file"><input type="file" class="custom-file-input" name="image_product_multiple'+ i +'" id="validatedCustomFile_'+(i-1)+'" required><label class="custom-file-label" required for="validatedCustomFile_'+(i-1)+'">Choose file...</label></div></div> <img class="image_multiple_block img_detail" id="image_block_'+(i-1)+'" src="http://placehold.it/180" alt="your image" style="width: 69%; height: 10%;" />');
+      // /* Act on the event */
+      //     $('#insertImage').append('<div class="form-group image_block" style="margin-top: 10px;"><label>Product Image Detail '+i+'</label><div class="custom-file"><input type="file" class="custom-file-input" name="image_product_multiple'+ i +'" id="validatedCustomFile_'+(i-1)+'" required><label class="custom-file-label" required for="validatedCustomFile_'+(i-1)+'">Choose file...</label></div></div>');
+
   }
+
+  //<img class="image_multiple_block img_detail" id="image_block_'+(i-1)+'" src="http://placehold.it/180" alt="your image" style="width: 69%; height: 10%;" />
 
   	var numSizeImage = $('.image_block').length;
     
@@ -41,17 +44,15 @@ $(document).ready(function(){
 
 
     $('a#del_image').on('click',(function(e){
-     
-      var url = "http://shop.test/public/admin/product/delimg/";
-      var _token = $("form[name='frmEditProduct']").find("input[name='_token']").val();
       var idImg = $(this).parent().find("img").attr("idImg");
       var img = $(this).parent().find("img").attr("src");
-      var rid = $(this).parent().find("img").attr("id");
+      $(this).parent().find("img").remove();
+      $(this).parent().removeAttr('id')
+      $(this).parent().append(`<div class="custom-file"> <input type="file" class="custom-file-input" name="image_product_multiple${idImg}" id="validatedCustomFile"> <label class="custom-file-label" required for="validatedCustomFile">Choose file...</label> </div>`);
+      $(this).parent().find('.img-hidden').remove();
+      $(this).remove();
       e.preventDefault();
-      //console.log(rid);
-      $("#"+ rid).remove();
-
-      addImgAfterDelete(idImg);
+      //addImgAfterDelete(idImg);
    }));
 
 	$(document).ready(function() {
@@ -286,42 +287,44 @@ $(document).ready(function(){
         var productId = $(this).attr('data-productId');
         var size = $(this).attr('data-size');
         var color = $(this).attr('data-color');
+      console.log(12)
+        $('.act-update').css('display','block')
 
-        if(parseInt(gia_ban, 0) >= parseInt(gia_von, 0))
-        {
-          $.ajax({
-            url: `${window.location.origin}/admin/product/setPrice`,
-            type: "post", // phương thức gửi dữ liệu.
-            dataType: "json",
-            data: {
-                  price: gia_ban,
-                  productId: productId,
-                  size: size,
-                  color: color
-              },
-            success:function(data){ //dữ liệu nhận về
-                 //console.log(data);
-                swal({
-                title: "Success!",
-                text: "Cập nhật giá bán thành công!",
-                icon: "success",
-                button: "Aww yiss!",
-              });
-            },
-            error: function() {
-              alert("Bị lỗi");
-            }
-         });
-        }
-        else
-        {
-          swal({
-            title: "Error!",
-            text: "Giá bán phải lớn hơn giá vốn!",
-            icon: "error",
-            button: "Aww yiss!",
-          });
-        }
+        // if(parseInt(gia_ban, 0) >= parseInt(gia_von, 0))
+        // {
+        //   $.ajax({
+        //     url: `${window.location.origin}/admin/product/setPrice`,
+        //     type: "post", // phương thức gửi dữ liệu.
+        //     dataType: "json",
+        //     data: {
+        //           price: gia_ban,
+        //           productId: productId,
+        //           size: size,
+        //           color: color
+        //       },
+        //     success:function(data){ //dữ liệu nhận về
+        //          //console.log(data);
+        //         swal({
+        //         title: "Success!",
+        //         text: "Cập nhật giá bán thành công!",
+        //         icon: "success",
+        //         button: "Aww yiss!",
+        //       });
+        //     },
+        //     error: function() {
+        //       alert("Bị lỗi");
+        //     }
+        //  });
+        // }
+        // else
+        // {
+        //   swal({
+        //     title: "Error!",
+        //     text: "Giá bán phải lớn hơn giá vốn!",
+        //     icon: "error",
+        //     button: "Aww yiss!",
+        //   });
+        // }
         
     });
 

@@ -13,10 +13,10 @@
                     
                       
                         <div class="form-group">
-                            <label for="email" class="col-md-4 control-label">Email address</label>
+                            <label for="email" class="col-md-4 control-label">username</label>
 
                             <div class="col-md-6">
-                                <input id="email" type="email" class="form-control" name="email" value="" required autofocus>
+                                <input id="username" type="text" class="form-control" name="username" value="" required autofocus>
 
                                     <span class="help-block">
                                         <strong></strong>
@@ -110,13 +110,13 @@
 
         $("#btn-login").on("click", function(event) {
         event.preventDefault();
-        let email = $("#email").val();
+        let username = $("#username").val();
         let password = $("#password").val();
 
         $.ajax({
             url: `${window.location.origin}/login`,
             method: "POST",
-            data: {email: email, password: password},
+            data: {username: username, password: password},
             success: function(data) { 
                 swal({
                 title: "Success!",
@@ -129,7 +129,7 @@
 
             },
             error: function(err) {
-                if (err.responseText == '"Tài khoản không tồn tại"') $("#email").val('');
+                if (err.responseText == '"Tài khoản không tồn tại"') $("#username").val('');
                
                 swal({
                 title: "Login fail!",

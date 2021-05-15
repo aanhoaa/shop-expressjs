@@ -2,34 +2,37 @@
 <% include ../../partials/header_admin %>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"> </script>
 <script src="/javascripts/js/addProduct.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/css/bootstrap-theme.min.css">
+<link rel="stylesheet" href="/javascripts/assets/bootstrap-tagsinput.css">
+<link rel="stylesheet" href="/javascripts/assets/app.css">
 <div style="margin-left: 5%;">
     <div class="col-lg-12">
         <h1 class="page-header">Product
             <small>Add</small>
         </h1>
     </div>
-
     <form action="" method="POST" enctype="multipart/form-data">
         <div class="col-lg-7" style="padding-bottom:120px">
-            <input type="hidden" name="_token" value="{!! csrf_token() !!}">
+            <!-- <input type="hidden" name="_token" value="{!! csrf_token() !!}"> -->
+
             <div class="form-group">
                 <label>Thương hiệu</label>
                 <select class="form-control" name="brand" required>
                     <option value="">Please Choose Brand</option>
-                    <% brand.forEach(brd=>{%>
-                      <option value="<%-brd.id%>"><%-brd.name%></option>
-                      <%})%>
+                  
+                      <option value="test">test</option>
+                      
                 </select>
             </div>
             <div class="form-group">
                 <label>Danh mục lớn</label>
-                <select class="form-control par-cate" name="parentCate" required>
+                <select class="form-control par-cate" name="cate1" required>
                     <option value="">Please Choose Category</option>
-                   <% parentCate.forEach(cat=>{%>
-                      <option value="<%-cat.id%>"><%-cat.name%></option>
+                    <%data.forEach(item => {%>
+                      <option value="<%-item.id%>"><%-item.name%></option>
                     <%})%>
-                </select>
-                
+                </select> 
             </div>
             <div id="output"></div>
             <div class="some-element-class"></div>
@@ -37,7 +40,7 @@
       
             <div class="form-group">
                 <label>Danh mục nhỏ</label>
-                <select class="form-control child-cate" name="childCate" required>
+                <select class="form-control child-cate" name="cate2" required>
                     <option value="">Please Choose Child Category</option>      
                 </select>
             </div>
@@ -45,15 +48,21 @@
                 <label>Chất liệu</label>
                 <select class="form-control" name="material" required>
                     <option value="">Please Choose Material</option>
-                    <% material.forEach(mat=>{%>
-                      <option value="<%-mat.id%>"><%-mat.name%></option>
-                    <%})%>
+                  
+                      <option value="test">test</option>
+                   
                 </select>
             </div>
             <div class="form-group">
                 <label>Tên sản phẩm</label>
                 <input class="form-control" name="name" placeholder="Please Enter Product Name" value="" required/>
             </div>
+
+            <div class="form-group">
+                <label>SKU</label>
+                <input class="form-control" name="sku" placeholder="Please Enter SKU" value=""/>
+            </div>
+            
             <input type="hidden" class="form-control" name="price" placeholder="Please Enter Product Price" value="0" required/>
             <div class="form-group">
                 <label>Miêu tả</label>
@@ -73,7 +82,7 @@
             <div class="col-md-8">
                 
                 <div id="file-upload-form" class="uploader">
-                  <input id="file-upload" type="file" name="image_product" onchange="readMainURL(this);" value="{!! old('image_product') !!}">
+                  <input id="file-upload" type="file" name="image_product" onchange="readMainURL(this);" value="" required>
                   <label for="file-upload" id="file-drag">
                     <img id="file-image" src="#" alt="Preview" class="hidden">
                     <div id="start">
@@ -107,34 +116,21 @@
                 <% } %>
                 
                 <div id="insertSize">
-                    <div class="form-group size_block">
-                        <label>Kích thước</label>
-                        <select class="form-control size_product" name="size" style="margin-top: 10px;" multiple="multiple" required>
-                            <option value="S">Size S</option>
-                            <option value="M">Size M</option>
-                            <option value="L">Size L</option>
-                            <option value="X">Size X</option>
-                            <option value="XL">Size XL</option>
-                        </select>
+                    <div class="form-group">
+                        <label>Size</label>
+                        <input type="text" value="" data-role="tagsinput" name='size' id="size-opt"/>
                     </div>
                 </div>
 
                 <div id="insertColor">
-                    <div class="form-group color_block">
-                        <label>Màu sắc</label>
-                        <select class="form-control color_product" name="color" style="margin-top: 10px;" multiple="multiple" required>
-                            <option value="orange">Orange</option>
-                            <option value="olivaceous">Olivaceous</option>
-                            <option value="green">Green</option>
-                            <option value="blue">Blue</option>
-                            <option value="sky">Sky</option>
-                            <option value="yellow">Yellow</option>
-                            <option value="greenish">Greenish</option>
-                            <option value="red">Red</option>
-                        </select>
+                    <div class="">
+                        <label>Color</label>
+                        <input type="text" value="" data-role="tagsinput" name='color'/>
                     </div>
                 </div>
             </div>
     </form>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js"></script>
+<script src="/javascripts/assets/bootstrap-tagsinput.min.js"></script>
 <% include ../../partials/footer_admin %>

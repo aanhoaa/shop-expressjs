@@ -8,7 +8,7 @@ const authController = require("../controllers/auth.controller");
 //     res.render('index', { title: 'Shop' });
 // });
 
-router.get("/", shopController.getIndexShop);
+//router.get("/", shopController.getIndexShop);
 router.get("/product", shopController.getProducts);
 router.get("/product/:productId", shopController.getProductDetail);
 router.get("/product/detail/:productId", shopController.getProductDetailInfo);
@@ -24,6 +24,9 @@ router.get("/cart/delete", authController.isLogin, shopController.getDeleteCart)
 router.get("/checkout", authController.isLogin, shopController.getCheckout);
 router.post("/checkout", authController.isLogin, shopController.postCheckout);
 router.get("/checkouted", authController.isLogin, shopController.getCheckouted);
+
+router.get("/", shopController.getShop);
+router.post("/", shopController.postShop);
 
 
 
