@@ -56,16 +56,16 @@ $(document).ready(function(){
    }));
 
 	$(document).ready(function() {
-	  $('#dataTables-example').DataTable({
-	    responsive: true,
-	    columnDefs: [
-	            {
-	                targets: [ 0, 1, 2 ],
-	                className: 'mdl-data-table__cell--non-numeric'
-	            }
-	        ]
+	  // $('#dataTables-example').DataTable({
+	  //   responsive: true,
+	  //   columnDefs: [
+	  //           {
+	  //               targets: [ 0, 1, 2 ],
+	  //               className: 'mdl-data-table__cell--non-numeric'
+	  //           }
+	  //       ]
 	        
-	  });
+	  // });
 	});
 
   	$(document).ready(function() {

@@ -7,6 +7,11 @@
 <link rel="stylesheet" href="/javascripts/assets/bootstrap-tagsinput.css">
 <link rel="stylesheet" href="/javascripts/assets/app.css">
 
+<div class="category-link">
+    <a href="#" onclick="btnCancel()">Trang chủ</a> >
+    <span style="color: red">Sửa sản phẩm</span>
+</div>
+
 <div style="margin-left: 5%;">
     <div class="col-lg-12">
         <h1 class="page-header">Product
@@ -98,8 +103,8 @@
             </div>
             
             <div class="col-md-12">
-               <button type="submit" class="btn btn-default">Product Update</button>
-               <button type="reset" class="btn btn-default">Reset</button> 
+               <button type="submit" class="btn btn-default">Cập nhật</button>
+               <button type="reset" class="btn btn-default" onclick="btnCancel()">Hủy</button> 
             </div>
         </div>
         <div class="col-md-1"></div>
@@ -154,6 +159,7 @@
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js"></script>
 <script src="/javascripts/assets/bootstrap-tagsinput.min.js"></script>
+<script src="/javascripts/js/admin/changeInfoVariant.js"></script>
 <script>
     function readMainURL(input) {
        if (input.files && input.files[0]) {

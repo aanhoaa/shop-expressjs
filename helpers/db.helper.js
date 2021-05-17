@@ -530,12 +530,12 @@ function insertProduct(values) {
 }
 
 function insertProductVariant(values) {
-    const sql = 'INSERT INTO productvariant(product_id, variant_id, name, sku, price, stockamount) VALUES($1, $2, $3, $4, $5, $6) RETURNING id';
+    const sql = 'INSERT INTO productvariant(product_id, variant_id, name, sku, price, stockamount) VALUES($1, $2, $3, $4, $5, $6)';
 
     return db.excuteQuery(sql, values)
     .then(res => {
         if (res.rowCount > 0)
-            return res.rows[0].id;
+            return true;
         return false;
     })
     .catch(error => {return error;});
@@ -560,6 +560,66 @@ function getIdVarianProduct(value) {
             })
         }
     })
+}
+
+function deleteProduct(value, str) {
+    const sql = `DELETE FROM product WHERE id in (${str});`
+
+    return db.excuteQuery(sql, value)
+    .then(res => {
+        if (res.rowCount > 0)
+            return true;
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function deleteProductVariant(value, str) {
+    const sql = `DELETE FROM productvariant WHERE product_id in (${str});`
+
+    return db.excuteQuery(sql, value)
+    .then(res => {
+        if (res.rowCount > 0)
+            return true;
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function deleteProductIamges(value, str) {
+    const sql = `DELETE FROM images WHERE product_id in (${str});`
+
+    return db.excuteQuery(sql, value)
+    .then(res => {
+        if (res.rowCount > 0)
+            return true;
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function deleteVariantDetail(value, str) {
+    const sql = `DELETE FROM variantdetail WHERE id in (${str});`
+
+    return db.excuteQuery(sql, value)
+    .then(res => {
+        if (res.rowCount > 0)
+            return true;
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function deleteTest(value, str) {
+    const sql = `delete from color where id in (${str})`;
+
+    return db.excuteQuery(sql, value)
+    .then(res => {
+        if (res.rowCount > 0)
+            return true;
+        return false;
+    })
+    .catch(error => {return error;});
 }
 
 //table imgs
@@ -775,7 +835,7 @@ function getProductVariant(value) {
 }
 
 function getProductVariantInfo(value) {
-    const sql = 'select a.name, c.attribute, b.sku, b.price, b.stockamount, b.id from productvariant as b inner join product as a on b.product_id = a.id inner join variantdetail as c on c.id = b.variant_id where a.id = $1';
+    const sql = 'select a.name, a.status, c.attribute, b.sku, b.price, b.stockamount, b.id, d.url from productvariant as b inner join product as a on b.product_id = a.id inner join variantdetail as c on c.id = b.variant_id inner join images as d on d.product_id = a.id where a.id = $1';
 
     return db.simpleQuery(sql, value)
     .then( res =>  {
@@ -792,6 +852,20 @@ function updateProduct(values) {
     const sql = 'UPDATE product SET name = $1, categorylevel1_id = $2, categorylevel2_id = $3, sku = $4, material = $5, description = $6 Where id = $7';
 
     return db.excuteQuery(sql, values)
+    .then(res => {
+        if (res.rowCount > 0)
+        {
+            return true;
+        }
+        return false;
+    })
+    .catch(error => { return false;}); 
+}
+
+function updateProductStatus(value) {
+    const sql = 'UPDATE product SET status = $1 WHERE id = $2';
+
+    return db.excuteQuery(sql, value)
     .then(res => {
         if (res.rowCount > 0)
         {
@@ -922,10 +996,15 @@ module.exports = {
     insertProductVariant,
     updateProduct,
     updateProductVariant,
+    updateProductStatus,
     getProductById,
     getProductByShop,
     getProductVariant,
     getProductVariantInfo,
+    deleteProduct,
+    deleteProductVariant,
+    deleteProductIamges,
+    deleteVariantDetail,
 
     insertImportGood,
     getDataImportGoodDetail,
@@ -945,4 +1024,5 @@ module.exports = {
 
     insertOrderTotal,
     insertOrder,
+    deleteTest
 }

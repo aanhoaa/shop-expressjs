@@ -253,9 +253,7 @@ exports.getLogin = (req, res, next) => {
       }
     } else {
       // Không tìm thấy token trong request
-      return res.status(403).send({
-        message: 'No token provided.',
-      });
+      return res.redirect('/login');
     }
   }
 
@@ -272,20 +270,29 @@ exports.getLogin = (req, res, next) => {
     }
   }
 
-  exports.isShop = async (req, res, next) => {
-    const decoded = await jwtHelper.verifyToken(get_cookies(req)['Token'], 'secret');
-  
-    if (decoded.data.role == 'shop')
-      next();
-    else
-    return res.redirect('/');
-  }
+exports.isShop = async (req, res, next) => {
+  const decoded = await jwtHelper.verifyToken(get_cookies(req)['Token'], 'secret');
 
-  var get_cookies = function(request) {
-    var cookies = {};
-    request.headers && request.headers.cookie.split(';').forEach(function(cookie) {
-      var parts = cookie.match(/(.*?)=(.*)$/)
-      cookies[ parts[1].trim() ] = (parts[2] || '').trim();
-    });
-    return cookies;
-  };
+  if (decoded.data.role == 'shop')
+    next();
+  else
+  return res.redirect('/');
+}
+
+exports.isAdmin = async (req, res, next) => {
+  const decoded = await jwtHelper.verifyToken(get_cookies(req)['Token'], 'secret');
+
+  if (decoded.data.role == 'admin')
+    next();
+  else
+  return res.redirect('/');
+}
+
+var get_cookies = function(request) {
+  var cookies = {};
+  request.headers && request.headers.cookie.split(';').forEach(function(cookie) {
+    var parts = cookie.match(/(.*?)=(.*)$/)
+    cookies[ parts[1].trim() ] = (parts[2] || '').trim();
+  });
+  return cookies;
+};

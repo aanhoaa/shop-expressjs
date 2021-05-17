@@ -38,10 +38,22 @@ async function excuteQuery(sql, values) {
     }
   })
 }
+async function multiExcuteQuery(sql, values) {
+  return await pool.multi({
+    text: sql,
+    values: values
+  })
+  .then(res => {
+    //console.log('res:', res)
+    return res;
+  })
+  .catch(e => console.error(e.stack))
+}
 
 
 
 module.exports = {
+  multiExcuteQuery,
   simpleQuery,
   excuteQuery,
     query: (text, params, callback) => {

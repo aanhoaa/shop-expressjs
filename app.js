@@ -15,8 +15,9 @@ const paypal = require('paypal-rest-sdk');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var authRouter = require('./routes/auth.route');
-var adminRouter = require('./routes/admin.route');
+var sellerRouter = require('./routes/seller.route');
 var shopRouter = require('./routes/shop.route');
+var adminRouter = require('./routes/admin.route');
 
 /* add database root */
 //const addCate = require('./util/addCategory');
@@ -81,6 +82,7 @@ paypal.configure({
 app.use(indexRouter);
 app.use(authRouter);
 app.use('/users', usersRouter);
+app.use('/seller', sellerRouter);
 app.use('/admin', adminRouter);
 app.use('/shop', shopRouter);
 
