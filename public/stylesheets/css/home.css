@@ -71,10 +71,16 @@ header .logo-routine img{
 header .for-user{
 	float: right;
 	margin-top: 19px;
+	margin-right: 55px;
 }
 header .for-user .icon-info{
 	float: right;
 	margin-top: 20px;
+}
+header .for-user .icon-info .cart-not-login{
+	position: relative; 
+	float: left;
+	margin: 1px 25%;
 }
 header .for-user .icon-info .fas{
 	margin: 10px;
@@ -92,11 +98,20 @@ header .for-user .icon-info .far{
 	padding-top: 1px;
 	text-align: center;
 }
+.icon-info .dropdown-menu {
+	left: -60px;
+	width: 175px;
+	padding-bottom: 0;
+}
+.icon-info .dropdown-menu .dropdown-item {
+	width: 172px;
+}
 header .for-user .group-search{
 	float: right;
 }
 header .for-user .group-search{
 	margin-top: 20px;
+	margin-right: 10px;
 }
 header .for-user .group-search .search-btn i{
 	font-size: 24px;

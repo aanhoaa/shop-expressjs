@@ -23,6 +23,14 @@ table.table-custom {
     text-align: left;
 }
 
+.banned-product {
+    text-align: center;
+    background: #eee;
+    color: red;
+    width: 76px;
+    font-weight: 600;
+}
+
 .hidden-product {
     text-align: center;
     background: #eee;
@@ -49,6 +57,7 @@ table.table-custom {
     color: #ee4d2d;
     background: rgba(239,71,71,.16);
     border-radius: 2px;
+    text-align: center;
 }
 
 .show-img-product {
@@ -188,4 +197,33 @@ table.table-custom {
     position:absolute;
     right: 10%;
     margin-top: 20px;
+}
+
+.user-option li{
+    margin: 10px;
+}
+
+.user-option li a {
+    color: #000;
+}
+.option-active a{
+    color: red !important;
+    text-decoration: underline;
+}
+
+.product-wrap-text {
+    width: 100px;
+    white-space: normal;
+}
+
+.custom-table-product {
+    padding: 8px 10px !important;
+}
+
+.action-product {
+    min-width: 145px !important;
+}
+
+.product-act {
+    margin-top: 50px;
 }

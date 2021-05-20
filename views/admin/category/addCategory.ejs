@@ -3,63 +3,62 @@
 
 <div style="margin-left: 5%;">
     <div class="col-lg-12">
-        <h1 class="page-header" style="margin-left: 55px;">Category
+        <h1 class="page-header">Category
             <small>Add</small>
         </h1>
     </div>
     
     <form action="" method="POST">
-        <input type="hidden" name="_token" value="{!! csrf_token() !!}">
         <div class="col-lg-10" style=" display: flex;">  
-            <div class="col-sm-11" style="margin-left: 55px;">
+            <div class="col-sm-11">
                 <label class="font_text">
             Thông tin chung <small style="margin-left: 10px; color: gray;">Cung cấp thông tin cơ bản về danh mục sản phẩm</small></label> 
-            <!-- <div class="form-group">
-                <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                    <label class="form-check-label" for="exampleCheck1">Check me out</label>
-                  </div>
-            </div> -->
-            <div class="form-group">
-                <label class="font_text_details">Cấp</label>
-            
-                <select class="form-control" name="levle" id="getLevel" required>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                </select>
-            </div>
+                <div class="select-category" style="margin-bottom: 100px;">
+                    <div class="form-group">
+                        <label class="font_text_details">Cấp</label>
+                    
+                        <select class="form-control" name="level" id="getLevel" required>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                        </select>
+                    </div>
+    
+                    <div class="col-md-3">
+                        <div class="col-sm-11">
+                             <button type="button" class="btn btn-primary" onclick="addCategory()">Xác nhận</button>
+                        </div>
+                    </div>    
+                </div>
 
-            <div class="form-group">
-                <label class="font_text_details">Danh mục cha</label>
-            
-                <select class="form-control" name="id" required>
+                <div class="form-group show-cate1" style="display: none;">
+                    <label class="font_text_details">Danh mục cha</label>
                 
-                    <option value="">Please Choose Parent Category</option>
-                
-                    <option value=""></option>
-                
-                </select>
-            </div>
-                <div class="form-group">
+                    <select class="form-control" name="id" id="parent">
+                        <option value="">Please Choose Parent Category</option>    
+                       <% if (data) {
+                           data.forEach(item => {
+                        %>
+                        <option value="<%-item.id%>"><%-item.name%></option>
+                        <%})}%>
+                    </select>
+                </div>
+                <div class="form-group show-category" style="display: none;">
                     <label class="font_text_details">* Tên danh mục</label>
-                    <input class="form-control" name="childCateName" placeholder="Nhập tên danh mục" required/>
+                    <input class="form-control" name="name" id="name" placeholder="Nhập tên danh mục" required/>
                 </div>
-                <div class="form-group">
+                <div class="form-group show-category" style="display: none;">
                     <label class="font_text_details">Mô tả</label>
-                    <input class="form-control" name="description" placeholder="Nhập mô tả"/>
+                    <input class="form-control" name="description"  id="description" placeholder="Nhập mô tả"/>
                 </div>
+                <div class="col-md-12">
+                    <div class="col-sm-11">
+                         <button type="submit" class="btn btn-primary" id="save" style="display: none;" onclick="saveDB()">Save</button>
+                    </div>
+                </div>   
             </div>
-        </div>
-
-        <div class="col-md-12" style="margin-top: 30px; margin-bottom: 40px; margin-left: 55px;">
-           <button type="submit" class="btn btn-primary" style="width: 18%;">Xác nhận</button>
-        </div>      
+        </div>  
     </form>
 </div>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"> </script>
-<script>
-    $(document).ready(function () {
-        
-    });
-</script>
+<script src="/javascripts/js/admin/category.js"></script>
 <% include ../../partials/footer_admin %>

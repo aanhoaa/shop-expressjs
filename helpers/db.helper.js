@@ -201,7 +201,7 @@ function checkUserExist(table, value) {
             return true;
         else return false;
     })
-    .catch(error => { return false;}); 
+    .catch(error => { console.log('error:',error)}); 
 }
 
 function checkUserById(value) {
@@ -218,7 +218,7 @@ function checkUserById(value) {
     });
 }
 
-function updateIsverified(values) {
+function updateUserIsverified(values) {
     return updateOne('users', 'isverified', [values, 1])
     .then(res => {
         if (res.rowCount > 0)
@@ -246,34 +246,21 @@ function getUserInfo(table, value) {
 
     return getAll(`${table}`, 'username', value)
     .then(res => {
-        //console.log('res', res.rows[0])
         return res.rows[0];
     })
     .catch(error => {return error;});
 }
 
-function userInsert(values) {
-    const sql = 'INSERT INTO users(username, password, email, tokenconfirm) VALUES($1, $2, $3, $4)';
+function insertUser(values) {
+    const sql = 'INSERT INTO users(fullname, username, password, email, tokenconfirm) VALUES($1, $2, $3, $4, $5) RETURNING id';
     
-    return checkUserExist(2, [values[0]])
-    .then(data => {
-        if (!data) {
-            values[1] =  bcrypt.hashSync(values[1], 10);
-            return db.excuteQuery(sql, values)
-            .then(res => {
-                if (res.rowCount > 0)
-                    return true;
-                return false;
-            })
-            .catch(error => {return error;});
-        }
-        else {
-            return ({
-                type: 0,
-                message: "user exist"
-            })
-        }
+    return db.excuteQuery(sql, values)
+    .then(res => {
+        if (res.rowCount > 0)
+        return res.rows[0].id;
+        return false;
     })
+    .catch(error => {return error;});
 }
 
 function userUpdate(values) {
@@ -283,7 +270,7 @@ function userUpdate(values) {
     .then(res => {
         if (res.rowCount > 0)
             return 'update success!!!';
-        return 'false';
+        return false;
     })
     .catch(error => {return error;});
 }
@@ -311,6 +298,18 @@ function userDelete(value) {
     })
 }
 
+function updateUserVerify(value) {
+    const sql = 'UPDATE users SET isverified = $1';
+
+    return db.excuteQuery(sql, values)
+    .then(res => {
+        if (res.rowCount > 0)
+            return true;
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
 function insertCart(values) {
     const sql = 'INSERT INTO cart(user_id, productvariant_id, amount) VALUES ($1, $2, $3)';
 
@@ -331,8 +330,19 @@ function insertCart(values) {
     helper category
 */
 
-function checkCateName(value) {
-    const sql = 'SELECT * FROM categoryparents WHERE name= $1';
+function checkCateName(value, level) {
+    var category = '';
+    switch(level) {
+        case 1:
+            category = 'categorylevel1';
+            break;
+        case 2:
+            category = 'categorylevel2';
+            break;
+    }
+
+    const sql = `SELECT * FROM ${category} WHERE name= $1`;
+
     return db.simpleQuery(sql, value)
     .then(res => {
         if (res.rows[0])
@@ -345,24 +355,47 @@ function checkCateName(value) {
     });
 }
 
-function cateInsert(values) {
+function insertCategoryLevelOne(values, level) {
     const sql = 'INSERT INTO categorylevel1(name, description) VALUES($1, $2)';
     
-    return checkCateName([values[0]])
+    return checkCateName([values[0]], 1)
     .then(data => {
         if (!data) {
             return db.excuteQuery(sql, values)
             .then(res => {
                 if (res.rowCount > 0)
-                    return 'Add category success!!!';
-                return 'false';
+                    return true;
+                return false;
             })
             .catch(error => {return error;});
         }
         else {
             return ({
-               // type: TYPE,
-                message: "category exist"
+               status: 0,
+               message: "category exist"
+            })
+        }
+    })
+}
+
+function insertCategoryLevelTwo(values) {
+    const sql = 'INSERT INTO categorylevel2(categorylevel1_id, name, description) VALUES($1, $2, $3)';
+    
+    return checkCateName([values[1]], 2)
+    .then(data => {
+        if (!data) {
+            return db.excuteQuery(sql, values)
+            .then(res => {
+                if (res.rowCount > 0)
+                    return true;
+                return false;
+            })
+            .catch(error => {return error;});
+        }
+        else {
+            return ({
+               status: 0,
+               message: "category exist"
             })
         }
     })
@@ -792,6 +825,20 @@ function updateProductVariant(values) {
     .catch(error => { return false;});  
 }
 
+function getProduct() {
+    const sql = 'SELECT * FROM product';
+
+    return db.simpleQuery(sql)
+    .then( res =>  {
+        if (res.rowCount > 0)
+        {
+            return res.rows;
+        }
+        return false;
+    })
+    .catch(error => { return false;});  
+}
+
 function getProductById(value) {
     const sql = 'SELECT * FROM product WHERE id = $1';
 
@@ -835,7 +882,7 @@ function getProductVariant(value) {
 }
 
 function getProductVariantInfo(value) {
-    const sql = 'select a.name, a.status, c.attribute, b.sku, b.price, b.stockamount, b.id, d.url from productvariant as b inner join product as a on b.product_id = a.id inner join variantdetail as c on c.id = b.variant_id inner join images as d on d.product_id = a.id where a.id = $1';
+    const sql = 'select a.name, a.status, c.attribute, b.sku, b.price, b.stockamount, b.id, d.url, e.name from productvariant as b inner join product as a on b.product_id = a.id inner join variantdetail as c on c.id = b.variant_id inner join images as d on d.product_id = a.id inner join shop as e on a.shop_id = e.id where a.id = $1';
 
     return db.simpleQuery(sql, value)
     .then( res =>  {
@@ -849,7 +896,7 @@ function getProductVariantInfo(value) {
 }
 
 function updateProduct(values) {
-    const sql = 'UPDATE product SET name = $1, categorylevel1_id = $2, categorylevel2_id = $3, sku = $4, material = $5, description = $6 Where id = $7';
+    const sql = 'UPDATE product SET name = $1, categorylevel1_id = $2, categorylevel2_id = $3, sku = $4, material = $5, description = $6 WHERE id = $7';
 
     return db.excuteQuery(sql, values)
     .then(res => {
@@ -934,6 +981,122 @@ function insertSupplier(values) {
 */
 
 /*
+    VIOLATE
+*/
+
+function getViolateType() {
+    const sql = 'SELECT * FROM violatetype';
+   
+    return db.simpleQuery(sql)
+    .then(res => {
+        if (res.rowCount > 0)
+            return res.rows;
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function getProductViolate(value) {
+    const sql = 'select a.id, b.id as violatetype_id, c.id as violateinfo_id, b.name, c.reason, c.suggestion, a.updated_at from productviolate as a inner join violatetype as b on b.id = a.violatetype_id inner join violateinfo as c on c.id = a.violateinfo_id where a.product_id = $1';
+
+    return db.simpleQuery(sql, value)
+    .then( res =>  {
+        if (res.rowCount > 0)
+        {
+            return res.rows;
+        }
+        return false;
+    })
+    .catch(error => { return false;}); 
+}
+
+function insertViolataInfo(values) {
+    const sql = 'INSERT INTO violateinfo(reason, suggestion) VALUES ($1, $2) RETURNING id';
+
+    return db.excuteQuery(sql, values)
+    .then(res => {
+        if (res.rowCount > 0)
+        {
+            return res.rows[0].id;
+        }
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function insertProductViolate(values) {
+    const sql = 'INSERT INTO productviolate(product_id, violateinfo_id, violatetype_id) VALUES ($1, $2, $3)';
+
+    return db.excuteQuery(sql, values)
+    .then(res => {
+        if (res.rowCount > 0)
+        {
+            return true;
+        }
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function checkProductViolateExist(value) {
+    const sql = 'SELECT * FROM productviolate WHERE product_id = $1';
+
+    return db.simpleQuery(sql, value)
+    .then(res => {
+        if (res.rows[0])
+            return true;
+        else return false;
+    })
+    .catch(error => {return error;});
+}
+
+function deleteProductViolate(value) {
+    const sql = 'DELETE FROM productviolate WHERE product_id = $1';
+
+    return db.excuteQuery(sql, value)
+    .then(res => {
+        if (res.rowCount > 0)
+        {
+            return true;
+        }
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function deleteViolateInfo(value) {
+    const sql = 'DELETE FROM violateinfo WHERE id = $1';
+
+    return db.excuteQuery(sql, value)
+    .then(res => {
+        if (res.rowCount > 0)
+        {
+            return true;
+        }
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function deleteViolateType(value) {
+    const sql = 'DELETE FROM violatetype WHERE id = $1';
+
+    return db.excuteQuery(sql, value)
+    .then(res => {
+        if (res.rowCount > 0)
+        {
+            return true;
+        }
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+/*
+ <==========================================================================>
+*/
+
+/*
     ORDER
 */
 function insertOrderTotal(values) {
@@ -973,13 +1136,14 @@ module.exports = {
     checkEmailExist,
     checkUserExist,
     getUserInfo,
-    userInsert,
+    insertUser,
     userUpdate,
     userDelete,
-    updateIsverified,
+    updateUserIsverified,
     insertCart,
 
-    cateInsert,
+    insertCategoryLevelOne,
+    insertCategoryLevelTwo,
     parentCateUpdate,
     cateDelete,
     getListCateParents,
@@ -997,6 +1161,7 @@ module.exports = {
     updateProduct,
     updateProductVariant,
     updateProductStatus,
+    getProduct,
     getProductById,
     getProductByShop,
     getProductVariant,
@@ -1005,6 +1170,15 @@ module.exports = {
     deleteProductVariant,
     deleteProductIamges,
     deleteVariantDetail,
+
+    getViolateType,
+    getProductViolate,
+    insertViolataInfo,
+    insertProductViolate,
+    checkProductViolateExist,
+    deleteProductViolate,
+    deleteViolateInfo,
+    deleteViolateType,
 
     insertImportGood,
     getDataImportGoodDetail,

@@ -13,7 +13,7 @@ const flash = require('connect-flash');
 const paypal = require('paypal-rest-sdk');
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+var usersRouter = require('./routes/users.route');
 var authRouter = require('./routes/auth.route');
 var sellerRouter = require('./routes/seller.route');
 var shopRouter = require('./routes/shop.route');
@@ -81,7 +81,7 @@ paypal.configure({
 
 app.use(indexRouter);
 app.use(authRouter);
-app.use('/users', usersRouter);
+app.use('/user', usersRouter);
 app.use('/seller', sellerRouter);
 app.use('/admin', adminRouter);
 app.use('/shop', shopRouter);

@@ -43,7 +43,10 @@ exports.handleImg = upload.fields([
     }
 ])
 
-exports.getLogin = (req, res, next) => {
+exports.getLogin = (req, res, next) => {  
+    if (req.session.token) 
+    res.redirect('/seller');
+    else
     res.render('shop/admin/login');
 }
 
@@ -63,8 +66,7 @@ exports.postLogin = async (req, res, next) => {
         }
         const accessToken = await jwtHelper.generateToken(userInfo, 'secret', '1h');
 
-        res.cookie('Token',accessToken, { maxAge: 1900000, httpOnly: true });
-        // res.headers(123);
+        req.session.token = accessToken;
         return res.status(200).json({accessToken});
       }
     }
@@ -72,19 +74,44 @@ exports.postLogin = async (req, res, next) => {
     return res.status(500).json();
 }
 
+exports.getLogout = (req, res, next) => {
+    req.session.destroy();
+    res.redirect('/');
+}
 
 exports.getHome = async (req, res, next) => {
     const shopId = req.jwtDecoded.data.id;
     var oData = new Array;
     const data = await db.getProductByShop([shopId]);
-    
+
     for(let i = 0; i< data.length; i++) {
-        var info = await db.getProductVariantInfo([data[i].id])
-       
-        oData.push({name: data[i].name, sku: data[i].sku, classify: info, id: data[i].id, status: data[i].status})
+        var info = await db.getProductVariantInfo([data[i].id]);
+        var violate = '';
+        if (data[i].status == -1) {
+            violate = await db.getProductViolate([data[i].id]);
+        }
+        if (violate != '') {
+            var time = violate[0].updated_at.toString();
+            
+            oData.push(
+                {
+                    name: data[i].name, sku: data[i].sku, classify: info, 
+                    id: data[i].id, status: data[i].status,
+                    vname: violate[0].name, vreason: violate[0].reason, 
+                    vsuggestion: violate[0].suggestion, vtime: getdate(time.substring(0, time.length-1))
+                }
+            )
+        }
+        else {
+            oData.push({
+                name: data[i].name, sku: data[i].sku, 
+                classify: info, id: data[i].id, 
+                status: data[i].status
+              })
+        }
+            
     }
     
-    //console.log('data', oData)
     res.render('./admin/index', {data: oData})
 }
 
@@ -390,7 +417,7 @@ exports.postEditProduct = async (req, res, next) => {
 
    const updateImg = await db.updateImages([imgUpdate, productId]);
     
-    if (update && updateImg) res.redirect('/admin');
+    if (update && updateImg) res.redirect('/seller');
     else return res.status(500).json();
 }
 
@@ -607,6 +634,22 @@ function makeid(length) {
        result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
     return result;
+}
+
+function getdate(tt) {
+    var date = new Date(tt);
+    var newdate = new Date(date);
+
+    newdate.setDate(newdate.getDate() + 3);
+    
+    var dd = newdate.getDate();
+    var mm = newdate.getMonth() + 1;
+    var y = newdate.getFullYear();
+    var hour = date.getHours();
+    var minutes = date.getMinutes();
+   
+    var someFormattedDate = dd + '/' + mm + '/' + y + ' ' + hour + 'h' + minutes + 'm';
+    return someFormattedDate;
 }
 
 exports.getAddInventory = (req, res, next) => {

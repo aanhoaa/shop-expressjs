@@ -3,7 +3,9 @@
 .admin_block{
   max-width: 13%; 
   background-color: #212120;
-  min-height: 1544px;
+  height: 650px;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 .panel-default > .panel-heading{

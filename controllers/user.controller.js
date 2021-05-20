@@ -1,44 +1,20 @@
-const User = require("../models/user.model");
-const Order = require("../models/order.model");
+const db = require('../helpers/db.helper');
+var bcrypt = require("bcryptjs");
+const nodemailer = require("nodemailer");
+const jwtHelper = require("../helpers/jwt.helper"); 
 
-exports.getUserInfo = (req, res, next) => {
-const promises = [];
-var oData = [];
-var total = 0;
-res.send('123');
-// promises.push(
-//     Order.find().then((data) => {
-//       data.forEach((order) => {
-//         total = 0;
-//         if (order.user == req.user._id)
-//         {
-//           order.cart.forEach((item) => {
-//             total = parseInt(total, 10) + parseInt(item.price, 10) * parseInt(item.amount, 10);
-//           })
 
-//           oData.push(
-//             {
-//               date: order.createdAt, 
-//               status: order.status, 
-//               orderId: order._id,
-//               address: req.user.address, 
-//               total: total
-//             })
-        
-//         }
-//       })
-//     })
-//     )
-//     Promise.all(promises).then(() => 
-    
-//     res.render('auth/user/userInfo', { 
-//       title: 'Shop', 
-//       user: req.user, 
-//       cart: req.session.cart, 
-//       oData: oData,
-//     })
-//     );
-    
+exports.getUserInfo = async (req, res, next) => {
+  const data = await db.getUserInfo(2, [req.jwtDecoded.data.username]);
+  const userInfo = {
+    username: data.username,
+    gender: data.gender
+  }
+
+  if (data) {
+    res.render('auth/user/userInfo', {userInfo: userInfo, user: data, cart: req.session.cart});
+  }
+  
 };
 
 exports.getEditUserInfo = (req, res, next) => {

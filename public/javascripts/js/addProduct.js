@@ -34,7 +34,7 @@
 
             var parentId = this.value;
             $.ajax({
-                url: `${window.location.origin}/admin/product/add/binding/${parentId}`,
+                url: `${window.location.origin}/seller/product/add/binding/${parentId}`,
                 method: "GET",
                 dataType: "json",
                 success: function(data) {

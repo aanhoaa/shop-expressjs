@@ -192,10 +192,17 @@ function checkAlls() {
 }
 
 function checkAll() {
-  const checkAll = document.getElementById('ckbAll').checked;
+  let visibleStep = $(".tab-option:visible");
+  
+  //var a = visibleStep.find('#ckbAll');
+  //console.log(a.prop('checked'))
+  
+  //const checkAll = document.getElementById('ckbAll').checked;
+  const checkAll = visibleStep.find('#ckbAll').prop('checked');
 
   if (checkAll) {
-    var checkboxes = document.getElementsByName('ckbProduct');
+    //visibleStep.find('#ckbAll').prop('checked', true);
+    var checkboxes = visibleStep.find('.checkOne');
  
    for (var i = 0; i < checkboxes.length; i++){
       checkboxes[i].checked = true;
@@ -205,14 +212,14 @@ function checkAll() {
     $('.opt-all').append('<div class="show-opt is-flex"> <div class="act-ckb col-sm-6"> <label for="">Chọn tất cả</label> <input type="checkbox" id="ckbAllS" onclick="checkAlls()"> </div> <div class="act-choose col-sm-6 is-flex" > <div style="margin: auto 0;"><p id="count-product-checked"></p></div> <div class="delete-product"> <button class="btn-group" id="delete-product" onclick="deleteProduct()">Xóa</button> </div> </div> </div>');
   }
 
-  document.getElementById('ckbAllS').checked = true;   
+ document.getElementById('ckbAllS').checked = true; 
 
    countChecked();
    //append
    //$('.opt-all').append('')
   }
   else {
-    var checkboxes = document.getElementsByName('ckbProduct');
+    var checkboxes = visibleStep.find('.checkOne');
  
    for (var i = 0; i < checkboxes.length; i++){
       checkboxes[i].checked = false;
@@ -223,7 +230,8 @@ function checkAll() {
 }
 
 function countChecked() {
-  var checkboxes = document.getElementsByName('ckbProduct');
+  let visibleStep = $(".tab-option:visible");
+  var checkboxes = visibleStep.find('.checkOne');
   var count = 0;
 
   for (var i = 0; i < checkboxes.length; i++){
@@ -255,7 +263,8 @@ function checkOne() {
 }
 
 function deleteProduct() {
-  const checkboxes = document.getElementsByName('ckbProduct');
+  let visibleStep = $(".tab-option:visible");
+  var checkboxes = visibleStep.find('.checkOne');
   var arrProduct = [];
 
   for (var i = 0; i < checkboxes.length; i++){
@@ -290,4 +299,32 @@ function deleteProduct() {
      });
     }
   })
+}
+
+//adminSys viewProduct
+function approve(it) {
+  const productId = $(it).attr('data-id');
+  
+  $.ajax({
+    url: `${window.location.origin}/admin/product/edit/status`,
+    type: "post",
+    dataType: "json",
+    data: {
+      productId: productId
+    },
+    success:function(data){ 
+         if (data.state == 0) 
+          Swal.fire('Lỗi', '', 'info')
+         else
+          {
+            Swal.fire('Đã phê duyệt', '', 'success');
+            setTimeout(function(){ 
+              window.location.href = '/admin'; 
+            }, 900);
+          }
+    },
+    error: function() {
+      alert("Bị lỗi");
+    }
+ });
 }

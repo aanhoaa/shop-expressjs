@@ -6,6 +6,7 @@ const sellerController = require("../controllers/seller.controller");
 
 router.get("/login" , sellerController.getLogin);
 router.post("/login" , sellerController.postLogin);
+router.get("/logout" , sellerController.getLogout);
 
 router.get("/" , authController.isAuth,authController.isShop, sellerController.getHome);
 

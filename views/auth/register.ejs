@@ -1,144 +1,82 @@
-<link rel="stylesheet" href="/stylesheets/css/register.css">
+
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"> </script>
+<!------ Include the above in your HEAD tag ---------->
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css">
 <title><%- title%></title>
 <% include ../partials/header %>
-<div class="container">
-    <div class="row">
-        <div class="col-md-8 offset-md-2" style="margin-top: 20px;">
-            <div class="card">
-                <div class="card-header">Register</div>
-                <%if (message != "undefined") { 
-                    if (message != '') {    
-                %>
-                <div class="message alert-danger">
-                    <%= message %>
-                </div>
-                <% }}%>
-                <div class="card-body">
-                    <form class="form-horizontal" method="POST" action="/register">
-                      
+<link rel="stylesheet" href="/stylesheets/css/register.css">
 
-                        <div class="row">
-                            <div class="form-group{{ $errors->has('username') ? ' has-error' : '' }} col-md-6">
-                                <label for="username" class="col-md-6 control-label">Tên tài khoản</label>
-
-                                <div class="col-md-12">
-                                    <input id="username" type="text" class="form-control" name="username" value="" required autofocus>
-                                        <span class="help-block">
-                                            <strong></strong>
-                                        </span>
-                                   
-                                </div>
-                            </div>
-
-                            <div class="form-group{{ $errors->has('fullname') ? ' has-error' : '' }} col-md-6">
-                                <label for="fullname" class="col-md-6 control-label">Tên khách hàng</label>
-
-                                <div class="col-md-12">
-                                    <input id="fullname" type="text" class="form-control" name="fullname" value="" required autofocus>
-
-                                  
-                                        <span class="help-block">
-                                            <strong></strong>
-                                        </span>
-                                   
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <div class="row">
-                            <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }} col-md-6">
-                                <label for="email" class="col-md-6 control-label">E-Mail Address</label>
-
-                                <div class="col-md-12">
-                                    <input id="email" type="email" class="form-control" name="email" value="" required>
-
-                                   
-                                        <span class="help-block">
-                                            <strong></strong>
-                                        </span>
-                                
-                                </div>
-                            </div>
-                            <div class="form-group{{ $errors->has('gender') ? ' has-error' : '' }} col-md-6">
-                                <label for="gender" class="col-md-6 control-label">Gender</label>
-
-                                <div class="col-md-12">
-                                    <select class="form-control " name="gender" required>
-                                        <option value="Male">Male</option>  
-                                        <option value="Female">Female</option>
-                                        <option value="Others">Others</option>    
-                                    </select>
-                                    
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="form-group{{ $errors->has('address') ? ' has-error' : '' }} col-md-6">
-                                <label for="address" class="col-md-6 control-label">Address</label>
-
-                                <div class="col-md-12">
-                                    <input id="address" type="address" class="form-control" name="address" value="" required>
-
-                                   
-                                        <span class="help-block">
-                                            <strong></strong>
-                                        </span>
-                                   
-                                </div>
-                            </div>
-                            <div class="form-group{{ $errors->has('phone') ? ' has-error' : '' }} col-md-6">
-                                <label for="phone" class="col-md-6 control-label">Phone</label>
-
-                                <div class="col-md-12">
-                                    <input id="phone" type="phone" class="form-control" name="phone" value="" required>
-
-                                   
-                                        <span class="help-block">
-                                            <strong></strong>
-                                        </span>
-                                   
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }} col-md-6">
-                                <label for="password" class="col-md-6 control-label">Password</label>
-
-                                <div class="col-md-12">
-                                    <input id="password" type="password" class="form-control" name="password" required>
-
-                                   
-                                        <span class="help-block">
-                                            <strong></strong>
-                                        </span>
-                                   
-                                </div>
-                            </div>
-
-                            <div class="form-group col-md-6">
-                                <label for="password-confirm" class="col-md-6 control-label">Confirm Password</label>
-
-                                <div class="col-md-12">
-                                    <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="col-md-6 col-md-offset-4">
-                                <button type="submit" class="btn btn-success">
-                                    Register
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+<div class="card bg-light">
+    <article class="card-body mx-auto" style="max-width: 400px;">
+        <% if (message) {%>
+            <p style="color: red"><%-message%></p>
+        <%}%>
+        <h4 class="card-title mt-3 text-center">Tạo tài khoản</h4>
+        <p class="text-center">Get started with your free account</p>
+        <p>
+            <a href="" class="btn btn-block btn-twitter"> <i class="fab fa-twitter"></i>   Login via Twitter</a>
+            <a href="" class="btn btn-block btn-facebook"> <i class="fab fa-facebook-f"></i>   Login via facebook</a>
+        </p>
+        <p class="divider-text">
+            <span class="bg-light">OR</span>
+        </p>
+        <form method="POST">
+        <div class="form-group input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+             </div>
+            <input name="fullname" class="form-control" placeholder="Full name" type="text" required>
+        </div> <!-- form-group// -->
+        <div class="form-group input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+             </div>
+            <input name="username" class="form-control" placeholder="User name" type="text" required>
+        </div> <!-- form-group// -->
+        <div class="form-group input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text"> <i class="fa fa-envelope"></i> </span>
+             </div>
+            <input name="email" class="form-control" placeholder="Email address" type="email" required>
+        </div> <!-- form-group// -->
+        <div class="form-group input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
             </div>
-        </div>
-    </div>
-</div>
+            <input class="form-control" id="password" placeholder="Create password" type="password" name="password" required>
+        </div> <!-- form-group// -->
+        <div class="form-group input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+            </div>
+            <input class="form-control" id="repassword" placeholder="Repeat password" type="password" name="repassword" required>
+        </div> <!-- form-group// -->                                      
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-block" onclick="register()"> Create Account  </button>
+        </div> <!-- form-group// -->      
+        <p class="text-center">Have an account? <a href="/login">Log In</a> </p>                                                                 
+    </form>
+    </article>
+    </div> <!-- card.// -->
+    
+    </div> 
+<script>
+    function register() {
+        const pass = document.getElementById('password').value;
+        const repass = document.getElementById('repassword').value;
+        console.log(pass, repass)
+
+        if (pass != repass) {
+            event.preventDefault();
+            alert('Xác nhận mật khẩu không khớp');
+            document.getElementById('password').value = '';
+            document.getElementById('repassword').value = '';
+        }
+    }
+</script>
 
 <% include ../partials/footer%>

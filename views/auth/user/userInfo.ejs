@@ -6,7 +6,7 @@
 		<div class="infomation_user" style="position: relative;">
 			<div class="avatar_name_user clearfix">
 				<div class="div_picture_profile" style="position: absolute;">
-					<img class="picture_profile" src="./images/man.png" alt="">
+					<img class="picture_profile" src="<%-userInfo.gender == 1?'./images/man.png': './images/girl.png'%>" alt="">
 				</div>
 				
 				<label class="info_user_name"><%-user.username%></label>
@@ -44,10 +44,7 @@
 
 		<div class="history_orders">
            
-				<%oData.forEach((item) => { 
-					let current_datetime = item.date;
-					let formatted_date = current_datetime.getDate() + "-" + (current_datetime.getMonth() + 1) + "-" + current_datetime.getFullYear();
-				%>
+			
 			
             
 			<div class="one_history_order clearfix">
@@ -57,31 +54,27 @@
 							<p></p>
 						</div>
 						<div>
-							<p style="padding-bottom: 15px; padding-top: 5px;"><%-formatted_date%></p>
+							<p style="padding-bottom: 15px; padding-top: 5px;"></p>
 						</div>
 					</div>
 				</div>
 				<div class="col-sm-10" style="position: relative;">
 					<p>ORDER</p>
-					<span><%-item.total%>đ</span>
+					<span></span>
 					<i class="fas fa-map-marker-alt"></i>
 
-					<address><%-item.address%></address>
+					<address></address>
 					<hr>
 					<div class="view_detail">
 						<label>Trạng thái: </label>
 						<label>
-							<% if (item.status == 0) {%>
-								Đang xử lý
-							<%} else { %>
-								Đã giao hàng
-							<%} %>
+							
 						</label>
-						<a href="/user/<%-item.orderId%>">View</a>
+						<a href="/user/">View</a>
 					</div>
 				</div>
 			</div>
-			<%})%>
+			
 			
 			<!-- <div class="one_history_order clearfix">
 				<div class="col-sm-2">

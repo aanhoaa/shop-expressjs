@@ -1,0 +1,176 @@
+<% include ../../partials/header_admin %>
+<link rel="stylesheet" href="/stylesheets/css/add_product.css">
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"> </script>
+<script src="/javascripts/js/addProduct.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/css/bootstrap-theme.min.css">
+<link rel="stylesheet" href="/javascripts/assets/bootstrap-tagsinput.css">
+<link rel="stylesheet" href="/javascripts/assets/app.css">
+
+<div class="category-link">
+    <a href="/admin">Trang chủ</a> >
+    <span style="color: red">Xem sản phẩm</span>
+</div>
+
+<div style="margin-left: 5%;">
+    <div class="col-lg-12">
+        <h1 class="page-header">Product
+            <small>Edit</small>
+        </h1>
+    </div>
+
+
+    <form action="" method="POST" name="frmEditProduct">
+        <div class="col-lg-7" style="padding-bottom:120px">
+            <div class="form-group">
+                <label>Thương hiệu</label>
+                <select class="form-control" name="brand" disabled>
+                    <option value="">Please Choose Brand</option>
+                   
+                        <option value=""></option> 
+                  
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Danh mục lớn</label>
+                <select class="form-control par-cate" name="cate1" disabled>
+                    <option value="">Please Choose Category</option>
+                    <%category1.forEach(cate => {%>
+                        <option value="<%-cate.id%>" <%-cate1 == cate.id ? 'selected' : ''%>><%-cate.name%></option>
+                    <%})%>
+                </select> 
+            </div>
+
+            <div class="form-group">
+                <label>Danh mục nhỏ</label>
+                <select class="form-control child-cate" name="cate2" disabled>
+                    <option value="">Please Choose Child Category</option>   
+                    <%category2.forEach(cate => {%>
+                        <option class="option-child" value="<%-cate.id%>" <%-cate2 == cate.id ? 'selected' : ''%>><%-cate.name%></option>
+                    <%})%>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Chất liệu</label>
+                <select class="form-control" name="material" disabled>
+                    <option value="">Please Choose Material</option>
+                   
+                      <option value="test" selected >test</option>
+                   
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Tên sản phẩm</label>
+                <input class="form-control" name="name" placeholder="Please Enter Product Name" value="<%-name%>" disabled/>
+            </div>
+            <div class="form-group">
+                <label>SKU</label>
+                <input class="form-control" name="sku" value="<%-sku%>" disabled/>
+            </div>
+            <div class="form-group">
+                <label>Miêu tả</label>
+                <textarea class="form-control" rows="3" name="description" id="description"  disabled></textarea>
+            </div>
+            <div class="form-group">
+                <label>Nội dung</label>
+                <textarea class="form-control" rows="3" name="content" id="content" disabled></textarea>
+            </div>
+
+            <div class="col-md-4">
+               <div>
+                    <p>Ảnh bìa</p>
+               </div>
+               <img id="blah" src="<%-imgCover%>" alt="your image" style="width: 100%; height: 13%;" />
+            </div>
+            
+            <div class="col-md-12 product-act">
+               <button type="reset" class="btn btn-default"><a href="/admin">Quay lại</a></button> 
+              
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@getbootstrap">Báo vi phạm</button>
+                <%if (status == -1) {%>
+                    <button type="submit" class="btn btn-primary" onclick="approve(this)" data-id="<%-id%>">Phê duyệt</button>
+                <%}%>
+
+                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                       
+                        <form action="">
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label">Loại vi phạm:</label>
+                                <div class="form-group">
+                                  <label for=""></label>
+                                  <select class="form-control" name="violateType" id="">
+                                    <%violate.forEach(item => {%>
+                                        <option value="<%-item.id%>"><%-item.name%></option>
+                                    <%})%>
+                                  </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="message-text" class="col-form-label">Lý do vi phạm:</label>
+                                <textarea class="form-control" name="violateReason" id="message-text" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="message-text" class="col-form-label">Gợi ý:</label>
+                                <textarea class="form-control" name="violateSuggest" id="message-text" required></textarea>
+                            </div>
+                        </form>
+                       
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Send message</button>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-1"></div>
+        <div class="col-md-3">
+
+        <%var i = 0;%>
+        <%imgSub.forEach(item => {   i++;
+            if (item != '') {
+        %>
+            <div class="form-group" id="subImg">
+                <label>Product Image Detail <%-i%></label>
+                <img src="<%-item%>" class="img_detail" idImg="" id="subImg" width="160px" height="170px">
+            </div>
+                <%}%>  
+            <%})%>
+
+            <% if (size) {%>
+            <div id="insertSize">
+                <div class="form-group">
+                    <label>Size</label>
+                    <input type="text" value="<%-size%>" data-role="tagsinput" name='size' id="size-opt" disabled/>
+                </div>
+            </div>
+            <%}%>
+
+            <% if (color) {%>
+            <div id="insertColor">
+                <div class="">
+                    <label>Color</label>
+                    <input type="text" value="<%-color%>" data-role="tagsinput" name='color' disabled/>
+                </div>
+            </div>
+            <%}%>
+            
+        </div>
+    </form>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js"></script>
+<script src="/javascripts/assets/bootstrap-tagsinput.min.js"></script>
+<script src="/javascripts/js/admin/changeInfoVariant.js"></script>
+<% include ../../partials/footer_admin %>
