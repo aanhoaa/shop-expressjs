@@ -59,7 +59,8 @@ exports.getLogin = (req, res, next) => {
         }
         else 
          res.send({ state: 1});
-      }
+      } 
+      res.status(500).send({Lỗi: 'Tài khoản hoặc mật khẩu không chính xác'}); 
     }
 
     else return res.status(500).json();
@@ -170,78 +171,78 @@ exports.getLogin = (req, res, next) => {
     }
   };
   
-  exports.getForgotPass = (req, res, next) => {
-    console.log(req.session.status)
-
-    var status = req.session.status;
-
-    if (req.session.sendMail === 1)
-    {
-      req.session.sendMail = 0;
-    }
-    else
-    {
-      status = '';
-    }
-
-    const message = req.flash("error")[0];
-    var cartProduct;
-    if (!req.session.cart) {
-      cartProduct = null;
-    } else {
-      var cart = new Cart(req.session.cart);
-      cartProduct = cart.generateArray();
-    }
-    res.render("./auth/forgot-password", {
-      title: "Quên mật khẩu",
-      message: `${message}`,
-      user: req.user,
-      cart: req.session.cart,
-      status: status
-    });
-  };
+exports.getForgotPassword = async (req, res, next) => {
+  var message = req.flash("info");
+  res.render('auth/forgot-password',{
+    title: 'Quên mật khẩu', cart: req.session.cart, 
+    userInfo: null, status: null, message: message
+  });
+}
   
-  exports.postForgotPass = (req, res, next) => {
-    const email = req.body.email;
-    
-    Users.findOne({ email: email }, (err, user) => {
-      if (!user) {
-        req.flash("error", "Email không hợp lệ");
-        return res.redirect("/forgot-password");
-      } else {
-        var transporter = nodemailer.createTransport({
-          service: "Gmail",
-          auth: {
-            user: "johndoestv4@gmail.com",
-            pass: "19903005"
-          }
-        });
-        var tpass = makeid(7);
-        var mainOptions = {
-          from: "perlC SHOP",
-          to: email,
-          subject: "Reset password",
-          text: "text ne",
-          html: "<p>Mật khẩu mới của bạn là:</p>" + tpass
-        };
-        transporter.sendMail(mainOptions, (err, info) => {
-          if (err) {
-            console.log(err);
-          } else {
-            console.log("Sent:" + info.response);
-          }
-        });
-        bcrypt.hash(tpass, 12).then(hashPassword => {
-          
-          user.password = hashPassword;
-          user.save();
-        });
-        req.session.status = 'Đã gửi password vào email của bạn';
-        req.session.sendMail = 1;
-        res.redirect("/forgot-password");
+exports.postForgotPassword = async (req, res, next) => {
+  var userId = '';
+  var email = '';
+  const v = new Validator({
+    useNewCustomCheckerFunction: true,
+    messages: {
+      unique: "Tài khoản không tồn tại trong hệ thống"
+  }
+  });
+
+  const schema = {
+    $$async: true,
+    username: {type: 'string', 
+      custom: async (vUsername, error) => {
+        const checkUserDB = await db.getUserInfo(2, [vUsername]);
+        if (checkUserDB == false) {
+          error.push({ type: "user wrong", actual: 'Tài khoản không tồn tại', state: 0 });
+        }
+        else {
+          userId = checkUserDB.id;
+          email = checkUserDB.email;
+        }
+        return vUsername;
       }
-    });
-  };
+    }
+  }
+  const check = v.compile(schema);
+  const username = {
+    username: req.body.username
+  }
+  const getCheck = await check(username);
+
+  if (getCheck == true) {
+    //send email
+    const generate = makeid(10);
+    const hash = bcrypt.hashSync(generate, 10);
+
+    const update = await db.updateUserPassword([userId, hash]);
+
+    if (update){
+      //send mail
+      let send = await mailer.sendMailResetPassword(generate, email);
+      if (send == true) {
+        req.flash('info', 'Đã gửi mật khẩu mới tới email của bạn');
+        res.redirect('/forgot-password');
+      }
+      else res.status(500).json({err: 'Fail'});
+    }
+  }
+  else {
+    var count = 0;
+    getCheck.forEach(i => {
+      if (i.state == 0) {
+        count ++;
+      }
+    })
+
+    if (count > 0) {
+      req.flash('info', 'Tài khoản không tồn tại trong hệ thống');
+      res.redirect('/forgot-password');
+    }
+    else res.status(500).json({error: getCheck});
+  }
+}
   
 exports.getVerify = async (req, res, next) => {
   var userInfo = null;

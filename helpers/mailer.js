@@ -22,6 +22,21 @@ async function sendMailVerify(token, email) {
     return false;
 }
 
+async function sendMailResetPassword(password, email) {
+    var mainOptions = {
+        from: "perlC SHOP",
+        to: email,
+        subject: "Đặt lại mật khẩu",
+        text: "text ne",
+        html: "<p>Mật khẩu mới của bạn là:</p>" + password
+    };
+
+    let info = await transporter.sendMail(mainOptions);
+    if (info) return true;
+    return false;
+}
+
 module.exports = {
-    sendMailVerify
+    sendMailVerify,
+    sendMailResetPassword
 }

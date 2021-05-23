@@ -1,0 +1,230 @@
+<% include ../../partials/header %>
+<link rel="stylesheet" href="/stylesheets/css/user_info.css">
+
+<div style="z-index: 10; margin-bottom: 280px; position: relative; background-color: rgb(240, 240, 240);">
+
+    <div style="display: flex; justify-content: center; padding: 20px;">
+       <div class="user-list-option">
+          <div class="">
+            <div class="user-item-selected">
+                <div>Thông tin của tôi</div>
+            </div>
+            <div class="stardust-dropdown_item-body stardust-dropdown_item-body-open" style="opacity: 1;">
+                <div class="userpage-sidebar-menu_subsection">
+                    <a class="user-account" href="/user/account/profile"><span class="_2PrdXX">Hồ sơ</span></a>
+                    <a class="user-account" href="/user/account/payment"><span class="_2PrdXX">Ngân hàng</span></a>
+                    <a class="user-account selected" href="/user/account/address"><span class="_2PrdXX"> Sổ Địa chỉ</span></a>
+                    <a class="user-account" href="/user/account/password"><span class="_2PrdXX">Đổi mật khẩu</span></a>
+                </div>
+             </div>
+          </div>
+          <div class="user-item">
+             <div>Quản lý đơn hàng</div>
+          </div>
+          <div class="user-item">
+             <div>Sổ địa chỉ</div>
+          </div>
+          <div class="user-item">
+             <div>Nhận xét sản phẩm đã mua</div>
+          </div>
+          <div class="user-item">
+             <div>Sản phẩm mua sau</div>
+          </div>
+       </div>
+       <div class="user-profile-container">
+
+         <div class="add-new-address">
+            
+            <button style="float: right; height: 40px;" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" onclick="getCity()">
+               <svg style="display: inline-block;
+               width: 1em;
+               height: 1em;
+               fill: currentColor;
+               position: relative;
+               overflow: hidden;" enable-background="new 0 0 10 10" viewBox="0 0 10 10" x="0" y="0" class="shopee-svg-icon icon-plus-sign"><polygon points="10 4.5 5.5 4.5 5.5 0 4.5 0 4.5 4.5 0 4.5 0 5.5 4.5 5.5 4.5 10 5.5 10 5.5 5.5 10 5.5"></polygon></svg>
+               Thêm địa chỉ mới
+               
+            </button>
+         </div>
+
+         <div>
+            <%if (address != '') {
+               address.forEach(item => {
+            %>
+            <div class="address-card">
+               <div></div>
+               <div class="address-display__left">
+                  <div class="address-display__field-container address-display__field-container--name">
+                     <div class="address-display__field-label">Họ và tên</div>
+                     <div class="address-display__field-content">
+                        <span class="address-display__name-text"><%-item.fullname%></span>
+                        <%-item.isdefault == 1? '<div class="bacc-default-badge">Mặc định</div>' : ''%>
+                        <!-- <div class="address-display__label_pickup">Địa chỉ lấy hàng</div>
+                        <div class="address-display__label_pickup">Địa chỉ trả hàng</div> -->
+                     </div>
+                  </div>
+                  <div class="address-display__field-container">
+                     <div class="address-display__field-label">Số điện thoại</div>
+                     <div class="address-display__field-content"><%-item.phone%></div>
+                  </div>
+                  <div class="address-display__field-container address-display__field-container__address">
+                     <div class="address-display__field-label">Địa chỉ</div>
+                     <div class="address-display__field-content"><span><%-item.identity_name%><br><%-item.ward_name%><br><%-item.district_name%><br><%-item.province_name%></span></div>
+                  </div>
+               </div>
+               <div class="address-card__buttons">
+                  <div class="address-card__button-group">
+                     <button class="bacc-secondary-action-btn" data-toggle="modal" data-target="#midifyModal<%-item.book_id%>" onclick="getAll(this)">Sửa</button>
+                     <button class="bacc-secondary-action-btn" onclick="deleteBook(this)" data-book="<%-item.book_id%>">Xóa</button>
+                  </div>
+                  <div class="address-card__button-group">
+                     
+                     <%if (item.isdefault == 0) {%>
+                        <button type="button" class="btn btn-light btn--s btn--inline btn-light--disabled address-card__button" aria-disabled="true" data-book="<%-item.book_id%>" onclick="setDefault(this)">Thiết lập mặc định</button>
+                     <%}%>
+                  </div>
+                  <div style="display: none;">
+                     <input type="text" value="<%-item.province_code%>" name="codeCity" class="codecity">
+                     <input type="text" value="<%-item.district_code%>" name="codeDistrict" class="codedistrict">
+                     <input type="text" value="<%-item.ward_code%>" name="codeWard" class="codeward">
+                     <input type="text" value="<%-item.fullname%>" name="codeName" class="fullname">
+                     <input type="text" value="<%-item.phone%>" name="codeName" class="phone">
+                     <input type="text" value="<%-item.identity_name%>" name="codeName" class="codename">
+                  </div>
+               </div>
+      
+            </div>
+            
+            <%})}%>
+         </div>
+         
+      </div>
+   </div>
+</div>
+ <!-- Modal -->
+ <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   <div class="modal-dialog" role="document">
+   <div class="modal-content">
+      <div class="modal-header">
+         <h5 class="modal-title" id="exampleModalLabel">Địa chỉ mới</h5>
+         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+         <span aria-hidden="true">&times;</span>
+         </button>
+      </div>
+      <div class="modal-body">
+         <form action="" method="POST">
+            <div class="form-group">
+               <input class="form-control user-password" type="text" name="fullname" placeholder="Họ và tên" required>
+            </div>
+            <div class="form-group">
+               <input class="form-control user-password" type="text" name="phone" placeholder="Số điện thoại" required>
+            </div>
+            <div class="form-group">
+               <label>Tỉnh/ Thành phố</label>
+               <select name="city" class="form-control city" onchange="pickCity(this)" required>
+                  <option value="">Tỉnh/ Thành phố</option>
+               </select>
+            </div>
+   
+            <div class="form-group">
+               <label>Quận/ Huyện</label>
+               <select class="form-control district" name="district" onchange="pickDistrict(this)" required disabled>
+                   <option value="" class="">Quận/ Huyện</option>      
+               </select>
+           </div>
+   
+           <div class="form-group">
+               <label>Phường/ Xã</label>
+               <select class="form-control ward" name="ward" required disabled>
+                  <option value="" class="">Phường/ Xã</option>      
+               </select>
+            </div>
+   
+            <div class="form-group">
+               <input class="form-control user-password" type="text" name="identity" placeholder="Số nhà, tên đường ..." required>
+            </div>
+
+            <div class="form-group">
+               <input class="form-control namecity" type="text" name="nameCity" style="display: none;" required>
+               <input class="form-control namedistrict" type="text" name="nameDistrict" style="display: none;"required>
+               <input class="form-control nameward" type="text" name="nameWard" style="display: none;"required>
+            </div>
+   
+            <div class="modal-footer">
+               <button type="button" class="btn btn-secondary" data-dismiss="modal">Trở lại</button>
+               <button type="submit" class="btn btn-primary" onclick="pick(this)">Hoàn thành</button>
+            </div>
+         </form>
+
+      </div>
+      
+   </div>
+   </div>
+</div>
+
+<%if (address) {
+   address.forEach(item => {
+%>
+<div class="modal fade" id="midifyModal<%-item.book_id%>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   <div class="modal-dialog" role="document">
+   <div class="modal-content">
+      <div class="modal-header">
+         <h5 class="modal-title" id="exampleModalLabel">Chỉnh sửa địa chỉ</h5>
+         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+         <span aria-hidden="true">&times;</span>
+         </button>
+      </div>
+      <div class="modal-body">
+         <form action="address/edit/<%-item.book_id%>" method="POST">
+            <div class="form-group">
+               <input class="form-control user-password fullname" type="text" name="fullname" placeholder="Họ và tên" required>
+            </div>
+            <div class="form-group">
+               <input class="form-control user-password phone" type="text" name="phone" placeholder="Số điện thoại" required>
+            </div>
+            <div class="form-group">
+               <label>Tỉnh/ Thành phố</label>
+               <select name="city" class="form-control city" onchange="pickCity(this)" required>
+                  <option value="">Tỉnh/ Thành phố</option>
+               </select>
+            </div>
+   
+            <div class="form-group">
+               <label>Quận/ Huyện</label>
+               <select class="form-control district" name="district" onchange="pickDistrict(this)" required>
+                   <option value="" class="">Quận/ Huyện</option>      
+               </select>
+           </div>
+   
+           <div class="form-group">
+               <label>Phường/ Xã</label>
+               <select class="form-control ward" name="ward" required>
+                  <option value="" class="">Phường/ Xã</option>      
+               </select>
+            </div>
+   
+            <div class="form-group">
+               <input class="form-control user-password name-identity" type="text" name="identity" placeholder="Số nhà, tên đường ..." required>
+            </div>
+
+            <div class="form-group">
+               <input class="form-control namecity" type="text" name="nameCity" style="display: none;" >
+               <input class="form-control namedistrict" type="text" name="nameDistrict" style="display: none;">
+               <input class="form-control nameward" type="text" name="nameWard" style="display: none;">
+            </div>
+            
+            <div class="modal-footer">
+               <button type="button" class="btn btn-secondary" data-dismiss="modal">Trở lại</button>
+               <button type="submit" class="btn btn-primary" onclick="pick(this)">Hoàn thành</button>
+            </div>
+         </form>
+
+      </div>
+      
+   </div>
+   </div>
+</div>
+<%})}%>
+
+<script src="/javascripts/js/user/user-account.js"></script>
+<% include ../../partials/footer %>

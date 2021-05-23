@@ -1,0 +1,83 @@
+<% include ../../partials/header %>
+<link rel="stylesheet" href="/stylesheets/css/user_info.css">
+<script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
+<link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+
+<div style="z-index: 10; margin-bottom: 280px; position: relative; background-color: rgb(240, 240, 240);">
+
+   <div style="display: flex; justify-content: center; padding: 20px;">
+      <div class="user-list-option">
+         <div class="">
+            <div class="user-item-selected">
+                  <div>Thông tin của tôi</div>
+            </div>
+            <div class="stardust-dropdown_item-body stardust-dropdown_item-body-open" style="opacity: 1;">
+                <div class="userpage-sidebar-menu_subsection">
+                    <a class="user-account selected" href="/user/account/profile"><span class="_2PrdXX">Hồ sơ</span></a>
+                    <a class="user-account" href="/user/account/payment"><span class="_2PrdXX">Ngân hàng</span></a>
+                    <a class="user-account" href="/user/account/address"><span class="_2PrdXX"> Sổ Địa chỉ</span></a>
+                    <a class="user-account" href="/user/account/password"><span class="_2PrdXX">Đổi mật khẩu</span></a>
+                </div>
+             </div>
+         </div>
+         <div class="user-item">
+            <div>Quản lý đơn hàng</div>
+         </div>
+         <div class="user-item">
+            <div>Sổ địa chỉ</div>
+         </div>
+         <div class="user-item">
+            <div>Nhận xét sản phẩm đã mua</div>
+         </div>
+         <div class="user-item">
+            <div>Sản phẩm mua sau</div>
+         </div>
+      </div>
+      <form class="user-profile-container" method="POST">
+         <div>
+            
+            <span><label class="user-label" for=""> Tên đăng nhập: <%-user.username%> </label></span>
+         </div>
+         <div class="form-group">
+            <label class="user-label" for="fullname"> Họ tên</label>
+            <input id="fullname" name="fullname" type="text" class="form-control user-form" value="<%-user.fullname%>">
+         </div>
+
+         <div class="form-group">
+            <label class="user-label" for="email"> Email</label>
+            <input name="email" type="email" id="email" class="form-control user-form" value="<%-user.email%>">
+         </div>
+
+         <div class="form-group">
+            <label class="user-label" for="phone"> Số điện thoại liên lạc</label>
+            <input type="number" name="phone" id="phone" class="form-control user-form" value="<%-user.phone%>">
+         </div>
+
+         <div class="form-group">
+            <label class="user-label" for="gender">Giới tính</label>
+            <select class="form-control user-form" name="gender" required>
+               <option value= 1 <%-user.gender == 1?'selected':''%>>Nam</option>
+               <option value= 2 <%-user.gender == 2?'selected':''%>>Nữ</option>
+               <option value= 0 <%-user.gender == 0?'selected':''%>>Khác</option>
+            </select>
+         </div>
+
+         <div class="form-group">
+           <label class="user-label" for="birthday">Ngày sinh (mm/dd/yy)</label>
+           <input id="datepicker" name="birthday" width="276" value="<%-birthday%>" />
+         </div>
+     
+         <div class="box-footer">
+             <button type="submit" class="btn btn-primary" onclick="updateProfile()">Cập nhật</button>
+         </div>
+      </form>
+   </div>
+</div>
+
+<script>
+$('#datepicker').datepicker({
+      uiLibrary: 'bootstrap4'
+});
+</script>
+<script src="/javascripts/js/user/user-account.js"></script>
+<% include ../../partials/footer %>

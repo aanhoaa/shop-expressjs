@@ -79,11 +79,11 @@
                         </div>
                         <%} else {%>
                             <div class="dropdown show">
-                                <a id="auser" href="/user" dropdown-toggle><img src="<%-userInfo.gender == 1?'./images/man.png': './images/girl.png'%>" alt="" style="width: 28.05px; height: 29.2px; margin-left: 21px; margin-top: 6px;">
+                                <a id="auser" href="/user" dropdown-toggle><img src="<%-userInfo.gender == 1?'/images/man.png': '/images/girl.png'%>" alt="" style="width: 28.05px; height: 29.2px; margin-left: 21px; margin-top: 6px;">
                                 </a>
                                 <span><%-userInfo.username%></span>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                    <a class="dropdown-item" href="/user">Tài khoản</a>
+                                    <a class="dropdown-item" href="/user/account/profile">Tài khoản</a>
                                     <a class="dropdown-item" href="#">Another action</a>
                                     <a class="dropdown-item" href="/logout">Đăng xuất</a>
                                   </div>

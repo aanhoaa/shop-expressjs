@@ -195,6 +195,230 @@
     border-width: 2px 4px;
     border-radius: 40px;
 }
+ /*user*/
+.user-list-option {
+	display: flex;
+    flex-direction: column;
+    background-color: white;
+    width: 310px;
+    padding: 20px;
+    height: auto;
+    margin-top: 10px;
+}
+.user-item-selected {
+	width: 100%;
+    height: 40px;
+    color: #3571a7;
+    font-weight: 500;
+    background-color: #f5f5f5;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 16px;
+    padding: 10px;
+    margin-bottom: 15px;
+}
+.user-item {
+	width: 100%;
+    height: 40px;
+    color: #0d1136;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 16px;
+    padding: 10px;
+    margin-bottom: 15px;
+}
+.user-profile-container {
+	display: flex;
+    flex-direction: column;
+    padding: 20px;
+    background-color: white;
+    width: 65%;
+    margin: 10px 0 0 10px;
+}
+.user-label {
+	font-weight: bold;
+    display: block;
+    margin-bottom: 0.5rem;
+    margin-top: 1rem;
+}
+.changeps-label {
+	display: flex;
+    padding: 0;
+    margin-top: 10px;
+}
+.user-form {
+    padding: 0.5rem;
+    font-size: 15px;
+    width: 50%;
+    display: block;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
 
+.user-form-password{
+    padding: 0.5rem;
+    font-size: 15px;
+    width: 100%;
+    display: block;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
 
+.userpage-sidebar-menu_subsection {
+	display: block;
+    padding: 0 0 3px 34px;
+}
+.user-account {
+	text-decoration: none;
+    color: rgba(0,0,0,.8);
+    display: block;
+    margin-bottom: 15px;
+    color: #555;
+}
 
+.selected {
+	color: #3571a7;
+}
+.address-card{
+	background: #fff;
+    padding: 1.875rem .1875rem 1.875rem 1.25rem;
+    min-height: 6.25rem;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    -moz-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    border-bottom: 1px solid #efefef;
+}
+.address-display__name-text {
+    display: inline-block;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    margin-right: .625rem;
+    max-width: 350px;
+    color: rgba(0,0,0,.8);
+    font-weight: 500;
+	font-size: 1rem;
+}
+.address-display__left {
+	-moz-animation-duration: 1;
+    -webkit-flex: 1;
+    -moz-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+}
+.address-display__field-container--name {
+	margin-bottom: .9375rem;
+}
+.address-display__field-container{
+	display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -moz-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    margin-bottom: .625rem;
+}
+.address-display__field-label {
+	margin-right: 1.5625rem;
+    text-transform: capitalize;
+    width: 10rem;
+    text-align: right;
+    color: rgba(85,85,85,.8);
+}
+.address-display__field-content {
+	max-width: 500px;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -moz-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    color: #333;
+}
+.add-new-address {
+    align-items: center;
+    border-bottom: 1px solid #efefef;
+    padding: 6px 0;
+    height: 72px;
+    -moz-box-sizing: border-box;
+}
+.address-card__buttons {
+	display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: -ms-flexbox;
+	display: flex;
+	width: 13.75rem;
+    height: 100%;
+    -webkit-flex-shrink: 1;
+    -ms-flex-negative: 1;
+    flex-shrink: 1;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+    -moz-box-orient: vertical;
+    -moz-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    -moz-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+}
+.address-card__button-group {
+	margin: 8px 0;
+    -webkit-box-pack: end;
+    -webkit-justify-content: flex-end;
+    -moz-box-pack: end;
+    -ms-flex-pack: end;
+	justify-content: flex-end;
+	display: flex;
+}
+.address-display__label_pickup {
+	display: inline-block;
+    color: #ee4d2d;
+    border: 1px solid #ee4d2d;
+    font-size: .75rem;
+    font-weight: 400;
+    height: 1.375rem;
+    padding: 0 .625rem;
+    border-radius: .6875rem;
+    vertical-align: .125rem;
+    line-height: 1.375rem;
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+	flex-shrink: 0;
+	margin-left: .625rem;
+}
+
+.bacc-default-badge {
+    display: inline-block;
+    background: #00bfa5;
+    color: #fff;
+    border-radius: 3px;
+    padding: 3px 7px 2px;
+    text-transform: capitalize;
+    font-size: 13px;
+    font-weight: 500;
+    width: auto;
+    white-space: nowrap;
+    margin-right: 12px;
+}

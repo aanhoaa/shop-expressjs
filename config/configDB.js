@@ -27,12 +27,11 @@ async function simpleQuery(sql, values) {
 async function excuteQuery(sql, values) {
   return await simpleQuery(sql, values)
   .then(data => {
-   // console.log('data:', data)
     if (data && (data.rowCount > 0)) {
       return data;
     } else {
       return ({
-          type: MY_ERROR.TYPE,
+          type: 'QUERY DB FAIL',
           message: "affected rows = 0 or insertID null"
       })
     }

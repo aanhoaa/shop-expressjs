@@ -10,16 +10,11 @@ router.post("/login", authController.postLogin);
 router.get("/logout", authController.getLogout);
 router.get("/register", authController.getSignUp);
 router.post("/register", authController.postSignUp);
-router.get("/forgot-password", authController.getForgotPass);
-router.post("/forgot-password", authController.postForgotPass);
+router.get("/forgot-password", authController.getForgotPassword);
+router.post("/forgot-password", authController.postForgotPassword);
 
 router.get("/verify", authController.isAuth, authController.getVerify);
 router.post("/verify", authController.isAuth, authController.postVerify);
 router.post("/resend/verify", authController.isAuth, authController.postResendVerify);
-
-//router.get("/user", authController.isAuth, authController.isUser, userController.getUserInfo);
-router.get("/user/edit", authController.isLogin, userController.getEditUserInfo);
-router.post("/user/edit", authController.isLogin, userController.postEditUserInfo);
-router.get("/user/:orderId", authController.isLogin, userController.getDetailOrder);
 
 module.exports = router;

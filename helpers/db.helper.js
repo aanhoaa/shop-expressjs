@@ -246,7 +246,9 @@ function getUserInfo(table, value) {
 
     return getAll(`${table}`, 'username', value)
     .then(res => {
-        return res.rows[0];
+        if (res.rowCount > 0)
+            return res.rows[0];
+        return false;
     })
     .catch(error => {return error;});
 }
@@ -263,17 +265,42 @@ function insertUser(values) {
     .catch(error => {return error;});
 }
 
-function userUpdate(values) {
-    const sql = 'UPDATE sinhvien SET email= $2 WHERE id = $1';
+function updateUserProfile(values) {
+    const sql = 'UPDATE users SET fullname = $2, email = $3, phone = $4, gender = $5, birthday = $6 WHERE id = $1';
 
     return db.excuteQuery(sql, values)
     .then(res => {
         if (res.rowCount > 0)
-            return 'update success!!!';
+            return true;
         return false;
     })
     .catch(error => {return error;});
 }
+
+function updateUserPassword(values) {
+    const sql = 'UPDATE users SET password = $2 WHERE id = $1 RETURNING password'
+
+    return db.excuteQuery(sql, values)
+    .then(res => {
+        if (res.rowCount > 0)
+            return res.rows[0].password;
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function updateUserPasswordByEmail(values) {
+    const sql = 'UPDATE users SET password = $2 WHERE email = $1'
+
+    return db.excuteQuery(sql, values)
+    .then(res => {
+        if (res.rowCount > 0)
+            return true;
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
 
 function userDelete(value) {
     const sql = 'DELETE FROM sinhvien WHERE id = $1';
@@ -302,6 +329,237 @@ function updateUserVerify(value) {
     const sql = 'UPDATE users SET isverified = $1';
 
     return db.excuteQuery(sql, values)
+    .then(res => {
+        if (res.rowCount > 0)
+            return true;
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function insertUserIdentityDetail(value) {
+    const sql = 'INSERT INTO identitydetail(name) VALUES ($1) RETURNING id';
+
+    return db.excuteQuery(sql, value)
+    .then(res => {
+        if (res.rowCount > 0)
+            return res.rows[0].id;
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function insertUserWard(values) {
+    const sql = 'INSERT INTO ward(identity_id, code, name) VALUES ($1, $2, $3) RETURNING id';
+
+    return db.excuteQuery(sql, values)
+    .then(res => {
+        if (res.rowCount > 0)
+            return res.rows[0].id;
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function insertUserDistrict(values) {
+    const sql = 'INSERT INTO district(ward_id, code, name) VALUES ($1, $2, $3) RETURNING id';
+
+    return db.excuteQuery(sql, values)
+    .then(res => {
+        if (res.rowCount > 0)
+            return res.rows[0].id;
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function insertUserProvince(values) {
+    const sql = 'INSERT INTO province(district_id, code, name) VALUES ($1, $2, $3) RETURNING id';
+
+    return db.excuteQuery(sql, values)
+    .then(res => {
+        if (res.rowCount > 0)
+            return res.rows[0].id;
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function insertUserAddressBook(values) {
+    const sql = 'INSERT INTO addressbook(user_id, province_id, fullname, phone, isdefault) VALUES ($1, $2, $3, $4, $5)';
+
+    return db.excuteQuery(sql, values)
+    .then(res => {
+        if (res.rowCount > 0)
+            return true;
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function getUserAddressBookExist(value) {
+    const sql = 'SELECT * FROM addressbook WHERE user_id = $1';
+
+    return db.simpleQuery(sql, value)
+    .then(res => {
+        if (res.rows[0])
+            return true;
+        else return false;
+    })
+    .catch(e => {
+        console.log('err', e);
+        return false;
+    });
+}
+
+function getUserAddressBook(value) {
+    const sql = 'select a.fullname, a.phone, a.isdefault, a.id as book_id, b.code as province_code, c.code as district_code, d.code as ward_code, e.name as identity_name, b.name as province_name, c.name as district_name, d.name as ward_name, e.id as identity_id from addressbook as a inner join province as b on b.id = a.province_id inner join district as c on c.id = b.district_id inner join ward as d on d.id = c.ward_id inner join identitydetail as e on e.id = d.identity_id where user_id = $1 ORDER BY a.isdefault DESC';
+
+    return db.excuteQuery(sql, value)
+    .then(res => {
+        if (res.rowCount > 0)
+            return res.rows;
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function getAddressBookById(value) {
+    const sql = 'select a.fullname, a.phone, a.id as book_id, b.code as province_code, c.code as district_code, d.code as ward_code, e.name as identity_name, b.name as province_name, c.name as district_name, d.name as ward_name, e.id as identity_id, b.id as province_id, c.id as district_id, d.id as ward_id from addressbook as a inner join province as b on b.id = a.province_id inner join district as c on c.id = b.district_id inner join ward as d on d.id = c.ward_id inner join identitydetail as e on e.id = d.identity_id where a.id = $1';
+
+    return db.excuteQuery(sql, value)
+    .then(res => {
+        if (res.rowCount > 0)
+            return res.rows;
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function updateUserAdressBook(values) {
+    const sql = 'UPDATE addressbook SET fullname = $2, phone = $3 WHERE id = $1'
+
+    return db.excuteQuery(sql, values)
+    .then(res => {
+        if (res.rowCount > 0)
+            return true;
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function updateUserProvince(values) {
+    const sql = 'UPDATE province SET code = $2, name = $3 WHERE id = $1';
+
+    return db.excuteQuery(sql, values)
+    .then(res => {
+        if (res.rowCount > 0)
+            return true;
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function updateUserDistrict(values) {
+    const sql = 'UPDATE district SET code = $2, name = $3 WHERE id = $1';
+
+    return db.excuteQuery(sql, values)
+    .then(res => {
+        if (res.rowCount > 0)
+            return true;
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function updateUserWard(values) {
+    const sql = 'UPDATE ward SET code = $2, name = $3 WHERE id = $1';
+
+    return db.excuteQuery(sql, values)
+    .then(res => {
+        if (res.rowCount > 0)
+            return true;
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function updateUserIdentity(values) {
+    const sql = 'UPDATE identitydetail SET name = $2 WHERE id = $1';
+
+    return db.excuteQuery(sql, values)
+    .then(res => {
+        if (res.rowCount > 0)
+            return true;
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function updateUserAddressBookDefault(values) {
+    const sql = 'UPDATE addressbook SET isdefault = $2 WHERE id = $1';
+
+    return db.excuteQuery(sql, values)
+    .then(res => {
+        if (res.rowCount > 0)
+            return true;
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function deleteUserAddressBook(value) {
+    const sql = 'DELETE from addressbook WHERE id = $1';
+
+    return db.excuteQuery(sql, value)
+    .then(res => {
+        if (res.rowCount > 0)
+            return true;
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function deleteUserProvince(value) {
+    const sql = 'DELETE from province WHERE id = $1';
+
+    return db.excuteQuery(sql, value)
+    .then(res => {
+        if (res.rowCount > 0)
+            return true;
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function deleteUserDistrict(value) {
+    const sql = 'DELETE from district WHERE id = $1';
+
+    return db.excuteQuery(sql, value)
+    .then(res => {
+        if (res.rowCount > 0)
+            return true;
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function deleteUserWard(value) {
+    const sql = 'DELETE from ward WHERE id = $1';
+
+    return db.excuteQuery(sql, value)
+    .then(res => {
+        if (res.rowCount > 0)
+            return true;
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function deleteUserIdentityDetail(value) {
+    const sql = 'DELETE from identitydetail WHERE id = $1';
+
+    return db.excuteQuery(sql, value)
     .then(res => {
         if (res.rowCount > 0)
             return true;
@@ -1137,9 +1395,30 @@ module.exports = {
     checkUserExist,
     getUserInfo,
     insertUser,
-    userUpdate,
+    updateUserProfile,
+    updateUserPassword,
+    updateUserPasswordByEmail,
     userDelete,
     updateUserIsverified,
+    insertUserIdentityDetail,
+    insertUserWard,
+    insertUserDistrict,
+    insertUserProvince,
+    insertUserAddressBook,
+    getUserAddressBookExist,
+    getUserAddressBook,
+    getAddressBookById,
+    updateUserAdressBook,
+    updateUserProvince,
+    updateUserDistrict,
+    updateUserWard,
+    updateUserIdentity,
+    updateUserAddressBookDefault,
+    deleteUserAddressBook,
+    deleteUserProvince,
+    deleteUserDistrict,
+    deleteUserWard,
+    deleteUserIdentityDetail,
     insertCart,
 
     insertCategoryLevelOne,
