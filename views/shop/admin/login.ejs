@@ -72,7 +72,7 @@
         let password = $("#password").val();
 
         $.ajax({
-            url: `${window.location.origin}/shop`,
+            url: `${window.location.origin}/seller/login`,
             method: "POST",
             data: {username: username, password: password},
             success: function(data) { 

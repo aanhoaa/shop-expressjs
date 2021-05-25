@@ -129,7 +129,10 @@
                 if (data.state == 0) {
                     window.location.href = "/verify";
                 }
-                else window.location.href = "/";
+                else {
+                    window.location.href = document.referrer;
+                    //console.log(document.referrer)
+            }
             },
             error: function(err) {
                 if (err.responseText == '"Tài khoản không tồn tại"') $("#username").val('');

@@ -568,6 +568,21 @@ function deleteUserIdentityDetail(value) {
     .catch(error => {return error;});
 }
 
+function checkExistCart(values) {
+    const sql = "SELECT * FROM cart WHERE user_id = $1 and productvariant_id = $2";
+
+    return db.simpleQuery(sql, values)
+    .then(res => {
+        if (res.rows[0])
+            return true;
+        else return false;
+    })
+    .catch(e => {
+        console.log('err:', e);
+        return r;
+    });
+}
+
 function insertCart(values) {
     const sql = 'INSERT INTO cart(user_id, productvariant_id, amount) VALUES ($1, $2, $3)';
 
@@ -578,6 +593,21 @@ function insertCart(values) {
         return false;
     })
     .catch(error => {return error;});
+}
+
+function getCartQuantity(values) {
+    const sql = "SELECT amount FROM cart WHERE user_id = $1 and productvariant_id = $2";
+
+    return db.simpleQuery(sql, values)
+    .then(res => {
+        if (res.rowCount > 0)
+            return res.rows;
+        else return false;
+    })
+    .catch(e => {
+        console.log('err:', e);
+        return false;
+    });
 }
 
 /*
@@ -766,6 +796,18 @@ function insertCateLevel(table, value) {
 
 function getCategoryLevelOne() {
     const sql = 'SELECT id, name FROM categorylevel1';
+
+    return db.simpleQuery(sql)
+    .then(res => {
+        if (res.rowCount > 0)
+            return res.rows;
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function getCategoryLevelTwoAll() {
+    const sql = 'SELECT * FROM categorylevel2';
 
     return db.simpleQuery(sql)
     .then(res => {
@@ -1125,6 +1167,34 @@ function getProductByShop(value) {
     .catch(error => { return false;});  
 }
 
+function getProductByCateOne(value) {
+    const sql = "select  max(d.price) as max, min(d.price) as min, b.name, b.id as product_id, c.url -> 'cover' as url, e.name as shop from categorylevel1 as a inner join product as b on b.categorylevel1_id = a.id inner join images as c on c.product_id = b.id inner join productvariant as d on d.product_id = b.id inner join shop as e on e.id = b.shop_id where a.id = $1 and b.status = 1 GROUP BY b.name, b.id, c.url, e.name";
+
+    return db.simpleQuery(sql, value)
+    .then( res =>  {
+        if (res.rowCount > 0)
+        {
+            return res.rows;
+        }
+        return false;
+    })
+    .catch(error => { return false;});
+}
+
+function getProductAllById(value) {
+    const sql = "select a.name, a.id as product_id, c.attribute->'Color' as color, c.attribute->'Size' as size, b.price, d.url->'cover' as cover, d.url as url from product as a inner join productvariant as b on b.product_id = a.id inner join variantdetail as c on c.id = b.variant_id inner join images as d on d.product_id = a.id where a.id = $1 and a.status = 1 group by a.name, a.id, c.attribute, b.price, d.url";
+
+    return db.simpleQuery(sql, value)
+    .then( res =>  {
+        if (res.rowCount > 0)
+        {
+            return res.rows;
+        }
+        return false;
+    })
+    .catch(error => { return false;});
+}
+
 function getProductVariant(value) {
     const sql = 'SELECT * FROM productvariant WHERE product_id = $1';
 
@@ -1151,6 +1221,20 @@ function getProductVariantInfo(value) {
         return false;
     })
     .catch(error => { return false;}); 
+}
+
+function getProductVariantBeforeSell(value) {
+    const sql = "select b.price, b.id as productvariant_id, b.stockamount, c.attribute->'Color' as color, c.attribute->'Size' as size from product as a inner join productvariant as b on b.product_id = a.id inner join variantdetail as c on c.id = b.variant_id where  a.id = $1";
+
+    return db.simpleQuery(sql, value)
+    .then( res =>  {
+        if (res.rowCount > 0)
+        {
+            return res.rows;
+        }
+        return false;
+    })
+    .catch(error => { return false;});
 }
 
 function updateProduct(values) {
@@ -1419,7 +1503,10 @@ module.exports = {
     deleteUserDistrict,
     deleteUserWard,
     deleteUserIdentityDetail,
+
+    checkExistCart,
     insertCart,
+    getCartQuantity,
 
     insertCategoryLevelOne,
     insertCategoryLevelTwo,
@@ -1432,6 +1519,7 @@ module.exports = {
     insertCateLevel,
     
     getCategoryLevelOne,
+    getCategoryLevelTwoAll,
     getCategoryLevelTwo,
     getCategoryLevelThree,
 
@@ -1440,9 +1528,12 @@ module.exports = {
     updateProduct,
     updateProductVariant,
     updateProductStatus,
+    getProductVariantBeforeSell,
     getProduct,
     getProductById,
     getProductByShop,
+    getProductByCateOne,
+    getProductAllById,
     getProductVariant,
     getProductVariantInfo,
     deleteProduct,

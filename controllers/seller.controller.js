@@ -12,6 +12,8 @@ const { count } = require("../models/user.model");
 const Order = require("../models/order.model");
 const db = require('../helpers/db.helper');
 const cloudinary = require('cloudinary');
+var bcrypt = require("bcryptjs");
+const jwtHelper = require("../helpers/jwt.helper"); 
 
 cloudinary.config({
     cloud_name: 'do3we3jk1',

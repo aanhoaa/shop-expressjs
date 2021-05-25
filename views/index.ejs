@@ -27,6 +27,22 @@
 		<h2>Fashion Style</h2>
 	</div>
 </section>
+<section class="sec-categories container mb-3">
+	<div class="title-h2 text-center">
+	   <h2>DANH MỤC SẢN PHẨM</h2>
+	</div>
+	<div class="row clearfix cate-block justify-center scroll-items">
+	   
+	   <%category.forEach(item => {%>
+		<a href="product/<%-item.id%>" title="Bàn" class="col-lg-2 col-sm-4 col-6 cate-item scroll-item-inner">
+			<div class="cate-item-inner">
+			   <div class="cate-img"></div>
+			   <h3><%-item.name%></h3>
+			</div>
+		 </a>
+	   <%})%>
+	</div>
+ </section>
 <section class="section-style-clothing">
 	<div class="container">
 		<div class="div-style-clothing">

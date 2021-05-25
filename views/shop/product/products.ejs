@@ -8,27 +8,32 @@
             <div class="box" style="width: unset;">
                 <div class="list col-sm-3" style="float: left;/*margin-right: 50px; margin-left: 70px; */margin-top: 86px;">
                     <div class="categories">
-                        <div >
-                            <h5 class="title_categories">Danh Mục</h5>
-                        </div>
-                        <div class="menu_categories">
-                            <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>"> 
-                            <ul class="list-group" style="list-style-type:none;">
-                            <%var i = 0;%>
-                            <%listCate.forEach((item) => { i++;%>
-                             <li class="nav-item dropdown">
-                                <a class="nav-link categories_parents" title="ao_nam" href="#" id="navbarDropdownMenuLink<%-i%>"  cate="<%-item.id%>"><%-item.name%><span class="sr-only">(current)</span></a>
-                                <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                    <%item.list.forEach((child) => {%>
-                                    <a class="dropdown-item categories_child" title="ao_nam" value="<%-child.id%>" cate="<%-item.id%>" href=""><%-child.name%>
-                                    </a>
-                                    <%})%>
-                                </ul>
-                              </li>
-                            <%})%>
-                             
-                            </ul>
-                        </div>
+                        <div class="menu-feature">
+                            <div class="menu-block menu-has-child">
+                               <h3 class="main-title">Nội Thất</h3>
+                               <ul class="submenu menu">
+
+                                <%if (cate1 != ''){ cate1.forEach(item => {%>
+                                  <li class="filter-block">
+                                     <strong class="menu-header ">
+                                         <a href="<%-item.id%>" class="title link ">
+                                     <%-item.name%>
+                                     </a></strong> 
+
+                                    
+                                     <%if (cate2 != ''){ cate2.forEach(item2 => {
+                                         if (item2.categorylevel1_id == item.id) { %>
+                                            <ul class="menu-content-show">
+                                                <li><a href="/sofa-goc/c386" class="link "><%-item2.name%></a></li>
+                                                <br> 
+                                             </ul>
+                                    <%}})}%>
+
+                                  </li>
+                                <%})}%>
+                               </ul>
+                            </div>
+                         </div>
                     </div>
                     <div class="filter_product">
                         <div class="sort_by">
@@ -38,16 +43,15 @@
                             <h5 class="filter_brand_text">Thương hiệu</h5>
                             <div class="filter_brand_box">
                                 <ul class="filter_brand_ul clearfix">
-                                    <% var i = 0;%>
-                                    <%listBrand.forEach((item) => { i++;%>
+                                   
                                     <li class="child_filter_brand_checkbox col-sm-6" style="float: left;">
                                         <div class="checkboxFive">
-                                            <input type="checkbox" value="<%-item.id%>" id="checkboxFiveInput<%-i%>" name="group_brand[]"/>
-                                            <label for="checkboxFiveInput<%-i%>"></label>
+                                            <input type="checkbox" value="" id="checkboxFiveInput" name="group_brand[]"/>
+                                            <label for="checkboxFiveInput"></label>
                                         </div>
-                                        <a class="brand_box" href=""><span class="brand_label"><%-item.name%></span></a>
+                                        <a class="brand_box" href=""><span class="brand_label"></span></a>
                                     </li>
-                                    <%})%>
+                                   
                                 </ul>
                             </div>
                         </div>
@@ -192,16 +196,15 @@
                             <h5 class="filter_material_text">Chất liệu</h5>
                             <div class="filter_material_box">
                                 <ul class="filter_material_ul clearfix">
-                                    <% var i = 0;%>
-                                    <% listMaterial.forEach((item) => { i++;%>
+                                   
                                     <li class="child_filter_brand_checkbox col-sm-6" style="float: left;">
                                         <div class="checkboxFive">
-                                            <input type="checkbox" value="<%-item.id%>" id="cb_material<%-i%>" name="group_material[]"/>
-                                            <label for="cb_material<%-i%>"></label>
+                                            <input type="checkbox" value="" id="cb_material" name="group_material[]"/>
+                                            <label for="cb_material"></label>
                                         </div>
-                                        <a class="brand_box" href=""><span class="brand_label"><%-item.name%></span></a>
+                                        <a class="brand_box" href=""><span class="brand_label"></span></a>
                                     </li>
-                                    <%})%>
+                                  
                                 </ul>
                             </div>
                         </div>
@@ -253,18 +256,18 @@
                         <h5 class="special_details_css">Sản phẩm nổi bật</h3>
                         </div>
                         <div style="margin-top: 30px; padding-bottom: 20px;">
-                            <% products.forEach((prod) => {%>
+                            
                             <div class="block_product_special" style="margin: 10px; margin-top: 20px; display: flex;">
                                 <div class="col-sm-5" style="padding: 0;">
-                                    <img class="special_details_image" src="/uploads/<%-prod.images%>" style="width: 100%;" alt="">
+                                    <img class="special_details_image" src="/uploads/" style="width: 100%;" alt="">
                                 </div>
                                 <div class="col-sm-7 special_details_info">
-                                    <h6 class="special_details_name" style="color: #504d4d; font-family: Lora; font-size: 17px;"><%-prod.name%></h6>
-                                    <p class="special_details_price"><%-prod.price%>₫</p>
-                                    <a href="/shop/product/<%-prod._id%>" style="color: #F65E39; text-decoration: underline;">Xem chi tiết</a>
+                                    <h6 class="special_details_name" style="color: #504d4d; font-family: Lora; font-size: 17px;"><h6>
+                                    <p class="special_details_price">₫</p>
+                                    <a href="/shop/product/" style="color: #F65E39; text-decoration: underline;">Xem chi tiết</a>
                                 </div>
                             </div>
-                            <%})%>
+                         
                         </div>
                     </div>   
                 </div>
@@ -278,7 +281,7 @@
                             </div>
                             <div class="div_number_products">
                                 <input type="hidden" id="category_id" value="">
-                                <h5 style="float: left;">Tìm thấy <span id="count_product"><%-products.length%></span> sản phẩm</h5>
+                                <h5 style="float: left;">Tìm thấy <span id="count_product"></span> sản phẩm</h5>
                             </div>
                             <div class="custom_select_box">
                                 <select class="custom-select" id="SortBy" style="float: right;">
@@ -293,13 +296,14 @@
                         </div>
                     </div>
                     <div class="khoi_sp" style="height: 200px;">
-                        <% products.forEach((prod) => {%>
+                        
                         <!-- <a href="{!! url('view',[$row->id]) !!}"> -->
+                        <%if (product != '') { product.forEach(item => {%>
                             
                             <div class="khoi col-sm-3">
                                 <div class="card" style="border-color: white; line-height: 0.5;">
                                     <div class="khoi_image" style="position: relative;">
-                                        <img class="card-img-top hinhsanpham" src="/uploads/<%-prod.images%>" alt="Card image cap">
+                                        <img class="card-img-top hinhsanpham" src="<%-item.url%>" alt="Card image cap">
                                        
                                         <!--<img src="{!! asset('sale.png') !!}" alt="" style="position: absolute; top: 7px; left: -5px; width: 61px; height: 30px;"> 
                                         <label style="position: absolute; top: 16px; left: 10px; font-weight: 501; color: #fff">
@@ -308,27 +312,54 @@
                                         
                                     </div>
                                     <ul class="social" id="social">
-                                        <li><a href="product/<%-prod._id%>" data-tip="Quick View"><i class="fa fa-eye"></i></a></li>
+                                        <li><a href="detail/<%-item.product_id%>" data-tip="Quick View"><i class="fa fa-eye"></i></a></li>
                                         <li><a href="#" data-tip="Add to Wishlist"><i class="fa fa-shopping-bag"></i></a></li>
                                         <li><a href="#" data-tip="Add to Cart"><i class="fa fa-shopping-cart"></i></a></li>
                                     </ul>
-                                    <div class="card-block">
-                                        <h6 class="card-title tensanpham" id="tensanpham" name="tensanpham"><%-prod.name%></h6>
-                                        
-                                        <!--<p class="card-text giatien" name="giatien" style="color: #333;; font-weight: bold; font-size: 14px;">
-                                        <span style="color: red;">{{number_format($row->current_price)}}₫</span>
-                                        <span style="text-decoration: line-through; text-decoration-color: #333;">{{number_format($row->price)}}₫</span>
-                                        </p> -->
-                                       
-                                        <p class="card-text giatien" name="giatien" style="color: #333;; font-weight: bold; font-size: 14px;"><%-prod.price.toLocaleString()%>₫</p>
-                                        
-                                        <!-- <button class="add_cart btn btn-dark"><i class="fas fa-cart-arrow-down"></i></button> -->
-                                    </div>
+                                    <div class="product-list-detail">
+                                        <span class="category-name"></span> 
+                                        <div class="related-product-info">
+                                           <div class="related-product-title"><a href="/giuong-doi-zago-omega-king-4283.html" title="Giường Đôi Zago Omega King" class="product-item-name">
+                                              <%-item.name%>
+                                              </a>
+                                           </div>
+                                           <div class="related-product-rating col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                              <div data-rating="0" class="react-rater">
+                                                 <div>
+                                                    <div class="react-rater-star is-disabled "><i class="fa fa-star"></i></div>
+                                                 </div>
+                                                 <div>
+                                                    <div class="react-rater-star is-disabled "><i class="fa fa-star"></i></div>
+                                                 </div>
+                                                 <div>
+                                                    <div class="react-rater-star is-disabled "><i class="fa fa-star"></i></div>
+                                                 </div>
+                                                 <div>
+                                                    <div class="react-rater-star is-disabled "><i class="fa fa-star"></i></div>
+                                                 </div>
+                                                 <div>
+                                                    <div class="react-rater-star is-disabled "><i class="fa fa-star"></i></div>
+                                                 </div>
+                                              </div>
+                                           </div>
+                                        </div>
+                                        <div class="related-product-price price-block">
+                                           <div class="col-price">
+                                              <p class="current-price"><%-item.min%> ₫ - <%-item.max%> ₫</p>
+                                           </div>
+                                           <div class="col-brand">
+                                              <div class="brand-image-wp"><a href="/thuong-hieu/zago" title="ZAGO"><img src="https://cdn.fitin.vn/cms-ecom/images/2020/03/06/zago-1583491970.png" alt="ZAGO" class="brand-image"></a></div>
+                                           </div>
+                                        </div>
+                                        <div class="block-tags">
+                                           <div class="row"></div>
+                                        </div>
+                                     </div>
                                 </div>
                             </div>
-                            
+                        <%})}%>
                             <!-- </a> -->
-                            <%})%>
+                          
                         </div>
                     </div>
                 </div>

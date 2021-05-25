@@ -17,231 +17,110 @@ exports.getIndexShop = (req, res, next) => {
     res.render('index', { title: 'Shop', user: req.user, cart: req.session.cart });
 }
 
-exports.getProducts = (req, res, next) => {
-  var listProduct = [];  
-  var listBrand = [];
-  var listMaterial = [];
-  var listCate = [];
+exports.getProducts = async (req, res, next) => {
+  const cateOneID = req.params.cateOneId;
+  const cate1 = await db.getCategoryLevelOne();
+  const cate2 = await db.getCategoryLevelTwoAll();
 
-  Brand.find().then((data) => {
-    data.forEach((item) => {
-      listBrand.push({id: item._id, name: item.name})
-    })
-  });
-
-  Material.find().then((data) => {
-    data.forEach((item) => {
-      listMaterial.push({id: item._id, name: item.name})
-    })
-  });
-
-  Category.find().then((data) => {
-    data.forEach((item) => {
-      var listChild = [];
-        item.childCateName.forEach((child) => {
-          listChild.push({id: child._id, name: child.childName})
-        })
-        listCate.push({name: item.name, id: item._id, list: listChild})
-    })
-  });
-
-    Product.find()
-    .limit(8)
-    .then(products => {
-      Product.find()
-        .limit(8)
-        .sort({"viewCounts": -1})
-        .then(products2 => {
-      
-            products2.forEach((prod) => {
-                if (prod.price > 0)
-               {
-                listProduct.push(prod);
-                //console.log(prod)
-               }
-            })
-
-            res.render("./shop/product/products", {
-              title: "Trang chủ",
-              user: req.user,
-              trendings: products,
-              products: listProduct,
-              cart: req.session.cart,
-              listBrand: listBrand,
-              listMaterial: listMaterial,
-              listCate: listCate
-            });
-        });
-    })
-    .catch(err => {
-      console.log(err);
-    });
-}
-
-exports.getProductDetail = (req, res, next) => {
-  var promises = [];
-  var productId = req.params.productId;
-  var brand = '';
-  var material = '';
-  var listSize = [];
-  var listColor = new Array;
-  var listRelative = [];
-
-  
-  
-  Product.findById(productId, function(err, data) {
-    if (err) console.log(err);
-    else
-    {
-      data.viewCounts += 1/2;
-      data.save();
-      
-      Product.find().then((data2) => {
-        data2.forEach((item) => {
-          if (item.price > 0)
-          {
-            if (item._id != productId)
-            {
-              if (item.productType.main.id === data.productType.main.id)
-              {
-                listRelative.push(item);
-              }
-            }
-          }
-        })
-      })
-        promises.push(
-          Brand.findById(data.brand, function(err, brd) {
-            if (err) console.log(err);
-            else{
-              brand = brd.name;
-            }
-          })
-        )
-
-        promises.push(
-          Material.findById(data.materials, function(err, mate) {
-            if (err) console.log(err);
-            else{
-              material = mate.name;
-            }
-          })
-        )
-        
-        var list = [];
-        data.subId.size.forEach((subSize) => {
-          listSize.push({name: subSize.name, price: subSize.price});
-
-          subSize.color.forEach((subColor) => {
-            list.push({size: subSize.name, color: subColor.name, amount: subColor.amount, price: subSize.price})
-          })
-        });
-       
-        data.subId.size[0].color.forEach((subColor) => {
-          var codeColor = '';
-          switch(subColor.name)
-          {
-            case ('orange'):
-            {
-              codeColor = 'color1';
-              break;
-            }
-            case ('olivaceous'):
-            {
-              codeColor = 'color2';
-              break;
-            }
-            case ('green'):
-            {
-              codeColor = 'color3';
-              break;
-            }
-            case ('blue'):
-            {
-              codeColor = 'color4';
-              break;
-            }
-            case ('sky'):
-            {
-              codeColor = 'color5';
-              break;
-            }
-            case ('yellow'):
-            {
-              codeColor = 'color6';
-              break;
-            }
-            case ('greenish'):
-            {
-              codeColor = 'color7';
-              break;
-            }
-            case ('red'):
-            {
-              codeColor = 'color8';
-              break;
-            }
-            default:
-            {
-              codeColor = 'no-color-img';
-              break;
-            }     
-          }
-
-          listColor.push({'name': subColor.name, 'code': codeColor});
-        })
-
-        //console.log(list)
-        Promise.all(promises).then(() => 
-          res.render("./shop/product/productDetail", {
-            user: req.user,
-            data: data,
-            subImg: data.subImages,
-            img: data.images,
-            brand: brand,
-            material: material,
-            size: listSize,
-            color: listColor,
-            list: list,
-            cart: req.session.cart,
-            listRelative: listRelative
-          })
-        );
-    }
+  const product = await db.getProductByCateOne([cateOneID]);
+  res.render("./shop/product/products", {
+    title: "Trang chủ",
+    userInfo: req.session.Userinfo,
+    cart: req.session.cart,
+    cate1: cate1,
+    cate2: cate2,
+    product: product,
   });
 }
 
-exports.getProductDetailInfo = (req, res, next) => {
-  var productId = req.params.productId;
-  var size = req.query.size_val;
-  var color = req.query.color_val;
-  var oData = new Array;
-  var promises = [];
+exports.getProductDetail = async (req, res, next) => {
+  const productId = req.params.productId;
+  const data = await db.getProductAllById([productId]);
 
-  Product.findById(productId, function(err, data) {
-    if (err) console.log(err);
-    else
-    {
-      data.subId.size.forEach((subSize) => {
-        if (subSize.name === size)
-        {
-          //promises.push(
-            subSize.color.forEach((subColor) => {
-              if (subColor.name === color)
-              {
-                oData.push({amount: subColor.amount, price: subSize.price})
-              }
-            })
-         // )
+  res.render("./shop/product/productDetail", {
+    user: req.user,
+    userInfo: req.session.Userinfo,
+    cart: req.session.cart,
+    data: data
+  })
+}
+
+exports.getProductDetailInfo = async (req, res, next) => {
+  var {productId, color, size, quantity} = req.query;
+
+  if (productId == '' || color == '' || size == '' || quantity == '') {
+    res.status(500).json({err: 'Cần chọn phân loại hàng '});
+  }
+
+  const data = await db.getProductVariantBeforeSell([productId]);
+  var stock = 0;
+  var productvariant_id = '';
+  if (color == 1) color = null;
+  if (size == 1) size = null;
+  var error = 0;
+  const userInfo = req.session.Userinfo;
+  var userID = 0;
+
+  //handle quantity if logged in
+  if (userInfo) {
+    userID = userInfo.id;
+  }
+
+  if (data != false) {  
+
+    for(let item of data) {
+      if (item.color == color && item.size == size) {
+        productvariant_id = item.productvariant_id;
+        if (userID > 0) {
+          var exist = await db.checkExistCart([userID, productvariant_id]);
+          if (exist != false) {
+            var getData = await db.getCartQuantity([userID, productvariant_id]);
+            if (getData != false) {
+              quantity = parseInt(getData[0].amount) + parseInt(quantity);
+            }
+            else {
+              error++;
+              break;
+            }
+          }
         }
-      });
-      res.send(JSON.stringify(oData))  
-    }
-  });
+        stock = item.stockamount;
+        if (stock < quantity) {
+          error ++;
+          break;
+        }
 
-  // Promise.all(promises).then(() => 
-  //   res.send(JSON.stringify(oData))             
-  // );
+        break;
+      }
+    }
+  }
+  else return res.status(500).json({err: 'Lỗi hệ thống '});
+  
+  if (error > 0) {
+    res.status(500).json({err: 'Không được vượt quá kho hàng '});
+  }
+  else {
+    res.send({stock: stock, productvariant_id: productvariant_id});
+  }
+}
+
+exports.postAddToCart = async (req, res, next) => {
+  const {pdvID, amount} = req.body;
+
+  if (pdvID != '' && amount != '') {
+    //save db
+    const cart = await db.insertCart([req.jwtDecoded.data.id, pdvID, amount]);
+    if (cart == true) res.send({state: 1});
+    else res.status(500).json({err: 'Lỗi hệ thống'});
+
+    //check exist
+    const exist = await db.checkExistCart([req.jwtDecoded.data.id, pdvID]);
+    if (exist == true) {
+      //check db + amount > stock
+       
+    }
+  }
+  else res.status(500).json({err: 'Dữ liệu trống'});
 }
 
 exports.postProductBuy = (req, res, next) => {

@@ -53,7 +53,13 @@ exports.getLogin = (req, res, next) => {
         const accessToken = await jwtHelper.generateToken(userInfo, 'secret', '1h');
 
         req.session.token = accessToken;
+
         const verify = await db.getUserInfo(2, [username]);
+        req.session.Userinfo = {
+          username: verify.username,
+          gender: verify.gender,
+          id: verify.id
+        }
         if (verify.isverified == 0) {
            res.send({ state: 0});
         }
@@ -365,6 +371,7 @@ exports.postResendVerify = async (req, res, next) => {
       }
     } else {
       // Không tìm thấy token trong request
+      console.log(res.headers)
       return res.redirect('/login');
     }
   }

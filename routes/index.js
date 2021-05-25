@@ -11,10 +11,11 @@ router.get('/', async function(req, res, next) {
     const decoded = await jwtHelper.verifyToken(req.session.token, 'secret');
     username = decoded.data.username;
     userInfo = {username: decoded.data.username, gender: decoded.data.gender};
-    console.log(userInfo)
   }
 
-  res.render('index', { title: 'Shop', userInfo: userInfo, cart: req.session.cart});
+  const category = await db.getCategoryLevelOne();
+
+  res.render('index', { title: 'Shop', userInfo: userInfo, cart: req.session.cart, category: category});
 });
 
 module.exports = router;

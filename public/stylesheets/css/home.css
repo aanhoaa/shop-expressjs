@@ -484,3 +484,105 @@ html[xmlns] .clearfix {
 * html .clearfix {
 	height: 1%;
 }
+
+.sec-categories {
+    padding-top: 30px;
+	padding-bottom: 30px;
+	max-width: 1140px;
+}
+.sec-categories .title-h2 {
+    display: block;
+}
+@media screen and (min-width: 768px) {
+.title-h2 {
+    margin-bottom: 15px;
+    text-transform: capitalize;
+}
+}
+.title-h2 {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    display: flex;
+    justify-content: space-between;
+}
+.justify-center {
+    justify-content: center;
+}
+.sec-categories .cate-block .cate-item-inner {
+    padding-bottom: 15px;
+    transition: all .3s;
+}
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: -15px;
+	margin-left: -15px;
+}
+.sec-categories .cate-block .cate-item-inner .cate-img img {
+	width: 100%;
+	height: auto;
+}
+
+/* custom product */
+.product-list-detail {
+    margin-top: 10px;
+}
+.related-product-info {
+    padding-bottom: 5px;
+    padding-top: 5px;
+    font-family: ProximaNova;
+    font-size: 14px;
+    font-weight: 600;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.71;
+    letter-spacing: normal;
+    color: #070404;
+}
+.related-product-title {
+	margin-bottom: 10px;
+}
+.related-product-info .product-item-name {
+    font-weight: 600;
+    height: 48px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+.related-product-info .related-product-rating {
+    text-align: left;
+}
+.react-rater, .related-product-rating {
+	display: flex;
+}
+.price-block {
+    padding-top: 10px;
+    border-top: 1px solid hsla(0,0%,63.1%,.37);
+    height: 42px;
+    align-self: center;
+    display: flex;
+    justify-content: space-between;
+}
+.price-block .current-price {
+    font-size: 14px;
+    margin-right: 10px;
+    font-weight: 700;
+    margin-bottom: 5px;
+    text-align: left;
+}
+.product-list-item .price-block .price {
+    color: #4b4343;
+    text-decoration: line-through;
+    text-align: left;
+    opacity: .65;
+}
+.price-block .col-brand {
+    width: 35%;
+}
+.price-block img {
+    width: auto;
+    max-height: 25px;
+    max-width: 100%;
+}

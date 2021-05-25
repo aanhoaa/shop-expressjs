@@ -81,10 +81,11 @@ paypal.configure({
 
 app.use(indexRouter);
 app.use(authRouter);
+app.use(shopRouter);
 app.use('/user', usersRouter);
 app.use('/seller', sellerRouter);
 app.use('/admin', adminRouter);
-app.use('/shop', shopRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
