@@ -103,13 +103,13 @@
                     </div>
                     <div class="input-group" style="width: 30%;">
                         <span class="input-group-btn">
-                        <button type="button" class="btn btn-number" style="background-color: #80808091; height: 30px;" disabled="disabled" data-type="minus" data-field="quant[1]">
+                        <button type="button" class="btn btn-number" style="background-color: #80808091; height: 30px;" disabled="disabled" data-type="minus" data-field="quantity" id="sub-quantity">
                         <span class="fa fa-minus"></span>
                         </button>
                         </span>
                         <input type="text" name="quantity" id="quantity" class="form-control input-number" value="1" min="1" max="10" style="max-height: 30px; max-width: 45px;">
                         <span class="input-group-btn">
-                        <button type="button" class="btn btn-number" style="background-color: #80808091; height: 30px;" data-type="plus" data-field="quant[1]">
+                        <button type="button" class="btn btn-number" style="background-color: #80808091; height: 30px;" data-type="plus" data-field="quantity" id="plus-quantity">
                         <span class="fa fa-plus"></span>
                         </button>
                         </span>
@@ -123,6 +123,8 @@
                     <input type="hidden" id="pdv" name="pdvID" value="">
                     <input type="hidden" id="stock" name="stock" value="">
                     <input type="hidden" id="amount" name="amount" value="">
+                    <input type="hidden" id="only"  value="<%-only%>">
+                    
                     
                     <div style="margin-top: 15px;">
                         <div class="cpAMpZ">

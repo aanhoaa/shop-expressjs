@@ -36,20 +36,29 @@ exports.getProducts = async (req, res, next) => {
 exports.getProductDetail = async (req, res, next) => {
   const productId = req.params.productId;
   const data = await db.getProductAllById([productId]);
-
-  res.render("./shop/product/productDetail", {
-    user: req.user,
-    userInfo: req.session.Userinfo,
-    cart: req.session.cart,
-    data: data
-  })
+  var onlyOne = 1;
+  
+  if (data == false) return res.redirect('/');
+  else {
+    if (data.length == 1) {
+      if (data[0].size == null && data[0].color == null) 
+        onlyOne = 0;
+    }
+    res.render("./shop/product/productDetail", {
+      user: req.user,
+      userInfo: req.session.Userinfo,
+      cart: req.session.cart,
+      data: data,
+      only: onlyOne
+    })
+  }
 }
 
 exports.getProductDetailInfo = async (req, res, next) => {
   var {productId, color, size, quantity} = req.query;
 
   if (productId == '' || color == '' || size == '' || quantity == '') {
-    res.status(500).json({err: 'Cần chọn phân loại hàng '});
+    return res.send({state: -1, err: 'Cần chọn phân loại hàng '});
   }
 
   const data = await db.getProductVariantBeforeSell([productId]);
@@ -60,6 +69,7 @@ exports.getProductDetailInfo = async (req, res, next) => {
   var error = 0;
   const userInfo = req.session.Userinfo;
   var userID = 0;
+  var amountErr = 0;
 
   //handle quantity if logged in
   if (userInfo) {
@@ -67,7 +77,6 @@ exports.getProductDetailInfo = async (req, res, next) => {
   }
 
   if (data != false) {  
-
     for(let item of data) {
       if (item.color == color && item.size == size) {
         productvariant_id = item.productvariant_id;
@@ -86,6 +95,11 @@ exports.getProductDetailInfo = async (req, res, next) => {
         }
         stock = item.stockamount;
         if (stock < quantity) {
+          if (getData) {
+            amountErr = stock - getData[0].amount;
+          }
+          else 
+            amountErr = stock;
           error ++;
           break;
         }
@@ -94,34 +108,126 @@ exports.getProductDetailInfo = async (req, res, next) => {
       }
     }
   }
-  else return res.status(500).json({err: 'Lỗi hệ thống '});
+  else return res.send({state: -1, err: 'Lỗi hệ thống '});
   
   if (error > 0) {
-    res.status(500).json({err: 'Không được vượt quá kho hàng '});
+    res.send({state: 0, err: "Không được vượt quá kho hàng", amountErr: amountErr});
   }
   else {
-    res.send({stock: stock, productvariant_id: productvariant_id});
+    res.send({state: 1, stock: stock, productvariant_id: productvariant_id});
   }
 }
 
 exports.postAddToCart = async (req, res, next) => {
   const {pdvID, amount} = req.body;
+  //check user logged
+  const userInfo = req.session.Userinfo;
 
   if (pdvID != '' && amount != '') {
-    //save db
-    const cart = await db.insertCart([req.jwtDecoded.data.id, pdvID, amount]);
-    if (cart == true) res.send({state: 1});
-    else res.status(500).json({err: 'Lỗi hệ thống'});
-
     //check exist
-    const exist = await db.checkExistCart([req.jwtDecoded.data.id, pdvID]);
-    if (exist == true) {
+    const exist = await db.checkExistCart([userInfo.id, pdvID]);
+    const cartCount = await db.getCart([userInfo.id]);
+    var stockDB = await db.getStockAmount([pdvID]);
+    if (exist != false && stockDB != false) { //if exist before
       //check db + amount > stock
-       
+        if (parseInt(exist.amount) + parseInt(amount) > stockDB.stockamount) {
+          return res.status(500).json({err: 'Vượt quá số lượng trong kho'});
+        }
+        else {
+          //update
+          const updateCart = await db.updateCart([parseInt(exist.amount) + parseInt(amount), userInfo.id, pdvID]);
+          if (updateCart == true) return res.send({state: 1});
+          else return res.status(500).json({err: 'Lỗi hệ thống'});
+        } 
+    }
+    else if (exist == false && stockDB != false){
+      //create new one
+      const cart = await db.insertCart([userInfo.id, pdvID, amount]);
+      if (cart == true) return res.send({state: 1, cart: cartCount.length});
+      else return res.status(500).json({err: 'Lỗi hệ thống'});
     }
   }
-  else res.status(500).json({err: 'Dữ liệu trống'});
+  else res.send({state: -1, err: 'Dữ liệu trống'});
 }
+
+exports.postUpdateToCart = async (req, res, next) => {
+  const {pdvID, amount} = req.body;
+  const userInfo = req.session.Userinfo;
+
+  if (pdvID != '' && amount != '') {
+    var stockDB = await db.getStockAmount([pdvID]);
+    if (stockDB < amount) {
+      return res.send({state: -1, err: 'Vượt quá giới hạn trong kho'});
+    }
+    else {
+      const updateCart = await db.updateCart([amount, userInfo.id, pdvID]);
+      if (updateCart == true) return res.send({state: 1});
+      else return res.send({state: -1, err: 'Lỗi hệ thống'});
+    }
+  }
+  else res.send({state: -1, err: 'Dữ liệu trống'});
+}
+
+exports.getCart = async (req, res, next) => {
+  const data = await db.getCartAll([req.session.Userinfo.id]);
+  //req.session.checkout = '';
+
+  res.render("./shop/cart/cart", {
+    title: "Giỏ hàng",
+    userInfo: req.session.Userinfo,
+    cart: req.session.cart,
+    data: data
+  });
+}
+
+exports.getCartInfo = async (req, res, next) => {
+  const data = req.query;
+  var amount = 0;
+  var price = 0;
+  if (data.pvd != '') {
+    for(let i of data.pvd) {
+      var getData = await db.getCartByUserIdAndPVId([req.session.Userinfo.id, i]);
+      amount = parseInt(amount) + parseInt(getData[0].amount);
+      price = parseInt(price) + parseInt(getData[0].price) * parseInt(getData[0].amount);
+    }
+  }
+
+  const addBook = await db.getUserAddressBookExist([req.session.Userinfo.id]);
+  if (addBook == true) {
+    req.session.checkout = data.pvd;
+    return res.send({state: 1, amount: amount, price: price, book: 1});
+  }
+  else return res.send({state: 1, amount: amount, price: price, book: 0});
+
+}
+
+exports.getCheckout = async (req, res, next) => {
+  const addBook = await db.getUserAddressBook([req.session.Userinfo.id]);
+  const data = req.session.checkout;
+  
+  var arrData = [];
+  if (data != '') {
+    for(let i of data) {
+      var getData = await db.getCartCheckOut([req.session.Userinfo.id, i]);
+      arrData.push(getData);
+    }
+  }
+  console.log(arrData)
+  res.render('./shop/cart/checkout', {
+    cart: req.session.cart, 
+    user: req.user,
+    userInfo: req.session.Userinfo,
+    book: addBook,
+    data: arrData
+  });
+}
+
+
+
+
+
+
+
 
 exports.postProductBuy = (req, res, next) => {
   var productId = req.params.productId;
@@ -536,38 +642,6 @@ exports.postProductCateFilter = (req, res, next) => {
     });
 }
 
-exports.getCart = (req, res, next) => {
-  var listProduct = []; 
-  
-  Product.find()
-    .limit(8)
-    .then(products => {
-      Product.find()
-        .limit(8)
-        .sort({"viewCounts": -1})
-        .then(products2 => {
-      
-            products2.forEach((prod) => {
-                if (prod.price > 0)
-                {
-                  listProduct.push(prod);
-                }
-            })
-           
-            res.render("./shop/cart/cart", {
-              title: "Giỏ hàng",
-              user: req.user,
-              trendings: products,
-              products: listProduct,
-              cart: req.session.cart
-            });
-        });
-    })
-    .catch(err => {
-      console.log(err);
-    });
-}
-
 exports.getDeleteCart = (req, res, next) => {
  var iCart = req.query.iCart;
 
@@ -588,9 +662,7 @@ exports.getDeleteCart = (req, res, next) => {
  res.send({done:1});
 }
 
-exports.getCheckout = (req, res, next) => {
-   res.render('./shop/cart/checkout', {cart: req.session.cart, user: req.user});
-}
+
 
 exports.postCheckout = (req, res, next) => {
   var promises = [];

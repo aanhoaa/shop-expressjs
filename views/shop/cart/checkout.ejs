@@ -4,192 +4,164 @@
 
 <div class="col-lg-12">
     <h1 class="page-header" style="margin-left: 10%;">Thanh toán
-        <small>Add</small>
     </h1>
 </div>
 
-<form action="" method="POST" style="display: flex;">
-    <div class="col-lg-5" style="padding-bottom:15px; margin-left: 10%;">
-        <input type="hidden" name="_token" value="{!! csrf_token() !!}">
-        <label class="text-uppercase font-weight-600 mb-2 checkout_block_text">Địa chỉ giao hàng</label>
-        <!-- Guest -->
-        
-        <!-- Logged in-->
-        
-        <div class="checkout_block">
-            <div class="form-group checkout_block_child">
-                <label class="checkout_block_text">Họ và tên</label>
-                <input type="text" class="form-control" name="name" placeholder="Họ và tên" value="<%-user.fullname%>" disabled="disabled" required/>
-            </div>
-            <div class="form-group checkout_block_child">
-                <label class="checkout_block_text">Email</label>
-                <input type="text" class="form-control" name="email" placeholder="Email" value="<%-user.email%>" disabled="disabled" required/>
-            </div>
-            <div class="form-group checkout_block_child">
-                <label class="checkout_block_text">Số điện thoại</label>
-                <input type="text" class="form-control" name="phone" placeholder="Số điện thoại" value="<%-user.phone%>" disabled="disabled" required/>
-            </div>
-            <div class="form-group checkout_block_child">
-                <label class="checkout_block_text">Tỉnh/Thành phố</label>
-                <select class="form-control" name="city" disabled="disabled" required>
-                    <option value="" disabled="disabled">Chọn thành phố</option>
-                    <option value="hcm">Tp.HCM</option>
-                    <option value="hn">Hà Nội</option>
-                </select>
-            </div>
-            <div class="form-group checkout_block_child">
-                <label class="checkout_block_text">Địa chỉ giao hàng</label>
-                <input type="text" class="form-control" name="address" placeholder="Địa chỉ giao hàng" value="<%-user.address%>" disabled="disabled" required/>
-            </div>
-            <div class="form-group checkout_block_child">
-                <label class="checkout_block_text">Giới tính</label>
-                <input type="text" class="form-control" name="gender" placeholder="Giới tính" value="<%-user.gender%>" disabled="disabled" required/>
-            </div>
+<div role="main" class="_1WlhIE">
+    <div class="_1iurwE">
+       <div class="_1G9Cv7"></div>
+       <div class="_1gkIPw">
+        <div class="_1TKMuK">
+           <div class="_20Qrq_">
+              <svg height="16" viewBox="0 0 12 16" width="12" class="shopee-svg-icon icon-location-marker">
+                 <path d="M6 3.2c1.506 0 2.727 1.195 2.727 2.667 0 1.473-1.22 2.666-2.727 2.666S3.273 7.34 3.273 5.867C3.273 4.395 4.493 3.2 6 3.2zM0 6c0-3.315 2.686-6 6-6s6 2.685 6 6c0 2.498-1.964 5.742-6 9.933C1.613 11.743 0 8.498 0 6z" fill-rule="evenodd"></path>
+              </svg>
+              Địa chỉ nhận hàng
+           </div>
         </div>
-       
+        <div class="Jgz_oc">
+           <div class="_2Pe7Hh">
+              <div class="book-name"><%-book[0].fullname%> <%-book[0].phone%></div>
+              <div class="book-address"><%-book[0].identity_name%>, <%-book[0].ward_name%>, <%-book[0].district_name%>, <%-book[0].province_name%></div>
+           </div>
+           <div class="change-book">
+               <a href="/user/account/address"><button>Thiết lập địa chỉ</button></a>
+           </div>
+        </div>
+        <div></div>
+     </div>
+    </div>
 
-        <label class="text-uppercase font-weight-600 mb-2 payment_block_text">Phương thức thanh toán</label>
-        <div class="payment_block" style="display: flex;">
-            <div class="form-group payment_block_child col-lg-5">
-                <label class="payment_block_text">Hình thức thanh toán</label>
-                <select class="form-control" name="type_of_payment" id="select-payment" required>
-                    <option disabled="disabled">Chọn hình thức thanh toán</option>
-                    <option value="paypal">Cổng thanh toán Paypal</option>
-                    <option value="money">Tiền mặt</option>
-                </select>
-            </div>
-            <div class="form-group payment_block_child col-lg-6" id="paypal_child">
-                <div class="col-lg-3">
-                    <img src="/images/img/visa.png" alt="">
+    <div class="border-cart" style="box-shadow: 0 1px 3px 0 rgba(0,0,0,.2);">
+                
+                <% if (data) 
+                    { 
+                        if (data.length >= 1) {%>
+                <div class="khoimenu_title" style="display: flex; border-bottom: solid 1px #b1b1b1;">
+                    <div class="col-sm-4">
+                        <label class="khoimenu_title_text">Sản phẩm</label>
+                    </div>
+                    <div class="col-sm-2">
+                        <label class="khoimenu_title_text">Đơn giá</label>
+                    </div>
+                    <div class="col-sm-2">
+                        <label class="khoimenu_title_text">Số lượng</label>
+                    </div>
+                    <div class="col-sm-2">
+                        <label class="khoimenu_title_text">Thành tiền</label>
+                    </div>
                 </div>
-                <div class="col-lg-3">
-                    <img src="/images/img/mastercard.png" alt="">
-                </div>
-                <div class="col-lg-3">
-                    <img src="/images/img/amex.png" alt="">
-                </div>
-                <div class="col-lg-3">
-                    <img src="/images/img/discover.png" alt="">
-                </div>
-            </div>
-            <div class="form-group payment_block_child col-lg-5 offset-lg-1" id="tien_mat_child">
-                <label class="payment_block_text">Thanh toán</label>
-                <select class="form-control" name="product" required>
-                    <option value="nhan_hang">Thanh toán khi nhận hàng</option>
-                </select>
-            </div>
-        </div>
-        <div>
-            <!-- <a href="#" class="btn btn-primary text-uppercase font-weight-600 mb-2 confirm_checkout" style="width: 40%;">Xác nhận</a> -->
-            <button type="submit" class="btn btn-primary text-uppercase font-weight-600 mb-2 confirm_checkout" style="width: 40%;">Xác nhận</button>
-        </div>
-    </div>
-    <div class="col-lg-5" style="padding-bottom:15px;">
-        <input type="hidden" name="_token" value="{!! csrf_token() !!}">
-        <label class="text-uppercase font-weight-600 mb-2 checkout_block_text">Đơn đặt hàng</label>
-        <div class="checkout_block_info">
-          
-          <%var total = 0;%>
-          <%cart.forEach((item) => {
-                total += parseInt(item.amount,10) * parseInt(item.price,10);
-            %> 
-            <div class="khoimenu" style="display: flex;">  
-<!--               <input type="hidden" name="invenId[]" value="{!! $row->options['invenId'] !!}"> -->       
-              <div class="col-sm-3">
-                <img class="hinhsanpham" src="<%-item.imgSrc%>" alt="" >
-              </div>
-              <div class="col-sm-7">
-                <div class="product_info">
-                  <label class="product_info_text"><%-item.name%><small style="color: gray;"> (<%-item.color%>)</small></label>
-                  <div class="product_info_description">
-                    <span>Số lượng: <%-item.amount%></span>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-2">
-                <!-- @if((int)$row->options['cur_price'] === 0)
-                <span>{!! number_format($row->price * $row->qty ) !!} ₫</span>
-                @else -->
-                <span><%-parseInt(item.amount,10) * parseInt(item.price,10)%>₫</span>
-               
-              </div>            
-            </div>
-            <!-- <?php
-            if((int)$row->options['cur_price'] === 0)
-            {
-                $total += $row->price * $row->qty;
-            }
-            else $total += $row->options['cur_price'] * $row->qty;
+                <%var i = 0;
+                var a = '';
+                var total = 0;
+                %>
+                <%data.forEach((item) => {i++;%>
+                <div class="shop-name">
             
-            ?> 
-            -->
-            <%})%> 
-        </div>
-        <div class="checkout_block" id="check_voucher" style="display: flex; padding-top: 30px; margin-bottom: 0; margin-top: 0;">
-            <div class="form-group checkout_block_child col-sm-10">
-                <input type="text" class="form-control voucher" name="voucher" placeholder="Nhập mã giảm giá"/>
-                <!-- @if(Auth::check())
-                    @if(Session::has('total_payment'))
-                        @if(!empty($voucher_info))
-                        <div class="info_voucher_block">
-                            <span class="info_voucher">Bạn đã sử dụng mã giảm giá: Số hiệu <span class="info_details">SNB00{!! $voucher_info->id !!}</span>, sử dụng tối đa <span class="info_details">{!! $voucher_info->number_use !!}</span> lần.</span><br>
-                            <span class="info_voucher">(Còn <span class="info_details">{!! Auth::user()->number_voucher - 1 !!}</span> lần !!)</span>
-                        </div>
-                        @endif
-                    @endif
-                @endif -->
-            </div>
-            <div>
-                <!-- @if(Auth::check())
-                <a href="javascript:void(0)" class="btn btn-primary voucher_checkout">Áp dụng</a>
-                @else -->
-                <a href="javascript:void(0)" class="btn btn-primary voucher_notcheckout">Áp dụng</a>
-                
-            </div>
-        </div>
-        
-        <div class="checkout_block_small" style="display: flex;">
-            <div class="col-sm-10 checkout_block_small_text">
-                <div style="line-height: 1.0;">
-                    <label style="font-weight: 600;">Tạm tính</label><br>
-                    <small style="color: gray; padding-left: 6px;">(Phí ship)</small>
+                    <% if (a != item[0].shop) {
+                        a = item[0].shop
+                    %>
+                   Cung cấp bởi: <%-item[0].shop%>
+                    <%}%>
+
                 </div>
-                
+                <div class="khoimenu" style="display: flex; padding: 15px 0; border-bottom: solid 1px #e4e4e4;">
+                    <div class="col-sm-4" style="display: flex;">
+                        <img class="hinhsanpham" src="<%-item[0].cover%>" alt="" >
+                        <div class="product_info">
+                            <label class="product_info_text"><%-item[0].name%> </label>
+                            <small class="product_info_small">(<%-item[0].color%> <%-item[0].size%>)</small>
+                        </div>
+                    </div>
+ 
+                    <div class="col-sm-2">
+                        
+                        <span><%-item[0].price.toLocaleString()%>₫</span>
+                        <input type="hidden" class="price" value="">
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="input-group get-info">
+                            <span class="input-group-btn">
+                                <%-item[0].amount%>
+                            </span>
+                            <input type="hidden" value="<%-item[0].color%>" class="color">
+                            <input type="hidden" value="<%-item[0].size%>" class="size">
+                            <input type="hidden" value="<%-item[0].id%>" class="pvid">
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+
+                        <span id="payment_total"><%-item[0].amount * item[0].price%>₫</span>
+                        <%total += item[0].amount * item[0].price%>                                  
+                    </div>
+                </div>
+
+                <%})}}%>
             </div>
-            <div class="col-sm-2 checkout_block_small_text col_text">
-                <label>
-                   <%=total%>₫
-                </label>
-            </div>
-        </div>
-        <div class="checkout_block_total" style="display: flex;">
-            <div class="col-sm-10 checkout_block_total_text">
-                <label style="font-weight: 600;">Tổng hóa đơn</label><br>  
-            </div>
-            <div class="col-sm-2 checkout_block_total_text col_text">
-                <label >
-                    
-                    
-                </label>
-                <input type="hidden" class="payment_total" name="payment_total" value="<?php echo $total; ?>">
-               
-                <input type="hidden" name="payment_total_final" value="{!! $total_payment !!}">
-                <%-total%>₫
-                    <input type="hidden" name="payment_end" value="{!! $total_payment !!}">
-                    <!-- @else
-                    <input type="hidden" name="payment_end" value="<?php echo Session::get('total_payment'); ?>">
-                    @endif -->
-                <!-- @else
-                <input type="hidden" name="payment_total_final" value="<?php echo $total; ?>">
-                    @if(!Session::has('total_payment'))
-                    <input type="hidden" name="payment_end" value="<?php echo $total; ?>">
-                    @else
-                    <input type="hidden" name="payment_end" value="<?php echo Session::get('total_payment'); ?>">
-                    @endif
-                @endif -->
-            </div>
-        </div>
+
+    <div class="f23wB9">
+       <div class="qXX2_B">
+          <div>
+             <div class="checkout-payment-method-view__current checkout-payment-setting">
+                <div class="checkout-payment-method-view__current-title">Phương thức thanh toán</div>
+                <div class="checkout-payment-setting__payment-methods-tab">
+                   <span tabindex="0">
+                      <button class="product-variation product-variation--selected">
+                         Ví AirPay
+                         <div class="product-variation__tick">
+                            <svg enable-background="new 0 0 12 12" viewBox="0 0 12 12" x="0" y="0" class="shopee-svg-icon icon-tick-bold">
+                               <g>
+                                  <path d="m5.2 10.9c-.2 0-.5-.1-.7-.2l-4.2-3.7c-.4-.4-.5-1-.1-1.4s1-.5 1.4-.1l3.4 3 5.1-7c .3-.4 1-.5 1.4-.2s.5 1 .2 1.4l-5.7 7.9c-.2.2-.4.4-.7.4 0-.1 0-.1-.1-.1z"></path>
+                               </g>
+                            </svg>
+                         </div>
+                      </button>
+                   </span>
+                   <span tabindex="0"><button class="product-variation">Thẻ Tín dụng/Ghi nợ</button></span><span tabindex="0"><button class="product-variation">Thanh toán khi nhận hàng</button></span>
+                </div>
+             </div>
+             <div class="checkout-payment-setting__payment-method-options">
+                <div class="bank-transfer-category">
+                   <div class="bank-transfer-category__body">
+                      <div class="checkout-bank-transfer-item[0] checkout-bank-transfer-item[0]--disabled">
+                         <div class="stardust-radio" tabindex="0">
+                            <div class="stardust-radio-button">
+                               <div class="stardust-radio-button__outer-circle">
+                                  <div class="stardust-radio-button__inner-circle"></div>
+                               </div>
+                            </div>
+                            <div class="stardust-radio__content">
+                               <div class="stardust-radio__label">
+                                  <div class="checkout-bank-transfer-item[0]__card">
+                                     <div class="checkout-bank-transfer-item[0]__icon-container"><img src="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/assets/37110bc844b571f80e7dd14beb5415e9.png" class="checkout-bank-transfer-item[0]__icon"></div>
+                                     <div class="checkout-bank-transfer-item[0]__main">
+                                        <div class="checkout-bank-transfer-item[0]__title">Ví AirPay Số dư</div>
+                                        <div class="checkout-bank-transfer-item[0]__subtitle">₫0</div>
+                                     </div>
+                                  </div>
+                               </div>
+                            </div>
+                         </div>
+                      </div>
+                   </div>
+                </div>
+             </div>
+          </div>
+       </div>
+       <div class="PC1-mc">
+          <div class="_1i3wS2 _1X3--o RihLPS">Tổng tiền hàng</div>
+          <div class="_1i3wS2 lsNObX RihLPS"><%-total%>₫</div>
+          <div class="_1i3wS2 _1X3--o RRMXiE">Phí vận chuyển</div>
+          <div class="_1i3wS2 lsNObX RRMXiE">₫</div>
+          <div class="_1i3wS2 _1X3--o _3QL9JJ">Tổng thanh toán:</div>
+          <div class="_1i3wS2 _20-5lO lsNObX _3QL9JJ">₫</div>
+          <div class="_3Q9F5R _1Q3ggw">
+             <div class="_2xyh_G">Nhấn "Đặt hàng" đồng nghĩa với việc bạn đồng ý tuân theo <a href="https://shopee.vn/legaldoc/policies/" target="_blank" rel="noopener noreferrer">Điều khoản Shopee</a></div>
+             <button class="stardust-button stardust-button--primary stardust-button--large _1qSlAe _2a74ER">Đặt hàng</button>
+          </div>
+       </div>
     </div>
-</form>
+ </div>
+
 
 <% include ../../partials/footer %>

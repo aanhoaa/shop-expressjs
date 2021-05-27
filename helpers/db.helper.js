@@ -574,12 +574,27 @@ function checkExistCart(values) {
     return db.simpleQuery(sql, values)
     .then(res => {
         if (res.rows[0])
-            return true;
+            return res.rows[0];
         else return false;
     })
     .catch(e => {
         console.log('err:', e);
-        return r;
+        return e;
+    });
+}
+
+function getStockAmount(value) {
+    const sql = "SELECT stockamount FROM productvariant WHERE id = $1";
+
+    return db.simpleQuery(sql, value)
+    .then(res => {
+        if (res.rows[0])
+            return res.rows[0];
+        else return false;
+    })
+    .catch(e => {
+        console.log('err:', e);
+        return e;
     });
 }
 
@@ -608,6 +623,78 @@ function getCartQuantity(values) {
         console.log('err:', e);
         return false;
     });
+}
+
+function getCart(value) {
+    const sql = "SELECT * FROM cart WHERE user_id = $1";
+
+    return db.simpleQuery(sql, value)
+    .then(res => {
+        if (res.rowCount > 0)
+            return res.rows;
+        else return false;
+    })
+    .catch(e => {
+        console.log('err:', e);
+        return false;
+    });
+}
+
+function getCartAll(value) {
+    const sql = "select a.amount, c.name, c.price, c.id, c.stockamount as stock, g.id as product_id, d.attribute->'Size' as size, d.attribute->'Color' as color, e.url->'cover' as cover, f.name as shop from cart as a inner join users as b on b.id = a.user_id inner join productvariant as c on c.id = a.productvariant_id inner join variantdetail as d on d.id = c.variant_id inner join images as e on e.product_id = c.product_id inner join product as g on g.id = c.product_id inner join shop as f on f.id = g.shop_id where b.id = $1 order by a.created_at";
+
+    return db.simpleQuery(sql, value)
+    .then(res => {
+        if (res.rowCount > 0)
+            return res.rows;
+        else return false;
+    })
+    .catch(e => {
+        console.log('err:', e);
+        return false;
+    });
+}
+
+function getCartCheckOut(values) {
+    const sql = "select c.name, a.amount, c.price, d.attribute->'Color' as color, d.attribute->'Size' as size, f.name as shop, e.url->'cover' as cover from cart as a inner join productvariant as c on c.id = a.productvariant_id inner join product as b on b.id = c.product_id inner join variantdetail as d on d.id = c.variant_id inner join images as e on e.product_id = c.product_id inner join shop as f on f.id = b.shop_id where a.user_id = $1 and c.id = $2";
+
+    return db.simpleQuery(sql, values)
+    .then(res => {
+        if (res.rowCount > 0)
+            return res.rows;
+        else return false;
+    })
+    .catch(e => {
+        console.log('err:', e);
+        return false;
+    });
+}
+
+function getCartByUserIdAndPVId(values) {
+    const sql = "select b.price, a.amount from cart as a inner join productvariant as b on b.id = a.productvariant_id inner join users as c on c.id = a.user_id where  c.id = $1 and b.id = $2";
+
+    return db.simpleQuery(sql, values)
+    .then(res => {
+        if (res.rowCount > 0)
+            return res.rows;
+        else return false;
+    })
+    .catch(e => {
+        console.log('err:', e);
+        return false;
+    });
+}
+
+function updateCart(values) {
+    const sql = 'UPDATE cart SET amount = $1 WHERE user_id = $2 AND productvariant_id = $3';
+
+    return db.excuteQuery(sql, values)
+    .then(res => {
+        if (res.rowCount > 0)
+            return true;
+        return false;
+    })
+    .catch(error => {return error;});
 }
 
 /*
@@ -1507,6 +1594,12 @@ module.exports = {
     checkExistCart,
     insertCart,
     getCartQuantity,
+    getStockAmount,
+    updateCart,
+    getCart,
+    getCartAll,
+    getCartByUserIdAndPVId,
+    getCartCheckOut,
 
     insertCategoryLevelOne,
     insertCategoryLevelTwo,

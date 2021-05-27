@@ -586,3 +586,17 @@ html[xmlns] .clearfix {
     max-height: 25px;
     max-width: 100%;
 }
+.cart-show {
+	background-color: #f5a623;
+	width: 1.4rem;
+	height: 1rem;
+	border-radius: .6rem;
+	position: absolute;
+	left: 24px;
+	top: 5px;
+	color: #fff;
+	text-align: center;
+	line-height: 1;
+	font-weight: bold;
+	font-size: 82%;
+}

@@ -55,11 +55,17 @@ exports.getLogin = (req, res, next) => {
         req.session.token = accessToken;
 
         const verify = await db.getUserInfo(2, [username]);
+
+        //session info
         req.session.Userinfo = {
           username: verify.username,
           gender: verify.gender,
           id: verify.id
         }
+        //session cart
+        const cart = await db.getCart([verify.id]);
+        req.session.cart = cart.length;
+
         if (verify.isverified == 0) {
            res.send({ state: 0});
         }

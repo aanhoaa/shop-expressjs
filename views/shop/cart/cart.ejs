@@ -1,27 +1,31 @@
+<title><%-title%></title>
 <% include ../../partials/header %>
 <link rel="stylesheet" href="/stylesheets/css/cart.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
 
 <div class="container">
     <div class="col-sm-12 block_cart">
         <section class="info-gio-hang clearfix">
             <div class="col-sm-12 gio_hang" style="padding: 0;">
                 <%if (cart) {%>
-                <h3>Giỏ hàng <small>(<%-cart.length%> sản phẩm)</small></h3>
+                <h3>Giỏ hàng <small>(<%-cart%> sản phẩm)</small></h3>
                 <%} else {%>
                 <h3>Giỏ hàng <small>(0 sản phẩm)</small></h3>
                 <%}%>
             </div>
             <div class="border-cart" style="box-shadow: 0 1px 3px 0 rgba(0,0,0,.2);">
                 
-                <% if (cart) 
+                <% if (data) 
                     { 
-                        if (cart.length >= 1) {%>
+                        if (data.length >= 1) {%>
                 <div class="khoimenu_title" style="display: flex; border-bottom: solid 1px #b1b1b1;">
-                    <div class="col-sm-2">
-                        <label class="khoimenu_title_text">Tên sản phẩm</label>
+                    <div class="col-sm-1">
+                        <input type="checkbox" name="" id="check-all">
                     </div>
                     <div class="col-sm-4">
-                        <label class="khoimenu_title_text">Giới thiệu</label>
+                        <label class="khoimenu_title_text">Sản phẩm</label>
                     </div>
                     <div class="col-sm-2">
                         <label class="khoimenu_title_text">Đơn giá</label>
@@ -32,69 +36,70 @@
                     <div class="col-sm-2">
                         <label class="khoimenu_title_text">Thành tiền</label>
                     </div>
-                </div>
-                <%var i = 0;%>
-                <%cart.forEach((item) => {i++;%>
-                
-                <div class="khoimenu" style="display: flex; padding: 15px 0; border-bottom: solid 1px #e4e4e4;">
-                    <div class="col-sm-2">
-                        <img class="hinhsanpham" src="<%-item.imgSrc%>" alt="" >
+                    <div class="col-sm-1">
+                        <label class="khoimenu_title_text">Tùy chọn</label>
                     </div>
-                    <div class="col-sm-4">
+                </div>
+                <%var i = 0;var a = ''%>
+                <%data.forEach((item) => {i++;%>
+                <div class="shop-name">
+            
+                    <% if (a != item.shop) {
+                            a = item.shop
+                    %>
+                   Cung cấp bởi: <%-item.shop%>
+                    <%}%>
+
+                </div>
+                <div class="khoimenu" style="display: flex; padding: 15px 0; border-bottom: solid 1px #e4e4e4;">
+                    <div class="col-sm-1">
+                        <input type="checkbox" name="ckbProduct" data-t=<%-item.id%>>
+                    </div>
+                    <div class="col-sm-4" style="display: flex;">
+                        <img class="hinhsanpham" src="<%-item.cover%>" alt="" >
                         <div class="product_info">
-                            <label class="product_info_text"><%-item.name%> <small><%-item.color%></small></label>
-                            <!-- <div class="product_info_description">
-                                <span>{!! $row->options['description'] !!}</span>
-                            </div> -->
+                            <label class="product_info_text"><%-item.name%> </label>
+                            <small class="product_info_small">(<%-item.color%> <%-item.size%>)</small>
                         </div>
                     </div>
+ 
                     <div class="col-sm-2">
                         
                         <span><%-item.price.toLocaleString()%>₫</span>
-                        <input type="hidden" class="price" value="{!! $row->price !!}">
-                        
-                        <!-- <span>{!! number_format($row->options['cur_price'] )!!}₫</span>
-                        <input type="hidden" class="price" value="{!! $row->options['cur_price'] !!}"> -->
-                       
-                        
+                        <input type="hidden" class="price" value="">
                     </div>
                     <div class="col-sm-2">
-                        <div class="input-group">
+                        <div class="input-group get-info">
                             <span class="input-group-btn">
-                            <button type="button" class="btn btn-number" style="background-color: #80808091; min-height: 30px;"  cart-type="minus" cart-field="quant[{!! $row->id !!}]">
+                            <button type="button" class="btn btn-number" style="background-color: #80808091; min-height: 30px;"  data-type="minus" data-field="quant[<%-item.id%>]">
                             <span class="fa fa-minus"></span>
                             </button>
                             </span>
-                            <input type="text" name="quant[{!! $row->id !!}]" class="form-control input-number input_new" value="<%-item.amount%>" min="1" max="10" style="max-height: 30px; max-width: 35px;" >
-                            <input type="hidden" name="invent_Amount" class="invent_Amount" value="{!! $row->options['invenAm'] !!}">
-                            <input type="hidden" name="cart_id" class="cart_id" value="{!! $row->rowId !!}">
+                            
+                            <input type="text" name="quant[<%-item.id%>]" class="form-control input-number input_new" value="<%-item.amount%>" min="1" max="<%-item.stock%>" style="max-height: 30px; max-width: 35px;">
+                            
+                            <input type="hidden" name="invent_Amount" class="invent_Amount" value="">
+                            <input type="hidden" name="cart_id" class="cart_id" value="">
                             <span class="input-group-btn">
-                            <button type="button" class="btn btn-number" style="background-color: #80808091; min-height: 30px;" cart-type="plus" cart-field="quant[{!! $row->id !!}]">
+                            <button type="button" class="btn btn-number" style="background-color: #80808091; min-height: 30px;" data-type="plus" data-field="quant[<%-item.id%>]" >
                             <span class="fa fa-plus"></span>
                             </button>
                             </span>
-                            <!--  <a href="javascript:void(0)"><img src="{!! asset('update_cart.png') !!}" width="30px" height="30px" alt="" style="margin-left: 10px;"></a> -->
+                            <input type="hidden" value="<%-item.color%>" class="color">
+                            <input type="hidden" value="<%-item.size%>" class="size">
+                            <input type="hidden" value="<%-item.id%>" class="pvid">
                         </div>
                     </div>
                     <div class="col-sm-2">
-                        <!-- @if((int)$row->options['cur_price'] === 0)
-                        <span id="payment_total">{!! number_format($row->price * $row->qty)!!}₫</span>
-                        <input type="hidden" class="payment_total_hidden_<?php echo $index; ?>" value="{!! $row->price * $row->qty !!}">
-                        @else -->
+
                         <span id="payment_total"><%-item.amount * item.price%>₫</span>
-                        <input type="hidden" class="payment_total_hidden_<?php echo $index; ?>" value="{!! $row->options['cur_price'] * $row->qty !!}">
-                       
-                        <a href="#" class="btn btn-danger delete-cart" data-info="<%-i%>" style="margin-left: 54px; margin-top: 0px;"><i class="fas fa-times-circle"></i></a>
+                        <input type="hidden" class="payment_total_hidden_<?php echo $index; ?>" value="{!! $row->options['cur_price'] * $row->qty !!}">                                     
+                    </div>
+                    <div class="col-sm-1">
+                        <a href="#" class="btn btn-danger delete-cart" data-info="<%-i%>"><i class="fas fa-times-circle"></i></a>
                     </div>
                 </div>
-                <!-- <?php
-                    if((int)$row->options['cur_price'] === 0){
-                        $total += $row->price * $row->qty;
-                    }
-                    else $total += $row->options['cur_price'] * $row->qty;      
-                    $index ++;
-                    ?> 
-                @endforeach -->
+
                 <%})}} else {%>
                 <!-- Cart empty-->
                
@@ -102,34 +107,58 @@
                   <div style="padding-top: 101px;">
                     <img src="/images/online-shop.png" alt="" style="width: 200px;">
                     <span style="display: block; margin-top: 20px;  font-size: 17px; font-weight: bold;">Giỏ hàng đang trống</span>
-                    <a href="/shop/product" class="btn btn-danger" style="margin-top: 20px;">Tiếp tục mua sắm</a>
+                    <a href="/" class="btn btn-danger" style="margin-top: 20px;">Tiếp tục mua sắm</a>
                   </div>
                 </div>
                 <%}%>
             </div>
+            <!--test-->
+            <div class="cart-page-footer cart-page-footer--overlap">
+
+                <div class="cart-page-footer__row _2QkgQs cart-page-footer__row5">
+                   <div class="cart-item__cell-checkbox cart-page-shop-header__checkbox-wrapper">
+                      <label class="stardust-checkbox">
+                         <input class="stardust-checkbox__input" type="checkbox">
+                         <div class="stardust-checkbox__box"></div>
+                      </label>
+                   </div>
+                   <button class="cart-page-footer__product-count clear-btn-style">Chọn tất cả (154)</button><button class="clear-btn-style _1gfXNH">Xóa</button>
+                   <div class=""></div>
+                   <button class="clear-btn-style mdaGir">Lưu vào mục Đã thích</button>
+                   <div class="cart-page-footer__gap"></div>
+                   <div class="_2IDRne">
+                      <div class="_1I3_mR">
+                         <div class="_1klFI7">
+                            <div class="cart-qnt">Tổng thanh toán (0 Sản phẩm):</div>
+                            <div class="cart-price">₫0</div>
+                         </div>
+                      </div>
+                      <div class="_3E49Q_"></div>
+                   </div>
+                   <div class="cart-page-footer__checkout">
+                       <button class="shopee-button-solid shopee-button-solid--primary" id="checkout-in">
+                           <span class="cart-page-footer__checkout-text">Mua hàng</span>
+                        </button>
+                    </div>
+                </div>
+             </div>
         </section>
         <section class="col-sm-12 sp-lien-quan" style="padding: 0; display: flex; margin-top: 80px;">
             <div class="col-sm-9 khoi_chua_sp_lienquan clearfix" style="padding: 0;">
                 <h5 style="margin-top:0; margin-bottom: 20px; font-size: 30px;">Sản phẩm liên quan</h5>
-                <% products.forEach((prod) => {%>
-                <a href="/shop/product/<%-prod._id%>">
+                
+                <a href="/shop/product/">
                     <div class="khoi_sp_lienquan clearfix col-sm-3" id="effect_1" style="height: 196px;">
-                        <img style="width: 100%; height: 100%;" src="/uploads/<%-prod.images%>"/>
+                        <img style="width: 100%; height: 100%;" src="/uploads/"/>
                         <div class="khoi_sp_lienquan_info">
-                            <p><%-prod.name%></p>
-                            <p><%-prod.price%>₫</p>
+                            <p></p>
+                            <p>₫</p>
                         </div>
                     </div>
                 </a>
-                <%})%> 
+               
             </div>
-            <%var total = 0;%>
-            <% if (cart) {
-                if (cart.count != 0) {
-                    cart.forEach((item) => {
-                        total += parseInt(item.amount,10) * parseInt(item.price,10);
-                    })
-            %>
+           
             <div class="col-sm-3 clearfix" style="padding-right: 0;">
                 <div class="card-group" style="width: 100%;">
                     <div class="border_cart" style="width: 100%;">
@@ -137,11 +166,11 @@
                             <tbody>
                                 <tr>
                                     <th  style="padding-bottom: 20px;">TẠM TÍNH</th>
-                                    <td class="TOTAL" style="float: right;"><%-total%>₫</td>
+                                    <td class="TOTAL" style="float: right;">₫</td>
                                 </tr>
                                 <tr>
-                                    <th style="">TỔNG TIỀN</th>
-                                    <td class="TOTAL" style="float: right; color: #e61212;"><%-total%>₫</td>
+                                    <th>TỔNG TIỀN</th>
+                                    <td class="TOTAL" style="float: right; color: #e61212;">₫</td>
                                 </tr>
                                 <tr>
                                     <th style="font-size: 16px; color: #8bb9c7;"><small>(Đã bao gồm VAT)</small></th>
@@ -155,8 +184,8 @@
                     </div>
                 </div>
             </div>
-            <%}}%>
+          
         </section>
     </div>
-
+    <script src="/javascripts/js/cart.js"></script>
 <% include ../../partials/footer %>

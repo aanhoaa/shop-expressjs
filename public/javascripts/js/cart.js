@@ -1,4 +1,167 @@
 $(document).ready(function(){  
+
+  $(document).on('change', '.input_new', function(e) {
+    var quantity = $(this).val();
+    const pdvID = $(this).parent().find('.pvid').val();
+    var color = $(this).parent().find('.color').val();
+    var size = $(this).parent().find('.size').val();
+
+    if (color == "") color = 1;
+    if (size == "") size = 1;
+
+    $.ajax({
+      url: `${window.location.origin}/cart/update_to_cart`,
+      type: "post", 
+      dataType: "json",
+      data: {
+        pdvID: pdvID,
+        amount: quantity
+      },
+      success:function(data){ 
+          //$('.cart-count').html(data.cart+1);
+          if (data.state == -1) {
+            alert(data.err)
+          }
+          if (data.state == 1) {
+            location.reload();
+          }
+      },
+      error: function(err) {
+         console.log(err)
+         
+      }
+  });
+  });
+  
+  $(document).on('click', '#check-all', function(e) {
+    var checkboxes = document.getElementsByName('ckbProduct');
+    const check = $(this).prop('checked');
+
+    if(check) {
+      for (var i = 0; i < checkboxes.length; i++){
+        checkboxes[i].checked = true;
+     }
+    }
+    else {
+      for (var i = 0; i < checkboxes.length; i++){
+        checkboxes[i].checked = false;
+     }
+    }
+  })
+
+  $(document).on('click', 'input[type="checkbox"]', function(e) {
+    var arr = [];
+    var checkboxes = document.getElementsByName('ckbProduct');
+    for (var i = 0; i < checkboxes.length; i++){
+      if (checkboxes[i].checked == true) {
+        arr.push(checkboxes[i].getAttribute('data-t'))
+      }
+    }
+   
+    if (arr.length > 0) {
+     //ajax
+      $.ajax({
+      url: `${window.location.origin}/cart/update`,
+      type: "get", 
+      dataType: "json",
+      data: {
+          pvd: arr
+      },
+      success:function(data){ 
+          if (data.state == 1) {
+            $('.cart-qnt').html(`Tổng thanh toán (${data.amount} Sản phẩm):`);
+            $('.cart-price').html(`${data.price} ₫`);
+          }
+      },
+      error: function(err) {
+         alert('Load fail');
+      }
+      });
+    }
+    else {
+      $('.cart-qnt').html(`Tổng thanh toán (0 Sản phẩm):`);
+      $('.cart-price').html(`0 ₫`);
+    }
+  });
+
+  $(document).on('click', '#checkout-in', function(e) {
+    var checkboxes = document.getElementsByName('ckbProduct');
+    var count = 0;
+    for (var i = 0; i < checkboxes.length; i++){
+       if (checkboxes[i].checked == false) count++;
+   }  
+
+   if (count == checkboxes.length) {
+    swal({
+      title: "",
+      text: "Vui lòng chọn sản phẩm để mua!",
+      icon: "error",
+    });
+      return;
+   }
+   
+   var arr = [];
+    var checkboxes = document.getElementsByName('ckbProduct');
+    for (var i = 0; i < checkboxes.length; i++){
+      if (checkboxes[i].checked == true) {
+        arr.push(checkboxes[i].getAttribute('data-t'))
+      }
+    }
+   
+    if (arr.length > 0) {
+     //ajax
+      $.ajax({
+      url: `${window.location.origin}/cart/update`,
+      type: "get", 
+      dataType: "json",
+      data: {
+          pvd: arr
+      },
+      success:function(data){ 
+          if (data.state == 1) {
+            if (data.book == 0) {
+              swal({
+                title: "",
+                text: "Bạn chưa có địa chỉ nhận hàng, thêm địa chỉ bây giờ?",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+              })
+              .then((willDelete) => {
+                if (willDelete) {
+                  window.location.href = "/user/account/address";
+                } 
+              });
+            }
+            else window.location.href = "/checkout";
+          }
+      },
+      error: function(err) {
+         alert('Load fail');
+      }
+      });
+    }
+  })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   var gColor = '';
 
   $(document).on('click', '.product_details_color .color_bind', function(e) {
@@ -119,68 +282,7 @@ $(document).ready(function(){
    });
 
   var total_price = 0;
-  $(document).on('change', '.input_new', function(e) {
-    var amount_cart = $(this).val();
-    var cart_id = $(this).parent().find('.cart_id').val();
-    var inventAmount = $(this).parent().find('.invent_Amount').val();
-    var price_original = $(this).parent().parent().parent().find('.price').val();
-    // console.log(cart_id);
-    var total_payment = 0;
-    var total = $(this).parent().parent().parent().find('.payment_total_hidden').val();
-    if(parseInt(amount_cart, 0) <= parseInt(inventAmount, 0))
-    {
-      $.ajax({
-          url: "update-cart/" + cart_id + '/' + amount_cart,
-          type: "get", // phương thức gửi dữ liệu.
-          data: {
-                cart_id: cart_id,
-                amount_cart: amount_cart
-            },
-          success:function(data){ //dữ liệu nhận về
-              // $(".block_pay").empty();
-              // $(".block_pay").append($(data).find('.block_pay'));
-              
-              // if (data == "Cart_Error") {
-                  
-              //     $(this).val($(this).val()-1).change();
-                
-              // }
-          },
-          error: function() {
-            // alert("Bị lỗi");
-          }
-       });
-      total_price = parseInt(price_original, 10) * parseInt(amount_cart, 10);
-
-      for(i=0; i<$('.khoimenu').length; i++)
-      {
-        $(this).parent().parent().parent().find('.payment_total_hidden_'+i).val(total_price);
-       total_payment += parseInt($('.payment_total_hidden_'+i).val(), 10);
-      }
-
-
-      
-      total_price = total_price.toLocaleString('it-IT', {style : 'currency', currency : 'VND'});
-      total_payment = total_payment.toLocaleString('it-IT', {style : 'currency', currency : 'VND'});
-      $(this).parent().parent().parent().find('#payment_total').text(total_price);
-
-      
-      // console.log(total_payment);
-      // console.log(total_price);
-      $('.TOTAL').text(total_payment);
-    }
-    else
-    {
-      swal({
-        title: "Error!",
-        text: "Sản phẩm tồn kho không đủ!",
-        icon: "error",
-        button: "Aww yiss!",
-      });
-      $(this).val($(this).val()-1).change();
-    }
-
-  });
+ 
 
 $("#them_gio_hang").click(function(event) {
   /* Act on the event */
