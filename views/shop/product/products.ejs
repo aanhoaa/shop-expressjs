@@ -345,7 +345,7 @@
                                         </div>
                                         <div class="related-product-price price-block">
                                            <div class="col-price">
-                                              <p class="current-price"><%-item.min%> ₫ - <%-item.max%> ₫</p>
+                                              <p class="current-price"><%-item.max==item.min? item.max : `${item.min} - ${item.max}` %> ₫</p>
                                            </div>
                                            <div class="col-brand">
                                               <div class="brand-image-wp"><a href="/thuong-hieu/zago" title="ZAGO"><img src="https://cdn.fitin.vn/cms-ecom/images/2020/03/06/zago-1583491970.png" alt="ZAGO" class="brand-image"></a></div>

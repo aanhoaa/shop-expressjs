@@ -641,7 +641,7 @@ function getCart(value) {
 }
 
 function getCartAll(value) {
-    const sql = "select a.amount, c.name, c.price, c.id, c.stockamount as stock, g.id as product_id, d.attribute->'Size' as size, d.attribute->'Color' as color, e.url->'cover' as cover, f.name as shop from cart as a inner join users as b on b.id = a.user_id inner join productvariant as c on c.id = a.productvariant_id inner join variantdetail as d on d.id = c.variant_id inner join images as e on e.product_id = c.product_id inner join product as g on g.id = c.product_id inner join shop as f on f.id = g.shop_id where b.id = $1 order by a.created_at";
+    const sql = "select a.amount, a.id as cart_id, c.name, c.price, c.id, c.stockamount as stock, g.id as product_id, d.attribute->'Size' as size, d.attribute->'Color' as color, e.url->'cover' as cover, f.name as shop from cart as a inner join users as b on b.id = a.user_id inner join productvariant as c on c.id = a.productvariant_id inner join variantdetail as d on d.id = c.variant_id inner join images as e on e.product_id = c.product_id inner join product as g on g.id = c.product_id inner join shop as f on f.id = g.shop_id where b.id = $1 order by f.id";
 
     return db.simpleQuery(sql, value)
     .then(res => {
@@ -656,7 +656,7 @@ function getCartAll(value) {
 }
 
 function getCartCheckOut(values) {
-    const sql = "select c.name, a.amount, c.price, d.attribute->'Color' as color, d.attribute->'Size' as size, f.name as shop, e.url->'cover' as cover from cart as a inner join productvariant as c on c.id = a.productvariant_id inner join product as b on b.id = c.product_id inner join variantdetail as d on d.id = c.variant_id inner join images as e on e.product_id = c.product_id inner join shop as f on f.id = b.shop_id where a.user_id = $1 and c.id = $2";
+    const sql = "select c.name, a.amount, c.price, c.id as pvd_id, d.attribute->'Color' as color, d.attribute->'Size' as size, f.name as shop, f.id as shop_id, e.url->'cover' as cover from cart as a inner join productvariant as c on c.id = a.productvariant_id inner join product as b on b.id = c.product_id inner join variantdetail as d on d.id = c.variant_id inner join images as e on e.product_id = c.product_id inner join shop as f on f.id = b.shop_id where a.user_id = $1 and c.id = $2";
 
     return db.simpleQuery(sql, values)
     .then(res => {
@@ -697,6 +697,30 @@ function updateCart(values) {
     .catch(error => {return error;});
 }
 
+
+function deleteCart(value) {
+    const sql = "DELETE FROM cart WHERE id = $1";
+
+    return db.excuteQuery(sql, value)
+    .then(res => {
+        if (res.rowCount > 0)
+            return true;
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function deleteCartByUser(value) {
+    const sql = "DELETE FROM cart WHERE user_id = $1 and productvariant_id = $2";
+
+    return db.excuteQuery(sql, value)
+    .then(res => {
+        if (res.rowCount > 0)
+            return true;
+        return false;
+    })
+    .catch(error => {return error;});
+}
 /*
  <==========================================================================>
 */
@@ -980,6 +1004,18 @@ function getIdVarianProduct(value) {
             })
         }
     })
+}
+
+function updateProductVariantAmount(values) {
+    const sql = "UPDATE productvariant SET stockamount = $1 WHERE id = $2";
+
+    return db.excuteQuery(sql, values)
+    .then(res => {
+        if (res.rowCount > 0)
+            return true;
+        return false;
+    })
+    .catch(error => {return error;});
 }
 
 function deleteProduct(value, str) {
@@ -1269,7 +1305,7 @@ function getProductByCateOne(value) {
 }
 
 function getProductAllById(value) {
-    const sql = "select a.name, a.id as product_id, c.attribute->'Color' as color, c.attribute->'Size' as size, b.price, d.url->'cover' as cover, d.url as url from product as a inner join productvariant as b on b.product_id = a.id inner join variantdetail as c on c.id = b.variant_id inner join images as d on d.product_id = a.id where a.id = $1 and a.status = 1 group by a.name, a.id, c.attribute, b.price, d.url";
+    const sql = "select a.name, a.id as product_id, max(b.price) as max, c.attribute->'Color' as color, c.attribute->'Size' as size, b.price, d.url->'cover' as cover, d.url as url from product as a inner join productvariant as b on b.product_id = a.id inner join variantdetail as c on c.id = b.variant_id inner join images as d on d.product_id = a.id where a.id = $1 and a.status = 1 group by a.name, a.id, c.attribute, b.price, d.url";
 
     return db.simpleQuery(sql, value)
     .then( res =>  {
@@ -1528,8 +1564,8 @@ function deleteViolateType(value) {
 /*
     ORDER
 */
-function insertOrderTotal(values) {
-    const sql = 'INSERT INTO ordertotal(user_id, payment_id, datepurchase) VALUES ($1, $2, $3) RETURNING id';
+function insertPurchase(values) {
+    const sql = 'INSERT INTO purchase(user_id, payment_id, datepurchase) VALUES ($1, $2, $3) RETURNING id';
 
     return db.excuteQuery(sql, values)
     .then(res => {
@@ -1543,7 +1579,7 @@ function insertOrderTotal(values) {
 }
 
 function insertOrder(values) {
-    const sql = 'INSERT INTO order(ordertotal_id, shop_id, shippingfee, deleverytime, status) VALUES ($1, $2, $3) RETURNING id';
+    const sql = 'INSERT INTO orders(purchase_id, shop_id, shippingfee, delivertime, status) VALUES ($1, $2, $3, $4, $5) RETURNING id';
 
     return db.excuteQuery(sql, values)
     .then(res => {
@@ -1555,6 +1591,35 @@ function insertOrder(values) {
     })
     .catch(error => {return error;});
 }
+
+function insertOrderDetail(values) {
+    const sql = "INSERT INTO orderdetail(order_id, productvariant_id, name, variant, amount, price, discount) VALUES ($1, $2, $3, $4, $5, $6, $7)";
+
+    return db.excuteQuery(sql, values)
+    .then(res => {
+        if (res.rowCount > 0)
+        {
+            return true;
+        }
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function insertAddressOrder(values) {
+    const sql = "INSERT INTO addressorder(purchase_id, province, district, ward, identity, fullname, phone) VALUES ($1, $2, $3, $4, $5, $6, $7)";
+
+    return db.excuteQuery(sql, values)
+    .then(res => {
+        if (res.rowCount > 0)
+        {
+            return true;
+        }
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
 /*
  <==========================================================================>
 */
@@ -1596,6 +1661,8 @@ module.exports = {
     getCartQuantity,
     getStockAmount,
     updateCart,
+    deleteCart,
+    deleteCartByUser,
     getCart,
     getCartAll,
     getCartByUserIdAndPVId,
@@ -1629,6 +1696,7 @@ module.exports = {
     getProductAllById,
     getProductVariant,
     getProductVariantInfo,
+    updateProductVariantAmount,
     deleteProduct,
     deleteProductVariant,
     deleteProductIamges,
@@ -1659,7 +1727,9 @@ module.exports = {
 
     insertSupplier,
 
-    insertOrderTotal,
+    insertPurchase,
     insertOrder,
+    insertOrderDetail,
+    insertAddressOrder,
     deleteTest
 }

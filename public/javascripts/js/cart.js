@@ -18,7 +18,7 @@ $(document).ready(function(){
         amount: quantity
       },
       success:function(data){ 
-          //$('.cart-count').html(data.cart+1);
+          $('.cart-count').html(data.cart);
           if (data.state == -1) {
             alert(data.err)
           }
@@ -143,7 +143,39 @@ $(document).ready(function(){
     }
   })
 
-
+  $(document).on('click', '.delete-cart', function(e) {
+      const cart_id = $(this).attr('data-info');
+      
+      swal({
+        title: "",
+        text: "Bạn muốn bỏ sản phẩm này khỏi giỏ hàng?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      })
+      .then((willDelete) => {
+        if (cart_id != '') {
+          $.ajax({
+            url: `${window.location.origin}/cart/delete`,
+            type: "post", 
+            dataType: "json",
+            data: {
+              cartId: cart_id
+            },
+            success:function(data){ 
+                if (data.state == 1) {
+                  window.location.href = "/cart";
+                }
+                else alert('Lỗi hệ thống');
+            },
+            error: function(err) {
+               alert('Load fail');
+            }
+          });
+        }
+      });
+  })
+  
 
 
 
@@ -339,24 +371,6 @@ $("#them_gio_hang").click(function(event) {
         }, 5000);
     
 });
-
-$(".delete-cart").click(function(event) {
-  var indexCart = $(this).attr('data-info');
-  $.ajax({
-    url: `${window.location.origin}/shop/cart/delete`,
-    type: "get", // phương thức gửi dữ liệu.
-    data: {
-          iCart: indexCart
-      },
-    success:function(data){ //dữ liệu nhận về
-      window.location.href = window.location.origin + '/shop/cart'
-    },
-    error: function() {
-      // alert("Bị lỗi");
-    }
- });
-});
-
 
 $('.image_gallery').click(function(event) {
   /* Act on the event */

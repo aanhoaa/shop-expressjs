@@ -1,6 +1,6 @@
 <% include ../../partials/header %>
 <link rel="stylesheet" href="/stylesheets/css/checkout.css">
-
+<script src="/javascripts/js/buyer/cart.js"></script>
 
 <div class="col-lg-12">
     <h1 class="page-header" style="margin-left: 10%;">Thanh toán
@@ -54,12 +54,20 @@
                 <%var i = 0;
                 var a = '';
                 var total = 0;
+                var arrAmount = [];
+                var arrPVD = [];
+                var arrShop = [];
                 %>
                 <%data.forEach((item) => {i++;%>
                 <div class="shop-name">
-            
-                    <% if (a != item[0].shop) {
-                        a = item[0].shop
+
+                    <% 
+                        arrAmount.push(item[0].amount);
+                        arrPVD.push(item[0].pvd_id);
+                        if (a != item[0].shop) {
+                        a = item[0].shop;
+                        
+                        arrShop.push(item[0].shop_id);
                     %>
                    Cung cấp bởi: <%-item[0].shop%>
                     <%}%>
@@ -106,44 +114,11 @@
                 <div class="checkout-payment-method-view__current-title">Phương thức thanh toán</div>
                 <div class="checkout-payment-setting__payment-methods-tab">
                    <span tabindex="0">
-                      <button class="product-variation product-variation--selected">
+                      <button class="product-variation">
                          Ví AirPay
-                         <div class="product-variation__tick">
-                            <svg enable-background="new 0 0 12 12" viewBox="0 0 12 12" x="0" y="0" class="shopee-svg-icon icon-tick-bold">
-                               <g>
-                                  <path d="m5.2 10.9c-.2 0-.5-.1-.7-.2l-4.2-3.7c-.4-.4-.5-1-.1-1.4s1-.5 1.4-.1l3.4 3 5.1-7c .3-.4 1-.5 1.4-.2s.5 1 .2 1.4l-5.7 7.9c-.2.2-.4.4-.7.4 0-.1 0-.1-.1-.1z"></path>
-                               </g>
-                            </svg>
-                         </div>
                       </button>
                    </span>
-                   <span tabindex="0"><button class="product-variation">Thẻ Tín dụng/Ghi nợ</button></span><span tabindex="0"><button class="product-variation">Thanh toán khi nhận hàng</button></span>
-                </div>
-             </div>
-             <div class="checkout-payment-setting__payment-method-options">
-                <div class="bank-transfer-category">
-                   <div class="bank-transfer-category__body">
-                      <div class="checkout-bank-transfer-item[0] checkout-bank-transfer-item[0]--disabled">
-                         <div class="stardust-radio" tabindex="0">
-                            <div class="stardust-radio-button">
-                               <div class="stardust-radio-button__outer-circle">
-                                  <div class="stardust-radio-button__inner-circle"></div>
-                               </div>
-                            </div>
-                            <div class="stardust-radio__content">
-                               <div class="stardust-radio__label">
-                                  <div class="checkout-bank-transfer-item[0]__card">
-                                     <div class="checkout-bank-transfer-item[0]__icon-container"><img src="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/assets/37110bc844b571f80e7dd14beb5415e9.png" class="checkout-bank-transfer-item[0]__icon"></div>
-                                     <div class="checkout-bank-transfer-item[0]__main">
-                                        <div class="checkout-bank-transfer-item[0]__title">Ví AirPay Số dư</div>
-                                        <div class="checkout-bank-transfer-item[0]__subtitle">₫0</div>
-                                     </div>
-                                  </div>
-                               </div>
-                            </div>
-                         </div>
-                      </div>
-                   </div>
+                   <span tabindex="0"><button class="product-variation">Thẻ Tín dụng/Ghi nợ</button></span><span tabindex="0"><button class="product-variation" data-method=1>Thanh toán khi nhận hàng</button></span>
                 </div>
              </div>
           </div>
@@ -156,8 +131,16 @@
           <div class="_1i3wS2 _1X3--o _3QL9JJ">Tổng thanh toán:</div>
           <div class="_1i3wS2 _20-5lO lsNObX _3QL9JJ">₫</div>
           <div class="_3Q9F5R _1Q3ggw">
-             <div class="_2xyh_G">Nhấn "Đặt hàng" đồng nghĩa với việc bạn đồng ý tuân theo <a href="https://shopee.vn/legaldoc/policies/" target="_blank" rel="noopener noreferrer">Điều khoản Shopee</a></div>
-             <button class="stardust-button stardust-button--primary stardust-button--large _1qSlAe _2a74ER">Đặt hàng</button>
+             <div class="_2xyh_G">Nhấn "Đặt hàng" đồng nghĩa với việc bạn đồng ý tuân theo <a href="https://shopee.vn/legaldoc/policies/" target="_blank" rel="noopener noreferrer">Điều khoản Shopee</a>
+            </div>
+             <form action="/checkout" method="POST">
+               <input type="text" hidden name="arrAmount" value="<%-arrAmount%>">
+               <input type="text" hidden name="arrPVD" value="<%-arrPVD%>">
+               <input type="text" hidden name="arrShop" value="<%-arrShop%>">
+               <input type="text" hidden name="paymentmethod" value="" id="payment-method">
+               <button class="stardust-button stardust-button--primary stardust-button--large _1qSlAe _2a74ER" id="pay" disabled>Đặt hàng
+               </button>
+             </form>
           </div>
        </div>
     </div>

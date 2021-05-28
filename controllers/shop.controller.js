@@ -9,13 +9,14 @@ const paypal = require('paypal-rest-sdk');
 const jwtHelper = require("../helpers/jwt.helper"); 
 const db = require('../helpers/db.helper');
 var bcrypt = require("bcryptjs");
+const util = require('util')
 
-exports.getIndexShop = (req, res, next) => {
-    Order.find().then((data) => {
-      console.log(data)
-    })
-    res.render('index', { title: 'Shop', user: req.user, cart: req.session.cart });
-}
+// exports.getIndexShop = (req, res, next) => {
+//     Order.find().then((data) => {
+//       console.log(data)
+//     })
+//     res.render('index', { title: 'Shop', user: req.user, cart: req.session.cart });
+// }
 
 exports.getProducts = async (req, res, next) => {
   const cateOneID = req.params.cateOneId;
@@ -37,6 +38,8 @@ exports.getProductDetail = async (req, res, next) => {
   const productId = req.params.productId;
   const data = await db.getProductAllById([productId]);
   var onlyOne = 1;
+  var min = 0;
+  var max = 0;
   
   if (data == false) return res.redirect('/');
   else {
@@ -44,12 +47,22 @@ exports.getProductDetail = async (req, res, next) => {
       if (data[0].size == null && data[0].color == null) 
         onlyOne = 0;
     }
+    min = data[0].max;
+    data.forEach(i => {
+      if (i.max > max)
+      max = i.max;
+      if (i.max < min)
+        min = i.max;
+    })
+    console.log(min, max)
     res.render("./shop/product/productDetail", {
       user: req.user,
       userInfo: req.session.Userinfo,
       cart: req.session.cart,
       data: data,
-      only: onlyOne
+      only: onlyOne,
+      min: min,
+      max: max
     })
   }
 }
@@ -63,6 +76,7 @@ exports.getProductDetailInfo = async (req, res, next) => {
 
   const data = await db.getProductVariantBeforeSell([productId]);
   var stock = 0;
+  var price = 0;
   var productvariant_id = '';
   if (color == 1) color = null;
   if (size == 1) size = null;
@@ -79,6 +93,7 @@ exports.getProductDetailInfo = async (req, res, next) => {
   if (data != false) {  
     for(let item of data) {
       if (item.color == color && item.size == size) {
+        price = item.price;
         productvariant_id = item.productvariant_id;
         if (userID > 0) {
           var exist = await db.checkExistCart([userID, productvariant_id]);
@@ -114,7 +129,7 @@ exports.getProductDetailInfo = async (req, res, next) => {
     res.send({state: 0, err: "Không được vượt quá kho hàng", amountErr: amountErr});
   }
   else {
-    res.send({state: 1, stock: stock, productvariant_id: productvariant_id});
+    res.send({state: 1, stock: stock, productvariant_id: productvariant_id, price: price});
   }
 }
 
@@ -143,7 +158,10 @@ exports.postAddToCart = async (req, res, next) => {
     else if (exist == false && stockDB != false){
       //create new one
       const cart = await db.insertCart([userInfo.id, pdvID, amount]);
-      if (cart == true) return res.send({state: 1, cart: cartCount.length});
+      if (cart == true) {
+        req.session.cart = req.session.cart + 1;
+        return res.send({state: 1, cart: cartCount.length  + 1});
+      }
       else return res.status(500).json({err: 'Lỗi hệ thống'});
     }
   }
@@ -170,7 +188,6 @@ exports.postUpdateToCart = async (req, res, next) => {
 
 exports.getCart = async (req, res, next) => {
   const data = await db.getCartAll([req.session.Userinfo.id]);
-  //req.session.checkout = '';
 
   res.render("./shop/cart/cart", {
     title: "Giỏ hàng",
@@ -201,6 +218,19 @@ exports.getCartInfo = async (req, res, next) => {
 
 }
 
+exports.postDeleteCart = async (req, res, next) => {
+  const cartID = req.body.cartId;
+
+  const delCart = await db.deleteCart([cartID]);
+  if (delCart == true) {
+    if (req.session.cart == 0) 
+      req.session.cart = 0;
+    else req.session.cart -= 1;
+    return res.send({state: 1});
+  }
+  else return res.send({state: 0});
+}
+
 exports.getCheckout = async (req, res, next) => {
   const addBook = await db.getUserAddressBook([req.session.Userinfo.id]);
   const data = req.session.checkout;
@@ -212,7 +242,35 @@ exports.getCheckout = async (req, res, next) => {
       arrData.push(getData);
     }
   }
-  console.log(arrData)
+  const all = [];
+  arrData.map(item => {
+    const shop_id = item[0].shop_id;
+    const pvd_id = item[0].pvd_id;
+    if (all.findIndex(x => x.shopId == shop_id) < 0){
+      all.push({
+        shopId: shop_id,
+        shopName: item[0].shop,
+        products: []
+      })
+    }
+    const index = all.findIndex(x => x.shopId == shop_id);
+    if(all[index].products.findIndex(x => x.pvdId == pvd_id) < 0){
+      all[index].products.push({
+        pvdId: pvd_id,
+        name: item[0].name,
+        amount: item[0].amount,
+        price: item[0].price,
+        color: item[0].color,
+        size: item[0].size,
+        cover: item[0].covers
+      })
+    }
+  })
+
+  //console.log(util.inspect(all, {showHidden: false, depth: null}))
+  req.session.order = '';
+  req.session.order = all;
+
   res.render('./shop/cart/checkout', {
     cart: req.session.cart, 
     user: req.user,
@@ -222,6 +280,64 @@ exports.getCheckout = async (req, res, next) => {
   });
 }
 
+exports.postCheckout = async (req, res, next) => {
+  const amount = req.body.arrAmount.split(",");
+  const pvd = req.body.arrPVD.split(",");
+  const shop_id = req.body.arrShop.split(",");
+  const userInfo = req.session.Userinfo;
+  const paymentMethod = req.body.paymentmethod;
+  const now = new Date();
+
+  try {
+      //update sản phẩm trong kho
+      for (let pdvID of pvd) {
+        var exist = await db.checkExistCart([userInfo.id, pdvID]);
+        if (exist == false) return res.status(500).json({err: "sản phẩm không có trong giỏ hàng"});
+        else {
+          var getStock = await db.getStockAmount([pdvID]);
+          
+          const subAmount = getStock.stockamount - exist.amount;
+          var updCart = await db.updateProductVariantAmount([subAmount, pdvID]);
+        }
+      }
+
+      for (let pdvID of pvd) {
+        var delCart = await db.deleteCartByUser([req.session.Userinfo.id, pdvID]);
+      }
+
+      //insert purchase
+      const purchase_id = await db.insertPurchase([userInfo.id, paymentMethod, now]);
+      if (purchase_id != false) {
+        //insert address order
+        const addOrder = await db.getUserAddressBook([userInfo.id]);
+        if (addOrder != false) {
+          const addressOrder = [purchase_id, addOrder[0].province_name, addOrder[0].district_name, addOrder[0].ward_name, addOrder[0].identity_name, addOrder[0].fullname, addOrder[0].phone];
+          const insertAddOrd = await db.insertAddressOrder(addressOrder);
+        }
+        //insert order
+        const data = req.session.order;
+        data.map(async item => {
+          //save order 
+          const order_id = await db.insertOrder([purchase_id, item.shopId, 30000, now, 0]);
+          item.products.map(async i => {
+            //save orderdetail
+            var variant = `${i.color} ${i.size}`;
+            const orderDetail = await db.insertOrderDetail([order_id, i.pvdId, i.name, variant, i.amount, i.price, 0]);
+          })
+        })
+      }
+  }
+  catch (error) {
+    console.log('Error when post checkout', error);
+    return error;
+  }
+  //update cart.length
+  const cart = await db.getCart([userInfo.id]);
+  req.session.cart = cart.length;
+
+  req.session.order = '';
+  res.redirect('/user/account/address');
+}
 
 
 
@@ -664,124 +780,10 @@ exports.getDeleteCart = (req, res, next) => {
 
 
 
-exports.postCheckout = (req, res, next) => {
-  var promises = [];
-  var okay = 0;
-  var type = req.body.type_of_payment;
-  var item = [];
-  var total = 0;
 
-  req.session.cart.forEach((subCart) => {
-    item.push(
-      {
-        name: subCart.name, 
-        sku: 'item', 
-        price: Number(parseInt(subCart.price, 10)/23000).toFixed(2).toString(),
-        currency: "USD",
-        quantity: parseInt(subCart.amount, 10)
-      }
-      )
 
-      total += parseInt(subCart.price, 10)/23000 * parseInt(subCart.amount, 10);
-  })
 
- // console.log(item)
-if (type === 'paypal')
-{
-  var create_payment_json = {
-    "intent": "authorize",
-    "payer": {
-        "payment_method": "paypal"
-    },
-    "redirect_urls": {
-      "return_url": "http://localhost:3000/shop/checkouted",
-      "cancel_url": "http://cancel.url"
-  },
-    "transactions": [{
-        "item_list": {
-            "items": item
-        },
-        "amount": {
-            "currency": "USD",
-            "total": Number(total).toFixed(2).toString()
-        },
-        "description": "This is the payment description."
-    }]
-  };
-  
-  paypal.payment.create(create_payment_json, function (error, payment) {
-    if (error) {
-        throw error;
-    } else {
-        for(let i = 0;i < payment.links.length;i++){
-          if(payment.links[i].rel === 'approval_url'){
-            res.redirect(payment.links[i].href);
-          }
-        }
-    }
-  });
-}
-else
-{
-  var order = new Order({
-    user: req.user._id,
-    cart: req.session.cart,
-    status: 0,
-    statusDelivery: 0,
-    statusToStore: -1
-  })
 
-  //update data in product, inventory
-  req.session.cart.forEach((prod) => {
-    promises.push(
-      Product.findById(prod.productId, function(err, data) {
-        if (err) console.log(err);
-        else{
-          data.subId.size.forEach((subSize) => {
-            if (prod.size === subSize.name)
-            {
-              subSize.color.forEach((subColor) => {
-                if (prod.color === subColor.name)
-                {
-                  subColor.amount -= prod.amount;
-                  data.save();
-                }
-              })
-            }
-  
-            for (let i = 0; i < data.listInventory.length; i++) {
-              Inventory.findById(data.listInventory[i], function(err, ivent) {
-                if (err) console.log(err);
-                else{
-                  if (prod.size === ivent.sizeId && prod.color === ivent.colorId)
-                  {
-                    ivent.amount -= prod.amount;
-                    ivent.save();
-                  }
-                  
-                }
-              })
-              
-            }
-          })
-        }
-      })
-    )
-  })
-
-  Promise.all(promises).then(() => 
-  order.save((err)=>{
-    if (err) throw err;
-    else
-    {
-      req.session.cart = null;
-      res.redirect(`/user/${order._id}`);
-    } 
-  })
-  );
-}
-
-}
 
 exports.getCheckouted = (req, res, next) => {
   var promises = [];

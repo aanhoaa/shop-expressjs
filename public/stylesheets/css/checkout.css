@@ -1272,11 +1272,9 @@ svg:not(:root) {
   display: inline-flex;
   margin-bottom: 0;
   margin-top: .625rem;
+  outline: none !important;
 }
-.product-variation--selected {
-  color: #ee4d2d;
-  border-color: #ee4d2d;
-}
+
 .product-variation {
   cursor: pointer;
   min-width: 5rem;
@@ -1640,8 +1638,9 @@ svg:not(:root) {
   font-family: inherit!important;
 }
 ._1WlhIE .stardust-button--primary {
-  background: #ee4d2d;
+  background: #00bcd4;
   color: #fff;
+  cursor: not-allowed;
 }
 ._1Q3ggw {
   grid-row-start: 24;
@@ -1724,4 +1723,8 @@ svg:not(:root) {
 background: rgba(0,0,0,.02);
 border-color: rgba(0,0,0,.09)!important;
 }
-
+.payment-selected {
+  color: #00bcd4;
+  border-color: #00bcd4;
+  outline: none !important;
+}

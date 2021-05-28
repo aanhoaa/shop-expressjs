@@ -93,10 +93,10 @@
                     <div class="col-sm-2">
 
                         <span id="payment_total"><%-item.amount * item.price%>₫</span>
-                        <input type="hidden" class="payment_total_hidden_<?php echo $index; ?>" value="{!! $row->options['cur_price'] * $row->qty !!}">                                     
+                                                        
                     </div>
                     <div class="col-sm-1">
-                        <a href="#" class="btn btn-danger delete-cart" data-info="<%-i%>"><i class="fas fa-times-circle"></i></a>
+                        <a class="btn btn-danger delete-cart" data-info="<%-item.cart_id%>"><i class="fas fa-times-circle"></i></a>
                     </div>
                 </div>
 

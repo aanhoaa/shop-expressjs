@@ -45,7 +45,7 @@
             </div>
         </div>
         <div class="col-sm-5 product_details">
-            <h3 class="product_details_name"></h3>
+            <h3 class="product_details_name"><%-data[0].name%></h3>
             <div class="product_details_block_info" style="display: flex;">
                 <span style="flex: 0.45;">Mã sản phẩm: SM116</span>
                 <span style="flex: 0.4;">Thương hiệu: </span>
@@ -53,7 +53,8 @@
             </div>
             <div style="border-bottom: 1px #80808042 dashed; margin: 5px;"></div>
             <h5 style="margin-top: 15px;">
-                <span class="product_details_price_zero">₫</span>
+                <span class="product_details_price_zero"><%-max==min?max:`${min} - ${max}`%>₫</span>
+                <span class="product_details_price_one"></span>
             </h5>
             <div class="product_details_description">
                 <span></span>
@@ -141,7 +142,7 @@
                                        <line fill="none" stroke-linecap="round" stroke-miterlimit="10" x1="9" x2="9" y1="8.5" y2="5.5"></line>
                                     </g>
                                  </svg>
-                                 <span>thêm vào giỏ hàng</span>
+                                 <span>Thêm vào giỏ hàng</span>
                               </button>
                               <button type="button" class="btn btn-solid-primary btn--l _3Kiuzg" aria-disabled="false" id="buy">Mua ngay</button>
                            </div>

@@ -13,9 +13,10 @@ router.get("/cart", authController.isAuth, authController.isUser, shopController
 router.post("/cart/add_to_cart", authController.isAuth, authController.isUser, shopController.postAddToCart);
 router.post("/cart/update_to_cart", authController.isAuth, authController.isUser, shopController.postUpdateToCart);
 router.get("/cart/update", authController.isAuth, authController.isUser, shopController.getCartInfo);
+router.post("/cart/delete", authController.isAuth, authController.isUser, shopController.postDeleteCart);
 
 router.get("/checkout", authController.isAuth, authController.isUser, shopController.getCheckout);
-router.post("/checkout", authController.isLogin, shopController.postCheckout);
+router.post("/checkout", authController.isAuth, authController.isUser, shopController.postCheckout);
 router.get("/checkouted", authController.isLogin, shopController.getCheckouted);
 
 // router.get("/", shopController.getShop);
