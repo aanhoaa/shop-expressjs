@@ -15,5 +15,7 @@ router.get("/category/add" , authController.isAuth, authController.isAdmin, admi
 router.post("/category/add" , authController.isAuth, authController.isAdmin, adminController.postAddCategory);
 
 router.post("/product/edit/status" , authController.isAuth, authController.isAdmin, adminController.postEditStatusProduct);
+router.get("/order" , authController.isAuth, authController.isAdmin, adminController.getOrder);
+router.get("/order/detail/:orderId" , authController.isAuth, authController.isAdmin, adminController.getOrderDetail);
 
 module.exports = router;

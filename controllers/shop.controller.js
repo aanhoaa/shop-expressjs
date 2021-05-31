@@ -262,7 +262,7 @@ exports.getCheckout = async (req, res, next) => {
         price: item[0].price,
         color: item[0].color,
         size: item[0].size,
-        cover: item[0].covers
+        cover: item[0].cover
       })
     }
   })
@@ -322,7 +322,7 @@ exports.postCheckout = async (req, res, next) => {
           item.products.map(async i => {
             //save orderdetail
             var variant = `${i.color} ${i.size}`;
-            const orderDetail = await db.insertOrderDetail([order_id, i.pvdId, i.name, variant, i.amount, i.price, 0]);
+            const orderDetail = await db.insertOrderDetail([order_id, i.pvdId, i.name, variant, i.amount, i.price, i.cover, 0]);
           })
         })
       }
@@ -336,7 +336,7 @@ exports.postCheckout = async (req, res, next) => {
   req.session.cart = cart.length;
 
   req.session.order = '';
-  res.redirect('/user/account/address');
+  res.redirect('/user/purchase/w-confirm');
 }
 
 

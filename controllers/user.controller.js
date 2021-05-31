@@ -399,6 +399,77 @@ exports.postReset = async (req, res, next) => {
     }
 }
 
+exports.getPurchase = async (req, res, next) => {
+  const data = await db.getUserInfo(2, [req.jwtDecoded.data.username]);
+  const userInfo = {
+    username: data.username,
+    gender: data.gender
+  }
+
+  if (data) {
+    res.render('auth/user/user-purchase', {
+      userInfo: userInfo, user: data, 
+      cart: req.session.cart
+    });
+  }
+}
+
+exports.getWaitingConfirm = async (req, res, next) => {
+  const data = await db.getUserInfo(2, [req.jwtDecoded.data.username]);
+  const userInfo = {
+    username: data.username,
+    gender: data.gender
+  }
+
+  const arrData = await db.getUserPurchaseWaiting([req.session.Userinfo.id]);
+  const all = [];
+ if (arrData) {
+  arrData.map(item => {
+    const shop_id = item.shop_id;
+    const pdv_id = item.pdv_id;
+    if (all.findIndex(x => x.shopId == shop_id) < 0){
+      all.push({
+        shopId: shop_id,
+        shopName: item.shop_name,
+        products: []
+      })
+    }
+    const index = all.findIndex(x => x.shopId == shop_id);
+    if(all[index].products.findIndex(x => x.pdv_id == pdv_id) < 0){
+      var getVariant = item.variant.split(' ');
+
+      if (getVariant[0] == 'null') {
+        if (getVariant[1] == 'null') {
+          getVariant = '';
+        }
+        else getVariant.splice(0,1);
+      }
+      else {
+        if (getVariant[1] == 'null') {
+          getVariant.splice(1,1);
+        }
+      }
+      all[index].products.push({
+        pdv_id: pdv_id,
+        name: item.name,
+        amount: item.amount,
+        price: item.price,
+        variant: getVariant,
+        cover: item.cover
+      })
+    }
+  })
+ }
+
+  if (data) {
+    res.render('auth/user/user-waiting-confirm', {
+      userInfo: userInfo, user: data, 
+      cart: req.session.cart,
+      data: all
+    });
+  }
+}
+
 //functional
 function getdate(tt) {
   var date = new Date(tt);

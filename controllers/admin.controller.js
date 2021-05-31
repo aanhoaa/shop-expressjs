@@ -242,7 +242,60 @@ exports.postEditStatusProduct = async (req, res, next) => {
   else res.send({ state: 0 });
 }
 
+exports.getOrder = async (req, res, next) => {
+  
+  const arrData = await db.getOrderAll();
 
+  const all = [];
+  arrData.map(item => {
+    const order_id = item.order_id;
+    const shop_id = item.shop_id;
+    const pdv_id = item.pdv_id;
+    if (all.findIndex(x => x.orderId == order_id) < 0){
+      all.push({
+        orderId: order_id,
+        shopId: shop_id,
+        shopName: item.shop_name,
+        status: item.status,
+        products: []
+      })
+    }
+    const index = all.findIndex(x => x.orderId == order_id);
+    if(all[index].products.findIndex(x => x.pdv_id == pdv_id) < 0){
+      var getVariant = item.variant.split(' ');
+
+      if (getVariant[0] == 'null') {
+        if (getVariant[1] == 'null') {
+          getVariant = '';
+        }
+        else getVariant.splice(0,1);
+      }
+      else {
+        if (getVariant[1] == 'null') {
+          getVariant.splice(1,1);
+        }
+      }
+      all[index].products.push({
+        pdv_id: pdv_id,
+        name: item.name,
+        amount: item.amount,
+        price: item.price,
+        variant: getVariant,
+        cover: item.cover
+      })
+    }
+  })
+
+  res.render('./adminSys/order/order', {data: all});
+}
+
+exports.getOrderDetail = async (req, res, next) => {
+  const orderId = req.params.orderId;
+  const address = await db.getOrderAddressById([orderId]);
+  const products = await db.getOrderDetailByOrderId([orderId])
+  console.log(products)
+  res.render('./adminSys/order/orderDetail', {address: address, products: products});
+}
 
 
 function getdate(tt) {

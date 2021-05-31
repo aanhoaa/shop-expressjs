@@ -204,7 +204,7 @@
                     <th class="custom-table-product">STT</th>
                     <th><input type="checkbox" id="ckbAll" onclick="checkAll()"></th>
                     <th>Tên sản phẩm</th>
-                    <th>SKU</th>
+                    <th>Shop</th>
                     <th>Phân loại hàng</th>
                     <th>Giá</th>
                     <th>Kho hàng</th>
@@ -254,13 +254,7 @@
                        </div>
                     </td>
                     <td>
-                      <%if (item.classify) {%>
-                       <%item.classify.forEach(it => {%>
-                            <div>
-                                <p><%-it.sku == ''?'--':it.sku%></p>
-                            </div>
-                        <%})%>
-                      <%}%>
+                        <p><%-item.classify[0].name%></p>
                     </td>
                     <td> 
                         <%if (item.classify) {%>
@@ -333,7 +327,7 @@
                     <th class="custom-table-product">STT</th>
                     <th><input type="checkbox" id="ckbAll" onclick="checkAll()"></th>
                     <th>Tên sản phẩm</th>
-                    <th>SKU</th>
+                    <th>Shop</th>
                     <th>Phân loại hàng</th>
                     <th>Giá</th>
                     <th>Kho hàng</th>
@@ -383,13 +377,7 @@
                        </div>
                     </td>
                     <td>
-                      <%if (item.classify) {%>
-                       <%item.classify.forEach(it => {%>
-                            <div>
-                                <p><%-it.sku == ''?'--':it.sku%></p>
-                            </div>
-                        <%})%>
-                      <%}%>
+                        <p><%-item.classify[0].name%></p>
                     </td>
                     <td> 
                         <%if (item.classify) {%>
@@ -513,6 +501,9 @@
                                 <div class="sku-product">
                                     <p>SKU sản phẩm:  <%-item.sku==''?'--':item.sku%></p>
                                 </div>
+                                <div>
+                                    Shop: <%-item.classify[0].name%>
+                                </div>
                             </div>
                        </div>
                     </td>
@@ -561,7 +552,7 @@
                               <li><a href="admin/product/view/<%-item.id%>">Xem</a></li>
                               <li><a href="seller/product/edit/variant/">Cập nhật biến thể</a></li>
                             </ul>
-                          </div>
+                        </div>
                     </td>
                 </tr>
                 <%}%>

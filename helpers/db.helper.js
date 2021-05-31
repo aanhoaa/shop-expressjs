@@ -568,6 +568,31 @@ function deleteUserIdentityDetail(value) {
     .catch(error => {return error;});
 }
 
+//user-purchase
+function getUserPurchaseWaiting(value) {
+    const sql = "select a.status, c.name, c.variant, c.amount, c.price, a.shop_id , d.name as shop_name, c.cover, c.productvariant_id as pdv_id from orders as a inner join purchase as b on b.id = a.purchase_id inner join orderdetail as c on c.order_id = a.id inner join shop as d on d.id = a.shop_id where b.user_id = $1 and a.status = 0 order by a.shop_id";
+
+    return db.excuteQuery(sql, value)
+    .then(res => {
+        if (res.rowCount > 0)
+            return res.rows;
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function getOrderAll(value) {
+    const sql = "select a.status, c.name, c.variant, c.amount, c.price, a.shop_id , d.name as shop_name, c.cover, c.productvariant_id as pdv_id, a.id as order_id from orders as a inner join purchase as b on b.id = a.purchase_id inner join orderdetail as c on c.order_id = a.id inner join shop as d on d.id = a.shop_id order by a.id";
+
+    return db.excuteQuery(sql, value)
+    .then(res => {
+        if (res.rowCount > 0)
+            return res.rows;
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
 function checkExistCart(values) {
     const sql = "SELECT * FROM cart WHERE user_id = $1 and productvariant_id = $2";
 
@@ -1579,7 +1604,7 @@ function insertPurchase(values) {
 }
 
 function insertOrder(values) {
-    const sql = 'INSERT INTO orders(purchase_id, shop_id, shippingfee, delivertime, status) VALUES ($1, $2, $3, $4, $5) RETURNING id';
+    const sql = 'INSERT INTO orders(purchase_id, shop_id, shippingfee, deliverytime, status) VALUES ($1, $2, $3, $4, $5) RETURNING id';
 
     return db.excuteQuery(sql, values)
     .then(res => {
@@ -1593,7 +1618,7 @@ function insertOrder(values) {
 }
 
 function insertOrderDetail(values) {
-    const sql = "INSERT INTO orderdetail(order_id, productvariant_id, name, variant, amount, price, discount) VALUES ($1, $2, $3, $4, $5, $6, $7)";
+    const sql = "INSERT INTO orderdetail(order_id, productvariant_id, name, variant, amount, price, cover, discount) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)";
 
     return db.excuteQuery(sql, values)
     .then(res => {
@@ -1620,6 +1645,33 @@ function insertAddressOrder(values) {
     .catch(error => {return error;});
 }
 
+function getOrderAddressById(value) {
+    const sql = "select a.id as order_id, c.fullname, c.phone, c.identity, c.ward, c.district, c.province from orders as a inner join purchase as b on b.id = a.purchase_id inner join addressorder as c on b.id = c.purchase_id where a.id = $1";
+
+    return db.excuteQuery(sql, value)
+    .then(res => {
+        if (res.rowCount > 0)
+        {
+            return res.rows[0];
+        }
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function getOrderDetailByOrderId(value) {
+    const sql = "select b.name, b.amount, b.price, b.variant, b.cover from orders as a inner join orderdetail as b on a.id = b.order_id where a.id = $1";
+
+    return db.excuteQuery(sql, value)
+    .then(res => {
+        if (res.rowCount > 0)
+        {
+            return res.rows;
+        }
+        return false;
+    })
+    .catch(error => {return error;});
+}
 /*
  <==========================================================================>
 */
@@ -1655,6 +1707,9 @@ module.exports = {
     deleteUserDistrict,
     deleteUserWard,
     deleteUserIdentityDetail,
+
+    getUserPurchaseWaiting,
+    getOrderAll,
 
     checkExistCart,
     insertCart,
@@ -1731,5 +1786,7 @@ module.exports = {
     insertOrder,
     insertOrderDetail,
     insertAddressOrder,
+    getOrderAddressById,
+    getOrderDetailByOrderId,
     deleteTest
 }
