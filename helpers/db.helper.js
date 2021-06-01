@@ -593,6 +593,18 @@ function getOrderAll(value) {
     .catch(error => {return error;});
 }
 
+function getOrderByShopId(value) {
+    const sql = "select a.shop_id, d.username, b.name, b.price, b.amount, b.variant, b.cover, a.id as order_id, a.status, b.productvariant_id as pdv_id from orders as a inner join orderdetail as b on b.order_id = a.id inner join purchase as c on c.id = a.purchase_id inner join users as d on d.id = c.user_id where a.shop_id = $1 order by a.created_at desc";
+
+    return db.excuteQuery(sql, value)
+    .then(res => {
+        if (res.rowCount > 0)
+            return res.rows;
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
 function checkExistCart(values) {
     const sql = "SELECT * FROM cart WHERE user_id = $1 and productvariant_id = $2";
 
@@ -1036,6 +1048,19 @@ function updateProductVariantAmount(values) {
 
     return db.excuteQuery(sql, values)
     .then(res => {
+        if (res.rowCount > 0)
+            return true;
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function updateProductVariantAmountAuto(values) {
+    const sql = "UPDATE productvariant SET stockamount = stockamount + $1 WHERE id = $2";
+
+    return db.excuteQuery(sql, values)
+    .then(res => {
+        console.log(res)
         if (res.rowCount > 0)
             return true;
         return false;
@@ -1645,6 +1670,21 @@ function insertAddressOrder(values) {
     .catch(error => {return error;});
 }
 
+function getOrderById(value) {
+    const sql = "SELECT * FROM orders WHERE id = $1";
+
+    return db.simpleQuery(sql, value)
+    .then(res => {
+        if (res.rowCount > 0)
+            return res.rows[0];
+        else return false;
+    })
+    .catch(e => {
+        console.log('err:', e);
+        return false;
+    });
+}
+
 function getOrderAddressById(value) {
     const sql = "select a.id as order_id, c.fullname, c.phone, c.identity, c.ward, c.district, c.province from orders as a inner join purchase as b on b.id = a.purchase_id inner join addressorder as c on b.id = c.purchase_id where a.id = $1";
 
@@ -1660,13 +1700,41 @@ function getOrderAddressById(value) {
 }
 
 function getOrderDetailByOrderId(value) {
-    const sql = "select b.name, b.amount, b.price, b.variant, b.cover from orders as a inner join orderdetail as b on a.id = b.order_id where a.id = $1";
+    const sql = "select b.name, b.amount, b.price, b.variant, b.cover, b.productvariant_id as pdv_id from orders as a inner join orderdetail as b on a.id = b.order_id where a.id = $1";
 
     return db.excuteQuery(sql, value)
     .then(res => {
         if (res.rowCount > 0)
         {
             return res.rows;
+        }
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function updateOrder(values) {
+    const sql = "UPDATE orders SET status = $1 WHERE id = $2";
+
+    return db.excuteQuery(sql, values)
+    .then(res => {
+        if (res.rowCount > 0)
+        {
+            return true;
+        }
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function updateOrderReason(values) {
+    const sql = "UPDATE orders SET status = $1, cancel = $2 WHERE id = $3";
+
+    return db.excuteQuery(sql, values)
+    .then(res => {
+        if (res.rowCount > 0)
+        {
+            return true;
         }
         return false;
     })
@@ -1710,6 +1778,7 @@ module.exports = {
 
     getUserPurchaseWaiting,
     getOrderAll,
+    getOrderByShopId,
 
     checkExistCart,
     insertCart,
@@ -1752,6 +1821,7 @@ module.exports = {
     getProductVariant,
     getProductVariantInfo,
     updateProductVariantAmount,
+    updateProductVariantAmountAuto,
     deleteProduct,
     deleteProductVariant,
     deleteProductIamges,
@@ -1786,7 +1856,10 @@ module.exports = {
     insertOrder,
     insertOrderDetail,
     insertAddressOrder,
+    getOrderById,
     getOrderAddressById,
     getOrderDetailByOrderId,
+    updateOrder,
+    updateOrderReason,
     deleteTest
 }

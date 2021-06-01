@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>SHOP NEW</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"> -->
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="/stylesheets/css/master.css">
+<link rel="stylesheet" href="/stylesheets/css/style.css">
+<link rel="stylesheet" href="/stylesheets/css/custom.css">
+
+<!-- Styles -->
+  <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous"> -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+
+<!-- DataTables CSS -->
+<link rel="stylesheet" href="/stylesheets/bootstrap/3/dataTables.bootstrap.css">
+
+<!-- DataTables Responsive CSS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/material-design-lite/1.1.0/material.min.css" rel="stylesheet">
+<link href="https://cdn.datatables.net/1.10.19/css/dataTables.material.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/css/bootstrap-timepicker.min.css">
+<script src="/javascripts/js/ejs.js"></script>
+<script src="/javascripts/js/ejs.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"> </script>
+</head>
+<body>
+
+<header>
+
+  
+</header>
+
+<nav class="navbar navbar-default">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#exampleNavComponents" aria-expanded="false">
+                <i class="glyphicon glyphicon-align-center"></i>
+            </button>
+            <ul class="nav navbar-nav">
+                <li class="active">
+                    <a href="#">Page 1</a>
+                </li>
+                <li>
+                    <a href="#">Page 2</a>
+                </li>
+            </ul>
+        </div>
+        <div class="collapse navbar-collapse" id="exampleNavComponents">
+          <form action="#" class="navbar-form navbar-right">
+              <div class="form-group">
+                  <input type="text" class="form-control" placeholder="Search">
+              </div>
+              <button type="submit" class="btn btn-default">Submit</button>
+          </form>
+        </div>
+    </div>
+</nav>
+       
+
+<div class="container-fluid">
+  <div class="row" style="background-color: #f4f6f8;">
+    <div class="col-sm-2 admin_block">
+      <div class="admin_title">
+        <i class="fa fa-paw fa-1x" style="color: #51bcda; padding-right: 15px;"></i>
+        <label>Dashboard</label>
+      </div>
+
+      <div class="admin_info">
+        <div class="admin_info_avatar">
+          <img src="../../../images/boy.png" class="img_circle" alt="" style="max-width: 45px; float: left;">
+        </div>
+        <div class="admin_info_details">
+         
+          <label class="admin_info_name">Welcome, <label style="color: gray;">hardcode</label></label>
+     
+          <a href="#">
+            <i class="fas fa-circle fa-success"></i>
+            Online
+          </a> 
+        </div>
+      </div>
+
+      <div class="input-group custom-search-form">
+          <input type="text" class="form-control search_input" placeholder="Search...">
+          <span class="input-group-btn">
+              <button class="btn btn-default" type="button">
+                  <i class="fa fa-search"></i>
+              </button>
+          </span>
+      </div>
+      
+        <div class="panel-group" id="accordion">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#cate">
+                      <span class="glyphicon glyphicon-dashboard fa-1x"></span>
+                  <label class="panel-title-label">&ensp;Danh mục</label></a>
+                </h4>
+            </div>
+            <div id="cate" class="panel-collapse collapse" data-parent="#accordion">
+                <div class="panel-body">
+                    <table class="table">
+                        <tr>
+                            <td>
+                                <span class="fas fa-list text-danger"></span><a href="/admin/category">&ensp;Danh sách danh mục</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="fas fa-pencil-alt text-success"></span><a href="/admin/category/add">&ensp;Thêm Danh Mục</a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#product">
+                      <span class="fab fa-product-hunt fa-1x"></span>
+                      <label class="panel-title-label">&ensp;Sản phẩm</label>
+                    </a>
+                </h4>
+            </div>
+            <div id="product" class="panel-collapse collapse" data-parent="#accordion">
+                <div class="panel-body">
+                    <table class="table">
+                        <tr>
+                            <td>
+                                <span class="fas fa-list text-danger"></span><a href="/seller">&ensp;Danh Sách Sản Phẩm</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="fas fa-pencil-alt text-success"></span><a href="/seller/product/add">&ensp;Thêm Sản Phẩm</a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#supplier">
+                      <span class="fas fa-parachute-box fa-1x"></span>
+                      <label class="panel-title-label">&ensp;Nhà Cung Cấp</label>
+                    </a>
+                </h4>
+            </div>
+            <div id="supplier" class="panel-collapse collapse" data-parent="#accordion">
+                <div class="panel-body">
+                    <table class="table">
+                        <tr>
+                            <td>
+                                <span class="fas fa-list text-danger"></span><a href="/admin/supplier">&ensp;Nhà Cung Cấp</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="fas fa-pencil-alt text-success"></span><a href="/admin/supplier/add">&ensp;Thêm Nhà Cung Câp</a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#shipping">
+                      <span class="fas fa-parachute-box fa-1x"></span>
+                      <label class="panel-title-label">&ensp;Đối tác vận chuyển</label>
+                    </a>
+                </h4>
+            </div>
+            <div id="shipping" class="panel-collapse collapse" data-parent="#accordion">
+                <div class="panel-body">
+                    <table class="table">
+                        <tr>
+                            <td>
+                                <span class="fas fa-list text-danger"></span><a href="/admin/shipping">&ensp;Danh Sách Đối Tác</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="fas fa-pencil-alt text-success"></span><a href="/admin/shipping/add">&ensp;Thêm Đối Tác</a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#inventory">
+                      <span class="fas fa-warehouse fa-1x"></span>
+                      <label class="panel-title-label">QUẢN LÝ KHO HÀNG</label>
+                    </a>
+                </h4>
+            </div>
+            <div id="inventory" class="panel-collapse collapse" data-parent="#accordion">
+                <div class="panel-body">
+                    <table class="table">
+                        <tr>
+                            <td>
+                                <span class="fas fa-list text-danger"></span><a href="/admin/inventory">&ensp;Kho Hàng</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="fas fa-list text-danger"></span><a href="/admin/inventory/import">&ensp;Phiếu Nhập Hàng</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="fas fa-list text-danger"></span><a href="{!! url('admin/inventory/list_export_ballot') !!}">&ensp;Phiếu Xuất Hàng</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="fas fa-pencil-alt text-success"></span><a href="/admin/inventory/add">&ensp;Tạo Phiếu Nhập Hàng</a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#bill">
+                      <span class="fas fa-file-invoice-dollar fa-1x"></span>
+                      <label class="panel-title-label">&ensp;Quản Lý Đơn hàng</label>
+                    </a>
+                </h4>
+            </div>
+            <div id="bill" class="panel-collapse collapse" data-parent="#accordion">
+                <div class="panel-body">
+                    <table class="table">
+                        <tr>
+                            <td>
+                                <span class="fas fa-list text-danger"></span><a href="/seller/order">&ensp;Danh Sách Đơn Hàng</a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#user">
+                      <span class="fas fa-user-tag fa-1x"></span>
+                      <label class="panel-title-label">Hồ sơ người dùng</label>
+                    </a>
+                </h4>
+            </div>
+            <div id="user" class="panel-collapse collapse" data-parent="#accordion">
+                <div class="panel-body">
+                    <table class="table">
+                        <tr>
+                            <td>
+                                <span class="fas fa-list text-danger"></span><a href="{!! url('admin/user/list') !!}">&ensp;Hồ Sơ Người Dùng</a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#voucher">
+                      <span class="fas fa-gift fa-1x"></span>
+                      <label class="panel-title-label">&ensp;Khuyến mãi</label>
+                  </a>
+                </h4>
+            </div>
+            <div id="voucher" class="panel-collapse collapse" data-parent="#accordion">
+                <div class="panel-body">
+                    <table class="table">
+                        <tr>
+                            <td>
+                                <span class="fas fa-list text-danger"></span><a href="{!! url('admin/voucher/list') !!}">&ensp;Danh Sách Khuyến Mãi</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="fas fa-pencil-alt text-success"></span><a href="{!! url('admin/voucher/add') !!}">&ensp;Thêm Khuyến Mãi</a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#report">
+                      <span class="fas fa-file-medical-alt fa-1x"></span>
+                      <label class="panel-title-label">&ensp;Thống Kê/Báo Cáo</label>
+                    </a>
+                </h4>
+            </div>
+            <div id="report" class="panel-collapse collapse" data-parent="#accordion">
+                <div class="panel-body">
+                    <table class="table">
+                        <tr>
+                            <td>
+                                <span class="fas fa-list text-danger"></span><a href="/admin/report/income">&ensp;Thống Kê Doanh Thu</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="fas fa-list text-danger"></span><a href="/admin/report/inventory">&ensp;Xuất/Nhập Tồn</a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#contact">
+                      <span class="fas fa-envelope-open-text fa-1x"></span>
+                      <label class="panel-title-label">&ensp;Contact</label>
+                    </a>
+                </h4>
+            </div>
+            <div id="contact" class="panel-collapse collapse" data-parent="#accordion">
+                <div class="panel-body">
+                    <table class="table">
+                        <tr>
+                            <td>
+                                <a href="#">Change Password</a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <div class="col-sm-10">    
+      <div class="main_container" style="width: 100%; margin: 1% -1%;">

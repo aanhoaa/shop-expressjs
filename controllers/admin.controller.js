@@ -44,8 +44,11 @@ exports.postLogin = async (req, res, next) => {
 }
 
 exports.getLogout = (req, res, next) => {
-  req.session.destroy();
-  res.redirect('/');
+  if (req.session.token) {
+    req.session.destroy();
+    res.redirect('/');
+  }
+  else res.redirect('/');
 }
 
 exports.getHome = async (req, res, next) => {
@@ -293,10 +296,40 @@ exports.getOrderDetail = async (req, res, next) => {
   const orderId = req.params.orderId;
   const address = await db.getOrderAddressById([orderId]);
   const products = await db.getOrderDetailByOrderId([orderId])
-  console.log(products)
-  res.render('./adminSys/order/orderDetail', {address: address, products: products});
+  const orderInfo = await db.getOrderById([orderId]);
+  
+  res.render('./adminSys/order/orderDetail', {info: orderInfo, address: address, products: products});
 }
 
+exports.putConfirmOrder = async (req, res, next) => {
+  const orderId = req.body.orderId;
+  if (orderId) {
+    const update = await db.updateOrder([1, orderId]);
+    if (update == true) return res.send({state: 1});
+    else return res.send({state: 0});
+  }
+  else res.send({state: -1});
+}
+
+exports.putCancelOrder = async (req, res, next) => {
+  const {orderId, cancelReason} = req.body;
+
+  if (orderId == '' || cancelReason == '')
+    return res.send({state: -1});
+
+  //update staus => -1
+  const update = await db.updateOrderReason([-1, cancelReason, orderId]);
+  if (update != true) return res.send({state: 0});
+
+  const getPdvId = await db.getOrderDetailByOrderId([orderId]);
+  for (item of getPdvId) {
+    const updateStock = await db.updateProductVariantAmountAuto([item.amount, item.pdv_id]);
+    console.log(item.amount)
+  }
+
+  res.send({state: 1});
+
+}
 
 function getdate(tt) {
   var date = new Date(tt);

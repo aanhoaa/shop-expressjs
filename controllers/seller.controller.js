@@ -66,6 +66,7 @@ exports.postLogin = async (req, res, next) => {
           username: username,
           role: userPass.role
         }
+        req.session.shopInfo = userInfo;
         const accessToken = await jwtHelper.generateToken(userInfo, 'secret', '1h');
 
         req.session.token = accessToken;
@@ -518,114 +519,94 @@ exports.postDeleteProduct = async (req, res, next) => {
     else res.status(500).json();
 }
 
-exports.getSupplier = (req, res, next) => {
-    Supplier.find().then((data) => {
-        res.render('./admin/supplier/supplier', {data: data});
-    })
-}
-
-exports.getAddSupplier = (req, res, next) => {
-    const message = req.flash("error")[0];
-    res.render('./admin/supplier/addSupplier');
-}
-
-exports.postAddSupplier = (req, res, next) => {
-    var supplier = new Supplier({
-        name: req.body.name,
-        phone: req.body.phone,
-        email: req.body.email,
-        address: req.body.address,
-        area: req.body.area,
-        website: req.body.website,
-        employee: req.body.employee,
-        description: req.body.description
-    });
-
-    supplier.save((err)=>{
-        if (err) throw err;
-
-        req.flash('success_msg', 'Đã Thêm Thành Công');
-        res.redirect('/admin/supplier/add'); 
-    })
-}
-
-exports.getEditSupplier = (req, res, next) => {
-    var suppId = req.params.suppId;
-
-    Supplier.findById(suppId, function(err, data) {
-        if (err) console.log(err);
-        else
-            res.render('./admin/supplier/editSupplier', {supp: data});
-    });
-}
-
-exports.postEditSupplier = (req, res, next) => {
-    var suppId = req.params.suppId;
+exports.getOrder = async (req, res, next) => {
+    var type = req.query.type;
+    switch(type) {
+        case 'confirm':
+            type = 0;
+            break;
+        case 'prepare':
+            type = 1;
+            break;
+        case 'delivery':
+            type = 2;
+            break;
+        case 'delivered':
+            type = 3;
+            break;
+        case 'cancel':
+            type = -1;
+            break;
+        default:
+            type = 5;
+    }
+    console.log(type)
     
-    Supplier.findById(suppId, function(err, data){
-        if (err) console.log(err);
-        else {
-            data.name = req.body.name;
-            data.phone = req.body.phone;
-            data.email = req.body.email;
-            data.address = req.body.address;
-            data.area = req.body.area;
-            data.website = req.body.website;
-            data.employee = req.body.employee;
-            data.description = req.body.description;
-
-            data.save();
-            res.redirect('/admin/supplier');
+    const shopId = req.session.shopInfo.id;
+    const arrData = await db.getOrderByShopId([shopId]);
+  
+    const all = [];
+    arrData.map(item => {
+     if (item.status == type || type == 5) {
+        const order_id = item.order_id;
+        const shop_id = item.shop_id;
+        const pdv_id = item.pdv_id;
+        if (all.findIndex(x => x.orderId == order_id) < 0){
+          
+          all.push({
+            orderId: order_id,
+            status: item.status,
+            username: item.username,
+            products: []
+          })
         }
-    })
-}
-
-exports.getInventory = async (req, res, next) => {
-    Product.find().then((data) =>{
-        res.render('./admin/inventory/inventory', {data: data});
-    });
-
-    // const inv = await Inventory.findById('5fcba110beac431d10a961a0');
-    // console.log(inv)
-}
-
-exports.getInventoryDetail = (req, res, next) => {
-    let productId = req.params.productId;
-    var oData = new Array;
-    var temp = {};
-    var promises = [];
-     Product.findById(productId, function(err, data){
-        if (err) console.log(err);
-        else
-        {
-           // res.render('./admin/inventory/inventoryDetail', {data: data});
-            data.listInventory.forEach((inventory) => {
-                promises.push(
-                    Inventory.findById(inventory, function(err, inv){
-                        if (err) console.log(err);
-                        else{
-                            temp['size'] = inv.sizeId;
-                            temp['color'] = inv.colorId;
-                            temp['amount'] = inv.amount;
+        const index = all.findIndex(x => x.orderId == order_id);
+        if(all[index].products.findIndex(x => x.pdv_id == pdv_id) < 0){
+          var getVariant = item.variant.split(' ');
     
-                            data.subId.size.forEach((subSize) => {
-                                if (subSize.id === inv.sizeId)
-                                {
-                                    temp['price'] = subSize.price;
-                                }
-                            });
-    
-                            oData.push({'size': inv.sizeId, 'color': inv.colorId, 'investment': inv.investment,'amount': inv.amount, 'price': temp['price']});
-                        }
-                    })
-                )
-            })
-
-            Promise.all(promises).then(() => 
-            res.render('./admin/inventory/inventoryDetail', {data: data.name, info: oData, productId: productId})
-            );
+          if (getVariant[0] == 'null') {
+            if (getVariant[1] == 'null') {
+              getVariant = '';
+            }
+            else getVariant.splice(0,1);
+          }
+          else {
+            if (getVariant[1] == 'null') {
+              getVariant.splice(1,1);
+            }
+          }
+          all[index].products.push({
+            pdv_id: pdv_id,
+            name: item.name,
+            amount: item.amount,
+            price: item.price,
+            variant: getVariant,
+            cover: item.cover
+          })
         }
+     }
     })
+  
+    res.render('./admin/order/order', {data: all, type: type});
+}
+
+exports.getOrderDetail = async (req, res, next) => {
+    const orderId = req.params.orderId;
+    const address = await db.getOrderAddressById([orderId]);
+    const products = await db.getOrderDetailByOrderId([orderId])
+    const orderInfo = await db.getOrderById([orderId]);
+    
+    res.render('./admin/order/orderDetail', {info: orderInfo, address: address, products: products});
+}
+
+exports.putDeliveryOrder = async (req, res, next) => {
+    const orderId = req.body.orderId;
+    if (orderId) {
+        const update = await db.updateOrder([2, orderId]);
+        if (update == true) return res.send({state: 1});
+        else return res.send({state: 0});
+    }
+    else res.send({state: -1});
 }
 
 function makeid(length) {
@@ -652,514 +633,4 @@ function getdate(tt) {
    
     var someFormattedDate = dd + '/' + mm + '/' + y + ' ' + hour + 'h' + minutes + 'm';
     return someFormattedDate;
-}
-
-exports.getAddInventory = (req, res, next) => {
-
-    var tempData = [1];
-    req.session.data = [];
-    req.session.token = makeid(10);
-    var token = req.session.token;
-
-    Supplier.find().then((supplier) => {
-        Category.find().then((data) => {
-            res.render('./admin/inventory/addInventory', {data: data, supplier: supplier, inventId: 1, inventInfor: tempData, token: token});
-        });
-    })
-}
-
-exports.postAddInventory = (req, res, next) => {
-
-    var date = req.body.ship_date;
-    var supplierId = req.body.supplierId;
-    var totalPayment = req.body.pricePayment;
-    var totalAmount = req.body.totalAmount;
-    var listInventory = req.body.inventoryId;
-    var priceImport = req.body.price_input;
-    var amountImport = req.body.amount_input;
-    var investment = req.body.gia_von;
-    var oldPrice = req.body.old_price;
-    var detail = new Array;
-
-    // Xử lý để sau khi add thì import vào chứa mảng các product dc select trong inventory
-    
-    if (listInventory.length > 1)
-    {
-        for (let i = 0; i < listInventory.length; i++)
-        {
-            var temp = {};
-            temp['inventoryId'] = listInventory[i];
-            temp['priceImport'] = priceImport[i];
-            temp['amountImport'] = amountImport[i];
-            temp['investment'] = investment[i];
-            temp['oldPrice'] = oldPrice[i];
-            detail.push(temp);
-        }
-    }
-    else{
-        var temp = {};
-        temp['inventoryId'] = listInventory;
-        temp['priceImport'] = priceImport;
-        temp['amountImport'] = amountImport;
-        temp['investment'] = investment;
-        temp['oldPrice'] = oldPrice;
-        detail.push(temp);
-    }
-
-    var importGoods = new Import({
-        supplierId: supplierId,
-        date: date,
-        totalPayment: totalPayment,
-        paymentForm: 'Tiền mặt',
-        status: 0,
-        amountGoods: totalAmount,
-        details: detail
-    });
-
-    importGoods.save((err)=>{
-        if (err) throw err;
-
-        req.flash('success_msg', 'Đã Thêm Thành Công');
-        res.redirect('/admin/inventory/import'); 
-    })
-}
-
-exports.getBindingInventory = (req, res, next) => {
-    var cateId = req.params.cateId;
-    var bind = new Array;
-
-    Product.find().then((data) => {
-       data.forEach((product) => {
-           if (product.productType.main.id === cateId)
-           {
-                var aColor = new Array;
-                var aDetail = new Array;
-               product.subId.size[0].color.forEach((gColor) => {
-                   aColor.push(gColor.name);
-               })
-              
-               product.subId.size.forEach((getColor) => {
-                
-                aDetail.push({
-                    nameSize: getColor.name,
-                    color: aColor
-                });
-               });
-               bind.push({id: product._id, name: product.name, detail: aDetail});
-           }
-       })
-       res.send(JSON.stringify(bind));
-    });
-}
-
-exports.postSearchInventory = (req, res, next) => {
-    var productId = req.body.product;
-    var sizeId = req.body.size;
-    var colorId = req.body.color;
-    var array_id = req.body.array_inventory_id;
-    var token = req.body._token;
-  
-    Product.findById(productId, function(err, data){
-        if (err) console.log(err);
-        else
-            {
-                data.subId.size.forEach((sub) => {
-                    if (sub.id === sizeId)
-                    {
-                        sub.color.forEach((subColor) => {
-                            if (subColor.id === colorId)
-                            {
-                                var oData = {
-                                    productName: data.name, 
-                                    inventoryAmount: subColor.amount,
-                                    productSize: sizeId,
-                                    productColor: colorId
-                                };
-                                var a = [];
-                                Inventory.find().then((data) => {
-                                    data.forEach((ivt) => {
-                                        if (ivt.productId === productId)
-                                        {
-                                            if (ivt.sizeId === sizeId && ivt.colorId === colorId)
-                                            {
-                                                oData['id'] = ivt._id;
-                                                oData['inventoryPrice'] = ivt.investment;
-                                                a.push(oData);
-                                            }
-                                        }
-                                    })
-                                })
-                                
-                                if (token != req.session.token )
-                                {
-                                    req.session.data.push(oData);
-                                }
-                                    
-                                Supplier.find().then((supplier) => {
-                                    Category.find().then((data) => {
-                                        if (array_id == 1)
-                                        {
-                                            req.session.token = token;
-                                            res.render('./admin/inventory/addInventory', {data: data, supplier: supplier, inventId: 2, inventInfor: a, token: makeid(10)});
-                                        }
-                                        else
-                                        {
-                                            req.session.token = token;
-                                            res.render('./admin/inventory/addInventory', {data: data, supplier: supplier, inventId: 2, inventInfor: req.session.data, token: makeid(10)});
-                                        }
-                                    });
-                                })
-                            }
-                        })
-                    }
-                })
-            }
-    });
-}
-
-exports.getImportInventory = (req, res, next) => {
-
-    Import.find().then((good) => {
-        // Category.find().then((data) => {
-        //     res.render('./admin/inventory/addInventory', {data: data, supplier: supplier, inventId: 1, inventInfor: tempData, token: token});
-        // });
-        res.render('./admin/inventory/import', {data: good});
-    })
-}
-
-exports.getEditImportInventory = (req, res, next) => {
-    var importId = req.params.importId;
-    var supplier = new Array;
-    var oData = new Array;
-    var promises = [];
-
-    Import.findById(importId, function(err, data) {
-        if (err) console.log(err);
-        else
-            {
-                promises.push(
-                    Supplier.findById(data.supplierId, function(err, supp) {
-                        if (err) console.log(err);
-                        else
-                           {
-                                supplier.push(supp);
-                           }
-                    })
-                );
-
-                if (data.details.length > 1)
-                {
-                    
-                        data.details.forEach((invent) => {
-                            promises.push(
-                                Inventory.findById(invent.inventoryId, function(err, inv) {
-                                    if (err) console.log(err);
-                                    else
-                                    {
-                                        var temp = {};
-                                    // temp['inventoryId'] = invlistInventory;
-                                        temp['priceImport'] = invent.priceImport;
-                                        temp['amountImport'] = invent.amountImport;
-                                        temp['investment'] = invent.investment;
-                                        temp['name'] = inv.productName + "( " + inv.sizeId + " - " + inv.colorId + ")";
-                                        temp['amount'] = inv.amount;
-                                        temp['oldPrice'] = invent.oldPrice;
-                                        oData.push(temp);
-                                    }
-                                })
-                            )
-                        })
-                    
-                }
-
-                Promise.all(promises).then(() => 
-                    res.render('./admin/inventory/editImport', {info: data, data: oData, supplier: supplier})
-                );
-            }
-    });
-}
-
-exports.postEditImportInventory = (req, res, next) => {
-    var importId = req.params.importId;
-    var promises = [];
-    var promises2 = [];
-
-    Import.findById(importId, function(err, imp) {
-        if (err) console.log(err);
-        else
-        {
-             imp.status = 1;
-             imp.save();
-           
-            imp.details.forEach((inventory) =>{
-                promises.push(
-                    Inventory.findById(inventory.inventoryId, function(err, inv) {
-                        if (err) console.log(err);
-                        else
-                        {
-                            inv.amount = inventory.amountImport;
-                            inv.investment = inventory.investment;
-                            inv.save();
-            
-                            promises2.push(
-                                Product.findById(inv.productId, function(err, product) {
-                                    if (err) console.log(err);
-                                    else
-                                    {
-                                        // chưa vào db
-                                        product.subId.size.forEach(( subSize) => {
-                                            if (subSize.id == inv.sizeId)
-                                            {
-                                            subSize.color.forEach((subColor) => {
-                                                if (subColor.id === inv.colorId)
-                                                {
-                                                    subColor.amount = inventory.amountImport;
-                                                    
-                                                    product.save();
-                                                }
-                                            })
-                                            }
-                                        });
-                                    }
-                                })
-                            )
-                        }
-                    })
-                )
-            });
-
-            Promise.all(promises).then(() => 
-                Promise.all(promises2).then(() =>
-                    res.redirect('/admin/inventory/import')
-                )
-            );
-
-        }
-    });
-};
-
-exports.getOrder = (req, res, next) => {
-    Order.find().then((order) => {
-        res.render("./admin/order/order", {data: order});
-    })
-}
-
-exports.getOrderDetail = (req, res, next) => {
-    var orderId = req.params.orderId;
-
-    Order.findById(orderId, function(err, ord) {
-        if (err) console.log(err);
-        else
-        {
-            User.findById(ord.user, function(err, user) {
-                if (err) console.log(err);
-                else
-                {
-                    console.log(ord)
-                    res.render("./admin/order/orderDetail", {data: ord, userInfo: user});
-                }
-            });
-        }
-    });
-}
-
-exports.postOrderDetail = (req, res, next) => {
-    var orderId = req.params.orderId;
-
-    Order.findById(orderId, function(err, ord) {
-        if (err) console.log(err);
-        else
-        {
-            ord.statusToStore = 0;
-            ord.status = 2;
-            ord.save();
-            res.redirect('/admin/order/detail/'+ orderId);
-        }
-    });
-}
-exports.getConfirm = (req, res, next) => {
-    var orderId = req.params.orderId;
-
-    Order.findById(orderId, function(err, ord) {
-        if (err) console.log(err);
-        else
-        {
-            ord.status = 1;
-            ord.save();
-            res.redirect('/admin/order')
-        }
-    });
-}
-
-exports.getConfirmArrive = (req, res, next) => {
-    var orderId = req.params.orderId;
-
-    Order.findById(orderId, function(err, ord) {
-        if (err) console.log(err);
-        else
-        {
-            ord.statusToStore = 1;
-            ord.statusDelivery = 1;
-            ord.save();
-            res.redirect('/admin/order/detail/'+ orderId);
-        }
-    });
-}
-
-exports.getShipping = (req, res, next) => {
-
-}
-
-exports.getAddShipping = (req, res, next) => {
-    res.render("./admin/shipping/shippingAdd");
-}
-
-exports.postAddShipping = (req, res, next) => {
-    
-}
-
-exports.getReportInventory = (req, res, next) => {
-    var amountExport = 0;
-    var totalValueExport = 0;
-    var promises = [];
-    var promises2 = [];
-    var iData = [];
-    var oData = [];
-    var temp = {};
-    var tempOut = {};
-    var ioData = [];
-
-    promises.push(
-        Order.find().then((order) => {
-            order.forEach((detail) => {
-                detail.cart.forEach((item) => {
-                    amountExport = parseInt(amountExport, 10) + parseInt(item.amount, 10);
-                    totalValueExport = parseInt(totalValueExport, 10) + parseInt(item.amount, 10) * parseInt(item.price, 10)
-                })
-            })
-        })
-    )
-    promises.push(
-    Product.find().then((product) => {
-        product.forEach((prod) => {
-
-            promises2.push( 
-                Import.find().then((imp) => {
-                    temp['name'] = prod.name;
-                    temp['amountImport'] = 0;
-                    temp['valueImport'] = 0;
-                    imp.forEach((detail) => {
-                        
-                        detail.details.forEach((info) => {
-                            for(let i = 0; i < prod.listInventory.length; i++)
-                            {
-                                if (info.inventoryId === prod.listInventory[i])
-                                {
-                                    temp['amountImport'] += info.amountImport;
-                                    temp['valueImport'] += info.priceImport * info.amountImport;
-                                }
-                            }
-                        })
-                    })
-                    iData.push({name: prod.name, amountImport: temp['amountImport'], valueImport: temp['valueImport']});
-                }),
-
-                Order.find().then((ord) => {
-                    tempOut['name'] = prod.name;
-                    tempOut['amountOutport'] = 0;
-                    tempOut['valueOutPort'] = 0;
-                    ord.forEach((order) => {
-                        order.cart.forEach((cart) => {
-                            if (cart.productId == prod._id)
-                            {
-                                tempOut['amountOutport'] = parseInt(tempOut['amountOutport'], 10) + parseInt(cart.amount, 10);
-                                tempOut['valueOutPort'] = parseInt(tempOut['valueOutPort'], 10) + parseInt(tempOut['amountOutport'], 10) * parseInt(cart.price, 10);
-                            }
-                        })
-                    })
-                    oData.push({name: prod.name, amountOutport: tempOut['amountOutport'], valueOutPort: tempOut['valueOutPort']});
-                })
-            )
-        })
-    })
-    )
-    
-    Promise.all(promises).then(() => 
-        Promise.all(promises2).then(() =>
-        Import.find().then((imp) => {
-            iData.forEach((item) => {
-                oData.forEach((i) => {
-                    if (item.name === i.name)
-                    {
-                        ioData.push({name: item.name, amountImport: item.amountImport, valueImport: item.valueImport,
-                            amountOutport: i.amountOutport, valueOutPort: i.valueOutPort
-                        })
-                    }
-                })
-            })
-            //console.log(ioData)
-            res.render("./admin/report/inventory", {
-                data: imp, 
-                amountExport: amountExport, 
-                totalValueExport: totalValueExport,
-                ioData: ioData
-            });
-        })
-        )
-    );
-}
-
-exports.getReportIncome = (req, res, next) => {
-    var amountExport = 0;
-    var totalValueExport = 0;
-    var promises = [];
-    var promises2 = [];
-    var oData = [];
-    var tempOut = {};
-    var ioData = [];
-
-    promises.push(
-        Order.find().then((order) => {
-            order.forEach((detail) => {
-                detail.cart.forEach((item) => {
-                    amountExport = parseInt(amountExport, 10) + parseInt(item.amount, 10);
-                    totalValueExport = parseInt(totalValueExport, 10) + parseInt(item.amount, 10) * parseInt(item.price, 10)
-                })
-            })
-        })
-    )
-    promises.push(
-    Product.find().then((product) => {
-        product.forEach((prod) => {
-
-            promises2.push( 
-                Order.find().then((ord) => {
-                    tempOut['name'] = prod.name;
-                    tempOut['amountOutport'] = 0;
-                    tempOut['valueOutPort'] = 0;
-                    ord.forEach((order) => {
-                        order.cart.forEach((cart) => {
-                            if (cart.productId == prod._id)
-                            {
-                                tempOut['amountOutport'] = parseInt(tempOut['amountOutport'], 10) + parseInt(cart.amount, 10);
-                                tempOut['valueOutPort'] = parseInt(tempOut['valueOutPort'], 10) + parseInt(tempOut['amountOutport'], 10) * parseInt(cart.price, 10);
-                            }
-                        })
-                    })
-                    oData.push({name: prod.name, amountOutport: tempOut['amountOutport'], valueOutPort: tempOut['valueOutPort']});
-                })
-            )
-        })
-    })
-    )
-    
-    Promise.all(promises).then(() => 
-        Promise.all(promises2).then(() =>
-        res.render("./admin/report/income", { 
-            amountExport: amountExport, 
-            totalValueExport: totalValueExport,
-            oData: oData
-        })
-        )
-    );
 }

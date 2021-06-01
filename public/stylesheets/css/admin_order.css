@@ -46,3 +46,10 @@
     word-break: break-all;
     font-weight: var(--font-weight);
 }
+.order-confirm {
+    cursor: pointer;
+}
+.option-active a {
+    color: red !important;
+    text-decoration: underline;
+}

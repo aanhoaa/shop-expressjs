@@ -4,6 +4,15 @@
 
 <div style="margin-left: 5%;">
     <a href="/admin/order">Back</a>
+    
+    <%if (info.status == -1) {%>
+    <div>
+        Trạng thái: Đã hủy 
+    </div>
+    <div>
+        Lý do: <%-info.cancel%>
+    </div>
+    <%}%>
     <div class="col-sm-12 user-info">
         <div>
             Thông tin khách hàng

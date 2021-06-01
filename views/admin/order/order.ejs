@@ -1,115 +1,153 @@
-<% include ../../partials/header_admin %>
+<% include ../../partials/header_seller %>
+<link rel="stylesheet" href="/stylesheets/css/admin_order.css">
+<link rel="stylesheet" href="/stylesheets/css/user_info.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+
+<script src="/javascripts/js/admin/order.js"></script>
 
 <div style="margin-left: 5%;">
-    <div class="col-lg-12">
-        <h1 class="page-header">Order
-            <small>List</small>
-        </h1>
-    </div>
-    <!-- /.col-lg-12 -->
-    <table id="dataTables-example" class="mdl-data-table table-custom" style="width:100%">
-        <thead>
-            <tr align="center">
-                <th>ID</th>
-                <th>Mã đơn hàng</th>
-                <th>Số lượng bán ra</th>
-                <th>Tiền hàng</th>
-                <th>Tổng chiết khấu</th>
-                <th>Thuế</th>
-                <th>Trạng thái đơn hàng</th>
-                <th>Trạng thái giao hàng</th>
-                <th>Tổng hóa đơn</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% var i = 0;%>
-            
-           <%data.forEach((order) => {i++;%>
-            <% var total = amount = 0;%>
-            <tr class="odd gradeX" align="center">
-                <td><%-i%></td>
-                <td></td>
-                <td>
-                    <%order.cart.forEach((item) => {
-                        
-                        amount = parseInt(amount, 10) + parseInt(item.amount,10);
-                        total = parseInt(total, 10) + parseInt(item.amount,10) * parseInt(item.price,10);
-                    });%>
+   <ul class="user-option nav nav-tabs">
+      <li class="option option-my-booking is-flex nav-item <%-type == 5?'option-active':''%>">
+          <div>
+              <p class="hover-text my-booking"><a class="nav-link active" href="/seller/order">Tất cả</a></p>
+          </div>
+      </li>
+      <li class="option option-favorite is-flex <%-type == 0?'option-active':''%>">
+          <div>
+              <p class="hover-text"><a class="nav-link" href="/seller/order?type=confirm">Chờ xác nhận</a></p>
+          </div>
+      </li>
+      <li class="option option-favorite is-flex <%-type == 1?'option-active':''%>">
+        <div>
+            <p class="hover-text"><a class="nav-link" href="/seller/order?type=prepare">Chuẩn bị hàng</a></p>
+        </div>
+    </li>
+      <li class="option option-setting is-flex <%-type == 2?'option-active':''%>">
+          <div>
+              <p class="hover-text"><a class="nav-link" href="/seller/order?type=delivery">Đang giao</a></p>
+          </div>
+      </li>
+      <li class="option option-setting is-flex <%-type == 3?'option-active':''%>">
+        <div>
+            <p class="hover-text"><a class="nav-link" href="/seller/order?type=delivered">Đã giao</a></p>
+        </div>
+    </li>
+    <li class="option option-setting is-flex <%-type == -1?'option-active':''%>">
+        <div>
+            <p class="hover-text"><a class="nav-link" href="/seller/order?type=cancel">Đơn hủy</a></p>
+        </div>
+    </li>
+  </ul>
 
-                    <%-amount%> cái
-                </td>
-                <td><%-total%> đ</td>
-                <td>0đ</td>
-                <td>0đ</td>
-                <td>
-                    <% if (order.status === 0 || order.status === 2) {%>
-                    <span class="label label-primary" style="font-size: 11px;">Đang xử lý</span>
-                    <% } else if (order.status === 1) {%>
-                    <span class="label label-success" style="font-size: 11px;">Đã thanh toán</span>
-                    <% } else if (order.status === -1) {%>
-                    <span class="label label-danger" style="font-size: 11px;">Đã hủy</span>
+  <div class="contain-order clearfix">
+     <div class="col-sm-12 order-list-pannel">
+        <div class="col-sm-4">
+           Sản phẩm
+        </div>
+        <div class="col-sm-2">
+            Tổng hóa đơn
+         </div>
+         <div class="col-sm-2">
+            Trạng thái
+         </div>
+         <div class="col-sm-4">
+            Thao tác
+         </div>
+     </div>
+     <div class="col-sm-12 order-list-body">
+        <%if (data != '') {
+            data.forEach(item => {
+        %>
+        <div class="order-item clearfix">
+
+            <div class="col-sm-12 shop-name">
+                <div class="_3xIZfd">
+                    <div class="_1tj6iU">
+                       <div class="_2zTpu5">
+                         <img src="/images/boy.png" alt="" width="20px" height="20px">
+                       </div>
+                       <div class="_2tDqUs"><%-item.username%></div>
+                    </div>
+                 </div>
+            </div>
+            
+            <div class="col-sm-12 order-item-list">
+                
+                <div class="col-sm-4">
+                    <%item.products.forEach(i => {%>
+                    <div class="order-product-list">
+                        <div class="order-product-wrapper">
+                            <img src="https://cf.shopee.vn/file/5d8b03e776b91b21be6ba71bc4595c6a_tn" alt="" class="item-images">
+                            <div class="item-product">
+                                <div class="ct-item-product-inner">
+                                    <div class="product-info">
+                                        <a href="/seller/order/detail/<%-item.orderId%>" class="ct-item-product-name"><%-i.name%></a>
+                                        <div><%-i.variant == ''?'': 'Phân loại: ' + i.variant%></div>
+                                        <div>x<%-i.amount%></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <%})%>
+                </div>
+                <div class="col-sm-2">
+                    Tổng hóa đơn
+                </div>
+                <div class="col-sm-2">
+                    <%if (item.status == -1) {%>
+                        Đã hủy
                     <%}%>
-                </td>
-                <td>
-                    <% if (order.status !== -1) {%>
-                        <% if (order.statusDelivery === 0) {%>
-                        <span class="label label-primary" style="font-size: 11px;">Đang xử lý</span>
-                        <% } else {%>
-                            <% if (order.statusToStore === 0) {%>
-                            <span class="label label-warning" style="font-size: 11px;">Chờ giao hàng</span>
-                            <%} else {%>
-                            <span class="label label-success" style="font-size: 11px;">Đã giao hàng</span>
-                            <%}%>
-                            <%}%>
-                     <%} else {%>
-                        <span class="label label-danger" style="font-size: 11px;">Đã hủy</span>
-                        <%}%>
-                </td>
-                <td><%-total%> đ</td>
-                <td class="center"><i class="fa fa-pencil fa-fw"></i> <a href="/admin/order/detail/<%-order._id%>" class="btn btn-success"><i class="fas fa-eye"></i> View</a></td>
-            </tr>
-            <%})%>
-            <!-- @foreach($contact_order as $item)
-            <tr class="odd gradeX" align="center">
-                <td>{!! $stt = $stt + 1 !!}</td>
-                <td>OCT000{!! $item->id !!}</td>
-                <td>
-                    cái
-                </td>
-                <td>{!! number_format($item->total,0,",",".") !!} đ</td>
-                <td>0đ</td>
-                <td>0đ</td>
-                <td>
-                    
-                    <span class="label label-primary" style="font-size: 11px;">Đang xử lý</span>
-                   
-                    <span class="label label-success" style="font-size: 11px;">Đã thanh toán</span>
-                    
-                    <span class="label label-danger" style="font-size: 11px;">Đã hủy</span>
-                   
-                </td>
-                <td>
-                    @if((int)$item->contact_status !== -1)
-                        @if((int)$item->shipping_status === 0)
-                        <span class="label label-primary" style="font-size: 11px;">Đang xử lý</span>
-                        @else
-                            @if((int)$item->invent_connect_store === 0)
-                            <span class="label label-warning" style="font-size: 11px;">Chờ giao hàng</span>
-                            @else
-                            <span class="label label-success" style="font-size: 11px;">Đã giao hàng</span>
-                            @endif
-                        @endif
-                    @else
-                        <span class="label label-danger" style="font-size: 11px;">Đã hủy</span>
-                    @endif
-                </td>
-                <td>{!! number_format($item->total,0,",",".") !!} đ</td>
-                <td class="center"><a href="{!! URL::route('admin.bill.getEditContact', $item['id']) !!}" class="btn btn-success"><i class="fas fa-eye"></i> View</a></td>
-            </tr>
-            @endforeach -->
-        </tbody>
-    </table>
+                   <%if (item.status == 0) {%>
+                        Chờ xác nhận
+                    <%}%>
+                    <%if (item.status == 1) {%>
+                        Đang chuẩn bị hàng
+                    <%}%>
+                    <%if (item.status == 2) {%>
+                        Đang giao
+                    <%}%>
+                </div>
+                <div class="col-sm-4">
+                    <%if (item.status == -1) {%>
+                        <a href="/seller/order/detail/<%-item.orderId%>">
+                            <button class="btn btn-default dropdown-toggle" type="button">Chi tiết</button>
+                        </a>
+                    <%}%>
+                    <%if (item.status == 0) {%>
+                        <a href="/admin/order/detail/<%-item.orderId%>">
+                            <button class="btn btn-default dropdown-toggle" type="button">Chi tiết</button>
+                        </a>
+                    <%}%>
+                    <%if (item.status == 1) {%>
+                        <div style="display: flex;">
+                            <div style="margin-right: 10px;">
+                                <button class="btn btn-default order-delivery" type="button" data-id="<%-item.orderId%>">Giao hàng</button>
+                            </div>
+                            <div class="dropdown">
+                                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                  Tùy chọn
+                                  <span class="caret"></span>
+                                </button>
+                               <ul class="dropdown-menu action-product" aria-labelledby="dropdownMenu1">
+                                  <li><a href="/admin/order/detail/<%-item.orderId%>">Chi tiết</a></li>
+                                  <li><a href="/admin/order/detail/<%-item.orderId%>">Hủy đơn hàng</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    <%}%>
+                    <%if (item.status == 2) {%>
+                        <button class="btn btn-default order-delivery" type="button" data-id="<%-item.orderId%>">Đã nhận hàng</button>
+                    <%}%>    
+                </div>
+            </div>
+            
+        </div>
+        <%})}%>
+     </div>
+  </div>
+   
 </div>
 
 <% include ../../partials/footer_admin %>

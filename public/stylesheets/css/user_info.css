@@ -620,12 +620,14 @@
     align-items: center;
 }
 ._3xIZfd {
-    padding: 0 0 12px;
+    padding: 15px;
     -webkit-box-pack: justify;
     -webkit-justify-content: space-between;
     -moz-box-pack: justify;
     -ms-flex-pack: justify;
     justify-content: space-between;
+    background: #ece8e8;
+    margin: 15px 0;
 }
 ._1tj6iU {
     white-space: nowrap;
@@ -1056,4 +1058,31 @@
     height: 1em;
     fill: currentColor;
     position: relative;
+}
+.clearfix:after {
+    content: ".";
+    display: block;
+    clear: both;
+    visibility: hidden;
+    line-height: 0;
+    height: 0;
+}
+
+.clearfix {
+    display: inline-block;
+}
+
+html[xmlns] .clearfix {
+    display: block;
+}
+
+* html .clearfix {
+    height: 1%;
+}
+.order-item {
+    border: 1px solid #e8e8e8;
+    border-radius: 4px;
+}
+.order-list-pannel {
+    margin-bottom: 20px;
 }

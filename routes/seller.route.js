@@ -26,34 +26,8 @@ router.get("/product/edit/variant/:productId" , authController.isAuth, authContr
 router.post("/product/edit/variant/:productId" , authController.isAuth, authController.isShop, sellerController.postEditProductVariant);
 router.post("/product/show/:productId" , authController.isAuth, authController.isShop, sellerController.postShowProduct);
 router.post("/product/delete" , authController.isAuth, authController.isShop, sellerController.postDeleteProduct);
-
-router.get("/supplier" , authController.isAdmin, sellerController.getSupplier);
-router.get("/supplier/add" , authController.isAdmin, sellerController.getAddSupplier);
-router.post("/supplier/add" , authController.isAdmin, sellerController.postAddSupplier);
-router.get("/supplier/edit/:suppId" , authController.isAdmin, sellerController.getEditSupplier);
-router.post("/supplier/edit/:suppId" , authController.isAdmin, sellerController.postEditSupplier);
-
-router.get("/inventory" , authController.isAdmin, sellerController.getInventory);
-router.get("/inventory/detail/:productId" , authController.isAdmin, sellerController.getInventoryDetail);
-router.get("/inventory/add" , authController.isAdmin, sellerController.getAddInventory);
-router.post("/inventory/add" , authController.isAdmin, sellerController.postAddInventory);
-router.get("/inventory/add/binding/:cateId" , authController.isAdmin, sellerController.getBindingInventory);
-router.post("/inventory/search" , authController.isAdmin, sellerController.postSearchInventory);
-router.get("/inventory/import" , authController.isAdmin, sellerController.getImportInventory);
-router.get("/inventory/import/edit/:importId" , authController.isAdmin, sellerController.getEditImportInventory);
-router.post("/inventory/import/edit/:importId" , authController.isAdmin, sellerController.postEditImportInventory);
-
-router.get("/order" , authController.isAdmin, sellerController.getOrder);
-router.get("/order/detail/:orderId" , authController.isAdmin, sellerController.getOrderDetail);
-router.post("/order/detail/:orderId" , authController.isAdmin, sellerController.postOrderDetail);
-router.get("/order/confirm/:orderId" , authController.isAdmin, sellerController.getConfirm);
-router.get("/order/confirm-arrive/:orderId" , authController.isAdmin, sellerController.getConfirmArrive);
-
-router.get("/shipping" , authController.isAdmin, sellerController.getShipping);
-router.get("/shipping/add" , authController.isAdmin, sellerController.getAddShipping);
-router.post("/shipping/add" , authController.isAdmin, sellerController.postAddShipping);
-
-router.get("/report/inventory" , authController.isAdmin, sellerController.getReportInventory);
-router.get("/report/income" , authController.isAdmin, sellerController.getReportIncome);
+router.get("/order" , authController.isAuth, authController.isShop, sellerController.getOrder);
+router.get("/order/detail/:orderId" , authController.isAuth, authController.isShop, sellerController.getOrderDetail);
+router.put("/order/delivery" , authController.isAuth, authController.isShop, sellerController.putDeliveryOrder);
 
 module.exports = router;
