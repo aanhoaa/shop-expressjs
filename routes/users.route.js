@@ -20,8 +20,9 @@ router.get("/api/account/city", authController.isAuth, authController.isUser, us
 router.get("/api/account/district/binding", authController.isAuth, authController.isUser, userController.getBindingDistrict);
 router.get("/api/account/ward/binding", authController.isAuth, authController.isUser, userController.getBindingWard);
 
-router.get("/purchase", authController.isAuth, authController.isUser, userController.getPurchase);
-router.get("/purchase/w-confirm", authController.isAuth, authController.isUser, userController.getWaitingConfirm);
+//router.get("/purchase", authController.isAuth, authController.isUser, userController.getPurchase);
+router.get("/purchase", authController.isAuth, authController.isUser, userController.getWaitingConfirm);
 router.get("/purchase/order/:orderId", authController.isAuth, authController.isUser, userController.getOrderDetail);
+router.put("/purchase/cancel", authController.isAuth, authController.isUser, userController.putOrderCancel);
 
 module.exports = router;

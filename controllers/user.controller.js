@@ -476,56 +476,101 @@ exports.getWaitingConfirm = async (req, res, next) => {
     gender: data.gender
   }
 
+  var orderStatus = ['CHỜ XÁC NHẬN', 'CHUẨN BỊ HÀNG', 'ĐANG GIAO', 'ĐÃ GIAO', 'ĐÃ HỦY'];
+  var type = req.query.type;
+  switch(type) {
+    case 'confirm':
+        type = 0;
+        break;
+    case 'prepare':
+        type = 1;
+        break;
+    case 'delivery':
+        type = 2;
+        break;
+    case 'delivered':
+        type = 3;
+        break;
+    case 'cancel':
+        type = -1;
+        break;
+    default:
+        type = 5;
+}
+
   const arrData = await db.getUserPurchaseWaiting([req.session.Userinfo.id]);
   const all = [];
  if (arrData) {
   arrData.map(item => {
-    const shop_id = item.shop_id;
-    const pdv_id = item.pdv_id;
-    const order_id = item.order_id;
-    if (all.findIndex(x => x.orderId == order_id) < 0){
-      all.push({
-        orderId: order_id,
-        shopId: shop_id,
-        ship: item.ship,
-        shopName: item.shop_name,
-        products: []
-      })
-    }
-    const index = all.findIndex(x => x.orderId == order_id);
-    if(all[index].products.findIndex(x => x.pdv_id == pdv_id) < 0){
-      var getVariant = item.variant.split(' ');
+    if (item.status == type || type == 5) {
+      const shop_id = item.shop_id;
+      const pdv_id = item.pdv_id;
+      const order_id = item.order_id;
+      if (all.findIndex(x => x.orderId == order_id) < 0){
+        all.push({
+          orderId: order_id,
+          shopId: shop_id,
+          ship: item.ship,
+          shopName: item.shop_name,
+          status: item.status,
+          products: []
+        })
+      }
+      const index = all.findIndex(x => x.orderId == order_id);
+      if(all[index].products.findIndex(x => x.pdv_id == pdv_id) < 0){
+        var getVariant = item.variant.split(' ');
 
-      if (getVariant[0] == 'null') {
-        if (getVariant[1] == 'null') {
-          getVariant = '';
+        if (getVariant[0] == 'null') {
+          if (getVariant[1] == 'null') {
+            getVariant = '';
+          }
+          else getVariant.splice(0,1);
         }
-        else getVariant.splice(0,1);
-      }
-      else {
-        if (getVariant[1] == 'null') {
-          getVariant.splice(1,1);
+        else {
+          if (getVariant[1] == 'null') {
+            getVariant.splice(1,1);
+          }
         }
+        all[index].products.push({
+          pdv_id: pdv_id,
+          name: item.name,
+          amount: item.amount,
+          price: item.price,
+          variant: getVariant,
+          cover: item.cover
+        })
       }
-      all[index].products.push({
-        pdv_id: pdv_id,
-        name: item.name,
-        amount: item.amount,
-        price: item.price,
-        variant: getVariant,
-        cover: item.cover
-      })
     }
   })
  }
 
   if (data) {
-    res.render('auth/user/user-waiting-confirm', {
+    res.render('auth/user/user-purchase', {
       userInfo: userInfo, user: data, 
       cart: req.session.cart,
-      data: all
+      data: all,
+      type: type,
+      orderStatus: orderStatus
     });
   }
+}
+
+exports.putOrderCancel = async (req, res, next) => {
+  const {orderId, cancelReason} = req.body;
+
+  if (orderId == '' || cancelReason == '')
+    return res.send({state: -1});
+
+  //update staus => -1
+  const update = await db.updateOrderReason([-1, cancelReason, orderId]);
+  if (update != true) return res.send({state: 0});
+
+  const getPdvId = await db.getOrderDetailByOrderId([orderId]);
+  for (item of getPdvId) {
+    const updateStock = await db.updateProductVariantAmountAuto([item.amount, item.pdv_id]);
+  }
+
+  res.send({state: 1});
 }
 
 exports.getOrderDetail = async (req, res, next) => {

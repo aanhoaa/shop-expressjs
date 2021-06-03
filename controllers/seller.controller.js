@@ -583,7 +583,8 @@ exports.getOrder = async (req, res, next) => {
             amount: item.amount,
             price: item.price,
             variant: getVariant,
-            cover: item.cover
+            cover: item.cover,
+            fee: item.shippingfee
           })
         }
      }

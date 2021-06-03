@@ -8,34 +8,34 @@
 
 <div style="margin-left: 5%;">
    <ul class="user-option nav nav-tabs">
-      <li class="option option-my-booking is-flex nav-item">
+      <li class="option option-my-booking is-flex nav-item <%-type == 5? 'option-active': ''%>">
           <div>
-              <p class="hover-text my-booking"><a class="nav-link active" href="#tab1">Tất cả</a></p>
+              <p class="hover-text my-booking"><a class="nav-link active" href="/admin/order">Tất cả</a></p>
           </div>
       </li>
-      <li class="option option-favorite is-flex">
+      <li class="option option-favorite is-flex <%-type == 0? 'option-active': ''%>">
           <div>
-              <p class="hover-text"><a class="nav-link" href="#tab2">Chờ xác nhận</a></p>
+              <p class="hover-text"><a class="nav-link" href="/admin/order/?type=confirm">Chờ xác nhận</a></p>
           </div>
       </li>
-      <li class="option option-setting is-flex">
+      <li class="option option-setting is-flex <%-type == 1? 'option-active': ''%>">
           <div>
-              <p class="hover-text"><a class="nav-link" href="#tab3">Chờ lấy hàng</a></p>
+              <p class="hover-text"><a class="nav-link" href="/admin/order/?type=prepare">Chờ lấy hàng</a></p>
           </div>
       </li>
-      <li class="option option-setting is-flex">
+      <li class="option option-setting is-flex <%-type == 2? 'option-active': ''%>">
           <div>
-              <p class="hover-text"><a class="nav-link" href="#tab4">Đang giao</a></p>
+              <p class="hover-text"><a class="nav-link" href="/admin/order/?type=delivery">Đang giao</a></p>
           </div>
       </li>
-      <li class="option option-setting is-flex">
+      <li class="option option-setting is-flex <%-type == 3? 'option-active': ''%>">
         <div>
-            <p class="hover-text"><a class="nav-link" href="#tab4">Đã giao</a></p>
+            <p class="hover-text"><a class="nav-link" href="/admin/order/?type=delivered">Đã giao</a></p>
         </div>
     </li>
-    <li class="option option-setting is-flex">
+    <li class="option option-setting is-flex <%-type == -1? 'option-active': ''%>">
         <div>
-            <p class="hover-text"><a class="nav-link" href="#tab4">Đơn hủy</a></p>
+            <p class="hover-text"><a class="nav-link" href="/admin/order/?type=cancel">Đơn hủy</a></p>
         </div>
     </li>
   </ul>
@@ -58,6 +58,7 @@
      <div class="col-sm-12 order-list-body">
         <%if (data != '') {
             data.forEach(item => {
+                var total = 0;
         %>
         <div class="order-item">
 
@@ -113,6 +114,7 @@
                                         <a href="" class="ct-item-product-name"><%-i.name%></a>
                                         <div><%-i.variant == ''?'': 'Phân loại: ' + i.variant%></div>
                                         <div>x<%-i.amount%></div>
+                                        <%total += i.amount*i.price + i.fee%>
                                     </div>
                                 </div>
                             </div>
@@ -121,7 +123,7 @@
                     <%})%>
                 </div>
                 <div class="col-sm-2">
-                    Tổng hóa đơn
+                    <%-VND(total)%>
                 </div>
                 <div class="col-sm-2">
                     <%if (item.status == -1) {%>

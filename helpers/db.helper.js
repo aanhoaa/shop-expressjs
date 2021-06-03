@@ -570,7 +570,7 @@ function deleteUserIdentityDetail(value) {
 
 //user-purchase
 function getUserPurchaseWaiting(value) {
-    const sql = "select a.status, a.id as order_id, a.shippingfee as ship, c.name, c.variant, c.amount, c.price, a.shop_id , d.name as shop_name, c.cover, c.productvariant_id as pdv_id from orders as a inner join purchase as b on b.id = a.purchase_id inner join orderdetail as c on c.order_id = a.id inner join shop as d on d.id = a.shop_id where b.user_id = $1 and a.status = 0 order by a.created_at desc";
+    const sql = "select a.status, a.id as order_id, a.shippingfee as ship, a.status, c.name, c.variant, c.amount, c.price, a.shop_id , d.name as shop_name, c.cover, c.productvariant_id as pdv_id from orders as a inner join purchase as b on b.id = a.purchase_id inner join orderdetail as c on c.order_id = a.id inner join shop as d on d.id = a.shop_id where b.user_id = $1 order by a.created_at desc";
 
     return db.excuteQuery(sql, value)
     .then(res => {
@@ -582,7 +582,7 @@ function getUserPurchaseWaiting(value) {
 }
 
 function getOrderAll(value) {
-    const sql = "select a.status, c.name, c.variant, c.amount, c.price, a.shop_id , d.name as shop_name, c.cover, c.productvariant_id as pdv_id, a.id as order_id from orders as a inner join purchase as b on b.id = a.purchase_id inner join orderdetail as c on c.order_id = a.id inner join shop as d on d.id = a.shop_id order by a.id";
+    const sql = "select a.status, a.shippingfee, c.name, c.variant, c.amount, c.price, a.shop_id , d.name as shop_name, c.cover, c.productvariant_id as pdv_id, a.id as order_id from orders as a inner join purchase as b on b.id = a.purchase_id inner join orderdetail as c on c.order_id = a.id inner join shop as d on d.id = a.shop_id order by a.id";
 
     return db.excuteQuery(sql, value)
     .then(res => {
@@ -594,7 +594,7 @@ function getOrderAll(value) {
 }
 
 function getOrderByShopId(value) {
-    const sql = "select a.shop_id, d.username, b.name, b.price, b.amount, b.variant, b.cover, a.id as order_id, a.status, b.productvariant_id as pdv_id, c.payment_id, e.province, e.district from orders as a inner join orderdetail as b on b.order_id = a.id inner join purchase as c on c.id = a.purchase_id inner join users as d on d.id = c.user_id inner join addressorder as e on e.purchase_id = c.id where a.shop_id = $1 order by a.created_at desc";
+    const sql = "select a.shop_id, a.shippingfee, d.username, b.name, b.price, b.amount, b.variant, b.cover, a.id as order_id, a.status, b.productvariant_id as pdv_id, c.payment_id, e.province, e.district from orders as a inner join orderdetail as b on b.order_id = a.id inner join purchase as c on c.id = a.purchase_id inner join users as d on d.id = c.user_id inner join addressorder as e on e.purchase_id = c.id where a.shop_id = $1 order by a.created_at desc";
 
     return db.excuteQuery(sql, value)
     .then(res => {
@@ -1060,7 +1060,6 @@ function updateProductVariantAmountAuto(values) {
 
     return db.excuteQuery(sql, values)
     .then(res => {
-        console.log(res)
         if (res.rowCount > 0)
             return true;
         return false;

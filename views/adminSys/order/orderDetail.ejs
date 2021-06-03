@@ -76,9 +76,9 @@
                             </div>
                         </div>
                     </td>
-                    <td><%-item.price%> đ</td>
+                    <td><%-VND(item.price)%></td>
                     <td><%-item.amount%></td>
-                    <td><%-item.price * item.amount%> đ</td>
+                    <td><%-VND(item.price * item.amount)%></td>
                     <%total += item.price * item.amount%>
                 </tr>
                 <%})%>
@@ -87,21 +87,21 @@
         <div style="display: flex; float: right; margin: 25px;">
             <div style="margin-right: 20px;">
                 <div>
-                    Tổng tiền sản phẩm
+                    Phí vận chuyển
                 </div>
                 <div>
-                    Phí vận chuyển
+                    Tổng tiền sản phẩm
                 </div>
                 <div>
                     Doanh thu
                 </div>
             </div>
             <div>
+                <div><%-VND(info.shippingfee)%></div>
                 <div>
-                   <%-total%> đ
+                   <%-VND(total)%>
                 </div>
-                <div> 30 đ</div>
-                <div>40000 đ</div>
+                <div class="income"><%-VND(total + info.shippingfee)%></div>
             </div>
         </div>
     </div>  

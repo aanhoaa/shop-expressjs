@@ -371,7 +371,7 @@ exports.postCheckout = async (req, res, next) => {
   req.session.cart = cart.length;
 
   req.session.order = '';
-  res.redirect('/user/purchase/w-confirm');
+  res.redirect('/user/purchase/?type=confirm');
 }
 
 

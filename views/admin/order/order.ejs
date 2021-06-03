@@ -58,6 +58,7 @@
      <div class="col-sm-12 order-list-body">
         <%if (data != '') {
             data.forEach(item => {
+                var total = 0;
         %>
         <div class="order-item clearfix">
 
@@ -85,6 +86,7 @@
                                         <a href="/seller/order/detail/<%-item.orderId%>" class="ct-item-product-name"><%-i.name%></a>
                                         <div><%-i.variant == ''?'': 'Phân loại: ' + i.variant%></div>
                                         <div>x<%-i.amount%></div>
+                                        <% total += i.amount*i.price + i.fee%>
                                     </div>
                                 </div>
                             </div>
@@ -93,7 +95,7 @@
                     <%})%>
                 </div>
                 <div class="col-sm-2" style="padding: 0;">
-                    Tổng hóa đơn
+                   <%-VND(total)%>
                     <div class="payment-info">
                         <%-item.payment == 1 ? '(Thanh toán khi nhận hàng)':'(Thanh toán online)'%>
                     </div>

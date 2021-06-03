@@ -76,9 +76,9 @@
                             </div>
                         </div>
                     </td>
-                    <td><%-item.price%> đ</td>
+                    <td><%-VND(item.price)%></td>
                     <td><%-item.amount%></td>
-                    <td><%-item.price * item.amount%> đ</td>
+                    <td><%-VND(item.price * item.amount)%></td>
                     <%total += item.price * item.amount%>
                 </tr>
                 <%})%>
@@ -97,11 +97,11 @@
                 </div>
             </div>
             <div>
+                <div><%-VND(total)%></div>
                 <div>
-                   <%-total%> đ
-                </div>
-                <div> 30 đ</div>
-                <div>40000 đ</div>
+                    <%-VND(info.shippingfee)%>
+                 </div>
+                <div><%-VND(total + info.shippingfee)%></div>
             </div>
         </div>
     </div>  

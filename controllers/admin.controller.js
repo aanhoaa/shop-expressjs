@@ -246,50 +246,77 @@ exports.postEditStatusProduct = async (req, res, next) => {
 }
 
 exports.getOrder = async (req, res, next) => {
-  
+  var type = req.query.type;
+  switch(type) {
+      case 'confirm':
+          type = 0;
+          break;
+      case 'prepare':
+          type = 1;
+          break;
+      case 'delivery':
+          type = 2;
+          break;
+      case 'delivered':
+          type = 3;
+          break;
+      case 'cancel':
+          type = -1;
+          break;
+      default:
+          type = 5;
+  }
+
   const arrData = await db.getOrderAll();
 
   const all = [];
   arrData.map(item => {
-    const order_id = item.order_id;
-    const shop_id = item.shop_id;
-    const pdv_id = item.pdv_id;
-    if (all.findIndex(x => x.orderId == order_id) < 0){
-      all.push({
-        orderId: order_id,
-        shopId: shop_id,
-        shopName: item.shop_name,
-        status: item.status,
-        products: []
-      })
-    }
-    const index = all.findIndex(x => x.orderId == order_id);
-    if(all[index].products.findIndex(x => x.pdv_id == pdv_id) < 0){
-      var getVariant = item.variant.split(' ');
+    if (item.status == type || type == 5) {
+      const order_id = item.order_id;
+      const shop_id = item.shop_id;
+      const pdv_id = item.pdv_id;
+      if (all.findIndex(x => x.orderId == order_id) < 0){
+        all.push({
+          orderId: order_id,
+          shopId: shop_id,
+          status: item.status,
+          shopName: item.shop_name,
+          status: item.status,
+          products: []
+        })
+      }
+      const index = all.findIndex(x => x.orderId == order_id);
+      if(all[index].products.findIndex(x => x.pdv_id == pdv_id) < 0){
+        var getVariant = item.variant.split(' ');
 
-      if (getVariant[0] == 'null') {
-        if (getVariant[1] == 'null') {
-          getVariant = '';
+        if (getVariant[0] == 'null') {
+          if (getVariant[1] == 'null') {
+            getVariant = '';
+          }
+          else getVariant.splice(0,1);
         }
-        else getVariant.splice(0,1);
-      }
-      else {
-        if (getVariant[1] == 'null') {
-          getVariant.splice(1,1);
+        else {
+          if (getVariant[1] == 'null') {
+            getVariant.splice(1,1);
+          }
         }
+        all[index].products.push({
+          pdv_id: pdv_id,
+          name: item.name,
+          amount: item.amount,
+          price: item.price,
+          variant: getVariant,
+          cover: item.cover,
+          fee: item.shippingfee
+        })
       }
-      all[index].products.push({
-        pdv_id: pdv_id,
-        name: item.name,
-        amount: item.amount,
-        price: item.price,
-        variant: getVariant,
-        cover: item.cover
-      })
     }
   })
 
-  res.render('./adminSys/order/order', {data: all});
+  res.render('./adminSys/order/order', {
+    data: all,
+    type: type
+  });
 }
 
 exports.getOrderDetail = async (req, res, next) => {

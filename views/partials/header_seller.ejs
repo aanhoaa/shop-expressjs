@@ -33,7 +33,11 @@
 <body>
 
 <header>
-
+    <%
+        VND = function(num) {
+            return num.toLocaleString('it-IT', {style : 'currency', currency : 'VND'});
+        }
+    %>
   
 </header>
 
