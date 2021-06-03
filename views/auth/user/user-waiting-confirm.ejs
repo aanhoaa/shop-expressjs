@@ -40,7 +40,9 @@
                 <a class="_2s-sXW" href="/user/purchase/?type=3"><span class="_2-GXl7">Đã giao</span></a><a class="_2s-sXW" href="/user/purchase/?type=4"><span class="_2-GXl7">Đã Hủy</span></a>
             </div>
             <div></div>
-           <% if (data != '') {%>
+           <% if (data != '') {
+              var total = 0;
+            %>
                 <div>
                     <%data.forEach(item => {%>
                     <div class="_32cw_C">
@@ -86,7 +88,7 @@
                                  </div>
                               </div>
                               <div class="_2U1-Hf"></div>
-                              <a href="/user/purchase/order/72508375371591?type=6">
+                              <a href="/user/purchase/order/<%-item.orderId%>">
                                  <div class="_2hnmH-">
                                 <%item.products.forEach(i => {%>
                                     <div class="FswepX">
@@ -133,6 +135,7 @@
                                        </div>
                                        <div class="_1YJXa6"></div>
                                     </div>
+                                    <%total+= (i.price)*i.amount%>
                                 <%})%>
                                  </div>
                               </a>
@@ -160,7 +163,7 @@
                                  </div>
                               </span>
                               <div class="_3LfHXA">Tổng số tiền:</div>
-                              <div class="isoXOF">₫53.200</div>
+                              <div class="isoXOF"><%-item.ship + total %></div>
                            </div>
                         </div>
                         <div class="_2GvoV8">

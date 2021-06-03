@@ -101,4 +101,9 @@ $(document).ready(function(){
             });
           });
     })
+    
+    //delivered
+    $(document).on('click', '.order-delivered', function(e) {
+        
+    })
 })

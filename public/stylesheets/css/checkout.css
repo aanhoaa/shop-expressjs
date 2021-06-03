@@ -1728,3 +1728,49 @@ border-color: rgba(0,0,0,.09)!important;
   border-color: #00bcd4;
   outline: none !important;
 }
+.product_info {
+  margin-left: 10px;
+}
+.shop-name {
+  margin-top: 5px;
+}
+._3xIZfd {
+  padding: 15px;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -moz-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  background: #ece8e8;
+  margin: 15px 0;
+}
+._1tj6iU, ._3xIZfd {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -moz-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+._1tj6iU {
+  white-space: nowrap;
+}
+._1DRlwq, ._2zTpu5 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -moz-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+._2bGakT, ._2tDqUs, ._18HTrf {
+  margin: 0 0 0 8px;
+}

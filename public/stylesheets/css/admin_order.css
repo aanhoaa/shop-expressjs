@@ -53,3 +53,10 @@
     color: red !important;
     text-decoration: underline;
 }
+.order-list-body {
+    padding-left: 0;
+}
+.payment-info {
+    color: #757575;
+    font-size: 12px;
+}

@@ -570,7 +570,7 @@ function deleteUserIdentityDetail(value) {
 
 //user-purchase
 function getUserPurchaseWaiting(value) {
-    const sql = "select a.status, c.name, c.variant, c.amount, c.price, a.shop_id , d.name as shop_name, c.cover, c.productvariant_id as pdv_id from orders as a inner join purchase as b on b.id = a.purchase_id inner join orderdetail as c on c.order_id = a.id inner join shop as d on d.id = a.shop_id where b.user_id = $1 and a.status = 0 order by a.shop_id";
+    const sql = "select a.status, a.id as order_id, a.shippingfee as ship, c.name, c.variant, c.amount, c.price, a.shop_id , d.name as shop_name, c.cover, c.productvariant_id as pdv_id from orders as a inner join purchase as b on b.id = a.purchase_id inner join orderdetail as c on c.order_id = a.id inner join shop as d on d.id = a.shop_id where b.user_id = $1 and a.status = 0 order by a.created_at desc";
 
     return db.excuteQuery(sql, value)
     .then(res => {
@@ -594,7 +594,7 @@ function getOrderAll(value) {
 }
 
 function getOrderByShopId(value) {
-    const sql = "select a.shop_id, d.username, b.name, b.price, b.amount, b.variant, b.cover, a.id as order_id, a.status, b.productvariant_id as pdv_id from orders as a inner join orderdetail as b on b.order_id = a.id inner join purchase as c on c.id = a.purchase_id inner join users as d on d.id = c.user_id where a.shop_id = $1 order by a.created_at desc";
+    const sql = "select a.shop_id, d.username, b.name, b.price, b.amount, b.variant, b.cover, a.id as order_id, a.status, b.productvariant_id as pdv_id, c.payment_id, e.province, e.district from orders as a inner join orderdetail as b on b.order_id = a.id inner join purchase as c on c.id = a.purchase_id inner join users as d on d.id = c.user_id inner join addressorder as e on e.purchase_id = c.id where a.shop_id = $1 order by a.created_at desc";
 
     return db.excuteQuery(sql, value)
     .then(res => {
@@ -693,7 +693,7 @@ function getCartAll(value) {
 }
 
 function getCartCheckOut(values) {
-    const sql = "select c.name, a.amount, c.price, c.id as pvd_id, d.attribute->'Color' as color, d.attribute->'Size' as size, f.name as shop, f.id as shop_id, e.url->'cover' as cover from cart as a inner join productvariant as c on c.id = a.productvariant_id inner join product as b on b.id = c.product_id inner join variantdetail as d on d.id = c.variant_id inner join images as e on e.product_id = c.product_id inner join shop as f on f.id = b.shop_id where a.user_id = $1 and c.id = $2";
+    const sql = "select c.name, a.amount, c.price, c.id as pvd_id, c.w, c.l, c.h, c.weight, d.attribute->'Color' as color, d.attribute->'Size' as size, f.name as shop, f.id as shop_id, e.url->'cover' as cover from cart as a inner join productvariant as c on c.id = a.productvariant_id inner join product as b on b.id = c.product_id inner join variantdetail as d on d.id = c.variant_id inner join images as e on e.product_id = c.product_id inner join shop as f on f.id = b.shop_id where a.user_id = $1 and c.id = $2";
 
     return db.simpleQuery(sql, values)
     .then(res => {
@@ -1285,7 +1285,7 @@ function confirmInsertImportGood(value) {
 } 
 
 function updateProductVariant(values) {
-    const sql = 'UPDATE productvariant set sku = $1, price = $2, stockamount = $3 WHERE id=$4';
+    const sql = 'UPDATE productvariant set sku = $1, price = $2, stockamount = $3, w = $4, l = $5, h = $6, weight = $7 WHERE id=$8';
 
     return db.excuteQuery(sql, values)
     .then( res =>  {
@@ -1383,7 +1383,7 @@ function getProductVariant(value) {
 }
 
 function getProductVariantInfo(value) {
-    const sql = 'select a.name, a.status, c.attribute, b.sku, b.price, b.stockamount, b.id, d.url, e.name from productvariant as b inner join product as a on b.product_id = a.id inner join variantdetail as c on c.id = b.variant_id inner join images as d on d.product_id = a.id inner join shop as e on a.shop_id = e.id where a.id = $1';
+    const sql = 'select a.name, a.status, c.attribute, b.sku, b.price, b.stockamount, b.id, b.w, b.l, b.h, b.weight, d.url, e.name from productvariant as b inner join product as a on b.product_id = a.id inner join variantdetail as c on c.id = b.variant_id inner join images as d on d.product_id = a.id inner join shop as e on a.shop_id = e.id where a.id = $1';
 
     return db.simpleQuery(sql, value)
     .then( res =>  {

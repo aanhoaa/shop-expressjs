@@ -1,0 +1,109 @@
+<% include ../../partials/header %>
+<link rel="stylesheet" href="/stylesheets/css/bill.css">
+<link rel="stylesheet" href="/stylesheets/css/inventory.css">
+<a href="/user/purchase">Back</a>
+<div style="margin-left: 5%;">
+    
+    
+    <%if (info.status == -1) {%>
+    <div>
+        Trạng thái: Đã hủy 
+    </div>
+    <div>
+        Lý do: <%-info.cancel%>
+    </div>
+    <%}%>
+    <div class="col-sm-12 user-info">
+        <div>
+            Thông tin khách hàng
+        </div>
+        <label for="">ID đơn hàng</label>
+        <div class="order">
+           #<%-address.order_id%>
+        </div>
+        <label for="">Địa chỉ nhận hàng</label>
+        <div class="address">
+            <div class="name">
+                <%-address.fullname%>, <%-address.phone%>
+            </div>
+            <%-address.identity%>, <%-address.ward%>, <%-address.district%>, <%-address.province%>
+        </div>
+    </div>  
+    <div class="col-sm-12 product-info" style="margin-top: 50px;">
+        <div>
+            Thông tin thanh toán
+        </div>
+        <table>
+            <thead>
+                <th>STT</th>
+                <th>Sản phẩm</th>
+                <th>Đơn giá</th>
+                <th>Số lượng</th>
+                <th>Thành tiền</th>
+            </thead>
+            <tbody>
+                <%var i = 0;
+                  var total = 0; 
+                %>
+                <%products.forEach(item => { i++;%>
+                <tr>
+                    <td><%-i%></td>
+                    <td>
+                        <div style="display: flex;">
+                            <div style="margin-right: 5px;">
+                                <img src="<%-item.cover%>" width="56px" height="56px" alt="">
+                            </div>
+                            <div>
+                                <%-item.name%>
+                                <div>
+                                    <%
+                                    var getVariant = item.variant.split(' ');
+
+                                    if (getVariant[0] == 'null') {
+                                        if (getVariant[1] == 'null') {
+                                        getVariant = '';
+                                        }
+                                        else getVariant.splice(0,1);
+                                    }
+                                    else {
+                                        if (getVariant[1] == 'null') {
+                                        getVariant.splice(1,1);
+                                        }
+                                    }
+                                    %>
+                                    <%-getVariant%>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td><%-VND(item.price)%> đ</td>
+                    <td><%-item.amount%></td>
+                    <td><%-VND(item.price * item.amount)%> đ</td>
+                    <%total += item.price * item.amount;%>
+                </tr>
+                <%})%>
+            </tbody>
+        </table>
+        <div style="display: flex; float: right; margin: 25px;">
+            <div style="margin-right: 20px;">
+                <div>
+                    Phí vận chuyển
+                </div>
+                <div>
+                    Tổng tiền sản phẩm
+                </div>
+                <div>
+                    Cần thanh toán khi nhận hàng!
+                </div>
+            </div>
+            <div>
+                <div><%-VND(info.shippingfee)%></div>
+                <div>
+                   <%-VND(total)%>
+                </div>
+            </div>
+        </div>
+    </div>  
+</div>
+
+<% include ../../partials/footer%>

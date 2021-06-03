@@ -5,13 +5,21 @@ function updateVariant() {
   var sku = document.getElementsByName('sku');
   var price = document.getElementsByName('price');
   var stock = document.getElementsByName('stock');
+  var width = document.getElementsByName('width');
+  var length = document.getElementsByName('length');
+  var height = document.getElementsByName('height');
+  var weight = document.getElementsByName('weight');
   var arrId = [];
   var arrSku = [];
   var arrPrice = [];
   var arrStock = [];
+  var arrWidth = [];
+  var arrLength = [];
+  var arrHeight = [];
+  var arrWeight = [];
 
   for(let i = 0; i < productId.length; i++) {
-    if (price[i].value == '' || stock[i].value == '')
+    if (price[i].value == '' || stock[i].value == '' || width[i].value == '' || length[i].value == '' || height[i].value == '' || weight[i].value == '')
     {
       Swal.fire('Các trường không được bỏ trống', '', 'info');
       return;
@@ -27,6 +35,10 @@ function updateVariant() {
     arrSku.push(sku[i].value);
     arrPrice.push(price[i].value);
     arrStock.push(stock[i].value)
+    arrWidth.push(width[i].value)
+    arrLength.push(length[i].value)
+    arrHeight.push(height[i].value)
+    arrWeight.push(weight[i].value)
   }
 
   Swal.fire({
@@ -47,12 +59,19 @@ function updateVariant() {
           sku: arrSku,
           price: arrPrice,
           stock: arrStock,
+          width: arrWidth,
+          length: arrLength,
+          height: arrHeight,
+          weight: arrWeight
           },
         success:function(data){ 
-            Swal.fire('Saved!', '', 'success');
+            if (data.state == 1) {
+              Swal.fire('Saved!', '', 'success');
             setTimeout(function(){ 
               window.location.href = '/seller'; 
             }, 1000);
+            }
+            else alert('Lỗi')
              
         },
         error: function() {

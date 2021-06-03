@@ -54,58 +54,94 @@
                 <%var i = 0;
                 var a = '';
                 var total = 0;
+                var ship = 0;
                 var arrAmount = [];
                 var arrPVD = [];
                 var arrShop = [];
+                var arrShip = [];
+                var totalFee = 0;
                 %>
                 <%data.forEach((item) => {i++;%>
-                <div class="shop-name">
-
-                    <% 
-                        arrAmount.push(item[0].amount);
-                        arrPVD.push(item[0].pvd_id);
-                        if (a != item[0].shop) {
-                        a = item[0].shop;
-                        
-                        arrShop.push(item[0].shop_id);
+                    <%ship = 0;
+                    arrShop.push(item.shopId)
                     %>
-                   Cung cấp bởi: <%-item[0].shop%>
-                    <%}%>
-
-                </div>
+                    <div class="clearfix" style="border: 1px solid rgba(0,0,0,0.09);">
+                    <div>
+                        <div class="col-sm-12 shop-name">
+                            <div class="_3xIZfd">
+                                <div class="_1tj6iU">
+                                   
+                                   <div class="_2zTpu5">
+                                     <img src="/images/boy.png" alt="" width="20px" height="20px">
+                                   </div>
+                                   <div class="_2tDqUs"><%-item.shopName%></div>
+                                </div>
+                             </div>
+                        </div>
+                <%item.products.forEach(i => {%>
+                    <%
+                    arrAmount.push(i.amount);
+                    arrPVD.push(i.pvdId);
+                    %>
                 <div class="khoimenu" style="display: flex; padding: 15px 0; border-bottom: solid 1px #e4e4e4;">
                     <div class="col-sm-4" style="display: flex;">
-                        <img class="hinhsanpham" src="<%-item[0].cover%>" alt="" >
+                        <img class="hinhsanpham" src="<%-i.cover%>" alt="" >
                         <div class="product_info">
-                            <label class="product_info_text"><%-item[0].name%> </label>
-                            <small class="product_info_small">(<%-item[0].color%> <%-item[0].size%>)</small>
+                            <label class="product_info_text"><%-i.name%> </label>
+                            <small class="product_info_small">(<%-i.color%> <%-i.size%>)</small>
                         </div>
                     </div>
  
                     <div class="col-sm-2">
                         
-                        <span><%-item[0].price.toLocaleString()%>₫</span>
+                        <span><%-VND(parseInt(i.price))%></span>
                         <input type="hidden" class="price" value="">
                     </div>
                     <div class="col-sm-2">
                         <div class="input-group get-info">
                             <span class="input-group-btn">
-                                <%-item[0].amount%>
+                                <%-i.amount%>
                             </span>
-                            <input type="hidden" value="<%-item[0].color%>" class="color">
-                            <input type="hidden" value="<%-item[0].size%>" class="size">
-                            <input type="hidden" value="<%-item[0].id%>" class="pvid">
+                            <input type="hidden" value="<%-item.color%>" class="color">
+                            <input type="hidden" value="<%-item.size%>" class="size">
+                            <input type="hidden" value="<%-item.id%>" class="pvid">
                         </div>
                     </div>
                     <div class="col-sm-2">
 
-                        <span id="payment_total"><%-item[0].amount * item[0].price%>₫</span>
-                        <%total += item[0].amount * item[0].price%>                                  
+                        <span id="payment_total"><%-VND(i.amount * i.price)%></span>
+                        <%total += i.amount * i.price%>     
+                        <%ship += i.fee%>                             
                     </div>
                 </div>
-
-                <%})}}%>
+                   
+                <%})%>
             </div>
+            <% totalFee += ship + total;%>
+            <div style="display: flex; float: right; margin: 25px;">
+                <div style="margin-right: 20px;">
+                    <div> 
+                        Phí vận chuyển
+                    </div>
+                    <div>
+                        Tổng tiền sản phẩm
+                    </div>
+                </div>
+                <div>
+                    <div>
+                        <%-VND(ship)%>
+                    </div>
+                    <div> <%-VND(totalFee)%></div>
+                    <%arrShip.push(ship)%>
+                </div>
+            </div>
+        </div>
+                <%})%>
+           
+            <%}}%>
+           
+            </div>
+           
 
     <div class="f23wB9">
        <div class="qXX2_B">
@@ -125,11 +161,11 @@
        </div>
        <div class="PC1-mc">
           <div class="_1i3wS2 _1X3--o RihLPS">Tổng tiền hàng</div>
-          <div class="_1i3wS2 lsNObX RihLPS"><%-total%>₫</div>
+          <div class="_1i3wS2 lsNObX RihLPS"><%-VND(total)%></div>
           <div class="_1i3wS2 _1X3--o RRMXiE">Phí vận chuyển</div>
-          <div class="_1i3wS2 lsNObX RRMXiE">₫</div>
+          <div class="_1i3wS2 lsNObX RRMXiE"><%-VND(totalFee)%></div>
           <div class="_1i3wS2 _1X3--o _3QL9JJ">Tổng thanh toán:</div>
-          <div class="_1i3wS2 _20-5lO lsNObX _3QL9JJ">₫</div>
+          <div class="_1i3wS2 _20-5lO lsNObX _3QL9JJ"><%-VND(total + totalFee)%></div>
           <div class="_3Q9F5R _1Q3ggw">
              <div class="_2xyh_G">Nhấn "Đặt hàng" đồng nghĩa với việc bạn đồng ý tuân theo <a href="https://shopee.vn/legaldoc/policies/" target="_blank" rel="noopener noreferrer">Điều khoản Shopee</a>
             </div>
@@ -137,6 +173,7 @@
                <input type="text" hidden name="arrAmount" value="<%-arrAmount%>">
                <input type="text" hidden name="arrPVD" value="<%-arrPVD%>">
                <input type="text" hidden name="arrShop" value="<%-arrShop%>">
+               <input type="text" hidden name="arrShip" value="<%-arrShip%>">
                <input type="text" hidden name="paymentmethod" value="" id="payment-method">
                <button class="stardust-button stardust-button--primary stardust-button--large _1qSlAe _2a74ER" id="pay" disabled>Đặt hàng
                </button>

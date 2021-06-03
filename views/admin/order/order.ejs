@@ -92,8 +92,11 @@
                     </div>
                     <%})%>
                 </div>
-                <div class="col-sm-2">
+                <div class="col-sm-2" style="padding: 0;">
                     Tổng hóa đơn
+                    <div class="payment-info">
+                        <%-item.payment == 1 ? '(Thanh toán khi nhận hàng)':'(Thanh toán online)'%>
+                    </div>
                 </div>
                 <div class="col-sm-2">
                     <%if (item.status == -1) {%>
@@ -116,7 +119,7 @@
                         </a>
                     <%}%>
                     <%if (item.status == 0) {%>
-                        <a href="/admin/order/detail/<%-item.orderId%>">
+                        <a href="/seller/order/detail/<%-item.orderId%>">
                             <button class="btn btn-default dropdown-toggle" type="button">Chi tiết</button>
                         </a>
                     <%}%>
@@ -131,14 +134,14 @@
                                   <span class="caret"></span>
                                 </button>
                                <ul class="dropdown-menu action-product" aria-labelledby="dropdownMenu1">
-                                  <li><a href="/admin/order/detail/<%-item.orderId%>">Chi tiết</a></li>
-                                  <li><a href="/admin/order/detail/<%-item.orderId%>">Hủy đơn hàng</a></li>
+                                  <li><a href="/seller/order/detail/<%-item.orderId%>">Chi tiết</a></li>
+                                  <li><a href="/seller/order/detail/<%-item.orderId%>">Hủy đơn hàng</a></li>
                                 </ul>
                             </div>
                         </div>
                     <%}%>
                     <%if (item.status == 2) {%>
-                        <button class="btn btn-default order-delivery" type="button" data-id="<%-item.orderId%>">Đã nhận hàng</button>
+                        <button class="btn btn-default order-delivered" type="button">Đã nhận hàng</button>
                     <%}%>    
                 </div>
             </div>

@@ -1,4 +1,4 @@
-<% include ../../partials/header_admin %>
+<% include ../../partials/header_seller %>
 <div class="category-link">
     <a href="/seller">Trang chủ</a> >
     <span>Chi tiết sản phẩm</span>
@@ -19,6 +19,7 @@
                 <th>Phân loại hàng</th>
                 <th>Giá</th>
                 <th>Kho hàng</th>
+                <th>Rộng, Dài, Cao (cm) - Trọng lượng(gr)</th>
             </tr>
         </thead>
         <tbody>
@@ -52,6 +53,27 @@
                     <div class="form-group edit-variant">
                         <input class="form-control" id="stock" name="stock"
                         value="<%-item.stockamount%>" type="number" onkeypress="changeVariant()" required/>  
+                    </div>
+                </td>
+                <td>
+                    <div style="display: flex;">
+                        <div>
+                            <input class="form-control pdv-detail" id="width" name="width"
+                            value="<%-item.w%>" type="number" onkeypress="changeVariant()" required/>
+                        </div>
+                        <div>
+                           
+                            <input class="form-control pdv-detail" id="length" name="length"
+                            value="<%-item.l%>" type="number" onkeypress="changeVariant()" required/>
+                        </div>
+                        <div>
+                            <input class="form-control pdv-detail" id="height" name="height"
+                            value="<%-item.h%>" type="number" onkeypress="changeVariant()" required/>
+                        </div>
+                        <div>
+                            <input class="form-control pdv-detail" id="weight" name="weight"
+                            value="<%-item.weight%>" type="number" onkeypress="changeVariant()" required/>
+                        </div>
                     </div>
                 </td>
             </tr>

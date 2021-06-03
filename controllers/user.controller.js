@@ -5,6 +5,7 @@ const jwtHelper = require("../helpers/jwt.helper");
 const Validator = require("fastest-validator");
 const mailer = require('../helpers/mailer');
 const fs = require('fs');
+const fetch = require('node-fetch');
 
 exports.getUserProfile = async (req, res, next) => {
   const data = await db.getUserInfo(2, [req.jwtDecoded.data.username]);
@@ -75,9 +76,9 @@ exports.postUserAddressBook = async (req, res, next) => {
   const schema = {
     fullname: 'string',
     phone: {type: 'string', length: 10},
-    city: 'string|length:2',
-    district: 'string|length:3',
-    ward: 'string|length:5',
+    city: 'string',
+    district: 'string',
+    ward: 'string',
     identity: 'string|min:3|max: 50',
     nameCity: 'string',
     nameDistrict: 'string',
@@ -110,7 +111,6 @@ exports.postUserAddressBook = async (req, res, next) => {
           if (district_id) {
             const province_id = await db.insertUserProvince([district_id, address.city, address.nameCity]);
             if (province_id) {
-              const addressBook = await db.insertUserAddressBook([req.jwtDecoded.data.id, province_id, address.fullname, address.phone]);
               if (exist == false) {
                 const addressBook = await db.insertUserAddressBook([req.jwtDecoded.data.id, province_id, address.fullname, address.phone, 1]);
                 if (addressBook == true) res.redirect('/user/account/address');
@@ -139,9 +139,9 @@ exports.postUpdateAddressBook = async (req, res, next) => {
   const schema = {
     fullname: 'string',
     phone: {type: 'string', length: 10},
-    city: 'string|length:2',
-    district: 'string|length:3',
-    ward: 'string|length:5',
+    city: 'string',
+    district: 'string',
+    ward: 'string',
     identity: 'string|min:3|max: 50',
     nameCity: 'string',
     nameDistrict: 'string',
@@ -249,65 +249,120 @@ exports.postSetAddressDefault = async (req, res, next) => {
 
 exports.getCity = async (req, res, next) => {
   var bind = new Array;
-  let rawdata = fs.readFileSync('helpers/address.json');
-  let address = JSON.parse(rawdata);
+  //let rawdata = fs.readFileSync('helpers/address.json');
+  //let address = JSON.parse(rawdata);
 
-  address.forEach(iCity => {
-    bind.push({id: iCity.Id, name: iCity.Name});
-  })
+  // address.forEach(iCity => {
+  //   bind.push({id: iCity.Id, name: iCity.Name});
+  // })
   
-  res.send(JSON.stringify(bind));
+  //res.send(JSON.stringify(bind));
+
+  fetch('https://online-gateway.ghn.vn/shiip/public-api/master-data/province', {
+    'method': 'GET',
+    'headers': {
+      'Connection': 'keep-alive',
+      'Pragma': 'no-cache',
+      'Cache-Control': 'no-cache',
+      'Upgrade-Insecure-Requests': '1',
+      //'Origin': 'https://danhmuchanhchinh.gso.gov.vn',
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36 Edg/87.0.664.66',
+      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+      'Sec-Fetch-Site': 'same-origin',
+      'Sec-Fetch-Mode': 'navigate',
+      'Sec-Fetch-User': '?1',
+      'Sec-Fetch-Dest': 'document',
+      'token': '09d8cf6a-c357-11eb-8ea7-7ad2d1e1ce1c',
+     // 'Referer': 'https://danhmuchanhchinh.gso.gov.vn/',
+      'Accept-Language': 'vi,en-US;q=0.9,en;q=0.8',
+     // 'Cookie': x.cookie,
+      'gzip': true,
+  }
+  }).then(res => res.json())
+  .then(data => {
+    const address = data.data;
+    address.forEach(iCity => {
+    bind.push({id: iCity.ProvinceID, name: iCity.ProvinceName});
+    })
+  
+    res.send(JSON.stringify(bind));
+  })
+  .catch(err => console.log(err))
 }
 
 exports.getBindingDistrict = async (req, res, next) => {
   const cityID = req.query.cityId;
-  var district;
   var bind = new Array;
 
-  let rawdata = fs.readFileSync('helpers/address.json');
-  let address = JSON.parse(rawdata);
-
-  address.forEach(city => {
-    if (city.Id == cityID) {
-      district = city.Districts;
-    }
-  })
-  
-  if (district != '') {
-    district.forEach(item => {
-      bind.push({id: item.Id, name: item.Name});
-    })
-    res.send(JSON.stringify(bind));
+  fetch(`https://online-gateway.ghn.vn/shiip/public-api/master-data/district?province_id=${cityID}`, {
+    'method': 'GET',
+    'headers': {
+      'Connection': 'keep-alive',
+      'Pragma': 'no-cache',
+      'Cache-Control': 'no-cache',
+      'Upgrade-Insecure-Requests': '1',
+      //'Origin': 'https://danhmuchanhchinh.gso.gov.vn',
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36 Edg/87.0.664.66',
+      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+      'Sec-Fetch-Site': 'same-origin',
+      'Sec-Fetch-Mode': 'navigate',
+      'Sec-Fetch-User': '?1',
+      'Sec-Fetch-Dest': 'document',
+      'token': '09d8cf6a-c357-11eb-8ea7-7ad2d1e1ce1c',
+     // 'Referer': 'https://danhmuchanhchinh.gso.gov.vn/',
+      'Accept-Language': 'vi,en-US;q=0.9,en;q=0.8',
+     // 'Cookie': x.cookie,
+      'gzip': true,
   }
-  else res.status(500).json({err: 'Load fail'});
+  }).then(res => res.json())
+  .then(data => {
+    const address = data.data;
+    console.log(address)
+    address.forEach(iDistrict => {
+    bind.push({id: iDistrict.DistrictID, name: iDistrict.DistrictName});
+    })
+  
+    res.send(JSON.stringify(bind));
+  })
+  .catch(err => console.log(err))
 }
 
 exports.getBindingWard = async (req, res, next) => {
-  const cityID = req.query.cityId;
-  var districtID = req.query.districtId;
-  var ward;
   var bind = new Array;
-
-  let rawdata = fs.readFileSync('helpers/address.json');
-  let address = JSON.parse(rawdata);
-
-  address.forEach(iCity => {
-    if (iCity.Id == cityID) {
-        iCity.Districts.forEach(iDistrict => {
-          if (districtID == iDistrict.Id) {
-            ward = iDistrict.Wards;
-          }
-        })
-    }
-  })
-  
-  if (ward != '') {
-    ward.forEach(item => {
-      bind.push({id: item.Id, name: item.Name});
-    })
-    res.send(JSON.stringify(bind));
+  var districtID = req.query.districtId;
+  fetch(`https://online-gateway.ghn.vn/shiip/public-api/master-data/ward?district_id=${districtID}`, {
+    'method': 'GET',
+    'headers': {
+      'Connection': 'keep-alive',
+      'Pragma': 'no-cache',
+      'Cache-Control': 'no-cache',
+      'Upgrade-Insecure-Requests': '1',
+      //'Origin': 'https://danhmuchanhchinh.gso.gov.vn',
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36 Edg/87.0.664.66',
+      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+      'Sec-Fetch-Site': 'same-origin',
+      'Sec-Fetch-Mode': 'navigate',
+      'Sec-Fetch-User': '?1',
+      'Sec-Fetch-Dest': 'document',
+      'token': '09d8cf6a-c357-11eb-8ea7-7ad2d1e1ce1c',
+     // 'Referer': 'https://danhmuchanhchinh.gso.gov.vn/',
+      'Accept-Language': 'vi,en-US;q=0.9,en;q=0.8',
+     // 'Cookie': x.cookie,
+      'gzip': true,
   }
-  else res.status(500).json({err: 'Load fail'});
+  }).then(res => res.json())
+  .then(data => {
+    const address = data.data;
+    address.forEach(iWard => {
+    bind.push({id: iWard.WardCode, name: iWard.WardName});
+    })
+  
+    res.send(JSON.stringify(bind));
+  })
+  .catch(err => console.log(err))
 }
 
 exports.getChangePassword = async (req, res, next) => {
@@ -427,14 +482,17 @@ exports.getWaitingConfirm = async (req, res, next) => {
   arrData.map(item => {
     const shop_id = item.shop_id;
     const pdv_id = item.pdv_id;
-    if (all.findIndex(x => x.shopId == shop_id) < 0){
+    const order_id = item.order_id;
+    if (all.findIndex(x => x.orderId == order_id) < 0){
       all.push({
+        orderId: order_id,
         shopId: shop_id,
+        ship: item.ship,
         shopName: item.shop_name,
         products: []
       })
     }
-    const index = all.findIndex(x => x.shopId == shop_id);
+    const index = all.findIndex(x => x.orderId == order_id);
     if(all[index].products.findIndex(x => x.pdv_id == pdv_id) < 0){
       var getVariant = item.variant.split(' ');
 
@@ -468,6 +526,24 @@ exports.getWaitingConfirm = async (req, res, next) => {
       data: all
     });
   }
+}
+
+exports.getOrderDetail = async (req, res, next) => {
+  const data = await db.getUserInfo(2, [req.jwtDecoded.data.username]);
+  const userInfo = {
+    username: data.username,
+    gender: data.gender
+  }
+  const orderId = req.params.orderId;
+  const address = await db.getOrderAddressById([orderId]);
+  const products = await db.getOrderDetailByOrderId([orderId])
+  const orderInfo = await db.getOrderById([orderId]);
+    
+    res.render('./auth/user/user-order', {
+      info: orderInfo, address: address, products: products,
+      userInfo: userInfo, user: data, 
+      cart: req.session.cart,
+    });
 }
 
 //functional

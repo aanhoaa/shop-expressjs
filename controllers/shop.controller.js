@@ -10,6 +10,7 @@ const jwtHelper = require("../helpers/jwt.helper");
 const db = require('../helpers/db.helper');
 var bcrypt = require("bcryptjs");
 const util = require('util')
+const fetch = require('node-fetch');
 
 // exports.getIndexShop = (req, res, next) => {
 //     Order.find().then((data) => {
@@ -234,7 +235,7 @@ exports.postDeleteCart = async (req, res, next) => {
 exports.getCheckout = async (req, res, next) => {
   const addBook = await db.getUserAddressBook([req.session.Userinfo.id]);
   const data = req.session.checkout;
-  
+  var ship = 0;
   var arrData = [];
   if (data != '') {
     for(let i of data) {
@@ -242,19 +243,46 @@ exports.getCheckout = async (req, res, next) => {
       arrData.push(getData);
     }
   }
+
   const all = [];
-  arrData.map(item => {
-    const shop_id = item[0].shop_id;
-    const pvd_id = item[0].pvd_id;
-    if (all.findIndex(x => x.shopId == shop_id) < 0){
-      all.push({
-        shopId: shop_id,
-        shopName: item[0].shop,
-        products: []
-      })
+    const a = await Promise.all(arrData.map(async item => {
+      const shop_id = item[0].shop_id;
+      const pvd_id = item[0].pvd_id;
+      if (all.findIndex(x => x.shopId == shop_id) < 0){
+        all.push({
+          shopId: shop_id,
+          shopName: item[0].shop,
+          fee: 0,
+          products: []
+        })
+      }
+      const index = all.findIndex(x => x.shopId == shop_id);
+      if(all[index].products.findIndex(x => x.pvdId == pvd_id) < 0){
+        //ship
+        const shipping = await fetch(`https://online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/fee?service_id=53320&insurance_value=500000&from_district_id=1542&to_district_id=${addBook[0].district_code}&to_ward_code=${addBook[0].ward_code}&height=${item[0].h}&length=${item[0].l}&weight=${item[0].weight}&width=${item[0].w}`, {
+      'method': 'GET',
+      'headers': {
+        'Connection': 'keep-alive',
+        'Pragma': 'no-cache',
+        'Cache-Control': 'no-cache',
+        //'Origin': 'https://danhmuchanhchinh.gso.gov.vn',
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36 Edg/87.0.664.66',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+        'Sec-Fetch-Site': 'same-origin',
+        'Sec-Fetch-Mode': 'navigate',
+        'Sec-Fetch-User': '?1',
+        'Sec-Fetch-Dest': 'document',
+        'token': '09d8cf6a-c357-11eb-8ea7-7ad2d1e1ce1c',
+       // 'Referer': 'https://danhmuchanhchinh.gso.gov.vn/',
+        'Accept-Language': 'vi,en-US;q=0.9,en;q=0.8',
+       // 'Cookie': x.cookie,
+        'gzip': true,
     }
-    const index = all.findIndex(x => x.shopId == shop_id);
-    if(all[index].products.findIndex(x => x.pvdId == pvd_id) < 0){
+    }).then(res => res.json())
+    .then(data => {
+      const fee = data.data;
+      all[index].fee = fee.total  * item[0].amount;
       all[index].products.push({
         pvdId: pvd_id,
         name: item[0].name,
@@ -262,32 +290,39 @@ exports.getCheckout = async (req, res, next) => {
         price: item[0].price,
         color: item[0].color,
         size: item[0].size,
-        cover: item[0].cover
-      })
-    }
-  })
+        cover: item[0].cover,
+        fee: fee.total  * item[0].amount
+      });
+      return fee.total  * item[0].amount;
+    })
+    .catch(err => console.log(err));
+      }
+      
+    }))
 
   //console.log(util.inspect(all, {showHidden: false, depth: null}))
   req.session.order = '';
   req.session.order = all;
-
   res.render('./shop/cart/checkout', {
     cart: req.session.cart, 
     user: req.user,
     userInfo: req.session.Userinfo,
     book: addBook,
-    data: arrData
+    data: all,
+    shipFee: 0
   });
+  
 }
 
 exports.postCheckout = async (req, res, next) => {
   const amount = req.body.arrAmount.split(",");
   const pvd = req.body.arrPVD.split(",");
   const shop_id = req.body.arrShop.split(",");
+  const ship = req.body.arrShip.split(",");
   const userInfo = req.session.Userinfo;
   const paymentMethod = req.body.paymentmethod;
   const now = new Date();
-
+ 
   try {
       //update sản phẩm trong kho
       for (let pdvID of pvd) {
@@ -318,7 +353,7 @@ exports.postCheckout = async (req, res, next) => {
         const data = req.session.order;
         data.map(async item => {
           //save order 
-          const order_id = await db.insertOrder([purchase_id, item.shopId, 30000, now, 0]);
+          const order_id = await db.insertOrder([purchase_id, item.shopId, item.fee, now, 0]);
           item.products.map(async i => {
             //save orderdetail
             var variant = `${i.color} ${i.size}`;

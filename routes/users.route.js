@@ -22,5 +22,6 @@ router.get("/api/account/ward/binding", authController.isAuth, authController.is
 
 router.get("/purchase", authController.isAuth, authController.isUser, userController.getPurchase);
 router.get("/purchase/w-confirm", authController.isAuth, authController.isUser, userController.getWaitingConfirm);
+router.get("/purchase/order/:orderId", authController.isAuth, authController.isUser, userController.getOrderDetail);
 
 module.exports = router;

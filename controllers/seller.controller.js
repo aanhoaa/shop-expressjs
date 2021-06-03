@@ -432,18 +432,18 @@ exports.getEditProductVariant = async (req, res, next) => {
 }
 
 exports.postEditProductVariant = async (req, res, next) => {
-    const {productId, sku, price, stock} = req.body;
+    const {productId, sku, price, stock, width, length, height, weight} = req.body;
     var count = 0;
 
     for(let i = 0; i < productId.length; i++) {
         if (sku[i] == '--') sku[i] = '';
-        var dataUpdate = [sku[i], price[i], stock[i], productId[i]];
+        var dataUpdate = [sku[i], price[i], stock[i], width[i], length[i], height[i], weight[i], productId[i]];
         var updateDB = await db.updateProductVariant(dataUpdate);
         if (updateDB == true) count++;
     }
 
-    if (count == productId.length)res.send({ state: 'success' });
-    else res.send({ state: 'fail' });
+    if (count == productId.length)res.send({ state: 1 });
+    else res.send({ state: 0 });
 }
 
 exports.postShowProduct = async (req, res, next) => {
@@ -540,7 +540,6 @@ exports.getOrder = async (req, res, next) => {
         default:
             type = 5;
     }
-    console.log(type)
     
     const shopId = req.session.shopInfo.id;
     const arrData = await db.getOrderByShopId([shopId]);
@@ -557,6 +556,9 @@ exports.getOrder = async (req, res, next) => {
             orderId: order_id,
             status: item.status,
             username: item.username,
+            payment: item.payment_id,
+            province: item.province,
+            district: item.district,
             products: []
           })
         }
