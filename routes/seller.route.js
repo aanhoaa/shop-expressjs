@@ -29,5 +29,6 @@ router.post("/product/delete" , authController.isAuth, authController.isShop, se
 router.get("/order" , authController.isAuth, authController.isShop, sellerController.getOrder);
 router.get("/order/detail/:orderId" , authController.isAuth, authController.isShop, sellerController.getOrderDetail);
 router.put("/order/delivery" , authController.isAuth, authController.isShop, sellerController.putDeliveryOrder);
+router.put("/order/delivered" , authController.isAuth, authController.isShop, sellerController.putDeliveredOrder);
 
 module.exports = router;

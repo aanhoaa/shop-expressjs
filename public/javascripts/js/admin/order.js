@@ -75,8 +75,8 @@ $(document).ready(function(){
             showCancelButton: true,
             closeOnConfirm: false,
             animation: "slide-from-top",
-          },
-          function(inputValue){
+        },
+        function(inputValue){
             if (inputValue === null) return false;
             if (!inputValue) return false;
             
@@ -99,11 +99,42 @@ $(document).ready(function(){
                     alert('fail');
                 }
             });
-          });
+        });
     })
     
     //delivered
     $(document).on('click', '.order-delivered', function(e) {
-        
+        const orderId = $(this).attr('data-id');
+        swal({
+            title: "Xác nhận",
+            text: "Bạn xác nhận đơn hàng này đã nhận được tiền và đã giao?",
+            showCancelButton: true,
+            closeOnConfirm: false,
+            animation: "slide-from-top",
+        },
+        function(inputValue){
+            if (inputValue === null) return false;
+            if (!inputValue) return false;
+            
+            $.ajax({
+                url: `${window.location.origin}/seller/order/delivered`,
+                type: "put", 
+                dataType: "json",
+                data: {
+                    orderId: orderId
+                },
+                success:function(data){ 
+                    if (data.state == 1) {
+                        swal("Nice!", "Đơn hàng đang giao", "success");
+                        window.location.href = "/seller/order?type=delivered";
+                    }
+                    if (data.state == 0) alert('Lỗi hệ thống');
+                    if (data.state == -1) alert('Dữ liệu trống');
+                },
+                error: function(err) {
+                    alert('fail');
+                }
+            });
+        });
     })
 })

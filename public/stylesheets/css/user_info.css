@@ -1082,3 +1082,15 @@ html[xmlns] .clearfix {
 .order-list-pannel {
     margin-bottom: 20px;
 }
+.star-rating {
+    line-height:32px;
+    font-size:1.25em;
+  }
+  
+.star-rating .fa-star{color: yellow;}
+.rating {
+    margin-right: 60px;
+}  
+._3M1Mfz {
+    width: 70px;
+}

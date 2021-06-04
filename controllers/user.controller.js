@@ -537,7 +537,11 @@ exports.getWaitingConfirm = async (req, res, next) => {
           amount: item.amount,
           price: item.price,
           variant: getVariant,
-          cover: item.cover
+          cover: item.cover,
+          rating: item.rating,
+          p_id: item.p_id,
+          userRating: item.user_rating,
+          ratingId: item.user_rating_id
         })
       }
     }
@@ -589,6 +593,15 @@ exports.getOrderDetail = async (req, res, next) => {
       userInfo: userInfo, user: data, 
       cart: req.session.cart,
     });
+}
+
+exports.putUserRating = async (req, res, next) => {
+  const {rating, r_id} = req.body;
+  if (rating == '' || r_id == '') return res.send({state: 0});
+
+  const update = await db.updateUserRating([rating, r_id]);
+  if (update == true) return res.send({state: 1});
+  else res.send({state: -1});
 }
 
 //functional

@@ -60,3 +60,33 @@
     color: #757575;
     font-size: 12px;
 }
+.signal-order {
+    padding: 0;
+    text-align: center;
+}
+.signal-order p {
+    margin: 0;
+    margin-top: 5px;
+}
+.count-order {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 10px;
+}
+.bg-danger {
+    background-color: #dc3545;
+    color: #fff;
+}
+.bg-success {
+    background-color: #28a745;
+    color: #fff;
+}
+.bg-info {
+    color: #fff;
+    background-color: #ff7f3b;
+    padding: 0 10px;
+}
+.bg-warning {
+    color: #fff;
+    background-color: #8bc34a;
+}

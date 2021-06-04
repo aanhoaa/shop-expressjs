@@ -40,46 +40,35 @@
     </li>
   </ul>
 
-  <div class="contain-order clearfix">
-     <div class="col-sm-12 order-list-pannel">
-        <div class="col-sm-4">
-           Sản phẩm
-        </div>
-        <div class="col-sm-2">
-            Tổng hóa đơn
-         </div>
-         <div class="col-sm-2">
-            Trạng thái
-         </div>
-         <div class="col-sm-4">
-            Thao tác
-         </div>
-     </div>
-     <div class="col-sm-12 order-list-body">
-        <%if (data != '') {
-            data.forEach(item => {
+  <%if (data != '') {%>
+    <div class="count-order">
+        <%-count%> đơn hàng
+    </div>
+    <table id="dataTables-example" class="mdl-data-table" style="width:100%">
+        <thead>
+            <th>Đơn hàng</th>
+            <th>Người mua</th>
+            <th>Sản phẩm</th>
+            <th>Tổng hóa đơn</th>
+            <th>Trạng thái</th>
+            <th>Thao tác</th>
+        </thead>
+        <tbody>
+            <% data.forEach(item => {
                 var total = 0;
-        %>
-        <div class="order-item clearfix">
-
-            <div class="col-sm-12 shop-name">
-                <div class="_3xIZfd">
-                    <div class="_1tj6iU">
-                       <div class="_2zTpu5">
-                         <img src="/images/boy.png" alt="" width="20px" height="20px">
-                       </div>
-                       <div class="_2tDqUs"><%-item.username%></div>
+             %>
+             
+            <tr>
+                <td>
+                    <div>
+                        #<%-item.orderId%>
                     </div>
-                 </div>
-            </div>
-            
-            <div class="col-sm-12 order-item-list">
-                
-                <div class="col-sm-4">
-                    <%item.products.forEach(i => {%>
+                </td>
+                <td><%-item.username%></td>
+                <td><%item.products.forEach(i => {%>
                     <div class="order-product-list">
                         <div class="order-product-wrapper">
-                            <img src="https://cf.shopee.vn/file/5d8b03e776b91b21be6ba71bc4595c6a_tn" alt="" class="item-images">
+                            <img src="<%-i.cover%>" alt="" class="item-images">
                             <div class="item-product">
                                 <div class="ct-item-product-inner">
                                     <div class="product-info">
@@ -93,66 +82,104 @@
                         </div>
                     </div>
                     <%})%>
-                </div>
-                <div class="col-sm-2" style="padding: 0;">
-                   <%-VND(total)%>
+                </td>
+                <td> <%-VND(total)%>
                     <div class="payment-info">
                         <%-item.payment == 1 ? '(Thanh toán khi nhận hàng)':'(Thanh toán online)'%>
                     </div>
-                </div>
-                <div class="col-sm-2">
-                    <%if (item.status == -1) {%>
-                        Đã hủy
-                    <%}%>
-                   <%if (item.status == 0) {%>
-                        Chờ xác nhận
-                    <%}%>
-                    <%if (item.status == 1) {%>
-                        Đang chuẩn bị hàng
-                    <%}%>
-                    <%if (item.status == 2) {%>
-                        Đang giao
-                    <%}%>
-                </div>
-                <div class="col-sm-4">
-                    <%if (item.status == -1) {%>
-                        <a href="/seller/order/detail/<%-item.orderId%>">
-                            <button class="btn btn-default dropdown-toggle" type="button">Chi tiết</button>
-                        </a>
-                    <%}%>
-                    <%if (item.status == 0) {%>
-                        <a href="/seller/order/detail/<%-item.orderId%>">
-                            <button class="btn btn-default dropdown-toggle" type="button">Chi tiết</button>
-                        </a>
-                    <%}%>
-                    <%if (item.status == 1) {%>
-                        <div style="display: flex;">
-                            <div style="margin-right: 10px;">
-                                <button class="btn btn-default order-delivery" type="button" data-id="<%-item.orderId%>">Giao hàng</button>
+                </td>
+                <td>
+                    <div class="signal-order">
+                        <%if (item.status == -1) {%>
+                            <p class="bg-danger">Đã hủy</p>
+                        <%}%>
+                       <%if (item.status == 0) {%>
+                            <p class="bg-primary">Chờ xác nhận</p>
+                        <%}%>
+                        <%if (item.status == 1) {%>
+                            <p class="bg-info">Chuẩn bị hàng</p>
+                        <%}%>
+                        <%if (item.status == 2) {%>
+                            <p class="bg-warning">Đang giao</p>
+                        <%}%>
+                        <%if (item.status == 3) {%>
+                            <p class="bg-success">Đã giao</p>
+                        <%}%>
+                    </div>
+                </td>
+                <td>
+                    <div class="col-sm-4">
+                        <%if (item.status == -1) {%>
+                            <a href="/seller/order/detail/<%-item.orderId%>">
+                                <button class="btn btn-default dropdown-toggle" type="button">Chi tiết</button>
+                            </a>
+                        <%}%>
+                        <%if (item.status == 0) {%>
+                            <a href="/seller/order/detail/<%-item.orderId%>">
+                                <button class="btn btn-default dropdown-toggle" type="button">Chi tiết</button>
+                            </a>
+                        <%}%>
+                        <%if (item.status == 1) {%>
+                            <div style="display: flex;">
+                                <div style="margin-right: 10px;">
+                                    <button class="btn btn-default order-delivery" type="button" data-id="<%-item.orderId%>">Giao hàng</button>
+                                </div>
+                                <div class="dropdown">
+                                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                      Tùy chọn
+                                      <span class="caret"></span>
+                                    </button>
+                                   <ul class="dropdown-menu action-product" aria-labelledby="dropdownMenu1">
+                                      <li><a href="/seller/order/detail/<%-item.orderId%>">Chi tiết</a></li>
+                                      <li><a href="/seller/order/detail/<%-item.orderId%>">Hủy đơn hàng</a></li>
+                                    </ul>
+                                </div>
                             </div>
-                            <div class="dropdown">
-                                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                  Tùy chọn
-                                  <span class="caret"></span>
-                                </button>
-                               <ul class="dropdown-menu action-product" aria-labelledby="dropdownMenu1">
-                                  <li><a href="/seller/order/detail/<%-item.orderId%>">Chi tiết</a></li>
-                                  <li><a href="/seller/order/detail/<%-item.orderId%>">Hủy đơn hàng</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    <%}%>
-                    <%if (item.status == 2) {%>
-                        <button class="btn btn-default order-delivered" type="button">Đã nhận hàng</button>
-                    <%}%>    
-                </div>
-            </div>
-            
-        </div>
-        <%})}%>
-     </div>
-  </div>
-   
+                        <%}%>
+                        <%if (item.status == 2) {%>
+                            <button class="btn btn-default order-delivered" data-id="<%-item.orderId%>" type="button">Đã nhận hàng</button>
+                        <%}%>    
+                        <%if (item.status == 3) {%>
+                            <a href="/seller/order/detail/<%-item.orderId%>">
+                                <button class="btn btn-default dropdown-toggle" type="button">Chi tiết</button>
+                            </a>
+                        <%}%>
+                    </div>
+                </td>
+            </tr>
+            <%})%>
+        </tbody>
+    </table>
+  <%} else {%>
+    <div>
+        Không có đơn hàng nào
+    </div>
+  <%}%>
 </div>
-
+<script>
+    $(document).ready(function() {
+    // Cấu hình các nhãn phân trang
+    $('.mdl-data-table').dataTable( {
+        "ordering": false,
+        "language": {
+        "sProcessing":   "Đang xử lý...",
+        "sLengthMenu":   "Xem _MENU_ mục",
+        "sZeroRecords":  "Không tìm thấy dòng nào phù hợp",
+        "sInfo":         "Đang xem _START_ đến _END_ trong tổng số _TOTAL_ mục",
+        "sInfoEmpty":    "Đang xem 0 đến 0 trong tổng số 0 mục",
+        "sInfoFiltered": "(được lọc từ _MAX_ mục)",
+        "sInfoPostFix":  "",
+        "sSearch":       "Tìm:",
+        "sUrl":          "",
+        "oPaginate": {
+            "sFirst":    "Đầu",
+            "sPrevious": "Trước",
+            "sNext":     "Tiếp",
+            "sLast":     "Cuối"
+            }
+        }
+    } );
+    } ); 
+    
+  </script> 
 <% include ../../partials/footer_admin %>

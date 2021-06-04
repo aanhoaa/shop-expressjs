@@ -358,6 +358,7 @@ exports.postCheckout = async (req, res, next) => {
             //save orderdetail
             var variant = `${i.color} ${i.size}`;
             const orderDetail = await db.insertOrderDetail([order_id, i.pvdId, i.name, variant, i.amount, i.price, i.cover, 0]);
+            
           })
         })
       }

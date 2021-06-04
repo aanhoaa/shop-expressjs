@@ -13,12 +13,18 @@
         Lý do: <%-info.cancel%>
     </div>
     <%}%>
+    <%if (info.status == 3) {%>
+        <div>
+            Trạng thái: Đã giao 
+        </div>
+    <%}%>
     <div class="col-sm-12 user-info">
         <div>
             Thông tin khách hàng
         </div>
-        <label for="">ID đơn hàng</label>
+        
         <div class="order">
+            <label for="">ID đơn hàng: </label>
            #<%-address.order_id%>
         </div>
         <label for="">Địa chỉ nhận hàng</label>
@@ -86,22 +92,22 @@
         </table>
         <div style="display: flex; float: right; margin: 25px;">
             <div style="margin-right: 20px;">
-                <div>
+                <div class="order-detail">
                     Tổng tiền sản phẩm
                 </div>
-                <div>
+                <div class="order-detail">
                     Phí vận chuyển
                 </div>
-                <div>
+                <div class="order-detail">
                     Doanh thu
                 </div>
             </div>
             <div>
-                <div><%-VND(total)%></div>
-                <div>
+                <div class="order-detail"><%-VND(total)%></div>
+                <div class="order-detail">
                     <%-VND(info.shippingfee)%>
                  </div>
-                <div><%-VND(total + info.shippingfee)%></div>
+                 <div class="order-detail total"><%-VND(total + info.shippingfee)%></div>
             </div>
         </div>
     </div>  

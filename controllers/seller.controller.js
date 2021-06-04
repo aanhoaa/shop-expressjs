@@ -543,7 +543,7 @@ exports.getOrder = async (req, res, next) => {
     
     const shopId = req.session.shopInfo.id;
     const arrData = await db.getOrderByShopId([shopId]);
-  
+    var orderCount = 0;
     const all = [];
     arrData.map(item => {
      if (item.status == type || type == 5) {
@@ -551,7 +551,7 @@ exports.getOrder = async (req, res, next) => {
         const shop_id = item.shop_id;
         const pdv_id = item.pdv_id;
         if (all.findIndex(x => x.orderId == order_id) < 0){
-          
+            orderCount++;
           all.push({
             orderId: order_id,
             status: item.status,
@@ -577,6 +577,7 @@ exports.getOrder = async (req, res, next) => {
               getVariant.splice(1,1);
             }
           }
+
           all[index].products.push({
             pdv_id: pdv_id,
             name: item.name,
@@ -590,7 +591,7 @@ exports.getOrder = async (req, res, next) => {
      }
     })
   
-    res.render('./admin/order/order', {data: all, type: type});
+    res.render('./admin/order/order', {data: all, type: type, count: orderCount});
 }
 
 exports.getOrderDetail = async (req, res, next) => {
@@ -606,6 +607,20 @@ exports.putDeliveryOrder = async (req, res, next) => {
     const orderId = req.body.orderId;
     if (orderId) {
         const update = await db.updateOrder([2, orderId]);
+        if (update == true) return res.send({state: 1});
+        else return res.send({state: 0});
+    }
+    else res.send({state: -1});
+}
+
+exports.putDeliveredOrder = async (req, res, next) => {
+    const orderId = req.body.orderId;
+    if (orderId) {
+        const info = await db.getUserAndProductByOrderId([orderId]);
+        for(let i of info) {
+            const insertRating = await db.insertUserRating([i.user_id, i.id]); 
+        }
+        const update = await db.updateOrder([3, orderId]);
         if (update == true) return res.send({state: 1});
         else return res.send({state: 0});
     }

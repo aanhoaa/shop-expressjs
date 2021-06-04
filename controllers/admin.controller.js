@@ -268,7 +268,7 @@ exports.getOrder = async (req, res, next) => {
   }
 
   const arrData = await db.getOrderAll();
-
+  var countOrder = 0;
   const all = [];
   arrData.map(item => {
     if (item.status == type || type == 5) {
@@ -276,6 +276,7 @@ exports.getOrder = async (req, res, next) => {
       const shop_id = item.shop_id;
       const pdv_id = item.pdv_id;
       if (all.findIndex(x => x.orderId == order_id) < 0){
+        countOrder++;
         all.push({
           orderId: order_id,
           shopId: shop_id,
@@ -307,7 +308,7 @@ exports.getOrder = async (req, res, next) => {
           price: item.price,
           variant: getVariant,
           cover: item.cover,
-          fee: item.shippingfee
+          fee: item.shippingfee,
         })
       }
     }
@@ -315,7 +316,8 @@ exports.getOrder = async (req, res, next) => {
 
   res.render('./adminSys/order/order', {
     data: all,
-    type: type
+    type: type,
+    count: countOrder
   });
 }
 
@@ -324,8 +326,14 @@ exports.getOrderDetail = async (req, res, next) => {
   const address = await db.getOrderAddressById([orderId]);
   const products = await db.getOrderDetailByOrderId([orderId])
   const orderInfo = await db.getOrderById([orderId]);
+  const userInfo = await db.getUserByOrder([orderId]);
   
-  res.render('./adminSys/order/orderDetail', {info: orderInfo, address: address, products: products});
+  res.render('./adminSys/order/orderDetail', {
+    info: orderInfo, 
+    address: address, 
+    products: products,
+    userInfo: userInfo
+  });
 }
 
 exports.putConfirmOrder = async (req, res, next) => {

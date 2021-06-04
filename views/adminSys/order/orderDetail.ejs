@@ -13,12 +13,20 @@
         Lý do: <%-info.cancel%>
     </div>
     <%}%>
+    <%if (info.status == 3) {%>
+        <div>
+            Trạng thái: Đã giao 
+        </div>
+    <%}%>
     <div class="col-sm-12 user-info">
         <div>
             Thông tin khách hàng
         </div>
-        <label for="">ID đơn hàng</label>
+        <div>
+            Tài khoản: <%-userInfo.username%>
+        </div>
         <div class="order">
+            <label for="">ID đơn hàng:</label>
            #<%-address.order_id%>
         </div>
         <label for="">Địa chỉ nhận hàng</label>

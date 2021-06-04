@@ -570,7 +570,7 @@ function deleteUserIdentityDetail(value) {
 
 //user-purchase
 function getUserPurchaseWaiting(value) {
-    const sql = "select a.status, a.id as order_id, a.shippingfee as ship, a.status, c.name, c.variant, c.amount, c.price, a.shop_id , d.name as shop_name, c.cover, c.productvariant_id as pdv_id from orders as a inner join purchase as b on b.id = a.purchase_id inner join orderdetail as c on c.order_id = a.id inner join shop as d on d.id = a.shop_id where b.user_id = $1 order by a.created_at desc";
+    const sql = "select a.status, a.id as order_id, a.shippingfee as ship, a.status, c.name, c.variant, c.amount, c.price, a.shop_id , d.name as shop_name, c.cover, c.productvariant_id as pdv_id, f.rating, f.id as p_id, g.rating as user_rating, g.id as user_rating_id from orders as a inner join purchase as b on b.id = a.purchase_id inner join orderdetail as c on c.order_id = a.id inner join shop as d on d.id = a.shop_id inner join productvariant as e on e.id = c.productvariant_id inner join product as f on f.id = e.product_id inner join rating as g on g.user_id = b.user_id and g.product_id = e.product_id where b.user_id = $1 order by a.created_at desc";
 
     return db.excuteQuery(sql, value)
     .then(res => {
@@ -582,7 +582,7 @@ function getUserPurchaseWaiting(value) {
 }
 
 function getOrderAll(value) {
-    const sql = "select a.status, a.shippingfee, c.name, c.variant, c.amount, c.price, a.shop_id , d.name as shop_name, c.cover, c.productvariant_id as pdv_id, a.id as order_id from orders as a inner join purchase as b on b.id = a.purchase_id inner join orderdetail as c on c.order_id = a.id inner join shop as d on d.id = a.shop_id order by a.id";
+    const sql = "select a.status, a.shippingfee, c.name, c.variant, c.amount, c.price, a.shop_id , d.name as shop_name, c.cover, c.productvariant_id as pdv_id, a.id as order_id from orders as a inner join purchase as b on b.id = a.purchase_id inner join orderdetail as c on c.order_id = a.id inner join shop as d on d.id = a.shop_id order by a.id desc";
 
     return db.excuteQuery(sql, value)
     .then(res => {
@@ -593,8 +593,20 @@ function getOrderAll(value) {
     .catch(error => {return error;});
 }
 
+function getUserByOrder(value) {
+    const sql = "select a.username from users as a inner join purchase as b on b.user_id = a.id inner join orders as c on c.purchase_id = b.id where c.id = $1";
+
+    return db.excuteQuery(sql, value)
+    .then(res => {
+        if (res.rowCount > 0)
+            return res.rows[0];
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
 function getOrderByShopId(value) {
-    const sql = "select a.shop_id, a.shippingfee, d.username, b.name, b.price, b.amount, b.variant, b.cover, a.id as order_id, a.status, b.productvariant_id as pdv_id, c.payment_id, e.province, e.district from orders as a inner join orderdetail as b on b.order_id = a.id inner join purchase as c on c.id = a.purchase_id inner join users as d on d.id = c.user_id inner join addressorder as e on e.purchase_id = c.id where a.shop_id = $1 order by a.created_at desc";
+    const sql = "select a.shop_id, a.shippingfee, d.username, d.id as user_id, b.name, b.price, b.amount, b.variant, b.cover, a.id as order_id, a.status, b.productvariant_id as pdv_id, c.payment_id, e.province, e.district from orders as a inner join orderdetail as b on b.order_id = a.id inner join purchase as c on c.id = a.purchase_id inner join users as d on d.id = c.user_id inner join addressorder as e on e.purchase_id = c.id where a.shop_id = $1 order by a.created_at desc";
 
     return db.excuteQuery(sql, value)
     .then(res => {
@@ -755,6 +767,74 @@ function deleteCartByUser(value) {
         if (res.rowCount > 0)
             return true;
         return false;
+    })
+    .catch(error => {return error;});
+}
+
+
+function updateUserRating(values) {
+    const sql = "UPDATE rating SET rating = $1 WHERE id = $2 ";
+
+    return db.excuteQuery(sql, values)
+    .then(res => {
+        if (res.rowCount > 0)
+            return true;
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function updateRating(values) {
+    const sql = "UPDATE product SET rating = $1 WHERE id = $2";
+
+    return db.excuteQuery(sql, values)
+    .then(res => {
+        if (res.rowCount > 0)
+            return true;
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function getUserAndProductByOrderId(value) {
+    const sql = "select d.id, e.user_id from orders as a inner join orderdetail as b on b.order_id = a.id inner join productvariant as c on c.id = b.productvariant_id inner join product as d on d.id = c.product_id inner join purchase as e on e.id = a.purchase_id where a.id = $1";
+
+    return db.excuteQuery(sql, value)
+    .then(res => {
+        if (res.rowCount > 0)
+            return res.rows;
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function checkRatingExist(values) {
+    const sql = "SELECT * FROM rating WHERE user_id = $1 and product_id = $2";
+
+    return db.simpleQuery(sql, values)
+    .then(res => {
+        if (res.rowCount > 0)
+            return true;
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function insertUserRating(values) {
+    const sql = "INSERT INTO rating(user_id, product_id) VALUES($1, $2)";
+
+    return checkRatingExist(values)
+    .then(res => {
+        if (res == false) {
+            return db.excuteQuery(sql, values)
+            .then(res => {
+                if (res.rowCount > 0)
+                    return true;
+                return false;
+            })
+            .catch(error => {return error;});
+        }
+        else return false;
     })
     .catch(error => {return error;});
 }
@@ -1340,7 +1420,7 @@ function getProductByShop(value) {
 }
 
 function getProductByCateOne(value) {
-    const sql = "select  max(d.price) as max, min(d.price) as min, b.name, b.id as product_id, c.url -> 'cover' as url, e.name as shop from categorylevel1 as a inner join product as b on b.categorylevel1_id = a.id inner join images as c on c.product_id = b.id inner join productvariant as d on d.product_id = b.id inner join shop as e on e.id = b.shop_id where a.id = $1 and b.status = 1 GROUP BY b.name, b.id, c.url, e.name";
+    const sql = "select  max(d.price) as max, min(d.price) as min, b.name, b.id as product_id, c.url -> 'cover' as url, e.name as shop, avg(f.rating)::numeric(10,1) as rating from categorylevel1 as a inner join product as b on b.categorylevel1_id = a.id inner join images as c on c.product_id = b.id inner join productvariant as d on d.product_id = b.id inner join shop as e on e.id = b.shop_id inner join rating as f on f.product_id = b.id where a.id = $1 and b.status = 1 GROUP BY b.name, b.id, c.url, e.name";
 
     return db.simpleQuery(sql, value)
     .then( res =>  {
@@ -1778,7 +1858,8 @@ module.exports = {
     getUserPurchaseWaiting,
     getOrderAll,
     getOrderByShopId,
-
+    getUserByOrder,
+    
     checkExistCart,
     insertCart,
     getCartQuantity,
@@ -1786,6 +1867,11 @@ module.exports = {
     updateCart,
     deleteCart,
     deleteCartByUser,
+    checkRatingExist,
+    insertUserRating,
+    updateUserRating,
+    updateRating,
+    getUserAndProductByOrderId,
     getCart,
     getCartAll,
     getCartByUserIdAndPVId,

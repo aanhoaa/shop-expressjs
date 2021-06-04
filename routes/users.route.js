@@ -24,5 +24,7 @@ router.get("/api/account/ward/binding", authController.isAuth, authController.is
 router.get("/purchase", authController.isAuth, authController.isUser, userController.getWaitingConfirm);
 router.get("/purchase/order/:orderId", authController.isAuth, authController.isUser, userController.getOrderDetail);
 router.put("/purchase/cancel", authController.isAuth, authController.isUser, userController.putOrderCancel);
+router.put("/purchase/rating", authController.isAuth, authController.isUser, userController.putUserRating);
+
 
 module.exports = router;

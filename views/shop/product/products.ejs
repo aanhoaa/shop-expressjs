@@ -1,6 +1,9 @@
 <link rel="stylesheet" href="/stylesheets/css/first_page.css">
 <% include ../../partials/header %>
-
+<script src="/javascripts/js/shop.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<link rel="stylesheet" href="https://raw.githubusercontent.com/kartik-v/bootstrap-star-rating/master/css/star-rating.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 
 <div class="container-fluid container content_first_page">
     <div class="row" style="width: 1300px; margin: 0">
@@ -324,23 +327,16 @@
                                               </a>
                                            </div>
                                            <div class="related-product-rating col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                              <div data-rating="0" class="react-rater">
-                                                 <div>
-                                                    <div class="react-rater-star is-disabled "><i class="fa fa-star"></i></div>
+                                            <div class="rating">
+                                                <div class="star-rating">
+                                                   <span class="fa fa-star-o" data-rating="1"></span>
+                                                   <span class="fa fa-star-o" data-rating="2"></span>
+                                                   <span class="fa fa-star-o" data-rating="3"></span>
+                                                   <span class="fa fa-star-o" data-rating="4"></span>
+                                                   <span class="fa fa-star-o" data-rating="5"></span>
+                                                   <input type="hidden" name="whatever1" class="rating-value" value="<%-item.rating%>">
                                                  </div>
-                                                 <div>
-                                                    <div class="react-rater-star is-disabled "><i class="fa fa-star"></i></div>
-                                                 </div>
-                                                 <div>
-                                                    <div class="react-rater-star is-disabled "><i class="fa fa-star"></i></div>
-                                                 </div>
-                                                 <div>
-                                                    <div class="react-rater-star is-disabled "><i class="fa fa-star"></i></div>
-                                                 </div>
-                                                 <div>
-                                                    <div class="react-rater-star is-disabled "><i class="fa fa-star"></i></div>
-                                                 </div>
-                                              </div>
+                                             </div>
                                            </div>
                                         </div>
                                         <div class="related-product-price price-block">
@@ -368,5 +364,4 @@
             </div>
         </div>
     </div>
-
 <% include ../../partials/footer %>

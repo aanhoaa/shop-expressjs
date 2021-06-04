@@ -1,9 +1,12 @@
+
 <% include ../../partials/header %>
 <link rel="stylesheet" href="/stylesheets/css/user_info.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
-
 <script src="/javascripts/js/user/user-purchase.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<link rel="stylesheet" href="https://raw.githubusercontent.com/kartik-v/bootstrap-star-rating/master/css/star-rating.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 
 <div style="z-index: 10; margin-bottom: 280px; position: relative; background-color: rgb(240, 240, 240);">
     <div style="display: flex; justify-content: center; padding: 20px;">
@@ -72,13 +75,12 @@
                                  </div>
                               </div>
                               <div class="_2U1-Hf"></div>
-                              <a href="/user/purchase/order/<%-item.orderId%>">
+                             
                                  <div class="_2hnmH-">
                                 <%item.products.forEach(i => {%>
                                     <div class="FswepX">
                                        <div>
                                           <span class="_2WGfBS">
-                                             <div></div>
                                              <div class="_3Nbzgs">
                                                 <div class="_3-E1pP">
                                                    <div class="shopee-image__wrapper">
@@ -112,6 +114,16 @@
                                                    </div>
                                                 </div>
                                              </div>
+                                             <div class="rating">
+                                                <div class="star-rating">
+                                                   <span class="fa fa-star-o" data-rating="1"></span>
+                                                   <span class="fa fa-star-o" data-rating="2"></span>
+                                                   <span class="fa fa-star-o" data-rating="3"></span>
+                                                   <span class="fa fa-star-o" data-rating="4"></span>
+                                                   <span class="fa fa-star-o" data-rating="5"></span>
+                                                   <input type="hidden" name="whatever1" class="rating-value" value="<%-i.userRating%>" data-id="<%-i.ratingId%>">
+                                                 </div>
+                                             </div>
                                              <div class="_3M1Mfz">
                                                 <div><span class="_7zFjZr"><%-VND(i.price)%></span><span class="_2id4-o _3rNlHO"></span></div>
                                              </div>
@@ -122,7 +134,7 @@
                                     <%total+= (i.price)*i.amount%>
                                 <%})%>
                                  </div>
-                              </a>
+                             
                               <div class="g7tA3o"></div>
                            </div>
                         </div>
@@ -175,8 +187,12 @@
                               <%}%>
                               <%if (item.status == 3) {%>
                                  <div class="EoE22E">
-                                    <a href="/user/purchase/order/<%-item.orderId%>"><button disabled class="stardust-button stardust-button--primary _3iADE8">Chi tiết</button></a>
+                                    <a href="/user/purchase/order/<%-item.orderId%>"><button class="stardust-button stardust-button--primary _3iADE8">Chi tiết</button></a>
                                  </div>
+                                 <div class="EoE22E">
+                                    <button class="stardust-button stardust-button--primary _3iADE8 rating" data-toggle="modal" data-target="#exampleModal">Đánh giá sản phẩm</button>
+                                 </div>
+                                 
                               <%}%>
                               <%if (item.status == -1) {%>
                                  <div class="EoE22E">
@@ -201,4 +217,5 @@
     </div>
     </div>
 </div>
+
 <% include ../../partials/footer %>

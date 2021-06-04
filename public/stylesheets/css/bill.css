@@ -173,3 +173,11 @@ th {
   opacity: 0.5;
 }*/
 
+.order-detail {
+  margin: 10px;
+}
+.total {
+  font-weight: 600;
+  font-size: 25px;
+  color: #03a9f4;
+}
