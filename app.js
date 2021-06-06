@@ -11,6 +11,7 @@ const session = require('express-session');
 const passport = require('passport');
 const flash = require('connect-flash');
 const paypal = require('paypal-rest-sdk');
+var methodOverride = require('method-override');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users.route');
@@ -38,7 +39,7 @@ const urlConnect = process.env.DB;
 
 // pass passport for configuration
 require('./config/passport')(passport);
-
+app.use(methodOverride('_method'));
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');

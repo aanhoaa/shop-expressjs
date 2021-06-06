@@ -4,10 +4,13 @@ const shopController = require("../controllers/shop.controller");
 const authController = require("../controllers/auth.controller");
 
 
-router.get("/product/:cateOneId", shopController.getProducts);
-router.get("/product/detail/:productId", shopController.getProductDetail);
+router.get("/product/*.:cateOneId", shopController.getProducts);
+router.get("/cate/*.:cateTwoId", shopController.getProductsCateTwo);
+router.get("/detail/*.:productId", shopController.getProductDetail);
 router.get("/getproductinfo", shopController.getProductDetailInfo);
-router.post("/product/:productId", shopController.postProductBuy);
+router.post("/product/*.:productId", shopController.postProductBuy);
+
+router.get("/shop/*.:shopId", shopController.getShopProduct);
 
 router.get("/cart", authController.isAuth, authController.isUser, shopController.getCart);
 router.post("/cart/add_to_cart", authController.isAuth, authController.isUser, shopController.postAddToCart);

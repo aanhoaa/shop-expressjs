@@ -15,25 +15,24 @@
                             <div class="menu-block menu-has-child">
                                <h3 class="main-title">Nội Thất</h3>
                                <ul class="submenu menu">
-                               
-                                <%if (cate1 != ''){ cate1.forEach(item => {%>
-                                  <li class="filter-block <%-item.id == key?'cate-active':''%>">
+
+                                
+                                  <li class="filter-block">
                                      <strong class="menu-header ">
-                                         <a href="<%-give(item.name)%>.<%-item.id%>" class="title link <%-item.id == key?'active':''%>" >
-                                     <%-item.name%>
+                                         <a href="/product/" class="title link" >
+                                    
                                      </a></strong> 
 
                                     
-                                     <%if (cate2 != ''){ cate2.forEach(item2 => {
-                                         if (item2.categorylevel1_id == item.id) { %>
+                                    
                                             <ul class="menu-content-show">
-                                                <li><a href="/cate/<%-give(item2.name)%>.<%-item2.id%>" class="link "><%-item2.name%></a></li>
+                                                <li><a href="" class="link" ></a></li>
                                                 <br> 
                                              </ul>
-                                    <%}})}%>
+                                  
 
                                   </li>
-                                <%})}%>
+                              
                                </ul>
                             </div>
                          </div>
@@ -157,118 +156,20 @@
                                     </li>
                                 </ul>
                             </div>
-
                         </div>
                         <div class="filter_material">
-                            <h5 class="filter_material_text">Đánh giá</h5>
+                            <h5 class="filter_material_text">Chất liệu</h5>
                             <div class="filter_material_box">
-                                <ul class="filter_price_ul clearfix">
-                                    <li class="child_filter_brand_checkbox">
+                                <ul class="filter_material_ul clearfix">
+                                   
+                                    <li class="child_filter_brand_checkbox col-sm-6" style="float: left;">
                                         <div class="checkboxFive">
-                                            <input type="checkbox" value="9" id="cb_rating1" name="group_rating[]"/>
-                                            <label for="cb_rating1"></label>
+                                            <input type="checkbox" value="" id="cb_material" name="group_material[]"/>
+                                            <label for="cb_material"></label>
                                         </div>
-                                        <div class="">
-                                            <a class="brand_box">
-                                                <div class="related-product-rating">
-                                                    <div class="rating">
-                                                        <div class="star-rating" style="display: flex;">
-                                                           <span class="fa fa-star-o" data-rating="1"></span>
-                                                           <span class="fa fa-star-o" data-rating="2"></span>
-                                                           <span class="fa fa-star-o" data-rating="3"></span>
-                                                           <span class="fa fa-star-o" data-rating="4"></span>
-                                                           <span class="fa fa-star-o" data-rating="5"></span>
-                                                           <input type="hidden" name="whatever1" class="rating-value" value="5">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                        </div>
+                                        <a class="brand_box" href=""><span class="brand_label"></span></a>
                                     </li>
-                                    <li class="child_filter_brand_checkbox">
-                                        <div class="checkboxFive">
-                                            <input type="checkbox" value="10" id="cb_rating2" name="group_rating[]"/>
-                                            <label for="cb_rating2"></label>
-                                        </div>
-                                        <a class="brand_box">
-                                            <div class="related-product-rating">
-                                                <div class="rating">
-                                                    <div class="star-rating" style="display: flex;">
-                                                       <span class="fa fa-star-o" data-rating="1"></span>
-                                                       <span class="fa fa-star-o" data-rating="2"></span>
-                                                       <span class="fa fa-star-o" data-rating="3"></span>
-                                                       <span class="fa fa-star-o" data-rating="4"></span>
-                                                       <span class="fa fa-star-o" data-rating="5"></span>
-                                                       <input type="hidden" name="whatever1" class="rating-value" value="4">
-                                                       <span style="margin-left: 2px;"> <i class="fas fa-arrow-up"></i></span>
-                                                    </div>
-                                                </div> 
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li class="child_filter_brand_checkbox">
-                                        <div class="checkboxFive">
-                                            <input type="checkbox" value="11" id="cb_rating3" name="group_rating[]"/>
-                                            <label for="cb_rating3"></label>
-                                        </div>
-                                        <a class="brand_box">
-                                            <div class="related-product-rating">
-                                                <div class="rating">
-                                                    <div class="star-rating" style="display: flex;">
-                                                       <span class="fa fa-star-o" data-rating="1"></span>
-                                                       <span class="fa fa-star-o" data-rating="2"></span>
-                                                       <span class="fa fa-star-o" data-rating="3"></span>
-                                                       <span class="fa fa-star-o" data-rating="4"></span>
-                                                       <span class="fa fa-star-o" data-rating="5"></span>
-                                                       <input type="hidden" name="whatever1" class="rating-value" value="3">
-                                                       <span style="margin-left: 2px;"> <i class="fas fa-arrow-up"></i></span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li class="child_filter_brand_checkbox">
-                                        <div class="checkboxFive">
-                                            <input type="checkbox" value="12" id="cb_rating4" name="group_rating[]"/>
-                                            <label for="cb_rating4"></label>
-                                        </div>
-                                        <a class="brand_box">
-                                            <div class="related-product-rating">
-                                                <div class="rating">
-                                                    <div class="star-rating" style="display: flex;">
-                                                       <span class="fa fa-star-o" data-rating="1"></span>
-                                                       <span class="fa fa-star-o" data-rating="2"></span>
-                                                       <span class="fa fa-star-o" data-rating="3"></span>
-                                                       <span class="fa fa-star-o" data-rating="4"></span>
-                                                       <span class="fa fa-star-o" data-rating="5"></span>
-                                                       <input type="hidden" name="whatever1" class="rating-value" value="2">
-                                                       <span style="margin-left: 2px;"> <i class="fas fa-arrow-up"></i></span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li class="child_filter_brand_checkbox">
-                                        <div class="checkboxFive">
-                                            <input type="checkbox" value="5" id="cb_rating5" name="group_rating[]"/>
-                                            <label for="cb_rating5"></label>
-                                        </div>
-                                        <a class="brand_box">
-                                            <div class="related-product-rating">
-                                                <div class="rating">
-                                                    <div class="star-rating" style="display: flex;">
-                                                       <span class="fa fa-star-o" data-rating="1"></span>
-                                                       <span class="fa fa-star-o" data-rating="2"></span>
-                                                       <span class="fa fa-star-o" data-rating="3"></span>
-                                                       <span class="fa fa-star-o" data-rating="4"></span>
-                                                       <span class="fa fa-star-o" data-rating="5"></span>
-                                                       <input type="hidden" name="whatever1" class="rating-value" value="1">
-                                                       <span style="margin-left: 2px;"> <i class="fas fa-arrow-up"></i></span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </li>
+                                  
                                 </ul>
                             </div>
                         </div>
@@ -276,33 +177,40 @@
                             <h5 class="filter_price_text">Khoảng giá</h5>
                             <div class="filter_price_box">
                                 <ul class="filter_price_ul clearfix">
+                                    <!-- <li class="child_filter_brand_checkbox">
+                                        <div class="checkboxFive">
+                                            <input type="checkbox" value="0" id="cb_price_all" name="group_price[]" checked="checked"/>
+                                            <label for="cb_price_all"></label>
+                                        </div>
+                                        <a class="price_box" href=""><span class="price">Tất cả</span></a>
+                                    </li> -->
                                     <li class="child_filter_brand_checkbox">
                                         <div class="checkboxFive">
-                                            <input type="checkbox" value="5" id="cb_price1" name="group_price[]"/>
+                                            <input type="checkbox" value="1" id="cb_price1" name="group_price[]"/>
                                             <label for="cb_price1"></label>
                                         </div>
-                                        <a class="price_box"><span class="price">Dưới 300,000đ</span></a>
+                                        <a class="price_box" href=""><span class="price">Dưới 300,000VNĐ</span></a>
                                     </li>
                                     <li class="child_filter_brand_checkbox">
                                         <div class="checkboxFive">
-                                            <input type="checkbox" value="6" id="cb_price2" name="group_price[]"/>
+                                            <input type="checkbox" value="2" id="cb_price2" name="group_price[]"/>
                                             <label for="cb_price2"></label>
                                         </div>
-                                        <a class="price_box" ><span class="300001">Từ 300,000đ - 1,000,000đ</span></a>
+                                        <a class="price_box" href=""><span class="300001">Từ 300,000VNĐ - 500,000VNĐ</span></a>
                                     </li>
                                     <li class="child_filter_brand_checkbox">
                                         <div class="checkboxFive">
-                                            <input type="checkbox" value="7" id="cb_price3" name="group_price[]"/>
+                                            <input type="checkbox" value="3" id="cb_price3" name="group_price[]"/>
                                             <label for="cb_price3"></label>
                                         </div>
-                                        <a class="price_box"><span class="price">Từ 1,000,000đ - 5,000,000đ</span></a>
+                                        <a class="price_box" href=""><span class="price">Từ 500,000VNĐ - 1,000,000VNĐ</span></a>
                                     </li>
                                     <li class="child_filter_brand_checkbox">
                                         <div class="checkboxFive">
-                                            <input type="checkbox" value="8" id="cb_price4" name="group_price[]"/>
+                                            <input type="checkbox" value="4" id="cb_price4" name="group_price[]"/>
                                             <label for="cb_price4"></label>
                                         </div>
-                                        <a class="price_box"><span class="price">Trên 5,000,000đ</span></a>
+                                        <a class="price_box" href=""><span class="price">Lớn hơn 1,000,000VNĐ</span></a>
                                     </li>
                                 </ul>
                             </div>
@@ -316,7 +224,7 @@
                             
                             <div class="block_product_special" style="margin: 10px; margin-top: 20px; display: flex;">
                                 <div class="col-sm-5" style="padding: 0;">
-                                    <img class="special_details_image" src="" style="width: 100%;" alt="">
+                                    <img class="special_details_image" src="/uploads/" style="width: 100%;" alt="">
                                 </div>
                                 <div class="col-sm-7 special_details_info">
                                     <h6 class="special_details_name" style="color: #504d4d; font-family: Lora; font-size: 17px;"><h6>
@@ -337,16 +245,16 @@
                                 <a href=""><img src="https://img.icons8.com/ios/50/000000/squared-menu-filled.png"></a>
                             </div>
                             <div class="div_number_products">
-                                <input type="hidden" id="category_id" value="<%-key%>">
+                                <input type="hidden" id="category_id" value="">
                                 <h5 style="float: left;">Tìm thấy <span id="count_product"></span> sản phẩm</h5>
                             </div>
                             <div class="custom_select_box">
                                 <select class="custom-select" id="SortBy" style="float: right;">
                                     <option selected disabled="">Open this select menu</option>
-                                    <option value="1">Giá từ thấp tới cao</option>
-                                    <option value="2">Giá từ cao tới thấp</option>
-                                    <option value="3">Mới nhất</option>
-                                    <option value="4">Cũ nhất</option>
+                                    <option value="price_ascending">Giá từ thấp tới cao</option>
+                                    <option value="price_descending">Giá từ cao tới thấp</option>
+                                    <option value="created_descending">Mới nhất</option>
+                                    <option value="created_ascending">Cũ nhất</option>
                                 </select>
                                 <label class="lable-sort-by" style="float: right;">Sort By</label>
                             </div>
@@ -360,13 +268,7 @@
                             <div class="khoi col-sm-3">
                                 <div class="card" style="border-color: white; line-height: 0.5;">
                                     <div class="khoi_image" style="position: relative;">
-                                        <img class="card-img-top hinhsanpham" src="<%-item.url%>" alt="Card image cap">
-                                       
-                                        <!--<img src="{!! asset('sale.png') !!}" alt="" style="position: absolute; top: 7px; left: -5px; width: 61px; height: 30px;"> 
-                                        <label style="position: absolute; top: 16px; left: 10px; font-weight: 501; color: #fff">
-                                        </label>-->
-                                       
-                                        
+                                        <img class="card-img-top hinhsanpham" src="<%-item.url%>" alt="Card image cap">                         
                                     </div>
                                     <ul class="social" id="social">
                                         <li><a href="/detail/<%-give(item.name)%>.<%-item.product_id%>" data-tip="Quick View"><i class="fa fa-eye"></i></a></li>
@@ -418,21 +320,8 @@
             </div>
         </div>
     </div>
-<script>
-    $(document).ready(function(){
-    var $star_rating = $('.star-rating .fa');
-
-    var SetRatingStar = function(event) {
-    return $star_rating.each(function(event) {
-        if (parseInt($(this).siblings('input.rating-value').val()) >= parseInt($(this).data('rating'))) {
-            return $(this).removeClass('fa-star-o').addClass('fa-star');
-        } else {
-            return $(this).removeClass('fa-star').addClass('fa-star-o');
-        }
-    });
-    };
-
-    SetRatingStar();
-})
-</script>
+    <script>
+        $('.cate2-active').parent().addClass('cate-active');
+        $('.cate2-active').parent().find('.menu-header').find('a').addClass('active');
+    </script>
 <% include ../../partials/footer %>

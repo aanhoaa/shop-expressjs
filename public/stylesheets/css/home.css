@@ -600,3 +600,6 @@ html[xmlns] .clearfix {
 	font-weight: bold;
 	font-size: 82%;
 }
+.custom_select_box {
+	margin-left: auto;
+}

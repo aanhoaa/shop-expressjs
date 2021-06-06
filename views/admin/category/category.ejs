@@ -1,6 +1,10 @@
 
 <% include ../../partials/header_admin %>
-
+<% if (type != -1 && type != -2) {%>
+    <div>
+       <a href="/admin/category">Back</a>
+    </div>
+<%}%>
 <div style="margin-left: 5%;">
     <div class="col-lg-12">
         <h1 class="page-header">Category
@@ -10,40 +14,101 @@
             </div>
         </h1>
     </div>
-   
+    <% if (type != 0 && type != -1) {%>
+        <div>
+            Danh mục lớn: <%-data[0].cate1_name%>
+        </div>
+    <%}%>
     <!-- /.col-lg-12 -->
+    <% if (data) {%>
     <table id="dataTables-example" class="mdl-data-table" style="width:100%">
         <thead>
             <tr align="center">
-                <th>ID</th>
+                <th>STT</th>
                 <th>Mã danh mục</th>
                 <th>Tên danh mục</th>
-                <th>Category Parent</th>
+                <th>Cấp danh mục</th>
                 <th>Mô tả</th>
-                <th>Action</th>
+                <th>Thao tác</th>
             </tr>
         </thead>
         <tbody>
            
-           
+           <%
+               var i = 0;
+               data.forEach(item => { i++;
+            %>
             <tr class="odd gradeX" align="center">
-                <td></td>
-                <td></td>
-                <td></td>
+                <td><%-i%></td>
+                <td><%-item.id%></td>
                 <td>
-                  
+                    <%-item.name%>
+                </td>
+                <td>
+                    <%-(type != 0 && type != -1 && type != -2)?2 : 1 %>
                 </td>
                 <td></td>
                 <td class="center">
-                    <div class="btn-group">
-                        <a href="/admin/category/edit/" class="btn btn-warning"><i class="fas fa-edit"></i> Edit</a>
-                        <a href="/admin/category/delete/" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Delete</a>
+                    <div class="dropdown">
+                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                          Tùy chọn
+                          <span class="caret"></span>
+                        </button>
+                       <ul class="dropdown-menu action-product" aria-labelledby="dropdownMenu1">
+                          <li><a data-toggle="modal" data-target="#exampleModal" class="edit-name" data-name="<%-item.name%>" data-id="<%-item.id%>" data-des="<%-item.description%>" data-type="<%-(type != 0 && type != -1 && type != -2)?2 : 1 %>">Chỉnh sửa</a></li>
+                          
+                          <%if (type == 0 || type == -1 || type == -2) {%>
+                            <li><a href="?target=<%-item.id%>">Xem danh mục con</a></li>
+                          <%}%>
+                        </ul>
                     </div>
                 </td>
             </tr>
-           
+           <%})%>
         </tbody>
     </table>
+    <%} else {%>
+        <div>
+            Danh mục trống
+        </div>
+    <%}%>
 </div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Chỉnh sửa tên danh mục</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form action="/admin/category/edit?_method=put" method="POST">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="">Tên danh mục</label>
+                    <input type="text"
+                    class="form-control" name="cate_name" id="cate_name" placeholder="Tên danh mục">
+                    <input type="text"
+                    class="form-control" name="cate_id" id="cate_id" placeholder="" hidden>
+                    <input type="text"
+                    class="form-control" name="cate_type" id="cate_type" placeholder="" hidden>
+                </div>
+                <div class="form-group">
+                    <label for="">Mô tả</label>
+                    <input type="text"
+                    class="form-control" name="cate_des" id="cate_des" placeholder="Mô tả">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Save changes</button>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"> </script>
+<script src="/javascripts/js/admin/category.js"></script>
 
 <% include ../../partials/footer_admin %>

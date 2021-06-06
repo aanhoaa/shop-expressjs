@@ -227,8 +227,9 @@
  .content_first_page .filter_product .filter_material .filter_material_box .child_filter_brand_checkbox .checkboxFive
  {
  	float: left;
- 	top: 4px;
- }
+	top: 1px;
+	height: 17.5px;
+}
  .content_first_page .filter_product .filter_price .filter_price_box .child_filter_brand_checkbox .checkboxFive
  {
  	float: left;
@@ -642,5 +643,22 @@
   
 .star-rating .fa-star{color: yellow;}
 .rating {
-    margin-right: 60px;
+    margin-right: 20px;
+}
+
+/*category*/
+.submenu li a, .submenu ul li a {
+	color: #000;
+}
+.active {
+	font-weight: 600;
+    text-decoration: underline;
+}
+.menu-content-show {
+	opacity: 0;
+	height: 0;
+}
+.cate-active .menu-content-show{
+	opacity: 1;
+	height: auto;
 }

@@ -182,6 +182,10 @@
              VND = function(num) {
                 return num.toLocaleString('it-IT', {style : 'currency', currency : 'VND'});
             }
+
+             give = function(data) {
+                return data.split(' ').join('-');
+            }
         %>
     </header>  
     <script>

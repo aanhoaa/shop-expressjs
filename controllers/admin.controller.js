@@ -187,9 +187,26 @@ exports.postViewProduct = async (req, res, next) => {
   else res.status(500).json();
 }      
 
-exports.getCategory = (req, res, next) => {
+exports.getCategory = async (req, res, next) => {
+  var target = req.query.target;
 
-  res.render('./admin/category/category');
+  if (target) {
+    var data = await db.getCategoryLevelTwo([target]);
+    if (data == false) {
+      target = 0;
+    }
+    if (data == -1) {
+      target = -1;
+    }
+  }
+  else 
+    {
+      var data = await db.getCategoryLevelOne();
+      target = -2;
+    }
+  
+  if (target == -1) var data = await db.getCategoryLevelOne();
+  res.render('./admin/category/category', {data: data, type: target});
 }
 
 exports.getAddCategory = async (req, res, next) => {
@@ -234,6 +251,16 @@ exports.postAddCategory = async (req, res, next) => {
     return res.send({ state: 1});
 
   }
+}
+
+exports.putEditNameCategory = async (req, res, next) => {
+  const {cate_id, cate_name, cate_des, cate_type} = req.body;
+
+  if (cate_name == '' || cate_id == '') res.status(500).json({staus: 'Dữ liệu trống'});
+  const update = await db.updateCategorylevel1(cate_type, [cate_id, cate_name, cate_des]);
+
+  if (update == true) return res.redirect('/admin/category');
+  else res.status(500).json({staus: 'Lỗi hệ thống'});
 }
 
 exports.postEditStatusProduct = async (req, res, next) => {
@@ -363,8 +390,41 @@ exports.putCancelOrder = async (req, res, next) => {
   }
 
   res.send({state: 1});
-
 }
+
+exports.getProfileShop = async (req, res, next) => {
+
+  res.render('./adminSys/profile/profile-shop');
+}
+
+exports.getProfileUser = async (req, res, next) => {
+  try {
+    const data = await db.getUser(); 
+    res.render('./adminSys/profile/profile-user', {data: data});  
+  }
+  catch (error) {
+    console.log(error)
+  }
+}
+
+exports.deleteUser = async (req, res, next) => {
+  const userId = req.body.userId;
+  if (userId != '') {
+    try {
+        const deleteUser = await db.deleteUser([userId]);
+        if (deleteUser == true) {
+          return res.send({state: 1});
+        }
+        else res.send({state: 0});
+    }
+    catch (error) {
+      console.log(error)
+    }
+  }
+  else return res.send({state: -1});
+}
+
+
 
 function getdate(tt) {
   var date = new Date(tt);

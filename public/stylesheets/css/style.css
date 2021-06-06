@@ -591,3 +591,6 @@ input[type=checkbox]:checked + label:before {
   font-size: 13px;
   line-height: normal;
 }
+.child_filter_brand_checkbox {
+  margin-bottom: 10px;
+}

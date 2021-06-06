@@ -24,7 +24,7 @@ exports.getProducts = async (req, res, next) => {
   const cate1 = await db.getCategoryLevelOne();
   const cate2 = await db.getCategoryLevelTwoAll();
 
-  const product = await db.getProductByCateOne([cateOneID]);
+  const product = await db.getProductByCateOne(1, 1, [cateOneID]);
   res.render("./shop/product/products", {
     title: "Trang chủ",
     userInfo: req.session.Userinfo,
@@ -32,16 +32,35 @@ exports.getProducts = async (req, res, next) => {
     cate1: cate1,
     cate2: cate2,
     product: product,
+    key: cateOneID
+  });
+}
+
+exports.getProductsCateTwo = async (req, res, next) => {
+  const cateTwoID = req.params.cateTwoId;
+  const cate1 = await db.getCategoryLevelOne();
+  const cate2 = await db.getCategoryLevelTwoAll();
+
+  const product = await db.getProductByCateTwo(1, 1, [cateTwoID]);
+  res.render("./shop/product/cate", {
+    title: "Trang chủ",
+    userInfo: req.session.Userinfo,
+    cart: req.session.cart,
+    cate1: cate1,
+    cate2: cate2,
+    product: product,
+    key: cateTwoID
   });
 }
 
 exports.getProductDetail = async (req, res, next) => {
   const productId = req.params.productId;
   const data = await db.getProductAllById([productId]);
+  const shop = await db.getShopByProductId([productId]);
   var onlyOne = 1;
   var min = 0;
   var max = 0;
-  
+ 
   if (data == false) return res.redirect('/');
   else {
     if (data.length == 1) {
@@ -55,7 +74,7 @@ exports.getProductDetail = async (req, res, next) => {
       if (i.max < min)
         min = i.max;
     })
-    console.log(min, max)
+    
     res.render("./shop/product/productDetail", {
       user: req.user,
       userInfo: req.session.Userinfo,
@@ -63,9 +82,24 @@ exports.getProductDetail = async (req, res, next) => {
       data: data,
       only: onlyOne,
       min: min,
-      max: max
+      max: max,
+      shop: shop
     })
   }
+}
+
+exports.getShopProduct = async (req, res, next) => {
+  const shopId = req.params.shopId;
+  const data = await db.getShopProductById([shopId]); 
+  const arrData = await db.getCateShop([shopId]);
+  
+  console.log(arrData)
+  res.render("./shop/product/shop", {
+    title: "Trang chủ",
+    userInfo: req.session.Userinfo,
+    cart: req.session.cart,
+    product: data,
+  });
 }
 
 exports.getProductDetailInfo = async (req, res, next) => {
@@ -435,287 +469,41 @@ exports.postProductBuy = (req, res, next) => {
   res.redirect('/shop/cart');
 }
 
-exports.postProductFilter = (req, res, next) => {
-  var listProduct = [];
-  var listBrand = [];
-  var listMaterial = [];
-  var listCate = [];
-
-  Brand.find().then((data) => {
-    data.forEach((item) => {
-      listBrand.push({id: item._id, name: item.name})
-    })
+exports.postProductFilter = async (req, res, next) => {
+  const cateOneID = req.body.cateOneId;
+  const optionSelect = req.body.optionSelect;
+  const group_rating = req.body.group_rating;
+  const cate1 = await db.getCategoryLevelOne();
+  const cate2 = await db.getCategoryLevelTwoAll();
+  const product = await db.getProductByCateOne(optionSelect, group_rating, [cateOneID]);
+ 
+  res.render("./shop/product/products", {
+    title: "Trang chủ",
+    userInfo: req.session.Userinfo,
+    cart: req.session.cart,
+    cate1: cate1,
+    cate2: cate2,
+    product: product,
+    key: cateOneID
   });
-
-  Material.find().then((data) => {
-    data.forEach((item) => {
-      listMaterial.push({id: item._id, name: item.name})
-    })
-  });
-
-  Category.find().then((data) => {
-    data.forEach((item) => {
-      var listChild = [];
-        item.childCateName.forEach((child) => {
-          listChild.push({name: child.childName})
-        })
-        listCate.push({name: item.name, list: listChild})
-    })
-  });
-
-  var 
-      brand = req.body.group_brand,
-      color = req.body.group_color, 
-      size = req.body.group_size, 
-      material = req.body.group_material,
-      price = req.body.group_price,
-      category = req.body.category_id;
-  console.log(price)
-  Product.find()
-    .limit(8)
-    .then(products => {
-      Product.find()
-        .limit(8)
-        .sort({"viewCounts": -1})
-        .then(products2 => {
-      
-            products2.forEach((prod) => {
-                if (prod.price > 0)
-               {
-                if (brand !== undefined)
-                {
-                  if (prod.brand === brand)
-                      listProduct.push(prod);
-                }
-                else
-                {
-                  listProduct.push(prod);
-                }
-                if (material !== undefined)
-                {
-                  for(let i =0; i < listProduct.length; i++)
-                  {
-                    if (listProduct[i].materials !== material)
-                    {
-                      if (i == 0)
-                      {
-                        listProduct.shift();
-                      }
-                      else
-                      {
-                        listProduct.splice(1, i);
-                      }
-                    }
-                  }
-               }
-               if (color !== undefined)
-               {
-                  for(let i = 0; i < listProduct.length; i++)
-                  {
-                    var count = listProduct[i].subId.size[0].color.length;
-                    listProduct[i].subId.size[0].color.forEach((subColor) => {
-                      if (subColor.name !== color)
-                      {
-                        count --;
-                      }
-
-                      if (count === 0)
-                      {
-                        if (i == 0)
-                        {
-                          listProduct.shift();
-                        }
-                        else
-                        {
-                          listProduct.splice(1, i);
-                        }
-                      }
-                    })
-                  }
-                }
-                if (size !== undefined)
-                {
-                  for(let i = 0; i < listProduct.length; i++)
-                  {
-                    var count = listProduct[i].subId.size.length;
-                    listProduct[i].subId.size.forEach((subSize) => {
-                      if (subSize.name !== size)
-                      {
-                        count --;
-                      }
-                      if (count === 0)
-                      {
-                        if (i == 0)
-                        {
-                          listProduct.shift();
-                        }
-                        else
-                        {
-                          listProduct.splice(1, i);
-                        }
-                      }
-                    })
-                  }
-                }
-
-                if (price !== undefined)
-                {
-                  for(let i = 0; i < listProduct.length; i++)
-                  {
-                    var count = listProduct[i].subId.size.length;
-                    listProduct[i].subId.size.forEach((subSize) => {
-                      switch (price) 
-                      {
-                        case '1':
-                        {
-                          if (subSize.price > 3000000) count --;
-                          if (count === 0)
-                          {
-                            if (i == 0)
-                            {
-                              listProduct.shift();
-                            }
-                            else
-                            {
-                              listProduct.splice(1, i);
-                            }
-                          }
-                          break;
-                        }
-                        case '2':
-                        {
-                          console.log('here')
-                          if (subSize.price < 3000000 || subSize.price > 500000) count --;
-                          if (count === 0)
-                          {
-                            if (i == 0)
-                            {
-                              listProduct.shift();
-                            }
-                            else
-                            {
-                              listProduct.splice(1, i);
-                            }
-                          }
-                          break;
-                        }
-                        case '3':
-                        {
-                          if (subSize.price < 500000 || subSize.price > 1000000) count --;
-                          if (count === 0)
-                          {
-                            if (i == 0)
-                            {
-                              listProduct.shift();
-                            }
-                            else
-                            {
-                              listProduct.splice(1, i);
-                            }
-                          }
-                          break;
-                        }
-                        case '4':
-                        {
-                          if (subSize.price < 10000000) count --;
-                          if (count === 0)
-                          {
-                            if (i == 0)
-                            {
-                              listProduct.shift();
-                            }
-                            else
-                            {
-                              listProduct.splice(1, i);
-                            }
-                          }
-                          break;
-                        }
-                      }
-                    })
-                  }
-                }
-
-               }
-            })
-
-            res.render("./shop/product/products", {
-              title: "Trang chủ",
-              user: req.user,
-              trendings: products,
-              products: listProduct,
-              cart: req.session.cart,
-              listBrand: listBrand,
-              listMaterial: listMaterial
-            });
-        });
-    })
-    .catch(err => {
-      console.log(err);
-    });
 }
 
-exports.postProductSortBy = (req, res, next) => {
-  var listProduct = [];  
-  var listBrand = [];
-  var listMaterial = [];
-  var listCate = [];
-  var option = req.body.optionSelect;
-  var sortby = req.body.sortby;
-  var sort = {};
-  sort[option] = sortby;
-
-  Brand.find().then((data) => {
-    data.forEach((item) => {
-      listBrand.push({id: item._id, name: item.name})
-    })
+exports.postProductSortBy = async (req, res, next) => {
+  const cateOneID = req.body.cateOneId;
+  const optionSelect = req.body.optionSelect;
+  const cate1 = await db.getCategoryLevelOne();
+  const cate2 = await db.getCategoryLevelTwoAll();
+  const product = await db.getProductByCateOne(optionSelect, 1, [cateOneID]);
+ 
+  res.render("./shop/product/products", {
+    title: "Trang chủ",
+    userInfo: req.session.Userinfo,
+    cart: req.session.cart,
+    cate1: cate1,
+    cate2: cate2,
+    product: product,
+    key: cateOneID
   });
-
-  Material.find().then((data) => {
-    data.forEach((item) => {
-      listMaterial.push({id: item._id, name: item.name})
-    })
-  });
-
-  Category.find().then((data) => {
-    data.forEach((item) => {
-      var listChild = [];
-        item.childCateName.forEach((child) => {
-          listChild.push({id: child._id, name: child.childName})
-        })
-        listCate.push({name: item.name, id: item._id, list: listChild})
-    })
-  });
-
-    Product.find()
-    .limit(8)
-    .then(products => {
-      Product.find()
-        .limit(8)
-        .sort(sort)
-        .then(products2 => {
-      
-            products2.forEach((prod) => {
-                if (prod.price > 0)
-                {
-                  listProduct.push(prod);
-                }
-            })
-           
-            res.render("./shop/product/products", {
-              title: "Trang chủ",
-              user: req.user,
-              trendings: products,
-              products: listProduct,
-              cart: req.session.cart,
-              listBrand: listBrand,
-              listMaterial: listMaterial
-            });
-        });
-    })
-    .catch(err => {
-      console.log(err);
-    });
 }
 
 exports.postProductCateFilter = (req, res, next) => {

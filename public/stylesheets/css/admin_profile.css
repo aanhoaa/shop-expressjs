@@ -1,0 +1,13 @@
+.content {
+    background: #fff;
+    margin-top: 40px;
+}
+.content .title {
+    margin: 20px;
+}
+.list-category {
+    margin: 20px;
+}
+.delete-user {
+    cursor: pointer;
+}

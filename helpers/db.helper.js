@@ -74,14 +74,15 @@ function getList(table, value) {
     });
 }
 
-function nameUpdate(table, values) {
+function nameUpdate(type, values) {
+    var table = type == 1 ? 'categorylevel1' : 'categorylevel2';
     const sql = `UPDATE ${table} SET name= $2, description = $3 WHERE id = $1`;
 
     return db.excuteQuery(sql, values)
     .then(res => {
         if (res.rowCount > 0)
-            return 'update success!!!';
-        return 'false';
+            return true;
+        return false;
     })
     .catch(error => {return error;});
 }
@@ -228,6 +229,18 @@ function updateUserIsverified(values) {
     .catch(error => {return error;});
 } //1-id -2 value of veri
 
+function getUser(value) {
+    const sql = "SELECT * FROM users";
+
+    return db.simpleQuery(sql, value)
+    .then(res => {
+        if (res.rowCount > 0)
+        return res.rows;
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
 function getUserInfo(table, value) {
     switch (table) {
         case 1: {
@@ -302,27 +315,16 @@ function updateUserPasswordByEmail(values) {
 }
 
 
-function userDelete(value) {
-    const sql = 'DELETE FROM sinhvien WHERE id = $1';
+function deleteUser(value) {
+    const sql = 'DELETE FROM users WHERE id = $1';
 
-    return checkUserById(value).
-    then(data => {
-        if (data) {
-            return db.excuteQuery(sql, value)
-            .then(res => {
-                if (res.rowCount > 0)
-                    return 'user deleted';
-                return 'false';
-            })
-            .catch(error => {return error;});
-        }
-        else {
-            return ({
-               // type: TYPE,
-                message: "user not exist"
-            })
-        }
+    return db.excuteQuery(sql, value)
+    .then(res => {
+        if (res.rowCount > 0)
+            return true;
+        return false;
     })
+    .catch(error => {return error;});
 }
 
 function updateUserVerify(value) {
@@ -917,8 +919,8 @@ function insertCategoryLevelTwo(values) {
     })
 }
 
-function parentCateUpdate(values) {
-    return nameUpdate('categorylevel1', values);
+function updateCategorylevel1(type, values) {
+    return nameUpdate(type, values);
 }
 
 function childCateUpdate(values) {
@@ -1047,7 +1049,7 @@ function getCategoryLevelTwoAll() {
 }
 
 function getCategoryLevelTwo(value) {
-    const sql = 'SELECT id, name FROM categorylevel2 WHERE categorylevel1_id = $1';
+    const sql = 'SELECT a.id, a.name, b.name as cate1_name FROM categorylevel2 as a inner join categorylevel1 as b on b.id = a.categorylevel1_id WHERE categorylevel1_id = $1';
 
     return db.simpleQuery(sql, value)
     .then(res => {
@@ -1055,7 +1057,7 @@ function getCategoryLevelTwo(value) {
             return res.rows;
         return false;
     })
-    .catch(error => {return error;});
+    .catch(error => {return -1;});
 }
 
 function getCategoryLevelThree(value) {
@@ -1419,8 +1421,118 @@ function getProductByShop(value) {
     .catch(error => { return false;});  
 }
 
-function getProductByCateOne(value) {
-    const sql = "select  max(d.price) as max, min(d.price) as min, b.name, b.id as product_id, c.url -> 'cover' as url, e.name as shop, avg(f.rating)::numeric(10,1) as rating from categorylevel1 as a inner join product as b on b.categorylevel1_id = a.id inner join images as c on c.product_id = b.id inner join productvariant as d on d.product_id = b.id inner join shop as e on e.id = b.shop_id inner join rating as f on f.product_id = b.id where a.id = $1 and b.status = 1 GROUP BY b.name, b.id, c.url, e.name";
+function getProductByCateOne(price, rating, value) {
+    var sortBy = 'min';
+    var filter_price = 'd.price > 0';
+    var filter_rating = 'b.rating >= 0';
+    switch(price) {
+        case '1': 
+            sortBy = 'min';
+            break;
+        case '2':
+            sortBy = 'min desc';
+            break;
+        case '3':
+            sortBy = 'b.created_at desc';
+            break;
+        case '4':
+            sortBy = 'b.created_at asc';
+            break;
+        case '5': 
+            filter_price = 'd.price < 300000';
+            break;
+        case '6':
+            filter_price = 'd.price >= 300000 and d.price < 1000000';
+            break;
+        case '7':
+            filter_price = 'd.price >= 1000000 and d.price < 5000000';
+            break;
+        case '8':
+            filter_price = 'd.price >= 5000000';
+            break;
+    }
+
+    switch (rating) {
+        case '9': 
+            filter_rating = 'b.rating = 5';
+            break;
+        case '10':
+            filter_rating = 'b.rating >= 4';
+            break;
+        case '11':
+            filter_rating = 'b.rating >= 3';
+            break;
+        case '12':
+            filter_rating = 'b.rating >= 2';
+            break;
+        case '13':
+            filter_rating = 'b.rating >= 1';
+            break;
+    }
+
+    const sql = `select max(d.price) as max, min(d.price) as min, b.name, b.id as product_id, c.url -> 'cover' as url, e.name as shop, avg(b.rating)::numeric(10,1) as rating , b.created_at from categorylevel1 as a inner join product as b on b.categorylevel1_id = a.id inner join images as c on c.product_id = b.id inner join productvariant as d on d.product_id = b.id inner join shop as e on e.id = b.shop_id where a.id = $1 and b.status = 1 AND ${filter_price} AND ${filter_rating} GROUP BY b.name, b.id, c.url, e.name, b.created_at order by ${sortBy}`;
+   
+    return db.simpleQuery(sql, value)
+    .then( res =>  {
+        if (res.rowCount > 0)
+        {
+            return res.rows;
+        }
+        return false;
+    })
+    .catch(error => { return false;});
+}
+
+function getProductByCateTwo(price, rating, value) {
+    var sortBy = 'min';
+    var filter_price = 'd.price > 0';
+    var filter_rating = 'b.rating >= 0';
+    switch(price) {
+        case '1': 
+            sortBy = 'min';
+            break;
+        case '2':
+            sortBy = 'min desc';
+            break;
+        case '3':
+            sortBy = 'b.created_at desc';
+            break;
+        case '4':
+            sortBy = 'b.created_at asc';
+            break;
+        case '5': 
+            filter_price = 'd.price < 300000';
+            break;
+        case '6':
+            filter_price = 'd.price >= 300000 and d.price < 1000000';
+            break;
+        case '7':
+            filter_price = 'd.price >= 1000000 and d.price < 5000000';
+            break;
+        case '8':
+            filter_price = 'd.price >= 5000000';
+            break;
+    }
+
+    switch (rating) {
+        case '9': 
+            filter_rating = 'b.rating = 5';
+            break;
+        case '10':
+            filter_rating = 'b.rating >= 4';
+            break;
+        case '11':
+            filter_rating = 'b.rating >= 3';
+            break;
+        case '12':
+            filter_rating = 'b.rating >= 2';
+            break;
+        case '13':
+            filter_rating = 'b.rating >= 1';
+            break;
+    }
+
+    const sql = `select  max(d.price) as max, min(d.price) as min, b.name, b.id as product_id, c.url -> 'cover' as url, e.name as shop, avg(b.rating)::numeric(10,1) as rating from categorylevel2 as a inner join product as b on b.categorylevel2_id = a.id inner join images as c on c.product_id = b.id inner join productvariant as d on d.product_id = b.id inner join shop as e on e.id = b.shop_id where a.id = $1 and b.status = 1 AND ${filter_price} AND ${filter_rating} GROUP BY b.name, b.id, c.url, e.name, b.created_at order by ${sortBy}`;
 
     return db.simpleQuery(sql, value)
     .then( res =>  {
@@ -1435,6 +1547,48 @@ function getProductByCateOne(value) {
 
 function getProductAllById(value) {
     const sql = "select a.name, a.id as product_id, max(b.price) as max, c.attribute->'Color' as color, c.attribute->'Size' as size, b.price, d.url->'cover' as cover, d.url as url from product as a inner join productvariant as b on b.product_id = a.id inner join variantdetail as c on c.id = b.variant_id inner join images as d on d.product_id = a.id where a.id = $1 and a.status = 1 group by a.name, a.id, c.attribute, b.price, d.url";
+
+    return db.simpleQuery(sql, value)
+    .then( res =>  {
+        if (res.rowCount > 0)
+        {
+            return res.rows;
+        }
+        return false;
+    })
+    .catch(error => { return false;});
+}
+
+function getShopByProductId(value) {
+    const sql = "SELECT b.id, b.name as shop_name FROM product as a inner join shop as b on b.id = a.shop_id WHERE a.id = $1";
+
+    return db.simpleQuery(sql, value)
+    .then( res =>  {
+        if (res.rowCount > 0)
+        {
+            return res.rows[0];
+        }
+        return false;
+    })
+    .catch(error => { return false;});
+}
+
+function getShopProductById(value) {
+    const sql = "select  max(d.price) as max, min(d.price) as min, b.name, b.id as product_id, c.url -> 'cover' as url, e.name as shop, avg(f.rating)::numeric(10,1) as rating from categorylevel1 as a inner join product as b on b.categorylevel1_id = a.id inner join images as c on c.product_id = b.id inner join productvariant as d on d.product_id = b.id inner join shop as e on e.id = b.shop_id inner join rating as f on f.product_id = b.id where e.id = $1 and b.status = 1 GROUP BY b.name, b.id, c.url, e.name";
+
+    return db.simpleQuery(sql, value)
+    .then( res =>  {
+        if (res.rowCount > 0)
+        {
+            return res.rows;
+        }
+        return false;
+    })
+    .catch(error => { return false;});
+}
+
+function getCateShop(value) {
+    const sql = "select distinct c.id as cate2_id, c.name as cate_name from categorylevel1 as a inner join product as b on b.categorylevel1_id = a.id inner join categorylevel2 as c on c.categorylevel1_id = a.id where b.shop_id = $1 and b.status = 1 order by c.id asc";
 
     return db.simpleQuery(sql, value)
     .then( res =>  {
@@ -1828,12 +1982,13 @@ module.exports = {
 
     checkEmailExist,
     checkUserExist,
+    getUser,
     getUserInfo,
     insertUser,
     updateUserProfile,
     updateUserPassword,
     updateUserPasswordByEmail,
-    userDelete,
+    deleteUser,
     updateUserIsverified,
     insertUserIdentityDetail,
     insertUserWard,
@@ -1879,7 +2034,7 @@ module.exports = {
 
     insertCategoryLevelOne,
     insertCategoryLevelTwo,
-    parentCateUpdate,
+    updateCategorylevel1,
     cateDelete,
     getListCateParents,
     getListCateChildren,
@@ -1902,7 +2057,11 @@ module.exports = {
     getProductById,
     getProductByShop,
     getProductByCateOne,
+    getProductByCateTwo,
     getProductAllById,
+    getShopByProductId,
+    getShopProductById,
+    getCateShop,
     getProductVariant,
     getProductVariantInfo,
     updateProductVariantAmount,

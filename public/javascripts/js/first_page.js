@@ -88,62 +88,44 @@ $(document).ready(function(){
     $('#SortBy').change(function(e) {
       var val = $("#SortBy option:selected").val();
       var category_id = $("#category_id").val();
-      var optionSelect = '';
-      var sort = 1;
-      // alert(val);
       e.preventDefault();
-      switch (val)
-      {
-        case 'created_ascending':
-        {
-          optionSelect = 'dateAdded';
-          sort = -1;
-          break;
-        }
-        case 'created_descending':
-        {
-          optionSelect = 'dateAdded';
-          sort = 1;
-          break;
-        }
-        case 'price_descending':
-        {
-          optionSelect = 'price';
-          sort = -1;
-          break;
-        }
-        case 'price_ascending':
-        {
-          optionSelect = 'price';
-          sort = 1;
-          break;
-        }
-      };
-      console.log(sort)
       $.ajax({
-        url: `${window.location.origin}/shop/sortby`,
+        url: `${window.location.origin}/sortby`,
         type: "post", // phương thức gửi dữ liệu.
         dataType: "html",
         data: {
-              optionSelect: optionSelect,
-              sortby: sort
+          optionSelect: val,
+          cateOneId: category_id
           },
         success:function(data){ //dữ liệu nhận về
-
             $(".khoi_sp").empty();
             $(".khoi_sp").append($(data).find('.khoi_sp').children());
             $("#count_product").text($(data).find('.khoi_sp').children().length);
+            var $star_rating = $('.star-rating .fa');
+
+            var SetRatingStar = function(event) {
+          return $star_rating.each(function(event) {
+              if (parseInt($(this).siblings('input.rating-value').val()) >= parseInt($(this).data('rating'))) {
+                  return $(this).removeClass('fa-star-o').addClass('fa-star');
+              } else {
+                  return $(this).removeClass('fa-star').addClass('fa-star-o');
+              }
+          });
+          };
+
+          SetRatingStar();
             // console.log($(data).find('.khoi_sp'));
             // alert(data);
              //console.log(data);
         },
-        error: function() {
+        error: function(err) {
+          console.log(err)
           alert("Bị lỗi");
         }
      });
     });
 
-    $("input[name='group_brand[]'], input[name='group_color[]'], input[name='group_size[]'], input[name='group_material[]'], input[name='group_price[]']").on('click', function() {
+    $("input[name='group_brand[]'], input[name='group_color[]'], input[name='group_size[]'], input[name='group_rating[]'], input[name='group_price[]']").on('click', function() {
       // in the handler, 'this' refers to the box clicked on
       var $box = $(this);
       if ($box.is(":checked")) {
@@ -160,33 +142,44 @@ $(document).ready(function(){
   });
    
 
-    $("input[name='group_brand[]'], input[name='group_material[]'], input[name='group_price[]'], input[name='group_color[]'], input[name='group_size[]']").change(function(e) {
+    $("input[name='group_brand[]'], input[name='group_rating[]'], input[name='group_price[]'], input[name='group_color[]'], input[name='group_size[]']").change(function(e) {
         var group_brand = $("input[name='group_brand[]']:checked").val();
-        var group_material = $("input[name='group_material[]']:checked").val();
+        var group_rating = $("input[name='group_rating[]']:checked").val();
         var group_price = $("input[name='group_price[]']:checked").val();
         var group_color = $("input[name='group_color[]']:checked").val();
         var group_size =  $("input[name='group_size[]']:checked").val();
         var category_id = $("#category_id").val();
-        // alert(group_size);
-        console.log(group_color)
-        var _token = $('input[name="_token"]').val(); // token để mã hóa dữ liệu
+
         $.ajax({
-          url: `${window.location.origin}/shop/filter`,
+          url: `${window.location.origin}/filter`,
           type: "POST", // phương thức gửi dữ liệu.
           dataType: "html",
           data: {
                 group_brand: group_brand,
-                group_material: group_material,
-                group_price: group_price,
+                group_rating: group_rating,
+                optionSelect: group_price,
                 group_color: group_color,
                 group_size: group_size,
-                category_id: category_id,
+                cateOneId: category_id,
             },
           success:function(data){ //dữ liệu nhận về
            // console.log(data)
               $(".khoi_sp").empty();
               $(".khoi_sp").append($(data).find('.khoi_sp').children());
               $("#count_product").text($(data).find('.khoi_sp').children().length);
+              var $star_rating = $('.star-rating .fa');
+
+            var SetRatingStar = function(event) {
+            return $star_rating.each(function(event) {
+              if (parseInt($(this).siblings('input.rating-value').val()) >= parseInt($(this).data('rating'))) {
+                  return $(this).removeClass('fa-star-o').addClass('fa-star');
+              } else {
+                  return $(this).removeClass('fa-star').addClass('fa-star-o');
+              }
+            });
+            };
+
+          SetRatingStar();
           },
           error: function() {
             alert("Bị lỗi here");
