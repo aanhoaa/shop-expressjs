@@ -14,6 +14,7 @@ router.post("/account/reset", authController.isAuth, authController.isUser, user
 router.post("/account/address/edit/:bookId", authController.isAuth, authController.isUser, userController.postUpdateAddressBook);
 router.post("/account/address/delete", authController.isAuth, authController.isUser, userController.postDeleteAddressBook);
 router.post("/account/address/default", authController.isAuth, authController.isUser, userController.postSetAddressDefault);
+router.get("/recent", authController.isAuth, authController.isUser, userController.getProductRecent);
 
 //api binding adddress
 router.get("/api/account/city", authController.isAuth, authController.isUser, userController.getCity);

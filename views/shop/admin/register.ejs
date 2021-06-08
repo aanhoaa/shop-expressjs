@@ -19,10 +19,10 @@
             <div class="col-md-9 register-right">
                 <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">
                     <li class="nav-item">
-                        <a class="nav-link" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Khách hàng</a>
+                        <a class="nav-link" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Employee</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Nhà bán</a>
+                        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Hirer</a>
                     </li>
                 </ul>
                 <div class="tab-content" id="myTabContent">
@@ -47,47 +47,52 @@
                                         <input class="form-control" id="repassword" placeholder="Nhập lại mật khẩu" type="password" name="repassword" required>
                                     </div>
                                     <div class="form-group">
-                                        <button type="submit" class="btn btn-primary btn-block" onclick="register(this)"> Create Account  </button>
+                                        <button type="submit" class="btn btn-primary btn-block" onclick="register()"> Create Account  </button>
                                     </div>
                                 </div>
                             </div>
                         </form>
                     </div>
                     <div class="tab-pane fade show" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                        <h3  class="register-heading">Bán hàng cùng chúng tôi</h3>
-                        <form action="seller/register" method="POST">
-                            <div class="row register-form">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <input name="fullname" class="form-control" placeholder="Họ và tên *" type="text" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <input name="phone" class="form-control" maxlength="10" minlength="10" placeholder="Số điện thoại liên lạc *" type="number" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="email" class="form-control" name="email" placeholder="Email liên hệ *" value="" />
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="text" class="form-control" name="name" placeholder="Tên gian hàng *" value="" />
-                                    </div>
+                        <h3  class="register-heading">Apply as a Hirer</h3>
+                        <div class="row register-form">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" placeholder="First Name *" value="" />
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <input name="username" class="form-control" placeholder="Tên đăng nhập *" type="text" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <input class="form-control" id="password" placeholder="Mật khẩu *" type="password" name="password" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <input class="form-control" id="repassword" placeholder="Nhập lại mật khẩu" type="password" name="repassword" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <input class="form-control" id="address" placeholder="Địa chỉ" type="text" name="address" required>
-                                    </div>
-                                    <input type="submit" class="btnRegister"  value="Register" onclick="register(this)"/>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" placeholder="Last Name *" value="" />
                                 </div>
+                                <div class="form-group">
+                                    <input type="email" class="form-control" placeholder="Email *" value="" />
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" maxlength="10" minlength="10" class="form-control" placeholder="Phone *" value="" />
+                                </div>
+
+
                             </div>
-                        </form>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input type="password" class="form-control" placeholder="Password *" value="" />
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" class="form-control" placeholder="Confirm Password *" value="" />
+                                </div>
+                                <div class="form-group">
+                                    <select class="form-control">
+                                        <option class="hidden"  selected disabled>Please select your Sequrity Question</option>
+                                        <option>What is your Birthdate?</option>
+                                        <option>What is Your old Phone Number</option>
+                                        <option>What is your Pet Name?</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" placeholder="`Answer *" value="" />
+                                </div>
+                                <input type="submit" class="btnRegister"  value="Register"/>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -105,7 +110,7 @@
        
         // If the location.hash matches one of the links, use that as the active tab.
         // If no match is found, use the first link as the initial active tab.
-        $active = $($links.filter('[href="' + location.hash + '"]')[0] || $links[0]);
+        $active = $($links.filter('[href="' + location.hash + '"]')[0] || $links[0]);console.log($active)
         $active.addClass('active');
         $active.prop('aria-selected', true);
         //$active.closest('.option').addClass('active');
@@ -146,10 +151,9 @@
     
 </script>
 <script>
-    function register(it) {
-        const its = $(it).parent().parent();
-        const pass = its.find('#password').val();
-        const repass = its.find('#repassword').val();
+    function register() {
+        const pass = document.getElementById('password').value;
+        const repass = document.getElementById('repassword').value;
 
         if (pass != repass) {
             event.preventDefault();

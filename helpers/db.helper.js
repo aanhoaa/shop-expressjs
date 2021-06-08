@@ -161,6 +161,30 @@ function insertAdmin(values) {
         }
     })
 }
+
+function checkExistShopByName(value) {
+    const sql = "SELECT id FROM shop WHERE username = $1";
+
+    return db.simpleQuery(sql, value)
+    .then(res => {
+        if (res.rows[0])
+            return true;
+        else return false;
+    })
+    .catch(error => { return false;}); 
+}
+
+function insertShop(values) {
+    const sql = "INSERT INTO shop(fullname, phone, email, name, username, password, address) VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING id";
+
+    return db.excuteQuery(sql, values)
+    .then(res => {
+        if (res.rowCount > 0)
+        return res.rows[0].id;
+        return false;
+    })
+    .catch(error => {return error;});
+}
 /*=====================================*/ 
 
 /*
@@ -1407,8 +1431,36 @@ function getProductById(value) {
     .catch(error => { return false;});  
 }
 
+function getFirstProductById(value) {
+    const sql = "select a.name, a.id as product_id, a.rating, a.categorylevel2_id as cate2_id, max(b.price) as max, c.attribute->'Color' as color, c.attribute->'Size' as size, b.price, d.url->'cover' as cover, d.url as url from product as a inner join productvariant as b on b.product_id = a.id inner join variantdetail as c on c.id = b.variant_id inner join images as d on d.product_id = a.id where a.id = $1 and a.status = 1 group by a.name, a.id, c.attribute, b.price, d.url order by b.price desc LIMIT 8";
+
+    return db.simpleQuery(sql, value)
+    .then( res =>  {
+        if (res.rowCount > 0)
+        {
+            return res.rows;
+        }
+        return false;
+    })
+    .catch(error => { return false;}); 
+}
+
+function getProductSeller(value) {
+    const sql = "SELECT * FROM product WHERE shop_id = $1";
+
+    return db.simpleQuery(sql, value)
+    .then( res =>  {
+        if (res.rowCount > 0)
+        {
+            return res.rows;
+        }
+        return false;
+    })
+    .catch(error => { return false;});  
+}
+
 function getProductByShop(value) {
-    const sql = 'SELECT * FROM product WHERE shop_id = $1';
+    const sql = "select a.status, a.id as product_id, a.name, a.rating, d.url->'cover' as cover, d.url as url, max(b.price), min(b.price) , a.rating from product as a inner join productvariant as b on b.product_id = a.id inner join images as d on d.product_id = a.id where a.shop_id = $1 and a.status = 1 and b.price = (select max(price) from productvariant where product_id = a.id) group by a.name, a.id, d.url, b.price";
 
     return db.simpleQuery(sql, value)
     .then( res =>  {
@@ -1532,7 +1584,7 @@ function getProductByCateTwo(price, rating, value) {
             break;
     }
 
-    const sql = `select  max(d.price) as max, min(d.price) as min, b.name, b.id as product_id, c.url -> 'cover' as url, e.name as shop, avg(b.rating)::numeric(10,1) as rating from categorylevel2 as a inner join product as b on b.categorylevel2_id = a.id inner join images as c on c.product_id = b.id inner join productvariant as d on d.product_id = b.id inner join shop as e on e.id = b.shop_id where a.id = $1 and b.status = 1 AND ${filter_price} AND ${filter_rating} GROUP BY b.name, b.id, c.url, e.name, b.created_at order by ${sortBy}`;
+    const sql = `select  a.name as cate2_name, max(d.price) as max, min(d.price) as min, b.name, b.id as product_id, c.url -> 'cover' as url, e.name as shop, avg(b.rating)::numeric(10,1) as rating from categorylevel2 as a inner join product as b on b.categorylevel2_id = a.id inner join images as c on c.product_id = b.id inner join productvariant as d on d.product_id = b.id inner join shop as e on e.id = b.shop_id where a.id = $1 and b.status = 1 AND ${filter_price} AND ${filter_rating} GROUP BY a.name, b.name, b.id, c.url, e.name, b.created_at order by ${sortBy}`;
 
     return db.simpleQuery(sql, value)
     .then( res =>  {
@@ -1546,7 +1598,7 @@ function getProductByCateTwo(price, rating, value) {
 }
 
 function getProductAllById(value) {
-    const sql = "select a.name, a.id as product_id, max(b.price) as max, c.attribute->'Color' as color, c.attribute->'Size' as size, b.price, d.url->'cover' as cover, d.url as url from product as a inner join productvariant as b on b.product_id = a.id inner join variantdetail as c on c.id = b.variant_id inner join images as d on d.product_id = a.id where a.id = $1 and a.status = 1 group by a.name, a.id, c.attribute, b.price, d.url";
+    const sql = "select a.name, a.id as product_id, a.rating, a.categorylevel2_id as cate2_id, max(b.price) as max, c.attribute->'Color' as color, c.attribute->'Size' as size, b.price, d.url->'cover' as cover, d.url as url from product as a inner join productvariant as b on b.product_id = a.id inner join variantdetail as c on c.id = b.variant_id inner join images as d on d.product_id = a.id where a.id = $1 and a.status = 1 group by a.name, a.id, c.attribute, b.price, d.url";
 
     return db.simpleQuery(sql, value)
     .then( res =>  {
@@ -1979,6 +2031,8 @@ function updateOrderReason(values) {
 
 module.exports = {
     insertAdmin,
+    checkExistShopByName,
+    insertShop,
 
     checkEmailExist,
     checkUserExist,
@@ -2055,6 +2109,8 @@ module.exports = {
     getProductVariantBeforeSell,
     getProduct,
     getProductById,
+    getFirstProductById,
+    getProductSeller,
     getProductByShop,
     getProductByCateOne,
     getProductByCateTwo,

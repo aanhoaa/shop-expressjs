@@ -47,22 +47,18 @@
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#exampleNavComponents" aria-expanded="false">
                 <i class="glyphicon glyphicon-align-center"></i>
             </button>
-            <ul class="nav navbar-nav">
-                <li class="active">
-                    <a href="#">Page 1</a>
-                </li>
-                <li>
-                    <a href="#">Page 2</a>
-                </li>
-            </ul>
         </div>
         <div class="collapse navbar-collapse" id="exampleNavComponents">
+            <div class="navbar-form navbar-right" style="margin-top: 15px;">
+                <a href="/seller/logout"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a> 
+            </div>
           <form action="#" class="navbar-form navbar-right">
               <div class="form-group">
                   <input type="text" class="form-control" placeholder="Search">
               </div>
               <button type="submit" class="btn btn-default">Submit</button>
           </form>
+         
         </div>
     </div>
 </nav>
@@ -82,7 +78,7 @@
         </div>
         <div class="admin_info_details">
          
-          <label class="admin_info_name">Welcome, <label style="color: gray;">hardcode</label></label>
+          <label class="admin_info_name">Welcome, <label style="color: gray;"><%-seller.username%></label></label>
      
           <a href="#">
             <i class="fas fa-circle fa-success"></i>
@@ -101,31 +97,6 @@
       </div>
       
         <div class="panel-group" id="accordion">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                    <a data-toggle="collapse" data-parent="#accordion" href="#cate">
-                      <span class="glyphicon glyphicon-dashboard fa-1x"></span>
-                  <label class="panel-title-label">&ensp;Danh mục</label></a>
-                </h4>
-            </div>
-            <div id="cate" class="panel-collapse collapse" data-parent="#accordion">
-                <div class="panel-body">
-                    <table class="table">
-                        <tr>
-                            <td>
-                                <span class="fas fa-list text-danger"></span><a href="/admin/category">&ensp;Danh sách danh mục</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="fas fa-pencil-alt text-success"></span><a href="/admin/category/add">&ensp;Thêm Danh Mục</a>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-        </div>
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4 class="panel-title">

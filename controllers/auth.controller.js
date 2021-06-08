@@ -280,11 +280,11 @@ exports.postVerify = async (req, res, next) => {
     if (verifyCode == data.tokenconfirm) {
       //change status
       const updateVer = await db.updateUserIsverified(data.id);
-      if (updateVer == true) res.redirect('/');
+      if (updateVer == true) return res.redirect('/');
     }
   }
-  res.status(500).json({state: 0});
   
+  res.status(500).json({state: 0});
 }
 
 exports.postResendVerify = async (req, res, next) => {

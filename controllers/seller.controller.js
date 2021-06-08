@@ -1,19 +1,12 @@
 const passport = require("passport");
 const multer = require('multer');
-const User = require("../models/user.model");
 const Category = require("../models/category.model");
-const Material = require("../models/material.model");
-const Brand = require("../models/brand.model");
-const Product = require("../models/product.model");
-const Supplier = require("../models/supplier.model");
-const Inventory = require("../models/inventory.model");
-const Import = require("../models/import.model");
-const { count } = require("../models/user.model");
-const Order = require("../models/order.model");
+
 const db = require('../helpers/db.helper');
 const cloudinary = require('cloudinary');
 var bcrypt = require("bcryptjs");
 const jwtHelper = require("../helpers/jwt.helper"); 
+const Validator = require("fastest-validator");
 
 cloudinary.config({
     cloud_name: 'do3we3jk1',
@@ -25,6 +18,7 @@ cloudinary.config({
 var storage = multer.diskStorage({});
 
 var upload = multer({ storage: storage });
+
 
 exports.handleImg = upload.fields([
     {
@@ -45,7 +39,93 @@ exports.handleImg = upload.fields([
     }
 ])
 
-exports.getLogin = (req, res, next) => {  
+exports.postRegister = async (req, res, next) => {  
+    const v = new Validator({
+        useNewCustomCheckerFunction: true, 
+        messages: {
+          unique: "The username is already exist"
+      }
+      });
+      const schema = {
+        $$async: true,
+        fullname: {type: 'string'},
+        phone: {type: 'string', min: 10, max: 10},
+        address: {type: 'string'},
+        name: {type: 'string'},
+        username: {
+          type: 'string', min: 6, max: 255,
+          custom: async (username, errors) => {
+            const data = await db.checkExistShopByName([username]);
+            if (data == true) {
+              errors.push({ type: "unique", actual: 123 });
+            }
+            return username;
+          }
+        },
+        email: {type: 'email'},
+        password: {type: 'string', min: 6, max: 50},
+        repassword: {type: 'string', min: 6, max: 50},
+      }
+  
+      const check = v.compile(schema);
+      const user = {
+        fullname: req.body.fullname,
+        phone: req.body.phone,
+        address: req.body.address,
+        username: req.body.username,
+        email: req.body.email,
+        name: req.body.name,
+        password: req.body.password,
+        repassword: req.body.repassword
+      }
+      const getCheck = await check(user);
+
+      if (getCheck == true) {
+        //save to db
+        //const save = await db.insertUser(Object.values(user));
+        if (user.repassword == user.password) {
+          // create confirm token email
+          const confirmToken = makeid(10);
+          const hash = bcrypt.hashSync(user.password, 10);
+          const userId = await db.insertShop([user.fullname, user.phone, user.email, user.name, user.username, hash, user.address]);
+          if (userId)
+          {
+            //get data
+            const userInfo = {
+              id: userId,
+              username: user.username,
+              role: 'shop',
+            };
+  
+            const accessToken = await jwtHelper.generateToken(userInfo, 'secret', '1h');
+            req.session.token = accessToken;
+            req.session.shopInfo = userInfo;
+            //screen waiting for approve
+            return res.redirect('/seller');
+          }
+        }
+        else {
+          req.flash('info', 'Xác nhận mật khẩu không khớp');
+          res.redirect('/register');
+        }
+      }
+      else {
+        var count = 0;
+        getCheck.forEach(i => {
+          if (i.actual == 123) {
+            count ++;
+          }
+        })
+  
+        if (count > 0) {
+          req.flash('info', 'Tài khoản đã tồn tại');
+          res.redirect('/register');
+        }
+        else res.status(500).json({state: 0});
+      }
+}
+
+exports.getLogin = (req, res, next) => {   
     if (req.session.token) 
     res.redirect('/seller');
     else
@@ -85,7 +165,7 @@ exports.getLogout = (req, res, next) => {
 exports.getHome = async (req, res, next) => {
     const shopId = req.jwtDecoded.data.id;
     var oData = new Array;
-    const data = await db.getProductByShop([shopId]);
+    const data = await db.getProductSeller([shopId]);
 
     for(let i = 0; i< data.length; i++) {
         var info = await db.getProductVariantInfo([data[i].id]);
@@ -110,12 +190,11 @@ exports.getHome = async (req, res, next) => {
                 name: data[i].name, sku: data[i].sku, 
                 classify: info, id: data[i].id, 
                 status: data[i].status
-              })
+            })
         }
             
     }
-    
-    res.render('./admin/index', {data: oData})
+    res.render('./admin/index', {seller: req.session.shopInfo, data: oData})
 }
 
 exports.getCategory = (req, res, next) => {
@@ -195,7 +274,7 @@ exports.getAddProduct = async (req, res, next) => {
    
     const data = await db.getCategoryLevelOne();
     
-    res.render('./admin/product/addProduct', {data: data});
+    res.render('./admin/product/addProduct', {seller: req.session.shopInfo, data: data});
 }
 
 exports.getBindingCategory = async (req, res, next) => {
@@ -347,6 +426,7 @@ exports.getEditProduct = async (req, res, next) => {
     var arrImgSub = [img[0].url.sub1,img[0].url.sub2,img[0].url.sub3];
     
     res.render('./admin/product/editProduct', {
+        seller: req.session.shopInfo,
         name: productInfo[0].name,
         category1: cate1,
         category2: cate2,
@@ -428,7 +508,7 @@ exports.getEditProductVariant = async (req, res, next) => {
     const productId = req.params.productId;
     const data = await db.getProductVariantInfo([productId]);
 
-    res.render('./admin/inventory/inventoryDetail', {data: data})
+    res.render('./admin/inventory/inventoryDetail', {seller: req.session.shopInfo,data: data})
 }
 
 exports.postEditProductVariant = async (req, res, next) => {
@@ -591,7 +671,7 @@ exports.getOrder = async (req, res, next) => {
      }
     })
   
-    res.render('./admin/order/order', {data: all, type: type, count: orderCount});
+    res.render('./admin/order/order', {seller: req.session.shopInfo,data: all, type: type, count: orderCount});
 }
 
 exports.getOrderDetail = async (req, res, next) => {
@@ -600,7 +680,10 @@ exports.getOrderDetail = async (req, res, next) => {
     const products = await db.getOrderDetailByOrderId([orderId])
     const orderInfo = await db.getOrderById([orderId]);
     
-    res.render('./admin/order/orderDetail', {info: orderInfo, address: address, products: products});
+    res.render('./admin/order/orderDetail', {
+        seller: req.session.shopInfo,info: orderInfo, 
+        address: address, products: products
+    });
 }
 
 exports.putDeliveryOrder = async (req, res, next) => {

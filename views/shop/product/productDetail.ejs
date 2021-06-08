@@ -10,6 +10,12 @@
 <script src="/javascripts/js/product.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+<link rel="stylesheet" href="/stylesheets/css/first_page.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+<script src="/javascripts/assets/custom.js"></script>
+<script src="/javascripts/assets/multislider.min.js"></script>
+<link rel="stylesheet" href="/stylesheets/multislider.css">
+<link rel="stylesheet" href="/stylesheets/slider_item.css">
 
 <div class="container" style="margin: 60px auto 0px; max-width: 1300px;">
     <div class="row">
@@ -47,12 +53,12 @@
         <div class="col-sm-5 product_details">
             <h3 class="product_details_name"><%-data[0].name%></h3>
             <div class="product_details_block_info" style="display: flex;">
-                <span style="flex: 0.45;">Mã sản phẩm: SM116</span>
-                <span style="flex: 0.3;">Shop cung cấp: <a href="/shop/<%-shop.shop_name%>.<%-shop.id%>"><%-shop.shop_name%></a></span>
+                <span style="flex: 3.45;">Mã sản phẩm: SM116</span>
+                <span style="flex: 3.3;">Shop cung cấp: <a href="/shop/<%-shop.shop_name%>.<%-shop.id%>"><%-shop.shop_name%></a></span>
             </div>
             <div style="border-bottom: 1px #80808042 dashed; margin: 5px;"></div>
             <h5 style="margin-top: 15px;">
-                <span class="product_details_price_zero"><%-max==min?max:`${min} - ${max}`%>₫</span>
+                <span class="product_details_price_zero"><%-max==min?max:`${VND(parseInt(min))} - ${VND(parseInt(max))}`%></span>
                 <span class="product_details_price_one"></span>
             </h5>
             <div class="product_details_description">
@@ -202,85 +208,24 @@
     </div>
     <div class="arcodion_block" id="accordion_collapse">
         <div class="arcodion">
-            <div class="arcodion_description arcodion_hover" data-toggle="collapse" data-target="#content_description" style="flex: 0 0 13%;">
+            <div class="arcodion_description arcodion_hover" data-toggle="collapse" data-target="#content_description" style="flex: 0 0 14%;">
                 <h5 class="arcodion_description_text">Mô tả sản phẩm</h5>
-                <div class="arcodion_under_line"></div>
-            </div>
-            <div class="arcodion_orientation arcodion_hover" data-toggle="collapse" data-target="#content_orientation" style="flex: 0 0 16%;">
-                <h5 class="arcodion_orientation_text">Hướng dẫn sử dụng</h5>
                 <div class="arcodion_under_line"></div>
             </div>
             <div class="arcodion_shipping arcodion_hover" data-toggle="collapse" data-target="#content_shipping" style="flex: 0 0 9%;">
                 <h5 class="arcodion_shipping_text">Giao hàng</h5>
                 <div class="arcodion_under_line"></div>
             </div>
-            <div class="arcodion_reback arcodion_hover" data-toggle="collapse" data-target="#content_reback" style="flex: 0 0 16%;">
+            <div class="arcodion_reback arcodion_hover" data-toggle="collapse" data-target="#content_reback" style="flex: 0 0 20%;">
                 <h5 class="arcodion_reback_text">Chính sách hoàn trả</h5>
                 <div class="arcodion_under_line"></div>
             </div>
         </div>
         <div class="arcodion_content">
             <div class="arcodion_content_description collapse show" id="content_description" data-parent="#accordion_collapse">
-                <table class="table table-bordered">
-                    <tbody>
-                        <tr class="arcodion_content_description_row">
-                            <td class="key">Thương hiệu:</td>
-                            <td class="value">Zara</td>
-                        </tr>
-                        <tr class="arcodion_content_description_row">
-                            <td class="key">Màu sắc:</td>
-                            <td class="value">Nhiều Màu</td>
-                        </tr>
-                        <tr class="arcodion_content_description_row">
-                            <td class="key">Thành phần:</td>
-                            <td class="value">30% Bông, 65% Polyester, 5% Spandex</td>
-                        </tr>
-                        <tr class="arcodion_content_description_row">
-                            <td class="key">Mùa:</td>
-                            <td class="value">Mùa xuân</td>
-                        </tr>
-                        <tr class="arcodion_content_description_row">
-                            <td class="key">Chất liệu:</td>
-                            <td class="value">Cotton</td>
-                        </tr>
-                        <tr class="arcodion_content_description_row">
-                            <td class="key">Phong cách:</td>
-                            <td class="value">Phong cách Campus</td>
-                        </tr>
-                        <tr class="arcodion_content_description_row">
-                            <td class="key">Hình bóng:</td>
-                            <td class="value">Bodycon</td>
-                        </tr>
-                    </tbody>
-                </table>
+                
             </div>
-            <div class="arcodion_content_orientation collapse" id="content_orientation" data-parent="#accordion_collapse">
-                <table class="table table-bordered">
-                    <tbody>
-                        <tr class="arcodion_content_orientation_row">
-                            <td class="key">SKU (simple):</td>
-                            <td class="value">SM116</td>
-                        </tr>
-                        <tr class="arcodion_content_orientation_row">
-                            <td class="key">Màu sắc:</td>
-                            <td class="value">Xanh rêu</td>
-                        </tr>
-                        <tr class="arcodion_content_orientation_row">
-                            <td class="key">Hướng dẫn sử dụng:</td>
-                            <td class="value">Giặt máy với nhiệt độ không quá 30°C<br>Không được tẩy<br>Ủi với nhiệt độ không quá 110°C<br>Không giặt khô<br>Không được sấy khô
-                            </td>
-                        </tr>
-                        <tr class="arcodion_content_orientation_row">
-                            <td class="key">Material:</td>
-                            <td class="value">100% cotton</td>
-                        </tr>
-                        <tr class="arcodion_content_orientation_row">
-                            <td class="key">Xuất xứ:</td>
-                            <td class="value">Bangladesh</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+            
             <div class="arcodion_content_shipping collapse" id="content_shipping" data-parent="#accordion_collapse">
                 <span class="arcodion_content_shipping_row_1">Giao Hàng Miễn Phí Theo Đơn Hàng Trên 1.000.000₫</span>
                 <p class="arcodion_content_shipping_row_2">Giao Hàng Tiêu Chuẩn: 5 - 7 Ngày Làm Việc</p>
@@ -308,73 +253,160 @@
         </div>
         <div class="customer_feedback_block clearfix" style="max-width: 100%;">
           <div class="col-sm-6" style="padding-left: 10%; float: left;">
-            <div class="" style="float: left; margin-top: 6px; padding-right: 10px;"><span class="customer_feedback_avager">Đánh giá trung bình</span></div>
-            
-            <div class="rate_star" style="padding-left: 0; margin-top: 5px;" >
-              <span><img class="star_image" src="https://png.pngtree.com/svg/20170629/7301c2f99d.svg" width="16px" height="18px;" alt=""></span>
-              <span><img class="star_image" src="https://png.pngtree.com/svg/20170629/7301c2f99d.svg" width="16px" height="18px;" alt=""></span>
-              <span><img class="star_image" src="https://png.pngtree.com/svg/20170629/7301c2f99d.svg" width="16px" height="18px;" alt=""></span>
-              <span><img class="star_image" src="https://png.pngtree.com/svg/20170629/7301c2f99d.svg" width="16px" height="18px;" alt=""></span>
-              <span><img class="star_image" src="https://png.pngtree.com/svg/20170629/7301c2f99d.svg" width="16px" height="18px;" alt=""></span>
-            </div>
+            <div class="" style="float: left; padding-right: 10px;"><span class="customer_feedback_avager">Đánh giá trung bình</span></div>
+                <div class="related-product-rating">
+                    <div class="rating">
+                        <div class="star-rating" style="display: flex;">
+                            <span class="fa fa-star-o" data-rating="1"></span>
+                            <span class="fa fa-star-o" data-rating="2"></span>
+                            <span class="fa fa-star-o" data-rating="3"></span>
+                            <span class="fa fa-star-o" data-rating="4"></span>
+                            <span class="fa fa-star-o" data-rating="5"></span>
+                            <input type="hidden" name="whatever1" class="rating-value" value="4">
+                        </div>
+                    </div>
+                </div>
+           
           </div>
-          <!-- <div class="col-sm-6" style="padding-right: 10%;">
-              <select class="custom-select" id="SortByPrice" style="width: 60%; float: right;">
-                  <option selected disabled="">Open this select menu</option>
-                  <option value="price_ascending">Giá từ thấp tới cao</option>
-                  <option value="price_descending">Giá từ cao tới thấp</option>
-                  <option value="created_descending">Mới nhất</option>
-                  <option value="created_ascending">Cũ nhất</option>
-              </select>
-          </div> -->
+          
         </div>
       </div>
       <hr>
       <div class="user_comment">
         <h4>Bình Luận</h4>
-       <%if (user) {%>
-        <form class="form_comment clearfix" action="{!! url('comment') !!}" method="POST" enctype="multipart/form-data">
-            <input type="hidden" name="_token" value="{!! csrf_token() !!}">
-            <input type="hidden" name="productId" value="{{$products->id}}">
-            <input type="hidden" name="userId" value="{{Auth::user()->id}}">
-            <textarea placeholder="Để lại bình luận hoặc đánh giá sản phẩm tại đây!" name="comment_content" class="text_comment"></textarea>
-            <input type="submit" class="btn btn-primary btn_send" value="Send">
-        </form>
-       <%} else {%>
-        <div class="" style="margin-left: 10%; margin-right: 10%;">
-            <span class="total_comments">Lượt bình luận ({!! $comment->count() !!})</span>
-            @foreach ($comment as $row)
-            <div class="detail_comment">
-                <div class="clearfix" style="float: left; margin-right: 15px;">
-                <img src="" alt="" style="width: 50px; height: 50px; border-radius: 50%;">
-                </div>
-                <div>
-                    <a href="" class="user_name">
-                        {{$row->full_name}}
-                    </a>
-                    <span class="comment_time">4m ago</span>
-                    <p class="comment_content">{{$row->description}}</p>
-                </div>
-            </div>
-           <%}%>
+       
         </div>
       </div>
       <hr>
     </section>
-    
+    <% if (relativeShop != '') {%>
     <div class="container clearfix">
       <div class="khoi_chua_sp_lienquan clearfix" style="display: block;">
-          <h5 style="margin-left: 10px; margin-bottom: 20px; font-size: 30px;">Sản phẩm liên quan</h5>
-         
-          <div class="khoi_sp_lienquan" id="effect_1" style="position: relative;">
-              <img style="width: 98%;" src="/uploads/"/>
-              <div class="khoi_sp_lienquan_info">
-                  <p></p>
-                  <p>₫</p>
-                  <a href="/shop/product/">Xem chi tiết</a>
-              </div>
-          </div>
-        
+          <h5 style="margin-left: 10px; margin-bottom: 20px; font-size: 30px;">Sản phẩm khác của shop</h5>
+        <div>
+            <a href="/shop/<%-shop.shop_name%>.<%-shop.id%>">Xem tất cả</a>
+        </div>
+          <div class="container" style="max-width: 973px;">
+            
+            <div id="blogSlider">
+                <div class="MS-content">
+                    <%relativeShop.forEach(item => {%>
+                    <div class="item">
+                         <div class="product-grid">
+                             <div class="product-image">
+                                 <a href="/detail/<%-item.name%>.<%-item.product_id%>">
+                                     <img class="pic-1" src="<%-item.cover%>">
+                                 </a>
+                                 <span class="product-new-label">Hot</span>
+                                 <!-- <span class="product-discount-label">50%</span> -->
+                            </div>
+                            <div class="related-product-rating">
+                                <div class="rating">
+                                    <div class="star-rating" style="display: flex;">
+                                       <span class="fa fa-star-o" data-rating="1"></span>
+                                       <span class="fa fa-star-o" data-rating="2"></span>
+                                       <span class="fa fa-star-o" data-rating="3"></span>
+                                       <span class="fa fa-star-o" data-rating="4"></span>
+                                       <span class="fa fa-star-o" data-rating="5"></span>
+                                       <input type="hidden" name="whatever1" class="rating-value" value="<%-item.rating%>">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="product-content">
+                                <h3 class="title"><a href="#"><%-item.name%></a></h3>
+                                <div class="price">
+                                     <%-VND(parseInt(item.max))%>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <%})%>
+                </div>
+                 <div class="MS-controls">
+                     <button class="MS-left"><i class="fa fa-chevron-left" aria-hidden="true"></i></button>
+                     <button class="MS-right"><i class="fa fa-chevron-right" aria-hidden="true"></i></button>
+                 </div>
+            </div>
+             
+        </div>
       </div>
     </div>
+    <%}%>
+    <% if (productCate2 != '') {%>
+        <div class="container clearfix">
+          <div class="khoi_chua_sp_lienquan clearfix" style="display: block;">
+              <h5 style="margin-left: 10px; margin-bottom: 20px; font-size: 30px;">Sản phẩm tương tự</h5>
+            <div>
+                <a href="/cate/<%-productCate2[0].cate2_name%>.<%-cate2_id%>">Xem tất cả</a>
+            </div>
+              <div class="container" style="max-width: 973px;">
+                
+                <div id="blogSlider">
+                    <div class="MS-content">
+                        <%productCate2.forEach(item => {%>
+                        <div class="item">
+                             <div class="product-grid">
+                                 <div class="product-image">
+                                     <a href="/detail/<%-item.name%>.<%-item.product_id%>">
+                                         <img class="pic-1" src="<%-item.url%>">
+                                     </a>
+                                     <span class="product-new-label">Hot</span>
+                                     <!-- <span class="product-discount-label">50%</span> -->
+                                </div>
+                                <div class="related-product-rating">
+                                    <div class="rating">
+                                        <div class="star-rating" style="display: flex;">
+                                           <span class="fa fa-star-o" data-rating="1"></span>
+                                           <span class="fa fa-star-o" data-rating="2"></span>
+                                           <span class="fa fa-star-o" data-rating="3"></span>
+                                           <span class="fa fa-star-o" data-rating="4"></span>
+                                           <span class="fa fa-star-o" data-rating="5"></span>
+                                           <input type="hidden" name="whatever1" class="rating-value" value="<%-item.rating%>">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="product-content">
+                                    <h3 class="title"><a href="#"><%-item.name%></a></h3>
+                                    <div class="price">
+                                         <%-VND(parseInt(item.max))%>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <%})%>
+                    </div>
+                     <div class="MS-controls">
+                         <button class="MS-left"><i class="fa fa-chevron-left" aria-hidden="true"></i></button>
+                         <button class="MS-right"><i class="fa fa-chevron-right" aria-hidden="true"></i></button>
+                     </div>
+                </div>
+                 
+            </div>
+          </div>
+        </div>
+        <%}%>
+    <script>
+        $(document).ready(function(){
+    
+        var $star_rating = $('.star-rating .fa');
+    
+        var SetRatingStar = function(event) {
+        return $star_rating.each(function(event) {
+            if (parseInt($(this).siblings('input.rating-value').val()) >= parseInt($(this).data('rating'))) {
+                return $(this).removeClass('fa-star-o').addClass('fa-star');
+            } else {
+                return $(this).removeClass('fa-star').addClass('fa-star-o');
+            }
+        });
+        };
+    
+        SetRatingStar();
+    })
+    </script>
+    <script>
+        $('#blogSlider').multislider({
+            duration: 750,
+            interval: 3000
+        }); 
+    </script>
 <% include ../../partials/footer %>

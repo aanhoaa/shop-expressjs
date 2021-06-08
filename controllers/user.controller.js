@@ -604,6 +604,23 @@ exports.putUserRating = async (req, res, next) => {
   else res.send({state: -1});
 }
 
+exports.getProductRecent = async (req, res, next) => {
+  var arrProduct = [];
+  if (req.session.recent) {
+    for (let item of req.session.recent) {
+      const data = await db.getFirstProductById([item]);
+      arrProduct.push(data[0]);
+    }
+  }
+  
+
+  res.render('auth/user/user-recent',{
+    userInfo: req.session.Userinfo,
+    cart: req.session.cart,
+    data: arrProduct
+  });
+}
+
 //functional
 function getdate(tt) {
   var date = new Date(tt);

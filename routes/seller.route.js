@@ -4,6 +4,8 @@ var passport = require("passport");
 const authController = require("../controllers/auth.controller");
 const sellerController = require("../controllers/seller.controller");
 
+router.post("/register" , sellerController.postRegister);
+
 router.get("/login" , sellerController.getLogin);
 router.post("/login" , sellerController.postLogin);
 router.get("/logout" , sellerController.getLogout);

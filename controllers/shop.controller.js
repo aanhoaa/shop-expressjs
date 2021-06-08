@@ -57,6 +57,24 @@ exports.getProductDetail = async (req, res, next) => {
   const productId = req.params.productId;
   const data = await db.getProductAllById([productId]);
   const shop = await db.getShopByProductId([productId]);
+  const relative = await db.getProductByShop([shop.id]);
+  const productCate2 = await db.getProductByCateTwo(1, 1, [data[0].cate2_id]); 
+  
+  if (!req.session.recent) {
+    req.session.recent = [];
+    req.session.recent.unshift(productId);
+  }
+  else {
+    const index = req.session.recent.indexOf(productId);
+    
+    if (index > -1){
+      req.session.recent.splice(index, 1);
+      req.session.recent.unshift(productId);
+    }
+    else req.session.recent.unshift(productId);
+  }
+
+  console.log(req.session.recent)
   var onlyOne = 1;
   var min = 0;
   var max = 0;
@@ -83,7 +101,10 @@ exports.getProductDetail = async (req, res, next) => {
       only: onlyOne,
       min: min,
       max: max,
-      shop: shop
+      shop: shop,
+      relativeShop: relative,
+      productCate2: productCate2,
+      cate2_id: data[0].cate2_id
     })
   }
 }
