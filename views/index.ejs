@@ -1,189 +1,1642 @@
 
 <% include ./partials/header %>
+ <!-- <script src="/javascripts/js/buyer/cart.js"></script> -->
+ <link href="stylesheets/css/custom/timber.scss.css" rel="stylesheet" type="text/css" media="all">
+ <link href="stylesheets/css/custom/reponsive.scss.css" rel="stylesheet" type="text/css" media="all">
+ <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+ <link href="https://fonts.googleapis.com/css?family=Open+Sans:700" rel="stylesheet">
+ <!-- Header hook for plugins ================================================== -->
+ <script src="https://connect.facebook.net/vi_VN/sdk.js?hash=ae5c6459d6db6e17ed0a07f9aebd705f&amp;ua=modern_es6" async="" crossorigin="anonymous"></script>
+ <script type="text/javascript" async="" src="https://www.gstatic.com/recaptcha/releases/CdDdhZfPbLLrfYLBdThNS0-Y/recaptcha__en.js" crossorigin="anonymous" integrity="sha384-3pNlpjOSWmuah66pVKQKOiPacG4Zb6CkqGCd1vLD1fLs77yx0HzO8mvn4afvVxw4"></script><script type="text/javascript" async="" src="https://www.gstatic.com/recaptcha/releases/CdDdhZfPbLLrfYLBdThNS0-Y/recaptcha__en.js" crossorigin="anonymous" integrity="sha384-3pNlpjOSWmuah66pVKQKOiPacG4Zb6CkqGCd1vLD1fLs77yx0HzO8mvn4afvVxw4"></script>
+ <script type="text/javascript" async="" src="https://stats.hstatic.net/analytics.min.js?t=2"></script>
 
-<section class="section-image-header">
-	<div class="container">
-		<div class="div-image-header">
-			<div class="image-left">
-				<img src="/images/img/image-left.jpg" alt="">
-			</div>
-			<div class="image-middle">
-				<img src="/images/img/image-middle.jpg" alt="">
-			</div>
-			<div class="image-right">
-				<img src="/images/img/image-right.jpg" alt="">
-			</div>
-			<div class="text-welcome">
-				<h3>Welcome to Routine</h3>
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eum adipisci natus consequuntur veritatis provident.</p>
-				<a href="shop/product" class="btn">Shop Now</a>
-			</div>
-		</div>
-	</div>
-	
-</section>
-<section class="title-fashion-style">
-	<div class="container">		
-		<h2>Fashion Style</h2>
-	</div>
-</section>
-<section class="sec-categories container mb-3">
-	<div class="title-h2 text-center">
-	   <h2>DANH MỤC SẢN PHẨM</h2>
-	</div>
-	<div class="row clearfix cate-block justify-center scroll-items">
-	   
-	   <%category.forEach(item => {%>
-		<a href="/product/<%-item.name%>.<%-item.id%>" title="Bàn" class="col-lg-2 col-sm-4 col-6 cate-item scroll-item-inner">
-			<div class="cate-item-inner">
-			   <div class="cate-img"></div>
-			   <h3><%-item.name%></h3>
-			</div>
-		 </a>
-	   <%})%>
-	</div>
- </section>
-<section class="section-style-clothing">
-	<div class="container">
-		<div class="div-style-clothing">
-			<div class="img-style-clothing-1">
-				<img src="/images/img/style-clothing-1.jpg" alt="">
-			</div>
-			<hr class="hr-style-1">
-			<div class="detail-style-1">
-				<h3>Korean Style</h3>
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Veniam assumenda reprehenderit facere atque velit.</p>
-				<a href="product" class="btn">Shop Now</a>
-			</div>
-			<div class="img-style-clothing-2">
-				<img src="/images/img/style-clothing-2.jpg" alt="">
-			</div>
-			<hr class="hr-style-2">
-			<div class="detail-style-2">
-				<h3>Summer Style</h3>
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Veniam assumenda reprehenderit facere atque velit.</p>
-				<a href="{!! URL::route('link-category', 3) !!}" class="btn">Shop Now</a>
-			</div>
-			<div class="img-style-clothing-3">
-				<img src="/images/img/style-clothing-3.jpg" alt="">
-			</div>
-			<hr class="hr-style-3">
-			<div class="detail-style-3">
-				<h3>Accessories</h3>
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Veniam assumenda reprehenderit facere atque velit.</p>
-				<a href="{!! URL::route('link-category', 3) !!}" class="btn">Shop Now</a>
-			</div>
-		</div>
-	</div>
-</section>
-<section class="title-quotations" style="margin-bottom: 15px;">
-	<div class="container">		
-		<h2>Quotations</h2>
-	</div>
-</section>
-<section class="section-quotations" style="margin-bottom: 110px;">
-	<div class="flo-block-image-links-6 flo-block-image-links-6--894 clearfix">
-		<div class="quotations1 div-quotations" style="color: #000000;background-color: #f9e6dd">
-			<span class="title-quotations">
-				DESTINATIONS
-			</span>
-			<h2 class="content-quotation">
-				Beauty is in everything and everywhere, in smiles and tears, in sunshine and rain.
-			</h2>
-			<div class="flo-block-image-links-6__button-wrap">
-				<a class="btn" href="#" target="_self">
-					DETAILS
-				</a>
-			</div>
-		</div>
-		<div class="quotations2 div-quotations" style="color: #000000;background-color: #f5f5f5">
-			<span class="title-quotations">
-				GET IN TOUCH
-			</span>
-			<h2 class="content-quotation">
-				We'd love to get to know you. Tell us your story and let's create something unique.
-			</h2>
-			<div class="flo-block-image-links-6__button-wrap">
-				<a class="btn" href="#" target="_self">
-					CONTACT
-				</a>
-			</div>
-		</div>
-	</div>
-</section>
-<section class="title-news">
-	<div class="container">		
-		<h2>From The Journal</h2>
-	</div>
-</section>
-<section class="news">
-	<div class="container">
-		<div class="img-card-news clearfix">
-			<div class="img-left col-sm-6">
-				<div class="div-card1 div-cards">
-					<div class="card-flip">
-						<div class="card-front">
-							<img class="img-card1" src="/images/img/card2.jpg" alt="" style="width: 100%;">
-						</div>
-						<div class="card-back">
-							<div class="content-back">
-								<div class="background-back">
-									<span>Read The Story</span>
-								</div>
-							</div>
-						</div>
-					</div>
-					<p class="some-text">Couples</p>
-					<h4>Best Of Me</h4>
+ <script type="text/javascript">
+	 window.HaravanAnalytics = window.HaravanAnalytics || {};
+	 window.HaravanAnalytics.meta = window.HaravanAnalytics.meta || {};
+	 window.HaravanAnalytics.meta.currency = 'VND';
+	 var meta = {"page":{"pageType":"home"}};
+	 for (var attr in meta) {
+	 window.HaravanAnalytics.meta[attr] = meta[attr];
+	 }
+ </script>
+ <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js" type="text/javascript"></script>
+
+ <script src="https://cdn.rawgit.com/tuupola/jquery_lazyload/0a5e0785a90eb41a6411d67a2f2e56d55bbecbd3/lazyload.js"></script>
+ <script type="text/javascript" charset="utf-8">
+	 window.addEventListener("load", function(event) {
+	 lazyload();
+	 });
+ </script>
+ <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:400,700&amp;subset=vietnamese" rel="stylesheet">
+ <link href="stylesheets/css/custom/owl.carousel.css" rel="stylesheet" type="text/css" media="all">
+<script src="/javascripts/assets/custom.js"></script>
+<script src="/javascripts/assets/multislider.min.js"></script>
+<link rel="stylesheet" href="/stylesheets/multislider.css">
+<link rel="stylesheet" href="/stylesheets/slider_item.css">
+
+<div id="NavDrawer" class="drawer drawer--left">
+	<!-- begin mobile-nav -->
+	<ul class="mobile-nav">
+	   <li class="mobile-nav__item mobile-nav__search">
+		  <!-- /snippets/search-bar.liquid -->
+		  <form action="/search" method="get" class="input-group search-bar" role="search">
+			 <input type="hidden" name="type" value="product">
+			 <input type="search" name="q" value="" placeholder="Tìm sản phẩm..." class="input-group-field" aria-label="Tìm sản phẩm...">
+			 <span class="input-group-btn">
+			 <button type="submit" class="btn icon-fallback-text">
+			 <span class="icon icon-search" aria-hidden="true"></span>
+			 <span class="fallback-text">Tìm kiếm</span>
+			 </button>
+			 </span>
+		  </form>
+	   </li>
+	   <li class="mobile-nav__item mobile-nav__item--active">
+		  <a href="/" class="mobile-nav__link">Trang chủ</a>
+	   </li>
+	   <li class="mobile-nav__item" aria-haspopup="true">
+		  <div class="mobile-nav__has-sublist">
+			 <a href="/collections/all" class="mobile-nav__link">Cửa hàng</a>
+			 <div class="mobile-nav__toggle">
+				<button type="button" class="icon-fallback-text mobile-nav__toggle-open">
+				<span class="icon icon-plus" aria-hidden="true"></span>
+				<span class="fallback-text">See More</span>
+				</button>
+				<button type="button" class="icon-fallback-text mobile-nav__toggle-close">
+				<span class="icon icon-minus" aria-hidden="true"></span>
+				<span class="fallback-text">"Đóng"</span>
+				</button>
+			 </div>
+		  </div>
+		  <ul class="mobile-nav__sublist">
+			 <li class="mobile-nav__item " aria-haspopup="true">
+				<div class="mobile-nav__has-sublist">
+				   <a href="" class="mobile-nav__link">Nội thất</a>
+				   <div class="mobile-nav__toggle">
+					  <button type="button" class="icon-fallback-text mobile-nav__toggle-open">
+					  <span class="icon icon-plus" aria-hidden="true"></span>
+					  <span class="fallback-text">See More</span>
+					  </button>
+					  <button type="button" class="icon-fallback-text mobile-nav__toggle-close">
+					  <span class="icon icon-minus" aria-hidden="true"></span>
+					  <span class="fallback-text">"Đóng"</span>
+					  </button>
+				   </div>
 				</div>
-				<div class="div-card1 div-cards">
-					<div class="card-flip" style="height: 378.19px;">
-						<div class="card-front">
-							<img class="img-card1" src="/images/img/card3.jpg" alt="" style="width: 100%;">
-						</div>
-						<div class="card-back">
-							<div class="content-back">
-								<span>Read The Story</span>
-							</div>
-						</div>
-					</div>
-					<p class="some-text">Hello august</p>
-					<h4>Hello World!</h4>
+				<ul class="mobile-nav__sublist">
+				   <li class="mobile-nav__item ">
+					  <a href="/collections/all" class="mobile-nav__link">Ghế sofa</a>
+				   </li>
+				   <li class="mobile-nav__item ">
+					  <a href="/collections/all" class="mobile-nav__link">Bàn phòng khách</a>
+				   </li>
+				   <li class="mobile-nav__item ">
+					  <a href="/collections/all" class="mobile-nav__link">Bàn phòng bếp</a>
+				   </li>
+				   <li class="mobile-nav__item ">
+					  <a href="/collections/all" class="mobile-nav__link">Ghế gấp</a>
+				   </li>
+				</ul>
+			 </li>
+			 <li class="mobile-nav__item " aria-haspopup="true">
+				<div class="mobile-nav__has-sublist">
+				   <a href="" class="mobile-nav__link">Ghế sofa</a>
+				   <div class="mobile-nav__toggle">
+					  <button type="button" class="icon-fallback-text mobile-nav__toggle-open">
+					  <span class="icon icon-plus" aria-hidden="true"></span>
+					  <span class="fallback-text">See More</span>
+					  </button>
+					  <button type="button" class="icon-fallback-text mobile-nav__toggle-close">
+					  <span class="icon icon-minus" aria-hidden="true"></span>
+					  <span class="fallback-text">"Đóng"</span>
+					  </button>
+				   </div>
 				</div>
-			</div>
-			<div class="img-right col-sm-6">
-				<div class="div-card2 div-cards">
-					<div class="card-flip" style="height: 378.19px;">
-						<div class="card-front">
-							<img class="img-card1" src="/images/img/card3.jpg" alt="" style="width: 100%;">
-						</div>
-						<div class="card-back">
-							<div class="content-back">
-								<span>Read The Story</span>
+				<ul class="mobile-nav__sublist">
+				   <li class="mobile-nav__item ">
+					  <a href="/collections/all" class="mobile-nav__link">Ghế sofa đơn</a>
+				   </li>
+				   <li class="mobile-nav__item ">
+					  <a href="/collections/all" class="mobile-nav__link">Ghế sofa hai chỗ</a>
+				   </li>
+				   <li class="mobile-nav__item ">
+					  <a href="/collections/all" class="mobile-nav__link">Ghế sofa da</a>
+				   </li>
+				   <li class="mobile-nav__item ">
+					  <a href="/collections/all" class="mobile-nav__link">Ghế cao cấp</a>
+				   </li>
+				</ul>
+			 </li>
+			 <li class="mobile-nav__item " aria-haspopup="true">
+				<div class="mobile-nav__has-sublist">
+				   <a href="" class="mobile-nav__link">Trang trí</a>
+				   <div class="mobile-nav__toggle">
+					  <button type="button" class="icon-fallback-text mobile-nav__toggle-open">
+					  <span class="icon icon-plus" aria-hidden="true"></span>
+					  <span class="fallback-text">See More</span>
+					  </button>
+					  <button type="button" class="icon-fallback-text mobile-nav__toggle-close">
+					  <span class="icon icon-minus" aria-hidden="true"></span>
+					  <span class="fallback-text">"Đóng"</span>
+					  </button>
+				   </div>
+				</div>
+				<ul class="mobile-nav__sublist">
+				   <li class="mobile-nav__item ">
+					  <a href="/collections/all" class="mobile-nav__link">Bàn gỗ cao cấp</a>
+				   </li>
+				   <li class="mobile-nav__item ">
+					  <a href="/collections/all" class="mobile-nav__link">Ghế sofa cao cấp</a>
+				   </li>
+				   <li class="mobile-nav__item ">
+					  <a href="/collections/all" class="mobile-nav__link">Cách trang trí</a>
+				   </li>
+				   <li class="mobile-nav__item ">
+					  <a href="/collections/all" class="mobile-nav__link">Cách chọn ghế</a>
+				   </li>
+				</ul>
+			 </li>
+			 <li class="mobile-nav__item " aria-haspopup="true">
+				<div class="mobile-nav__has-sublist">
+				   <a href="" class="mobile-nav__link">Thông tin</a>
+				   <div class="mobile-nav__toggle">
+					  <button type="button" class="icon-fallback-text mobile-nav__toggle-open">
+					  <span class="icon icon-plus" aria-hidden="true"></span>
+					  <span class="fallback-text">See More</span>
+					  </button>
+					  <button type="button" class="icon-fallback-text mobile-nav__toggle-close">
+					  <span class="icon icon-minus" aria-hidden="true"></span>
+					  <span class="fallback-text">"Đóng"</span>
+					  </button>
+				   </div>
+				</div>
+				<ul class="mobile-nav__sublist">
+				   <li class="mobile-nav__item ">
+					  <a href="/collections/all" class="mobile-nav__link">Bộ sưu tập</a>
+				   </li>
+				   <li class="mobile-nav__item ">
+					  <a href="/collections/all" class="mobile-nav__link">Accordion</a>
+				   </li>
+				   <li class="mobile-nav__item ">
+					  <a href="/collections/all" class="mobile-nav__link">Carousel</a>
+				   </li>
+				   <li class="mobile-nav__item ">
+					  <a href="/collections/all" class="mobile-nav__link">Bản đồ </a>
+				   </li>
+				   <li class="mobile-nav__item ">
+					  <a href="/collections/all" class="mobile-nav__link">Chuyển hướng</a>
+				   </li>
+				</ul>
+			 </li>
+			 <li class="mobile-nav__item has-image" aria-haspopup="true">
+				<div class="sub-menu__child--img">
+				   <a href="" class="mega-img"><img src="http://theme.hstatic.net/1000187230/1000241027/14/image_child_5.png?v=2476" alt="Siêu thị nội thất SUPLO"></a>
+				</div>
+			 </li>
+		  </ul>
+	   </li>
+	   <li class="mobile-nav__item">
+		  <a href="/blogs/news" class="mobile-nav__link">Tin tức</a>
+	   </li>
+	   <li class="mobile-nav__item" aria-haspopup="true">
+		  <div class="mobile-nav__has-sublist">
+			 <a href="/products/sofa-don-uni-3651" class="mobile-nav__link">Khuyến mãi</a>
+			 <div class="mobile-nav__toggle">
+				<button type="button" class="icon-fallback-text mobile-nav__toggle-open">
+				<span class="icon icon-plus" aria-hidden="true"></span>
+				<span class="fallback-text">See More</span>
+				</button>
+				<button type="button" class="icon-fallback-text mobile-nav__toggle-close">
+				<span class="icon icon-minus" aria-hidden="true"></span>
+				<span class="fallback-text">"Đóng"</span>
+				</button>
+			 </div>
+		  </div>
+		  <ul class="mobile-nav__sublist">
+			 <li class="mobile-nav__item ">
+				<a href="/collections/all" class="mobile-nav__link">Sự kiện mới</a>
+			 </li>
+			 <li class="mobile-nav__item ">
+				<a href="/collections/all" class="mobile-nav__link">Đối tác</a>
+			 </li>
+			 <li class="mobile-nav__item" aria-haspopup="true">
+				<div class="mobile-nav__has-sublist">
+				   <a href="/collections/all" class="mobile-nav__link">Giảm giá</a>
+				   <div class="mobile-nav__toggle">
+					  <button type="button" class="icon-fallback-text mobile-nav__toggle-open">
+					  <span class="icon icon-plus" aria-hidden="true"></span>
+					  <span class="fallback-text">See More</span>
+					  </button>
+					  <button type="button" class="icon-fallback-text mobile-nav__toggle-close">
+					  <span class="icon icon-minus" aria-hidden="true"></span>
+					  <span class="fallback-text">"Đóng"</span>
+					  </button>
+				   </div>
+				</div>
+				<ul class="mobile-nav__sublist">
+				   <li class="mobile-nav__item  mobile-nav__item--active">
+					  <a href="/" class="mobile-nav__link">Ghế sofa đơn</a>
+				   </li>
+				   <li class="mobile-nav__item  mobile-nav__item--active">
+					  <a href="/" class="mobile-nav__link">Ghế sofa 2 chỗ</a>
+				   </li>
+				   <li class="mobile-nav__item  mobile-nav__item--active">
+					  <a href="/" class="mobile-nav__link">Ghế sofa</a>
+				   </li>
+				</ul>
+			 </li>
+			 <li class="mobile-nav__item ">
+				<a href="/collections/all" class="mobile-nav__link">Thông tin</a>
+			 </li>
+		  </ul>
+	   </li>
+	   <li class="mobile-nav__item">
+		  <a href="/pages/about-us" class="mobile-nav__link">Liên hệ</a>
+	   </li>
+	</ul>
+	<!-- //mobile-nav -->
+ </div>
+ <div id="CartDrawer" class="drawer drawer--right">
+	<div class="drawer__header">
+	   <div class="drawer__title h3">Giỏ hàng</div>
+	   <div class="drawer__close js-drawer-close">
+		  <button type="button" class="icon-fallback-text">
+		  <span class="icon icon-x" aria-hidden="true"></span>
+		  <span class="fallback-text">"Đóng"</span>
+		  </button>
+	   </div>
+	</div>
+	<div id="CartContainer"></div>
+ </div>
+ <div class="cart-overlay"></div>
+ <div id="PageContainer" class="is-moved-by-drawer">
+	<section id="main-slider">
+	   <div id="owl-home-slider" class="owl-carousel owl-enable owl-theme" data-nav="true" data-items="1" data-desktop="[1240, 1]" data-mobile="[979, 1]" style="opacity: 1; display: block;">
+		  <div class="owl-wrapper-outer">
+			 <div class="owl-wrapper" style="width: 8094px; left: 0px; display: block;">
+				<div class="owl-item" style="width: 1349px;">
+				   <div class="item">
+					  <div class="slide-bg">
+						 <img src="http://theme.hstatic.net/1000187230/1000241027/14/main_slider_1.png?v=2476" alt="Chào mừng bạn đến với Suplo Furniture">
+					  </div>
+					  <div class="slide-content-outside">
+						 <div class="wrapper">
+							<div class="inner clearfix">
+							   <div class="grid">
+								  <div class="grid__item large--six-twelfths push--large--six-twelfths text-right">
+									 <div class="slide-content">
+										<p class="desc small--hide">Chào mừng bạn đến với Suplo Furniture</p>
+										<h2 class="title small--hide">
+										   THIẾT KẾ NỘI THẤT DEMO
+										</h2>
+										<p class="author small--hide">
+										   FREE SHIPING VỚI ĐƠN HÀNG TRÊN 5.000.000Đ
+										</p>
+									 </div>
+									 <a href="/collections/all" class="btnType2 btnSelectHairStyle  small--hide" target="_blank">Mua ngay</a>
+								  </div>
+							   </div>
 							</div>
+						 </div>
+					  </div>
+				   </div>
+				</div>
+				<div class="owl-item" style="width: 1349px;">
+				   <div class="item">
+					  <div class="slide-bg">
+						 <img src="http://theme.hstatic.net/1000187230/1000241027/14/main_slider_2.png?v=2476" alt="Chào mừng bạn đến với Suplo Furniture">
+					  </div>
+					  <div class="slide-content-outside">
+						 <div class="wrapper">
+							<div class="inner clearfix">
+							   <div class="grid">
+								  <div class="grid__item large--six-twelfths push--large--six-twelfths text-right">
+									 <div class="slide-content">
+										<p class="desc small--hide">Chào mừng bạn đến với Suplo Furniture</p>
+										<h2 class="title small--hide">
+										   THIẾT KẾ NỘI THẤT DEMO
+										</h2>
+										<p class="author small--hide">
+										   FREE SHIPING VỚI ĐƠN HÀNG TRÊN 5.000.000Đ
+										</p>
+									 </div>
+									 <a href="/collections/all" class="btnType2 btnSelectHairStyle  small--hide" target="_blank">Mua ngay</a>
+								  </div>
+							   </div>
+							</div>
+						 </div>
+					  </div>
+				   </div>
+				</div>
+				<div class="owl-item" style="width: 1349px;">
+				   <div class="item">
+					  <div class="slide-bg">
+						 <img src="http://theme.hstatic.net/1000187230/1000241027/14/main_slider_3.png?v=2476" alt="Chào mừng bạn đến với Suplo Furniture">
+					  </div>
+					  <div class="slide-content-outside">
+						 <div class="wrapper">
+							<div class="inner clearfix">
+							   <div class="grid">
+								  <div class="grid__item large--six-twelfths push--large--six-twelfths text-right">
+									 <div class="slide-content">
+										<p class="desc small--hide">Chào mừng bạn đến với Suplo Furniture</p>
+										<h2 class="title small--hide">
+										   THIẾT KẾ NỘI THẤT DEMO
+										</h2>
+										<p class="author small--hide">
+										   FREE SHIPING VỚI ĐƠN HÀNG TRÊN 5.000.000Đ
+										</p>
+									 </div>
+									 <a href="/collections/all" class="btnType2 btnSelectHairStyle  small--hide" target="_blank">Mua ngay</a>
+								  </div>
+							   </div>
+							</div>
+						 </div>
+					  </div>
+				   </div>
+				</div>
+			 </div>
+		  </div>
+		  <div class="owl-controls clickable">
+			 <div class="owl-pagination">
+				<div class="owl-page active"><span class=""></span></div>
+				<div class="owl-page"><span class=""></span></div>
+				<div class="owl-page"><span class=""></span></div>
+			 </div>
+			 <div class="owl-buttons">
+				<div class="owl-prev"><i class="fa fa-angle-left" aria-hidden="true"></i></div>
+				<div class="owl-next"><i class="fa fa-angle-right" aria-hidden="true"></i></div>
+			 </div>
+		  </div>
+	   </div>
+	</section>
+	<main class="main-content">
+	   <section id="home-banner" class="mg-bottom-30">
+		  <div class="wrapper">
+			 <div class="inner">
+				<div class="grid mg-0">
+				   <div class="grid__item large--six-twelfths medium--one-whole small--one-whole pd-0 custom-banner">
+					  <a target="_blank" class="banner_1" href="/collections/all">
+						 <div class="ov1"></div>
+						 <div class="ov2"></div>
+						 <div class="ov3"></div>
+						 <div class="ov4"></div>
+						 <img src="http://theme.hstatic.net/1000187230/1000241027/14/banner_img_1.png?v=2476" alt="Siêu thị nội thất SUPLO">
+						 <div class="text-content">
+							<h2 class="title">
+							   NỘI THẤT GIẢM GIÁ 35% - 50%
+							</h2>
+							<span>
+							Xem chi tiết
+							</span>
+						 </div>
+					  </a>
+				   </div>
+				   <div class="grid__item large--six-twelfths medium--one-whole small--one-whole pd-0 custom-banner">
+					  <a target="_blank" class="custom-banner" href="/collections/all">
+						 <div class="ov1"></div>
+						 <div class="ov2"></div>
+						 <div class="ov3"></div>
+						 <div class="ov4"></div>
+						 <img src="http://theme.hstatic.net/1000187230/1000241027/14/banner_img_2.png?v=2476" alt="Siêu thị nội thất SUPLO">
+					  </a>
+					  <a target="_blank" href="/collections/all">
+						 <div class="ov1"></div>
+						 <div class="ov2"></div>
+						 <div class="ov3"></div>
+						 <div class="ov4"></div>
+						 <img src="http://theme.hstatic.net/1000187230/1000241027/14/banner_img_3.png?v=2476" alt="Siêu thị nội thất SUPLO">
+						 <div class="text-content2 large--five-twelfths  medium--one-whole small--one-whole custom-banner">
+							<h2 class="title">
+							   SẢN PHẨM THIẾT KẾ MỚI NHẤT 2017
+							</h2>
+						 </div>
+					  </a>
+				   </div>
+				</div>
+			 </div>
+		  </div>
+	   </section>
+	   <section id="home-collection">
+		  <div class="wrapper">
+			 <div class="inner">
+				<div class="grid">
+				<%
+					if (category) {
+						category.forEach(item => {
+				%>
+				   <div class="grid__item large--two-twelfths medium--four-twelfths small--six-twelfths">
+					  <a href="/product/<%-item.name%>.<%-item.id%>">
+						 <div class="collection-item">
+							<img src="http://theme.hstatic.net/1000187230/1000241027/14/collection_1.png?v=2476" alt="Trang trí">
+							<span><%-item.name%></span>
+						 </div>
+					  </a>
+				   </div>
+				<%})}%>
+				</div>
+			 </div>
+		  </div>
+	   </section>
+	   <section id="home-featured-products" class="mg-top-60 mg-bottom-60">
+		  <div class="wrapper">
+			 <div class="inner text-center">
+				<div class="h2-title mg-bottom-30">
+				   <h2 class="title--default">Sản phẩm mới</h2>
+				</div>
+				<div class="featured-products">
+				   <div class="grid">
+					<div class="blogSlider" id="productNew">
+						<div class="MS-content">
+						<%if (products) {
+							products.forEach(item => {
+						%>
+							<div class="item">
+								<div class="product-grid">
+									<div class="product-image">
+										<a href="/detail/<%-item.name%>.<%-item.id%>">
+											<img class="pic-1" src="<%-item.cover%>">
+										</a>
+										
+										<!-- <span class="product-discount-label">50%</span> -->
+								   </div>
+								   <div class="related-product-rating">
+									   <div class="rating">
+										   <div class="star-rating" style="display: flex;">
+											  <span class="fa fa-star" data-rating="1"></span>
+											  <span class="fa fa-star" data-rating="2"></span>
+											  <span class="fa fa-star-o" data-rating="3"></span>
+											  <span class="fa fa-star-o" data-rating="4"></span>
+											  <span class="fa fa-star-o" data-rating="5"></span>
+											  <input type="hidden" name="whatever1" class="rating-value" value="<%-item.rating%>">
+										   </div>
+									   </div>
+								   </div>
+								   <div class="product-content">
+									   <h3 class="title"><a href="#"><%-item.name%></a></h3>
+									   <div class="price">
+										<%-item.min_price == item.max_price ? VND(parseInt(item.max_price)) : VND(parseInt(item.min_price)) + ' - ' + VND(parseInt(item.max_price))%>
+									   </div>
+								   </div>
+							   </div>
+						   </div>
+						<%})}%>
 						</div>
+						 <div class="MS-controls">
+							 <button class="MS-left"><i class="fa fa-chevron-left" aria-hidden="true"></i></button>
+							 <button class="MS-right"><i class="fa fa-chevron-right" aria-hidden="true"></i></button>
+						 </div>
 					</div>
-					<p class="some-text">Hello august</p>
-					<h4>Hello World!</h4>
+				   </div>
+				</div>
+			 </div>
+		  </div>
+	   </section>
+	   <div class="tab-products">
+		  <div class="wrapper">
+			 <div class="inner text-center">
+				<div class="tab-title clearfix">
+				   <div class="h2-title">
+					  <h2 class="title--default">Sản phẩm bán chạy</h2>
+				   </div>
+				   <ul class="nav nav-tabs" role="tablist">
+					   <%if (category) {
+						   var i = 0;
+						   category.forEach(item => { i++;
+						%>
+					  <li role="presentation" class="change-tab3 active"><a href="#tab<%-i%>" aria-controls="tab<%-i%>" data-tab="tab<%-i%>" role="tab" data-toggle="tab" data-id="<%-item.id%>"><%-item.name%></a></li>
+					  <%})}%>
+				   </ul>
+				</div>
+				<div class="tab-content">
+
+				   <div role="tabpanel" class="tab-product" id="tab1" style="display: block;">
+					  <div class="grid">
+						<div class="blogSlider" id="productFeatured">
+							<div class="MS-content">
+								<%if (top) {
+									top.forEach(item => {
+								%>
+									<div class="item">
+										<div class="product-grid">
+											<div class="product-image">
+												<a href="/detail/<%-item.name%>.<%-item.id%>">
+													<img class="pic-1" src="<%-item.cover%>">
+												</a>
+												
+												<!-- <span class="product-discount-label">50%</span> -->
+										   </div>
+										   <div class="related-product-rating">
+											   <div class="rating">
+												   <div class="star-rating" style="display: flex;">
+													  <span class="fa fa-star" data-rating="1"></span>
+													  <span class="fa fa-star" data-rating="2"></span>
+													  <span class="fa fa-star-o" data-rating="3"></span>
+													  <span class="fa fa-star-o" data-rating="4"></span>
+													  <span class="fa fa-star-o" data-rating="5"></span>
+													  <input type="hidden" name="whatever1" class="rating-value" value="<%-item.rating%>">
+												   </div>
+											   </div>
+										   </div>
+										   <div class="product-content">
+											   <h3 class="title"><a href="#"><%-item.name%></a></h3>
+											   <div class="price">
+												<%-item.min_price == item.max_price ? VND(parseInt(item.max_price)) : VND(parseInt(item.min_price)) + ' - ' + VND(parseInt(item.max_price))%>
+											   </div>
+										   </div>
+									   </div>
+								   </div>
+								<%})}%>
+							</div>
+							
+							 <div class="MS-controls">
+								 <button class="MS-left"><i class="fa fa-chevron-left" aria-hidden="true"></i></button>
+								 <button class="MS-right"><i class="fa fa-chevron-right" aria-hidden="true"></i></button>
+							 </div>
+						</div>
+					  </div>
+				   </div>
+				   
+
+				</div>
+			 </div>
+		  </div>
+	   </div>
+	   <script type="text/javascript">
+		  $(document).ready(function()
+		  {
+		  // Hàm active tab nào đó
+		  function activeTab(obj)
+		  {
+		  // Xóa class active tất cả các tab
+		  $('.tab-products ul li').removeClass('active');
+		  
+		  // Thêm class active vòa tab đang click
+		  $(obj).addClass('active');
+		  
+		  // Lấy href của tab để show content tương ứng
+		  var id = $(obj).find('a').attr('href');
+		  
+		  // Ẩn hết nội dung các tab đang hiển thị
+		  $('.tab-product').hide();
+		  
+		  // Hiển thị nội dung của tab hiện tại
+		  $(id) .show();
+		  }
+		  
+		  // Sự kiện click đổi tab
+		  $('.nav-tabs li').click(function(){
+		  activeTab(this);
+		  return false;
+		  });
+		  
+		  // Active tab đầu tiên khi trang web được chạy
+		  activeTab($('.nav-tabs li:first-child'));
+		  });
+	   </script>
+
+	   <section id="home-policy" class=" mg-bottom-30 mg-top-30 pd-top-60 pd-bottom-60" style="background-image: url(http://theme.hstatic.net/1000187230/1000241027/14/bg_box.jpg?v=2476)">
+		  <div class="overlow"></div>
+		  <div class="wrapper policy-content">
+			 <div class="inner">
+				<div class="grid">
+				   <div class="policy grid__item large--four-twelfths medium--four-twelfths">
+					  <div class="inner">
+						 <a target="_blank" href="/collections/all">
+							<p class="policy-icon">
+							   <img src="http://theme.hstatic.net/1000187230/1000241027/14/policy_icon_1.png?v=2476" alt="MIỄN PHÍ GIAO HÀNG">
+							</p>
+							<div class="tex-box">
+							   <h2 class="policy-title">
+								  MIỄN PHÍ GIAO HÀNG
+							   </h2>
+							   <p>
+								  Nhận hàng trong vòng 3 ngày
+							   </p>
+							</div>
+						 </a>
+					  </div>
+				   </div>
+				   <div class="policy grid__item large--four-twelfths medium--four-twelfths">
+					  <div class="inner">
+						 <a target="_blank" href="/collections/all">
+							<p class="policy-icon">
+							   <img src="http://theme.hstatic.net/1000187230/1000241027/14/policy_icon_2.png?v=2476" alt="CHẤT LƯỢNG ĐẢM BẢO">
+							</p>
+							<div class="tex-box">
+							   <h2 class="policy-title">
+								  CHẤT LƯỢNG ĐẢM BẢO
+							   </h2>
+							   <p>
+								  Top 10 thương hiệu uy tín 2016
+							   </p>
+							</div>
+						 </a>
+					  </div>
+				   </div>
+				   <div class="policy grid__item large--four-twelfths medium--four-twelfths">
+					  <div class="inner">
+						 <a target="_blank" href="/collections/all">
+							<p class="policy-icon">
+							   <img src="http://theme.hstatic.net/1000187230/1000241027/14/policy_icon_3.png?v=2476" alt="ĐỔI TRẢ DỄ DÀNG">
+							</p>
+							<div class="tex-box">
+							   <h2 class="policy-title">
+								  ĐỔI TRẢ DỄ DÀNG
+							   </h2>
+							   <p>
+								  Trả lại hàng nếu không ưng ý
+							   </p>
+							</div>
+						 </a>
+					  </div>
+				   </div>
+				</div>
+			 </div>
+		  </div>
+	   </section>
+	   <section id="home-blog" class="pd-top-30">
+		  <div class="wrapper">
+			 <div class="inner text-center">
+				<div class="h2-title">
+				   <h2 class="title--default">Blog mới nhất</h2>
+				</div>
+				<a href="/blogs/news" class="btn btnViewMore">Xem tất cả</a>
+				<div class="related-blogs">
+				   <div class="owldemo7-wrapper ">
+					  <div id="owl-demo7" class="owl-carousel owl-enable boxi-owl owl-theme" data-nav="true" data-items="3" data-desktop="[1240, 3]" data-mobile="[640, 1]" style="opacity: 1; display: block;">
+						 <div class="owl-wrapper-outer">
+							<div class="owl-wrapper" style="width: 4716px; left: 0px; display: block;">
+							   <div class="owl-item" style="width: 393px;">
+								  <div class="item grid__item bolg-top pd-0">
+									 <div class="a-related-blog">
+										<div class="blog-content">
+										   <div class="arrow-down"></div>
+										   <span class="datetime">15-05-2017</span>
+										   <a href="/blogs/news/phong-cach-sang-trong-lich-su-cua-mau-ghe-sofa-nhieu-cho-moi">Phong cách sang trọng, lịch sự của mẫu ghế sofa nhiều chỗ mới</a>
+										   <div class="rte">
+											  <p>Phòng khách là nơi được sử dụng nhiều nhất trong ngôi nhà để đón tiếp những người khách đến thăm...</p>
+										   </div>
+										   <a href="http:/blogs/news/phong-cach-sang-trong-lich-su-cua-mau-ghe-sofa-nhieu-cho-moi" class="btn btnViewMore">Xem thêm</a>
+										</div>
+										<a href="/blogs/news/phong-cach-sang-trong-lich-su-cua-mau-ghe-sofa-nhieu-cho-moi" class="image"><img src="http://file.hstatic.net/1000187230/article/blog3_c00f9b02283b4a888eda2be35939b286_932fb5e42a334959ba88fd1ca6b776ae_grande.jpg" alt="Phong cách sang trọng, lịch sự của mẫu ghế sofa nhiều chỗ mới"></a>
+									 </div>
+								  </div>
+							   </div>
+							   <div class="owl-item" style="width: 393px;">
+								  <div class="item grid__item pd-0">
+									 <div class="a-related-blog">
+										<a href="/http:blogs/news/ghe-sofa-kich-thuoc-be" class="image"><img src="http://file.hstatic.net/1000187230/article/blog2_b416d5f3ce514a22bb8d017c9fc7a4d7_grande.jpg" alt="Ghế sofa kích thước bé giúp người dùng có thể để những nơi hẹp"></a>
+										<div class="blog-content">
+										   <div class="arrow-up"></div>
+										   <span class="datetime">06-05-2017</span>
+										   <a href="/blogs/news/ghe-sofa-kich-thuoc-be">Ghế sofa kích thước bé giúp người dùng có thể để những nơi hẹp</a>
+										   <div class="rte">
+											  <p>Phòng khách là nơi được sử dụng nhiều nhất trong ngôi nhà để đón tiếp những người khách đến thăm...</p>
+										   </div>
+										   <a href="/blogs/news/ghe-sofa-kich-thuoc-be" class="btn btnViewMore">Xem thêm</a>
+										</div>
+									 </div>
+								  </div>
+							   </div>
+							   <div class="owl-item" style="width: 393px;">
+								  <div class="item grid__item bolg-top pd-0">
+									 <div class="a-related-blog">
+										<div class="blog-content">
+										   <div class="arrow-down"></div>
+										   <span class="datetime">06-05-2017</span>
+										   <a href="/blogs/news/huong-dan-dat-sofa-theo-phong-thuy">Hướng dẫn đặt sofa theo phong thủy theo phong cách Tây Âu</a>
+										   <div class="rte">
+											  <p>Phòng khách là nơi được sử dụng nhiều nhất trong ngôi nhà để đón tiếp những người khách đến thăm...</p>
+										   </div>
+										   <a href="/blogs/news/huong-dan-dat-sofa-theo-phong-thuy" class="btn btnViewMore">Xem thêm</a>
+										</div>
+										<a href="/blogs/news/huong-dan-dat-sofa-theo-phong-thuy" class="image"><img src="http://file.hstatic.net/1000187230/article/blog3_c00f9b02283b4a888eda2be35939b286_grande.jpg" alt="Hướng dẫn đặt sofa theo phong thủy theo phong cách Tây Âu"></a>
+									 </div>
+								  </div>
+							   </div>
+							   <div class="owl-item" style="width: 393px;">
+								  <div class="item grid__item pd-0">
+									 <div class="a-related-blog">
+										<a href="/blogs/news/trang-tri-sofa-o-phong-khach" class="image"><img src="http://file.hstatic.net/1000187230/article/blog1_900cbc92dfa9424eba3cb35b8ab74f62_grande.jpg" alt="Trang trí sofa ở phòng khách hợp lý và sáng tạo"></a>
+										<div class="blog-content">
+										   <div class="arrow-up"></div>
+										   <span class="datetime">06-05-2017</span>
+										   <a href="/blogs/news/trang-tri-sofa-o-phong-khach">Trang trí sofa ở phòng khách hợp lý và sáng tạo</a>
+										   <div class="rte">
+											  <p>Phòng khách là nơi được sử dụng nhiều nhất trong ngôi nhà để đón tiếp những người khách đến thăm...</p>
+										   </div>
+										   <a href="/blogs/news/trang-tri-sofa-o-phong-khach" class="btn btnViewMore">Xem thêm</a>
+										</div>
+									 </div>
+								  </div>
+							   </div>
+							   <div class="owl-item" style="width: 393px;">
+								  <div class="item grid__item bolg-top pd-0">
+									 <div class="a-related-blog">
+										<div class="blog-content">
+										   <div class="arrow-down"></div>
+										   <span class="datetime">06-05-2017</span>
+										   <a href="/blogs/news/cach-bo-tri-sofa-hop-ly-voi-phong-thuy">Cách bố trí sofa hợp lý với phong thủy với phong cách lịch sự</a>
+										   <div class="rte">
+											  <p>Phòng khách là nơi được sử dụng nhiều nhất trong ngôi nhà để đón tiếp những người khách đến thăm...</p>
+										   </div>
+										   <a href="/blogs/news/cach-bo-tri-sofa-hop-ly-voi-phong-thuy" class="btn btnViewMore">Xem thêm</a>
+										</div>
+										<a href="/blogs/news/cach-bo-tri-sofa-hop-ly-voi-phong-thuy" class="image"><img src="http://file.hstatic.net/1000187230/article/blog3_grande.jpg" alt="Cách bố trí sofa hợp lý với phong thủy với phong cách lịch sự"></a>
+									 </div>
+								  </div>
+							   </div>
+							   <div class="owl-item" style="width: 393px;">
+								  <div class="item grid__item pd-0">
+									 <div class="a-related-blog">
+										<a href="/blogs/news/nhung-tien-ich-uu-viet-cua-sofa" class="image"><img src="http://file.hstatic.net/1000187230/article/blog2_grande.jpg" alt="Những tiện ích ưu việt của Sofa để đáp ứng nhu cầu người dùng"></a>
+										<div class="blog-content">
+										   <div class="arrow-up"></div>
+										   <span class="datetime">06-05-2017</span>
+										   <a href="/blogs/news/nhung-tien-ich-uu-viet-cua-sofa">Những tiện ích ưu việt của Sofa để đáp ứng nhu cầu người dùng</a>
+										   <div class="rte">
+											  <p>Phòng khách là nơi được sử dụng nhiều nhất trong ngôi nhà để đón tiếp những người khách đến thăm...</p>
+										   </div>
+										   <a href="/blogs/news/nhung-tien-ich-uu-viet-cua-sofa" class="btn btnViewMore">Xem thêm</a>
+										</div>
+									 </div>
+								  </div>
+							   </div>
+							</div>
+						 </div>
+						 <div class="owl-controls clickable">
+							<div class="owl-pagination">
+							   <div class="owl-page active"><span class=""></span></div>
+							   <div class="owl-page"><span class=""></span></div>
+							</div>
+							<div class="owl-buttons">
+							   <div class="owl-prev"><i class="fa fa-angle-left" aria-hidden="true"></i></div>
+							   <div class="owl-next"><i class="fa fa-angle-right" aria-hidden="true"></i></div>
+							</div>
+						 </div>
+					  </div>
+				   </div>
+				</div>
+			 </div>
+		  </div>
+	   </section>
+	</main>
+
+ </div>
+ <div id="back-to-top" style="display: block;">
+	<i class="fa fa-angle-up" aria-hidden="true"></i>
+ </div>
+ <div id="popup-subscribe" class="popup" style="display: none;">
+	<!-- Modal content -->
+	<div class="popup-content">
+	   <div class="grid">
+		  <div class="grid__item large--one-whole medium--one-whole small--one-whole">
+			 <span class="close-popup"><i class="fa fa-times" aria-hidden="true"></i></span>
+			 <h2>
+				HÃY ĐẾN VỚI CHÚNG TÔI
+			 </h2>
+			 <p>
+				Đăng ký nhận các tin tức và thông tin tuyển dụng mới nhất của Suplo Vietnam:
+			 </p>
+			 <form accept-charset="UTF-8" action="/account/contact" class="contact-form" method="post">
+				<input name="form_type" type="hidden" value="customer">
+				<input name="utf8" type="hidden" value="✓">
+				<div class="input-group">
+				   <input type="email" value="" placeholder="email@example.com" name="contact[email]" id="Email" class="input-group-field" aria-label="email@example.com">
+				   <input type="hidden" name="contact[tags]" value="newsletter">
+				   <span class="input-group-btn">
+				   <button type="submit" class="btn"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+				   </span>
 				</div>
 				
-				<div class="div-card2 div-cards">
-					<div class="card-flip">
-						<div class="card-front">
-							<img class="img-card1" src="/images/img/card1.jpg" alt="" style="width: 100%;">
+			 </form>
+			 <div class="modal-social-icons">
+				<a href="https://web.facebook.com/haravan.official/" target="_blank" class="iconFB"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+				<a href="https://web.facebook.com/haravan.official/" target="_blank" class="iconTW"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+				<a href="https://web.facebook.com/haravan.official/" target="_blank" class="iconYT"><i class="fa fa-youtube-play" aria-hidden="true"></i></a>
+				<a href="https://web.facebook.com/haravan.official/" target="_blank" class="iconGG"><i class="fa fa-google-plus" aria-hidden="true"></i></a>
+			 </div>
+		  </div>
+	   </div>
+	</div>
+ </div>
+ <button id="popup-btn"></button>
+ <script>
+	var modal = document.getElementById('popup-subscribe');
+	var btn = document.getElementById("popup-btn");
+	var span = document.getElementsByClassName("close-popup")[0];
+	btn.onclick = function() {
+		modal.style.display = "block";
+	}
+	span.onclick = function() {
+		modal.style.display = "none";
+	}
+	window.onclick = function(event) {
+		if (event.target == modal) {
+			modal.style.display = "none";
+		}
+	}
+	
+	
+	$(document).ready(function($){
+		var date = new Date();
+		var minutes = 60;
+		date.setTime(date.getTime() + (minutes * 60 * 1000));
+		if (getCookie('popupNewLetterStatus') != 'closed') {
+			$('#popup-btn').trigger('click');
+			setCookie('popupNewLetterStatus', 'closed', date);
+		};
+	});
+	
+	
+	function setCookie(cname, cvalue, exdays) {
+		var d = new Date();
+		d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+		var expires = "expires="+d.toUTCString();
+		document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+	}
+	
+	function getCookie(cname) {
+		var name = cname + "=";
+		var ca = document.cookie.split(';');
+		for(var i = 0; i < ca.length; i++) {
+			var c = ca[i];
+			while (c.charAt(0) == ' ') {
+				c = c.substring(1);
+			}
+			if (c.indexOf(name) == 0) {
+				return c.substring(name.length, c.length);
+			}
+		}
+		return "";
+	}
+	
+	function checkCookie() {
+		var user = getCookie("username");
+		if (user != "") {
+			alert("Welcome again " + user);
+		} else {
+			user = prompt("Please enter your name:", "");
+			if (user != "" && user != null) {
+				setCookie("username", user, 365);
+			}
+		}
+	}
+ </script>
+
+ <script src="http://theme.hstatic.net/1000187230/1000241027/14/fastclick.min.js?v=2476" type="text/javascript"></script>
+ <script src="http://hstatic.net/0/0/global/design/js/owl.carousel.js" type="text/javascript"></script>
+ <script src="http://theme.hstatic.net/1000187230/1000241027/14/script.js?v=2476" type="text/javascript"></script>
+ <script src="http://theme.hstatic.net/1000187230/1000241027/14/timber.js?v=2476" type="text/javascript"></script>
+ <!-- Validate quantity form -->
+ <script>
+	jQuery(document).ready(function() {
+		$(function() {
+			$(".js-qty__num").keypress(function(event) {
+				if (event.which != 8 && event.which != 0 && (event.which < 48 || event.which > 57)) {
+					return false;
+				}
+			});
+			$(".ajaxcart__qty-num").keypress(function(event) {
+				if (event.which != 8 && event.which != 0 && (event.which < 48 || event.which > 57)) {
+					return false;
+				}
+			});
+		});
+	});
+ </script>
+ <script>
+	jQuery(document).ready(function() {
+		var offset = 220;
+		var duration = 500;
+		jQuery(window).scroll(function() {
+			if (jQuery(this).scrollTop() > offset) {
+				jQuery('#back-to-top').fadeIn(duration);
+			} else {
+				jQuery('#back-to-top').fadeOut(duration);
+			}
+		});
+	
+		jQuery('#back-to-top').click(function(event) {
+			event.preventDefault();
+			jQuery('html, body').animate({
+				scrollTop: 0
+			}, duration);
+			return false;
+		})
+	});
+ </script>
+ <!-- Validate quantity form & trigger zoom -->
+ <script>
+	$("document").ready(function() {
+		$(function() {
+			$(".js-qty__num").keypress(function(event) {
+				if (event.which != 8 && event.which != 0 && (event.which < 48 || event.which > 57)) {
+					return false;
+				}
+			});
+		});
+		if($(window).width()> 768){
+			setTimeout(function() {
+				$("#ProductThumbs .thumbnail-item:first-child a").trigger('click');
+			},3000);
+		};
+	
+	});
+ </script>
+ <script src="http://theme.hstatic.net/1000187230/1000241027/14/handlebars.min.js?v=2476" type="text/javascript"></script>
+ <!-- /snippets/ajax-cart-template.liquid -->
+ <script id="CartTemplate" type="text/template">
+	<form action="/cart" method="post" novalidate class="cart ajaxcart">
+		<div class="ajaxcart__inner">
+			{{#items}}
+			<div class="ajaxcart__product">
+				<div class="ajaxcart__row" data-line="{{line}}">
+					<div class="grid">
+						<div class="grid__item one-quarter">
+							<a href="{{url}}" class="ajaxcart__product-image"><img src="{{img}}" alt=""></a>
 						</div>
-						<div class="card-back">
-							<div class="content-back">
-								<span>Read The Story</span>
+						<div class="grid__item three-quarters">
+							<p>
+								<a href="{{url}}" class="ajaxcart__product-name">{{name}}</a>
+								{{#if variation}}
+								<span class="ajaxcart__product-meta variant">{{variation}}</span>
+								{{/if}}
+								{{#properties}}
+								{{#each this}}
+								{{#if this}}
+								<span class="ajaxcart__product-meta">{{@key}}: {{this}}</span>
+								{{/if}}
+								{{/each}}
+								{{/properties}}
+								
+								<span class="ajaxcart__product-meta">{{ vendor }}</span>
+								
+							</p>
+	
+							<div class="grid--full display-table">
+								<div class="grid__item display-table-cell one-half">
+									<div class="ajaxcart__qty">
+										<button type="button" class="ajaxcart__qty-adjust ajaxcart__qty--minus icon-fallback-text" data-id="{{key}}" data-qty="{{itemMinus}}" data-line="{{line}}">
+											<span class="icon icon-minus" aria-hidden="true"></span>
+											<span class="fallback-text" aria-hidden="true">&minus;</span>
+											<span class="visually-hidden">Giảm số lượng sản phẩm đi 1</span>
+										</button>
+										<input type="text" name="updates[]" class="ajaxcart__qty-num" value="{{itemQty}}" min="0" data-id="{{key}}" data-line="{{line}}" aria-label="quantity" pattern="[0-9]*">
+										<button type="button" class="ajaxcart__qty-adjust ajaxcart__qty--plus icon-fallback-text" data-id="{{key}}" data-line="{{line}}" data-qty="{{itemAdd}}">
+											<span class="icon icon-plus" aria-hidden="true"></span>
+											<span class="fallback-text" aria-hidden="true">+</span>
+											<span class="visually-hidden">Tăng số lượng sản phẩm lên 1</span>
+										</button>
+									</div>
+								</div>
+								<div class="grid__item display-table-cell one-half text-right">
+									{{#if discountsApplied}}
+									<!---
+	<small class="ajaxcart-item__price-strikethrough hide"><s>{{{originalLinePrice}}}</s></small>
+	<br>
+	-->
+									<span>{{{linePrice}}}</span>
+									{{else}}
+									<span>{{{linePrice}}}</span>
+									{{/if}}
+								</div>
 							</div>
+							{{#if discountsApplied}}
+							<div class="grid--full display-table">
+								<div class="grid__item text-right">
+									{{#each discounts}}
+									<small class="ajaxcart-item__discount">{{ this.title }}</small><br>
+									{{/each}}
+								</div>
+							</div>
+							{{/if}}
 						</div>
 					</div>
-					<p class="some-text">Big sale</p>
-					<h4>Sale For You</h4>
 				</div>
 			</div>
 		</div>
+		</div>
+	{{/items}}
+	
+	
+	<div>
+		<label for="CartSpecialInstructions">Chú thích cho chủ cửa hàng</label>
+		<textarea name="note" class="input-full" id="CartSpecialInstructions">{{ note }}</textarea>
 	</div>
-</section> 
+	
+	</div>
+	<div class="ajaxcart__footer">
+	<div class="grid--full">
+		<div class="grid__item two-thirds">
+			<p>Tổng tiền</p>
+		</div>
+		<div class="grid__item one-third text-right">
+			<p>{{{totalPrice}}}</p>
+		</div>
+		{{#if totalCartDiscount-abort}}
+		<p class="ajaxcart__savings text-center"><em>{{{totalCartDiscount}}}</em></p>
+		{{/if}}
+	</div>
+	<button type="submit" class="btn--secondary btn--full cart__checkout" name="checkout">
+		Thanh toán &rarr;
+	</button>
+	
+	</div>
+	</form>
+	
+ </script>
+ <script id="AjaxQty" type="text/template">
+	<div class="ajaxcart__qty">
+		<button type="button" class="ajaxcart__qty-adjust ajaxcart__qty--minus icon-fallback-text" data-id="{{key}}" data-qty="{{itemMinus}}">
+			<span class="icon icon-minus" aria-hidden="true"></span>
+			<span class="fallback-text" aria-hidden="true">&minus;</span>
+			<span class="visually-hidden">Giảm số lượng sản phẩm đi 1</span>
+		</button>
+		<input type="text" class="ajaxcart__qty-num" value="{{itemQty}}" min="0" data-id="{{key}}" aria-label="quantity" pattern="[0-9]*">
+		<button type="button" class="ajaxcart__qty-adjust ajaxcart__qty--plus icon-fallback-text" data-id="{{key}}" data-qty="{{itemAdd}}">
+			<span class="icon icon-plus" aria-hidden="true"></span>
+			<span class="fallback-text" aria-hidden="true">+</span>
+			<span class="visually-hidden">Tăng số lượng sản phẩm lên 1</span>
+		</button>
+	</div>
+	
+ </script>
+ <script id="JsQty" type="text/template">
+	<div class="js-qty">
+		<button type="button" class="js-qty__adjust js-qty__adjust--minus icon-fallback-text" data-id="{{key}}" data-qty="{{itemMinus}}">
+			<span class="icon icon-minus" aria-hidden="true"></span>
+			<span class="fallback-text" aria-hidden="true">&minus;</span>
+			<span class="visually-hidden">Giảm số lượng sản phẩm đi 1</span>
+		</button>
+		<input type="text" class="js-qty__num" value="{{itemQty}}" min="1" data-id="{{key}}" aria-label="quantity" pattern="[0-9]*" name="{{inputName}}" id="{{inputId}}">
+		<button type="button" class="js-qty__adjust js-qty__adjust--plus icon-fallback-text" data-id="{{key}}" data-qty="{{itemAdd}}">
+			<span class="icon icon-plus" aria-hidden="true"></span>
+			<span class="fallback-text" aria-hidden="true">+</span>
+			<span class="visually-hidden">Tăng số lượng sản phẩm lên 1</span>
+		</button>
+	</div>
+	
+ </script>
+ <script src="http://theme.hstatic.net/1000187230/1000241027/14/ajax-cart.js?v=2476" type="text/javascript"></script>
+ <script src="https://npmcdn.com/imagesloaded@4.1/imagesloaded.pkgd.min.js"></script>
+ <!-- or -->
+ <script src="https://npmcdn.com/imagesloaded@4.1/imagesloaded.pkgd.js"></script>
+ <script>
+	jQuery(function($) {
+		ajaxCart.init({
+			formSelector: '#AddToCartForm',
+			cartContainer: '#CartContainer',
+			addToCartSelector: '#AddToCart',
+			cartCountSelector: '#CartCount',
+			cartCostSelector: '#CartCost',
+			moneyFormat: "{{amount}}₫"
+									});
+	});
+	jQuery(document.body).on('afterCartLoad.ajaxCart', function(evt, cart) {
+		// Bind to 'afterCartLoad.ajaxCart' to run any javascript after the cart has loaded in the DOM
+		timber.RightDrawer.open();
+	});
+ </script>
+ <script>
+	function openTab(evt, tabName) {
+		var i, tabcontent, tablinks;
+		tabcontent = document.getElementsByClassName("tabcontent");
+		for (i = 0; i < tabcontent.length; i++) {
+			tabcontent[i].style.display = "none";
+		}
+		tablinks = document.getElementsByClassName("tablinks");
+		for (i = 0; i < tablinks.length; i++) {
+			tablinks[i].className = tablinks[i].className.replace(" active", "");
+		}
+		document.getElementById(tabName).style.display = "block";
+		evt.currentTarget.className += " active";
+	}
+ </script>
+ <script>
+	$(window).on('load',function(){
+		var img_height_max = 0;
+		$('.img-resize').each(function(){
+			if(img_height_max < $(this).height()){
+				img_height_max = $(this).height();
+			}
+		})
+		$('.img-resize').height(img_height_max);
+	})
+ </script>
+ <script type="text/javascript">
+	var $filterSidebar = $('#sidebar');
+	var $overlay = $('body').find('#open-filters');
+	$overlay.on( "click", function() {
+	$filterSidebar.toggleClass('open');
+	$(this).toggleClass('active');
+	$('body').toggleClass('open_sidebar');
+	});
+	
+ </script>
+ <script>
+	$(window).on('load',function(){
+		if($(window).width() < 769){
+			$('#sidebar').appendTo('body');
+		}
+	})
+ </script>
+ <style>
+	.modal {
+	display: none;
+	position: fixed;
+	z-index: 99999;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	overflow: hidden; 
+	background-color: rgb(0,0,0);
+	background-color: rgba(0,0,0,0.4);
+	transtion: all .5s;
+	}
+	.modal-content {
+	background-color: #fefefe;
+	margin: 5% auto; 
+	padding: 20px;
+	border: 1px solid #888;
+	width: 80%;
+	max-width: 780px;
+	transform: translatey(-30px);
+	transition: all .5s;
+	}
+	.close {
+	color: #aaa;
+	font-size: 28px;
+	font-weight: bold;
+	position: absolute;
+	right: 0;
+	top: 0;
+	width: 40px;
+	text-align: center;
+	}
+	.close:hover,
+	.close:focus {
+	color: black;
+	text-decoration: none;
+	cursor: pointer;
+	}
+ </style>
+ <div class="modal" id="productQuickView">
+	<div class="modal-content">
+	   <span id="close" class="close">×</span>
+	   <form class="grid" id="form-quick-view">
+		  <div class="grid__item large--five-tenths">
+			 <div class="image-zoom">
+				<img id="p-product-image-feature" class="p-product-image-feature" src="">
+				<div id="p-sliderproduct" class="flexslider">
+				   <ul class="slides"></ul>
+				</div>
+			 </div>
+		  </div>
+		  <div class="grid__item large--five-tenths pull-right">
+			 <h4 class="p-title   modal-title " id="">Tên sản phẩm</h4>
+			 <p class="product-more-info">
+				<span class="product-sku">
+				Mã sản phẩm: <span id="ProductSku">01923123</span> 
+				</span>
+			 </p>
+			 <div class="form-input product-price-wrapper">
+				<div class="product-price">
+				   <span class="p-price "></span>
+				   <del></del>
+				</div>
+				<em id="PriceSaving"></em>
+			 </div>
+			 <div class="p-option-wrapper">
+				<select name="id" class="" id="p-select-quickview"></select>
+			 </div>
+			 <div id="swatch-quick-view" class="select-swatch">
+			 </div>
+			 <div class="form-input hidden">
+				<label>Số lượng</label>
+				<div class="js-qty">
+				   <button type="button" class="js-qty__adjust js-qty__adjust--minus icon-fallback-text" data-id="" data-qty="0">
+				   <span class="icon icon-minus" aria-hidden="true"></span>
+				   <span class="fallback-text" aria-hidden="true">−</span>
+				   <span class="visually-hidden">Giảm số lượng sản phẩm đi 1</span>
+				   </button>
+				   <input type="text" class="js-qty__num" value="1" min="1" data-id="" aria-label="quantity" pattern="[0-9]*" name="quantity" id="">
+				   <button type="button" class="js-qty__adjust js-qty__adjust--plus icon-fallback-text" data-id="" data-qty="11">
+				   <span class="icon icon-plus" aria-hidden="true"></span>
+				   <span class="fallback-text" aria-hidden="true">+</span>
+				   <span class="visually-hidden">Tăng số lượng sản phẩm lên 1</span>
+				   </button>
+				</div>
+			 </div>
+			 <div class="form-input" style="width: 100%">
+				<button type="submit" class="btn btn-addcart" id="AddToCardQuickView">Thêm vào giỏ</button>
+				<button disabled="" class="btn btn-soldout">Hết hàng</button>
+				<div class="qv-readmore">
+				   <span> hoặc </span><a class="read-more p-url" href="" role="button">Xem chi tiết</a>
+				</div>
+			 </div>
+		  </div>
+	   </form>
+	</div>
+	<div id="loading">
+	   <div></div>
+	</div>
+ </div>
+ <script>
+	$('#AddToCardQuickView').on('click', function(e){
+		e.preventDefault();
+		jQuery.ajax({
+			type: 'POST',
+			url: '/cart/add.js',
+			async : false,
+			data: jQuery('#form-quick-view').serialize(),
+			dataType: 'json',
+			success: function() {
+				$(".close").trigger('click');
+				updateCart();
+				updateCartModal();
+			},
+			error: function(XMLHttpRequest, textStatus) {
+				Haravan.onError(XMLHttpRequest, textStatus);
+			}
+		});
+	});
+	var callBack = function (variant, selector) {
+		if (variant) {
+			modal = $('#productQuickView');
+			$('.p-price').html(Haravan.formatMoney(variant.price, "{{amount}}₫"));
+			if(variant.sku){
+				$('#ProductSku').html(variant.sku);
+				$('.product-sku').show();
+			}else{
+				$('.product-sku').hide();
+			}
+			if(variant.compare_at_price - variant.price > 0){
+				$('#PriceSaving').html('(Bạn đã tích kiệm được ' + Haravan.formatMoney(variant.compare_at_price - variant.price, "{{amount}}₫")+')')
+			}else{
+				$('#PriceSaving').html('')
+			}
+			if (variant.compare_at_price > 0)
+				modal.find('del').html(Haravan.formatMoney(variant.compare_at_price, "{{amount}}₫"));
+			else
+				modal.find('del').html('');
+			if (variant.available) {
+				modal.find('.btn-addcart').css('display', 'block');
+				modal.find('.btn-soldout').css('display', 'none');
+				if (variant.featured_image) {
+					var newImg = variant.featured_image,
+							el = $('.p-product-image-feature')[0];
+					Haravan.Image.switchImage(newImg, el, timber.switchImage);
+				}
+				check_variant_quickview = true;
+			}
+			else {
+				modal.find('.btn-addcart').css('display', 'none');
+				modal.find('.btn-soldout').css('display', 'block');
+	
+			}
+		}
+		else {
+			modal.find('.btn-addcart').css('display', 'none');
+			modal.find('.btn-soldout').css('display', 'block');
+			check_variant_quickview = false;
+	
+		}
+	}
+	var p_select_data = $('.p-option-wrapper').html();
+	var p_zoom = $('.image-zoom').html();
+	var quickViewProduct = function (purl) {
+	
+		if ($(window).width() < 680) { window.location = purl; return false; }
+		modal = $('#productQuickView');
+		$.ajax({
+			url: purl + '.js',
+			async: false,
+			success: function (product) {
+				$.each(product.options, function (i, v) {
+					product.options[i] = v.name;
+				})
+				modal.find('.p-title').html(product.title);
+				modal.find('.p-option-wrapper').html(p_select_data);
+				modal.find('#swatch-quick-view').html('');
+				$('.image-zoom').html(p_zoom);
+				modal.find('.p-url').attr('href', product.url);
+	
+				$.each(product.variants, function (i, v) {
+					modal.find('select#p-select-quickview').append("<option value='" + v.id + "'>" + v.title + ' - ' + v.price + "</option>");
+				})
+				if (product.variants.length == 1 && product.variants[0].title.indexOf('Default') != -1)
+					$('.p-option-wrapper').hide();
+				else
+					$('.p-option-wrapper').show();
+				if (product.variants.length == 1 && product.variants[0].title.indexOf('Default') != -1) {
+					callBack(product.variants[0], null);
+				}
+				else {
+					new Haravan.OptionSelectors("p-select-quickview", { product: product, onVariantSelected: callBack });
+					if (product.options.length == 1 && product.options[0].indexOf('Tiêu đề')==-1)
+						modal.find('.selector-wrapper:eq(0)').prepend('<label>' + product.options[0] + '</label>');
+					$('.p-option-wrapper select:not(#p-select-quickview)').each(function () {
+						$(this).wrap('<span class="custom-dropdown custom-dropdown--white"></span>');
+						$(this).addClass("custom-dropdown__select custom-dropdown__select--white");
+					});
+					var filePath = window.file_url.substring(0, window.file_url.lastIndexOf('?'));
+					var assetUrl = window.asset_url.substring(0, window.asset_url.lastIndexOf('?'));
+	
+					product.options.forEach(function(item){
+	
+					})
+					var variantSwatch = '';
+					for(var j = 0; j< product.options.length; j++){
+						var option_index = j;
+						var op_index_plus = option_index + 1;
+						var swatch = product.options[option_index];
+						variantSwatch += '<div id="variant-swatch-'+ option_index +'-quickview" class="swatch swatch-quick-view clearfix" data-option="option'+ op_index_plus +'" data-option-index="'+ option_index +'">';
+						variantSwatch += '<div class="header"> '+ product.options[j]+' </div><div class="select-swap">';
+						var is_color = false;
+						if(product.options[j] == "Màu sắc" || product.options[j] == "Màu"){
+							is_color = true;
+						}					
+						var values = '';
+						for(var i = 0; i< product.variants.length; i++){
+							var value = convertToSlug(product.variants[i].options[option_index]); //value handle :(
+							var _value = product.variants[i].options[option_index];
+	
+							if(values.indexOf(value) < 0){
+								values += ',';
+								values += ',' + value;
+								values = values.split(',');
+								if(is_color){
+									variantSwatch += '<div data-value="'+_value+'" class="n-sd swatch-element color '+ value;
+	
+								}else{
+									variantSwatch += '<div data-value="'+_value+'" class="n-sd swatch-element '+ value;
+								}
+	
+								if(option_index == 2){
+									variantSwatch += 'variant-3">';
+								}else{
+									variantSwatch +='">';
+								}
+	
+								variantSwatch += '<input class="variant-'+option_index+' input-quickview" id="qv-swatch-'+option_index+'-'+value+'" type="radio" name="option'+op_index_plus+'" value="'+_value+'"';
+								if(j==0){
+									variantSwatch += ' checked/>';
+								}else{
+									variantSwatch += ' />';
+								}
+	
+								if(is_color){
+									var img_url = '';
+									if(product.variants[i].featured_image != null){
+										img_url = Haravan.resizeImage(product.variants[i].featured_image.src, 'thumb');
+									}
+									if(img_url !== ''){
+										if(img_url.indexOf('noDefaultImage6') < 0){
+											variantSwatch += '<label class="'+value+' has-thumb" for="qv-swatch-'+option_index+'-'+value+'" style="background: url('+img_url+') top left no-repeat" >';
+										}
+									}
+									//fix o day
+									else{
+										variantSwatch += 	'<label class="'+value+' no-thumb" for="qv-swatch-'+option_index+'-'+value+'">';
+									}
+									variantSwatch +='	<span>'+_value+'</span><img class="crossed-out" src="'+assetUrl+'soldout.png" /><img class="img-check" src="'+assetUrl+'select-pro.png" /></label>';
+	
+								}else{
+									variantSwatch += '<label for="qv-swatch-'+option_index+'-'+value+'">'+ _value +'<img class="crossed-out" src="'+assetUrl+'soldout.png" /><img class="img-check" src="'+assetUrl+'select-pro.png" /></label>';
+								}
+								//console.log(variantSwatch);
+								//console.log(product.variants[i])
+								variantSwatch += '</div>';
+							}
+						}
+	
+						variantSwatch += '</div>';
+						variantSwatch += '</div>';
+					}
+	
+					modal.find('#swatch-quick-view').html(variantSwatch);
+	
+					callBack(product.variants[0], null);
+					callFirstVariantQuickView();
+				}
+				if (product.images.length == 0) {
+					modal.find('.p-product-image-feature').attr('src', '//hstatic.net/0/0/global/noDefaultImage6_large.gif');
+				}
+				else {
+					$('#p-sliderproduct').remove();
+					$('.image-zoom').append("<div id='p-sliderproduct'>");
+					$('#p-sliderproduct').append("<ul class='owl-carousel inline-list'>");
+					$.each(product.images, function (i, v) {
+						elem = $('<li class="item">').append('<a href="#" data-image="" data-zoom-image=""><img /></a>');
+						elem.find('a').attr('data-image', Haravan.resizeImage(v, 'medium'));
+						elem.find('a').attr('data-zoom-image', Haravan.resizeImage(v, 'large'));
+						elem.find('img').attr('data-image', Haravan.resizeImage(v, 'medium'));
+						elem.find('img').attr('data-zoom-image',Haravan.resizeImage(v, 'large'));
+						elem.find('img').attr('src', Haravan.resizeImage(v, 'medium'));
+						modal.find('.owl-carousel').append(elem);
+					});
+					var owl = $('#p-sliderproduct .owl-carousel');
+					owl.owlCarousel({
+						items:3,
+						navigation : true,
+						navigationText :[navRightText, navLeftText]
+					});
+					$('#p-sliderproduct .owl-carousel .owl-item').first().children('.item').addClass('active');
+					modal.find('.p-product-image-feature').attr('src', Haravan.resizeImage(product.featured_image, 'large') );
+					$(".modal-footer .btn-readmore").attr('href', purl);
+				}
+			}
+		});
+	
+		return false;
+	}
+
+	$('.change-tab3').on('click', function (e) {
+		const id = $(this).find('a').data('id');
+		e.preventDefault();
+		$.ajax({
+          url: `${window.location.origin}/binding/cate`,
+          type: "post", // phương thức gửi dữ liệu.
+          dataType: "html",
+          data: {
+                cate: id
+            },
+		  success:function(data){ //dữ liệu nhận về
+              $(".tab-content").empty();
+              $(".tab-content").append($(data).find('.tab-content').children());
+          },
+          error: function() {
+            alert("Bị lỗi");
+          }
+       });
+	})
+
+	$('#productQuickView').on('click', '.item img', function (event) {
+		event.preventDefault();
+		modal = $('#quick-view-modal');
+		modal.find('.p-product-image-feature').attr('src', $(this).attr('data-zoom-image'));
+		modal.find('.item').removeClass('active');
+		$(this).parents('li').addClass('active');
+		return false;
+	});
+	$(function(){
+		$('#close').click(function(){
+			$('#productQuickView .modal-content').css('opacity', '0');
+			$('#productQuickView .modal-content').css('transform', 'translateY(-30px)');
+			$('#productQuickView').css('background-color', 'rgba(0,0,0,0)');
+			setTimeout(function(){
+				$('#productQuickView').hide();
+			}, 500);
+			document.getElementById("form-quick-view").reset();
+		})
+		window.onclick = function(event) {
+			if (event.target == document.getElementById('productQuickView')) {
+				$('#productQuickView .modal-content').css('opacity', '0');
+				$('#productQuickView .modal-content').css('transform', 'translateY(-30px)');
+				$('#productQuickView').css('background-color', 'rgba(0,0,0,0)');
+				setTimeout(function(){
+					$('#productQuickView').hide();
+				}, 500);
+				document.getElementById("form-quick-view").reset();
+			}
+		}
+	})
+	$(document).on("click",".quick-view", function(event){
+		event.preventDefault();
+	
+		if(!quickViewProduct($(this).attr('data-handle'))){
+			if ($(window).width() > 680) {
+				$('#productQuickView .modal-content').css('opacity', '0');
+				$('#productQuickView').show();
+				$('#productQuickView').css('background-color', 'rgba(0,0,0,0.4)');
+				$('#loading').show();
+	
+				var images = $("#productQuickView img");
+				var loadedImgNum = 0;
+	
+				images.on('load', function(){
+					loadedImgNum += 1;
+					if (loadedImgNum == images.length) {
+						var topPQZ =  ($('#productQuickView').height() - $('.modal-content').height())/2;
+						$('#loading').hide();
+						$('#productQuickView .modal-content').css('opacity', '1');
+						$('#productQuickView .modal-content').css('transform', 'translateY(0)');
+						$('#productQuickView .modal-content').css('margin-top', topPQZ - 50);
+					}
+				});
+			}
+			$('#p-sliderproduct a').on('click', function(evt) {
+				evt.preventDefault();
+				var newImage = $(this).data('zoom-image');
+				$('.p-product-image-feature').attr('src', newImage);
+			});
+		}
+	});
+	function callFirstVariantQuickView(){
+		var _chage = '';
+		$('#productQuickView .swatch-element[data-value="'+$('.selector-wrapper .single-option-selector').eq(0).val()+'"]').find('input').click();
+		$('#productQuickView .swatch-element[data-value="'+$('.selector-wrapper .single-option-selector').eq(1).val()+'"]').find('input').click();
+		if(swatch_size == 2){
+			var _avi_op1 = '';
+			var _avi_op2 = '';
+			var _count = $('#variant-swatch-1-quickview .swatch-element').size();
+			$('#variant-swatch-0-quickview .swatch-element').each(function(ind,value){
+				var _key = $(this).data('value');
+				var _unavi = 0;
+				$('#productQuickView .single-option-selector').eq(0).val(_key).change();
+				$('#variant-swatch-1-quickview .swatch-element').each(function(i,v){
+					var _val = $(this).data('value');
+					$('#productQuickView .single-option-selector').eq(1).val(_val).change();
+					if(check_variant_quickview == true){
+						if(_avi_op1 == ''){
+							_avi_op1 = _key;
+						}
+						if(_avi_op2 == ''){
+							_avi_op2 = _val;
+						}
+					}else{
+						_unavi += 1;
+					}
+				})
+				if(_unavi == _count){
+					$('#variant-swatch-0-quickview .swatch-element[data-value = "'+_key+'"]').addClass('soldout');
+					$('#variant-swatch-0-quickview .swatch-element[data-value = "'+_key+'"]').find('input').attr('disabled','disabled');					
+				}
+			})
+			$('#variant-swatch-1-quickview .swatch-element[data-value = "'+_avi_op2+'"] input').click();
+			$('#variant-swatch-0-quickview .swatch-element[data-value = "'+_avi_op1+'"] input').click();
+		}else if(swatch_size == 3){
+			var _avi_op1 = '';
+			var _avi_op2 = '';
+			var _avi_op3 = '';
+			var _size_op2 = $('#variant-swatch-1-quickview .swatch-element').size();
+			var _size_op3 = $('#variant-swatch-2-quickview .swatch-element').size();
+	
+			$('#variant-swatch-0-quickview .swatch-element').each(function(ind,value){
+				var _key_va1 = $(this).data('value');
+				var _count_unavi = 0;
+				$('#productQuickView .single-option-selector').eq(0).val(_key_va1).change();
+				$('#variant-swatch-1-quickview .swatch-element').each(function(i,v){
+					var _key_va2 = $(this).data('value');
+					var _unavi_2 = 0;
+					$('#productQuickView .single-option-selector').eq(1).val(_key_va2).change();
+					$('#variant-swatch-2-quickview .swatch-element').each(function(j,z){
+						var _key_va3 = $(this).data('value');
+						$('#productQuickView .single-option-selector').eq(2).val(_key_va3).change();
+						if(check_variant_quickview == true){
+							if(_avi_op1 == ''){
+								_avi_op1 = _key_va1;
+							}
+							if(_avi_op2 == ''){
+								_avi_op2 = _key_va2;
+							}
+							if(_avi_op3 == ''){
+								_avi_op3 = _key_va3;
+							}
+						}else{
+							_unavi_2 += 1;
+						}
+					})
+					if(_unavi_2 == _size_op3){
+						_count_unavi += 1;
+					}
+				})
+				if(_size_op2 == _count_unavi){
+					$('#variant-swatch-0-quickview .swatch-element[data-value = "'+_key_va1+'"]').addClass('soldout');
+					$('#variant-swatch-0-quickview .swatch-element[data-value = "'+_key_va1+'"]').find('input').attr('disabled','disabled');					
+				}
+			})
+			$('#variant-swatch-0-quickview .swatch-element[data-value = "'+_avi_op1+'"] input').click();
+		}
+		var img_ = $('#variant-swatch-0-quickview .swatch-element[data-value = "'+_avi_op1+'"] input').data('img-src');
+	}
+ </script>
+ <script>
+	$('#productNew').multislider({
+		duration: 750,
+		interval: 3000
+	}); 
+	$('#productFeatured').multislider({
+		duration: 750,
+		interval: 3000
+	}); 
+</script>
+ <div>
+	<div class="grecaptcha-badge" data-style="bottomright" style="width: 256px; height: 60px; display: block; transition: right 0.3s ease 0s; position: fixed; bottom: 14px; right: -186px; box-shadow: gray 0px 0px 5px; border-radius: 2px; overflow: hidden;">
+	   <div class="grecaptcha-logo"><iframe title="reCAPTCHA" src="https://www.google.com/recaptcha/api2/anchor?ar=1&amp;k=6LdD18MUAAAAAHqKl3Avv8W-tREL6LangePxQLM-&amp;co=aHR0cHM6Ly9ub2ktdGhhdC1zdXBsby5teWhhcmF2YW4uY29tOjQ0Mw..&amp;hl=en&amp;v=CdDdhZfPbLLrfYLBdThNS0-Y&amp;size=invisible&amp;cb=6suv3gnw5tu" width="256" height="60" role="presentation" name="a-cxu1vhh9xi5u" frameborder="0" scrolling="no" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation allow-modals allow-popups-to-escape-sandbox"></iframe></div>
+	   <div class="grecaptcha-error"></div>
+	   <textarea id="g-recaptcha-response-100000" name="g-recaptcha-response" class="g-recaptcha-response" style="width: 250px; height: 40px; border: 1px solid rgb(193, 193, 193); margin: 10px 25px; padding: 0px; resize: none; display: none;"></textarea>
+	</div>
+ </div>
+ <div>
+	<div class="grecaptcha-badge" data-style="none" style="width: 256px; height: 60px; position: fixed; visibility: hidden;">
+	   <div class="grecaptcha-logo"><iframe title="reCAPTCHA" src="https://www.google.com/recaptcha/api2/anchor?ar=1&amp;k=6LdD18MUAAAAAHqKl3Avv8W-tREL6LangePxQLM-&amp;co=aHR0cHM6Ly9ub2ktdGhhdC1zdXBsby5teWhhcmF2YW4uY29tOjQ0Mw..&amp;hl=en&amp;v=CdDdhZfPbLLrfYLBdThNS0-Y&amp;size=invisible&amp;cb=t402hhccfgqu" width="256" height="60" role="presentation" name="a-6mv1ung3tfi9" frameborder="0" scrolling="no" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation allow-modals allow-popups-to-escape-sandbox"></iframe></div>
+	   <div class="grecaptcha-error"></div>
+	   <textarea id="g-recaptcha-response-100001" name="g-recaptcha-response" class="g-recaptcha-response" style="width: 250px; height: 40px; border: 1px solid rgb(193, 193, 193); margin: 10px 25px; padding: 0px; resize: none; display: none;"></textarea>
+	</div>
+	<iframe style="display: none;"></iframe>
+ </div>
 
 <% include ./partials/footer%>

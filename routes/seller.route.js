@@ -12,12 +12,8 @@ router.get("/logout" , sellerController.getLogout);
 
 router.get("/" , authController.isAuth,authController.isShop, sellerController.getHome);
 
-router.get("/category" , authController.isAuth, authController.isShop, sellerController.getCategory);
-router.get("/category/add" , authController.isAuth, authController.isShop, sellerController.getAddCategory);
-router.post("/category/add" , authController.isAuth, authController.isShop, sellerController.postAddCategory);
-router.get("/category/edit/:parentId/:childId" , authController.isAuth, authController.isShop, sellerController.getEditCategory);
-router.post("/category/edit/:parentId/:childId" , authController.isAuth, authController.isShop, sellerController.postEditCategory);
-router.get("/category/delete/:parentId/:childId" , authController.isAuth, authController.isShop, sellerController.getDeleteCategory);
+router.get("/profile/address-book" , authController.isAuth,authController.isShop, sellerController.getAddressBook);
+router.post("/profile/address-book" , authController.isAuth,authController.isShop, sellerController.postAddressBook);
 
 router.get("/product/add" , authController.isAuth, authController.isShop, sellerController.getAddProduct);
 router.get("/product/add/binding/:parentId" ,authController.isAuth, authController.isShop, sellerController.getBindingCategory);
@@ -32,5 +28,9 @@ router.get("/order" , authController.isAuth, authController.isShop, sellerContro
 router.get("/order/detail/:orderId" , authController.isAuth, authController.isShop, sellerController.getOrderDetail);
 router.put("/order/delivery" , authController.isAuth, authController.isShop, sellerController.putDeliveryOrder);
 router.put("/order/delivered" , authController.isAuth, authController.isShop, sellerController.putDeliveredOrder);
+
+router.post("/profile/address/edit/:bookId", authController.isAuth, authController.isShop, sellerController.postUpdateAddressBook);
+router.post("/profile/address/delete", authController.isAuth, authController.isShop, sellerController.postDeleteAddressBook);
+router.post("/profile/address/default", authController.isAuth, authController.isShop, sellerController.postSetAddressDefault);
 
 module.exports = router;

@@ -197,77 +197,184 @@ exports.getHome = async (req, res, next) => {
     res.render('./admin/index', {seller: req.session.shopInfo, data: oData})
 }
 
-exports.getCategory = (req, res, next) => {
-    res.render('./admin/category/category');
+exports.getAddressBook = async (req, res, next) => {
+  const addressDB = await db.getShopAddressBook([req.jwtDecoded.data.id]);
+  res.render('./admin/profile/address-book', {seller: req.session.shopInfo, address: addressDB});
 }
 
-exports.getAddCategory = (req, res, next) => {
-    const message = req.flash("error")[0];
-    res.render('./admin/category/addCategory');
-}
+exports.postAddressBook = async (req, res, next) => {
+    const v = new Validator();
+    const schema = {
+    fullname: 'string',
+    phone: {type: 'string', length: 10},
+    city: 'string',
+    district: 'string',
+    ward: 'string',
+    identity: 'string|min:3|max: 50',
+    nameCity: 'string',
+    nameDistrict: 'string',
+    nameWard: 'string',
+  }
+  const check = v.compile(schema);
+  const address = {
+    fullname: req.body.fullname,
+    phone: req.body.phone,
+    city: req.body.city,
+    district: req.body.district,
+    ward: req.body.ward,
+    identity: req.body.identity,
+    nameCity: req.body.nameCity,
+    nameDistrict: req.body.nameDistrict,
+    nameWard: req.body.nameWard
+  }
+  const getCheck = await check(address);
+  if (getCheck == true) {
+      const seller = req.session.shopInfo;
+    //save db
+    //save to identity
+    try {
+      const exist = await db.getUserAddressBookExist(2, [seller.id]);
+      const ident_id = await db.insertUserIdentityDetail([address.identity]);
 
-exports.postAddCategory = (req, res, next) => { 
-    Category.findById(req.body.id, function(err, data) {
-        if (err) console.log(err);
-        else {
-            data.childCateName.push({childName: req.body.childCateName});
-            data.save();
-            req.flash('success_msg', 'Thêm thành công');
-            res.redirect('/admin/category/add/');
+      if (ident_id) {
+        const ward_id = await db.insertUserWard([ident_id, address.ward, address.nameWard]);
+        if (ward_id) {
+          const district_id = await db.insertUserDistrict([ward_id, address.district, address.nameDistrict]);
+          if (district_id) {
+            const province_id = await db.insertUserProvince([district_id, address.city, address.nameCity]);
+            if (province_id) {
+              if (exist == false) {
+                const addressBook = await db.insertShopAddressBook([0, seller.id, province_id, address.fullname, address.phone, 1]);
+                if (addressBook == true) res.redirect('/seller/profile/address-book');
+                else res.status(500).json({state: 0, type: 'Address fail'});
+              }
+              else {
+                const addressBook = await db.insertShopAddressBook([0, seller.id, province_id, address.fullname, address.phone, 0]);
+                if (addressBook == true) res.redirect('/seller/profile/address-book');
+                else res.status(500).json({state: 0, type: 'Address fail'});
+              }
+            }
+          }
         }
-    });
+      }
+    }
+    catch (error) {
+      return res.status(500).json({state: 0, type: 'Save fail'});
+    }  
+  }
+  else return res.status(500).json({state: 0, type: getCheck});
 }
 
-exports.getEditCategory = (req, res, next) => {
-    var parentId = req.params.parentId;
-    var childId = req.params.childId;
-
-    Category.find().then((data)=>{
-        res.render('./admin/category/editCategory', {parentId: parentId, childId: childId, data: data});
-    })
-}
-
-exports.postEditCategory = (req, res, next) => {
-    var parentId = req.params.parentId;
-    var childId = req.params.childId;
-
-    Category.findById(parentId, function(err, data){
-        if (err) console.log(err);
-        else {
-            data.childCateName.forEach((item)=>{
-                if (item._id == childId)
-                {
-                    item.childName = req.body.childCateName;
-                    data.save();
-                    res.redirect('/admin/category/');
-                }
-            })
+exports.postUpdateAddressBook = async (req, res, next) => {
+    const bookId = req.params.bookId;
+    const v = new Validator();
+    const schema = {
+      fullname: 'string',
+      phone: {type: 'string', length: 10},
+      city: 'string',
+      district: 'string',
+      ward: 'string',
+      identity: 'string|min:3|max: 50',
+      nameCity: 'string',
+      nameDistrict: 'string',
+      nameWard: 'string',
+    }
+    const check = v.compile(schema);
+    const address = {
+      fullname: req.body.fullname,
+      phone: req.body.phone,
+      city: req.body.city,
+      district: req.body.district,
+      ward: req.body.ward,
+      identity: req.body.identity,
+      nameCity: req.body.nameCity,
+      nameDistrict: req.body.nameDistrict,
+      nameWard: req.body.nameWard
+    }
+    const getCheck = await check(address);
+  
+    if (getCheck == true) {
+      try {
+        const addressDB = await db.getAddressBookById([bookId]);
+        if (addressDB) {
+          if (addressDB[0].fullname != address.fullname 
+              || addressDB[0].phone != address.phone) {
+              //update addressbook
+              const updateAB = await db.updateUserAdressBook([addressDB[0].book_id, address.fullname, address.phone]);
+          }
+  
+          if (addressDB[0].province_code != address.city) {
+            //update all
+            const updateProvince = await db.updateUserProvince([addressDB[0].province_id, address.city, address.nameCity]);
+            const updateDistrict = await db.updateUserDistrict([addressDB[0].district_id, address.district, address.nameDistrict]);
+            const updateWard = await db.updateUserWard([addressDB[0].ward_id, address.ward, address.nameWard]);
+          }
+          else if (addressDB[0].district_code != address.district) {
+            //update district
+            //update ward
+            const updateDistrict = await db.updateUserDistrict([addressDB[0].district_id, address.district, address.nameDistrict]);
+            const updateWard = await db.updateUserWard([addressDB[0].ward_id, address.ward, address.nameWard]);
+          }
+          else  if (addressDB[0].ward_code != address.ward){
+            //update ward
+            const updateWard = await db.updateUserWard([addressDB[0].ward_id, address.nameWard]);
+          }
+  
+          if (addressDB[0].identity_name != address.identity) {
+            //update identity
+            const updateWard = await db.updateUserIdentity([addressDB[0].identity_id, address.identity]);
+          }
         }
-    })
+        else res.status(500).json({state: 0, type: getCheck});
+        res.redirect('/seller/profile/address-book');
+      }
+      catch (error) {
+        return res.status(500).json({state: 0, type: 'Update fail', err: error});
+      }  
+    }
 }
 
-exports.getDeleteCategory = (req, res, next) => {
-    var parentId = req.params.parentId;
-    var childId = req.params.childId;
+exports.postDeleteAddressBook = async (req, res, next) => {
+    const bookID = req.body.bookID;
+    const addressDB = await db.getAddressBookById([bookID]);
+    if (addressDB != false) {
+      //delte addB
+      const deleteAB = await db.deleteUserAddressBook([bookID]);
+      const deleteP = await db.deleteUserProvince([addressDB.province_id]);
+      const deleteD = await db.deleteUserDistrict([addressDB.district_id]);
+      const deleteW = await db.deleteUserWard([addressDB.ward_id]);
+      const deleteIdentity = await db.deleteUserIdentityDetail([addressDB.identity_id]);
+  
+      if (deleteAB) {
+        res.send({ state: 1});
+      }
+      else res.status(500).json({status: 'delete fail'});
+    }
+    else res.status(500).json({status: 'delete fail'});
+}
+  
+exports.postSetAddressDefault = async (req, res, next) => {
+const bookID = req.body.bookID;
+const addressDB = await db.getShopAddressBook([req.jwtDecoded.data.id]);
 
-    Category.findById(parentId, function(err, data){
-        if (err) console.log(err);
-        else {
-            data.childCateName.forEach((item)=>{
-                if (item._id == childId)
-                {
-                    var index = data.childCateName.indexOf(item);
-                    
-                    if (index > -1)
-                    {
-                        data.childCateName.splice(index, 1);
-                        data.save();
-                        res.redirect('/admin/category/');
-                    }
-                }
-            })   
+    if (addressDB != false) {
+        var count = 0;
+        for (let i = 0; i < addressDB.length; i++) {
+        if (addressDB[i].isdefault == 1) {
+            const setZero = await db.updateUserAddressBookDefault([addressDB[i].book_id, 0]);
+            count++;
         }
-    })
+        else if (addressDB[i].book_id == bookID) {
+            //set to 1
+            const setOne= await db.updateUserAddressBookDefault([addressDB[i].book_id, 1]);
+            count++;
+        }
+        if (count == 2) {
+            return res.send({ state: 1});
+        }
+        }
+    }
+    res.status(500).json({status: 'Set default fail'});
 }
 
 exports.getAddProduct = async (req, res, next) => {
@@ -528,6 +635,12 @@ exports.postEditProductVariant = async (req, res, next) => {
 
 exports.postShowProduct = async (req, res, next) => {
     const productId = req.params.productId;
+    const shopId = req.session.shopInfo.id;
+    //check to addressbook
+    const addBook = await db.getShopAddressBookByShopId([shopId]);
+    if (!addBook) {
+        return res.send({state: 2});
+    }
 
     const data = await db.getProductVariantInfo([productId]);
     var count = 0;
@@ -701,7 +814,8 @@ exports.putDeliveredOrder = async (req, res, next) => {
     if (orderId) {
         const info = await db.getUserAndProductByOrderId([orderId]);
         for(let i of info) {
-            const insertRating = await db.insertUserRating([i.user_id, i.id]); 
+            const insertRating = await db.insertUserRating([i.user_id, i.id]);
+            const updateSelled = await db.updateProductSelled([i.sum, i.id]); 
         }
         const update = await db.updateOrder([3, orderId]);
         if (update == true) return res.send({state: 1});

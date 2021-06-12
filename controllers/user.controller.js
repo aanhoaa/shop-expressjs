@@ -101,7 +101,7 @@ exports.postUserAddressBook = async (req, res, next) => {
     //save db
     //save to identity
     try {
-      const exist = await db.getUserAddressBookExist([req.jwtDecoded.data.id]);
+      const exist = await db.getUserAddressBookExist(1, [req.jwtDecoded.data.id]);
       const ident_id = await db.insertUserIdentityDetail([address.identity]);
 
       if (ident_id) {
@@ -173,11 +173,9 @@ exports.postUpdateAddressBook = async (req, res, next) => {
 
         if (addressDB[0].province_code != address.city) {
           //update all
-          console.log([addressDB[0].province_id, address.city, address.nameCity])
           const updateProvince = await db.updateUserProvince([addressDB[0].province_id, address.city, address.nameCity]);
           const updateDistrict = await db.updateUserDistrict([addressDB[0].district_id, address.district, address.nameDistrict]);
           const updateWard = await db.updateUserWard([addressDB[0].ward_id, address.ward, address.nameWard]);
-          console.log(updateProvince)
         }
         else if (addressDB[0].district_code != address.district) {
           //update district
@@ -245,124 +243,6 @@ exports.postSetAddressDefault = async (req, res, next) => {
     }
   }
   res.status(500).json({status: 'Set default fail'});
-}
-
-exports.getCity = async (req, res, next) => {
-  var bind = new Array;
-  //let rawdata = fs.readFileSync('helpers/address.json');
-  //let address = JSON.parse(rawdata);
-
-  // address.forEach(iCity => {
-  //   bind.push({id: iCity.Id, name: iCity.Name});
-  // })
-  
-  //res.send(JSON.stringify(bind));
-
-  fetch('https://online-gateway.ghn.vn/shiip/public-api/master-data/province', {
-    'method': 'GET',
-    'headers': {
-      'Connection': 'keep-alive',
-      'Pragma': 'no-cache',
-      'Cache-Control': 'no-cache',
-      'Upgrade-Insecure-Requests': '1',
-      //'Origin': 'https://danhmuchanhchinh.gso.gov.vn',
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36 Edg/87.0.664.66',
-      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
-      'Sec-Fetch-Site': 'same-origin',
-      'Sec-Fetch-Mode': 'navigate',
-      'Sec-Fetch-User': '?1',
-      'Sec-Fetch-Dest': 'document',
-      'token': '09d8cf6a-c357-11eb-8ea7-7ad2d1e1ce1c',
-     // 'Referer': 'https://danhmuchanhchinh.gso.gov.vn/',
-      'Accept-Language': 'vi,en-US;q=0.9,en;q=0.8',
-     // 'Cookie': x.cookie,
-      'gzip': true,
-  }
-  }).then(res => res.json())
-  .then(data => {
-    const address = data.data;
-    address.forEach(iCity => {
-    bind.push({id: iCity.ProvinceID, name: iCity.ProvinceName});
-    })
-  
-    res.send(JSON.stringify(bind));
-  })
-  .catch(err => console.log(err))
-}
-
-exports.getBindingDistrict = async (req, res, next) => {
-  const cityID = req.query.cityId;
-  var bind = new Array;
-
-  fetch(`https://online-gateway.ghn.vn/shiip/public-api/master-data/district?province_id=${cityID}`, {
-    'method': 'GET',
-    'headers': {
-      'Connection': 'keep-alive',
-      'Pragma': 'no-cache',
-      'Cache-Control': 'no-cache',
-      'Upgrade-Insecure-Requests': '1',
-      //'Origin': 'https://danhmuchanhchinh.gso.gov.vn',
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36 Edg/87.0.664.66',
-      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
-      'Sec-Fetch-Site': 'same-origin',
-      'Sec-Fetch-Mode': 'navigate',
-      'Sec-Fetch-User': '?1',
-      'Sec-Fetch-Dest': 'document',
-      'token': '09d8cf6a-c357-11eb-8ea7-7ad2d1e1ce1c',
-     // 'Referer': 'https://danhmuchanhchinh.gso.gov.vn/',
-      'Accept-Language': 'vi,en-US;q=0.9,en;q=0.8',
-     // 'Cookie': x.cookie,
-      'gzip': true,
-  }
-  }).then(res => res.json())
-  .then(data => {
-    const address = data.data;
-    console.log(address)
-    address.forEach(iDistrict => {
-    bind.push({id: iDistrict.DistrictID, name: iDistrict.DistrictName});
-    })
-  
-    res.send(JSON.stringify(bind));
-  })
-  .catch(err => console.log(err))
-}
-
-exports.getBindingWard = async (req, res, next) => {
-  var bind = new Array;
-  var districtID = req.query.districtId;
-  fetch(`https://online-gateway.ghn.vn/shiip/public-api/master-data/ward?district_id=${districtID}`, {
-    'method': 'GET',
-    'headers': {
-      'Connection': 'keep-alive',
-      'Pragma': 'no-cache',
-      'Cache-Control': 'no-cache',
-      'Upgrade-Insecure-Requests': '1',
-      //'Origin': 'https://danhmuchanhchinh.gso.gov.vn',
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36 Edg/87.0.664.66',
-      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
-      'Sec-Fetch-Site': 'same-origin',
-      'Sec-Fetch-Mode': 'navigate',
-      'Sec-Fetch-User': '?1',
-      'Sec-Fetch-Dest': 'document',
-      'token': '09d8cf6a-c357-11eb-8ea7-7ad2d1e1ce1c',
-     // 'Referer': 'https://danhmuchanhchinh.gso.gov.vn/',
-      'Accept-Language': 'vi,en-US;q=0.9,en;q=0.8',
-     // 'Cookie': x.cookie,
-      'gzip': true,
-  }
-  }).then(res => res.json())
-  .then(data => {
-    const address = data.data;
-    address.forEach(iWard => {
-    bind.push({id: iWard.WardCode, name: iWard.WardName});
-    })
-  
-    res.send(JSON.stringify(bind));
-  })
-  .catch(err => console.log(err))
 }
 
 exports.getChangePassword = async (req, res, next) => {

@@ -1,9 +1,11 @@
 <% include ../../partials/header_admin %>
 <link rel="stylesheet" href="/stylesheets/css/admin_profile.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
 
 <div class="container">
     <div class="list-category">
-        Trang chủ
+        <a href="/admin">Trang chủ</a> > <a>Hồ sơ nhà bán</a>
     </div>
     <div class="content clearfix">
         <div class="title">
@@ -13,25 +15,24 @@
             <thead>
                 <tr align="center">
                     <th>STT</th>
-                    <th>Tài khoản</th>
+                    <th>Họ tên</th>
                     <th>Số điện thoại</th>
-                    <th>Cấp danh mục</th>
-                    <th>Mô tả</th>
+                    <th>Địa chỉ</th>
+                    <th>Tình trạng</th>
                     <th>Thao tác</th>
                 </tr>
             </thead>
             <tbody>
-               
+               <% if (data) {
+                   var i = 0;
+                   data.forEach(item => { i++;
+                %> 
                 <tr class="odd gradeX" align="center">
-                    <td></td>
-                    <td></td>
-                    <td>
-                       
-                    </td>
-                    <td>
-                      
-                    </td>
-                    <td></td>
+                    <td><%-i%></td>
+                    <td><%-item.fullname%></td>
+                    <td><%-item.phone%></td>
+                    <td><%-item.address%></td>
+                    <td><%-item.status == 1?'<p class="enable">Hoạt động</p>':'<p class="disable">Tạm khóa</p>'%></td>
                     <td class="center">
                         <div class="dropdown">
                             <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -39,19 +40,22 @@
                               <span class="caret"></span>
                             </button>
                            <ul class="dropdown-menu action-product" aria-labelledby="dropdownMenu1">
-                              <li><a>Chỉnh sửa</a></li>
-                              
-                             
-                                <li><a href="">Xem danh mục con</a></li>
-                              
+                                <li><a href="/admin/shop/<%-item.name%>.<%-item.id%>">Chi tiết</a></li>
+                                
+                                <% if (item.status == 1) {%>
+                                    <li><a data-id="<%-item.id%>" data-status = "1" class="lock-shop">Khóa tài khoản</a></li>
+                                <%} else {%>
+                                    <li><a data-id="<%-item.id%>" data-status = "0" class="lock-shop">Mở khóa</a></li>
+                                <%}%>
                             </ul>
                         </div>
                     </td>
                 </tr>
-               
+               <%})}%>
             </tbody>
         </table>
     </div>
 </div>
 
+<script src="/javascripts/js/admin/order.js"></script>
 <% include ../../partials/footer_admin %>

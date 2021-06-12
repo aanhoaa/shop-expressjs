@@ -16,11 +16,6 @@ router.post("/account/address/delete", authController.isAuth, authController.isU
 router.post("/account/address/default", authController.isAuth, authController.isUser, userController.postSetAddressDefault);
 router.get("/recent", authController.isAuth, authController.isUser, userController.getProductRecent);
 
-//api binding adddress
-router.get("/api/account/city", authController.isAuth, authController.isUser, userController.getCity);
-router.get("/api/account/district/binding", authController.isAuth, authController.isUser, userController.getBindingDistrict);
-router.get("/api/account/ward/binding", authController.isAuth, authController.isUser, userController.getBindingWard);
-
 //router.get("/purchase", authController.isAuth, authController.isUser, userController.getPurchase);
 router.get("/purchase", authController.isAuth, authController.isUser, userController.getWaitingConfirm);
 router.get("/purchase/order/:orderId", authController.isAuth, authController.isUser, userController.getOrderDetail);

@@ -1,0 +1,71 @@
+<% include ../../partials/header_admin %>
+<link rel="stylesheet" href="/stylesheets/css/admin_profile.css">
+
+<div class="container">
+    <div class="list-category">
+        <a href="/admin">Trang chủ</a> > <a href="/admin/profile/shop">Hồ sơ nhà bán</a> > <a>Chi tiết nhà bán</a>
+    </div>
+    <div class="content clearfix">
+        <div class="title">
+           Chi tiết nhà bán
+        </div>
+        <div class="col-sm-8" style="display: flex;">
+            <div class="col-sm-4 info">
+                <div>
+                    Họ tên:
+                </div>
+                <div>
+                    Tên tài khoản:
+                </div>
+                <div>
+                    Tên nhà bán:
+                </div>
+                <div>
+                    Số điện thoại:
+                </div>
+                <div>
+                    Email:
+                </div>
+                <div>
+                    Địa chị
+                </div>
+                <div>
+                    Trạng thái:
+                </div>
+                <div>
+                    Địa chỉ kho hàng:
+                </div>
+            </div>
+            <div class="col-sm-4 info-content">
+                <div>
+                    <%-data[0].fullname%>1
+                </div>
+                <div>
+                    <%-data[0].username%>
+                </div>
+                <div>
+                    <%-data[0].name%>
+                </div>
+                <div>
+                    <%-data[0].phone%>
+                </div>
+                <div>
+                    <%-data[0].email%>
+                </div>
+                <div>
+                    <%-data[0].address%>
+                </div>
+                <div>
+                    <%-data[0].status == 1?'Đang hoạt động':'Tạm khóa'%>
+                </div>
+                <%if (address) {%>
+                    <div>
+                        <%-address.identity_name%>, <%-address.ward_name%>, <%-address.district_name%>, <%-address.province_name%>
+                    </div>
+                <%}%>
+            </div>
+        </div>
+    </div>
+</div>
+
+<% include ../../partials/footer_admin %>

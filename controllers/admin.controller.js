@@ -393,8 +393,36 @@ exports.putCancelOrder = async (req, res, next) => {
 }
 
 exports.getProfileShop = async (req, res, next) => {
+  const data = await db.getShop();
 
-  res.render('./adminSys/profile/profile-shop');
+  res.render('./adminSys/profile/profile-shop', {data: data});
+}
+
+exports.getShopDetail = async (req, res, next) => {
+  const shopID = req.params.shopId;
+  const data = await db.getShopById([shopID]);
+  const address = await db.getShopAddressBook([shopID]);
+
+  res.render('./adminSys/profile/shop-detail', {data: data, address: address[0]});
+}
+
+exports.putShopLock = async (req, res, next) => {
+  const shopID = req.body.shopId;
+  const status = req.body.status;
+
+  if (shopID == '' || status == '') return res.send({state: 0});
+  try {
+    if (status == 1) {
+      var update = await db.updateShopStatus([0, shopID]);
+    }
+    else var update = await db.updateShopStatus([1, shopID]);
+
+    return res.send({state: 1});
+  }
+  catch(err) {
+    console.log(err);
+    return res.send({state: -1});
+  }
 }
 
 exports.getProfileUser = async (req, res, next) => {

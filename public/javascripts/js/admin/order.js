@@ -137,4 +137,49 @@ $(document).ready(function(){
             });
         });
     })
+
+    //lock shop
+    $(document).on('click', '.lock-shop', function(e) {
+        const shopId = $(this).attr('data-id');
+        const status = $(this).data('status');
+        const title = status == 1 ? 'Xác nhận khóa' : 'Xác nhận hủy khóa';
+        const text = status == 1 ? 'Nhà bán này sẽ không thể đăng bán các sản phẩm của mình' : 'Nhà bán này sẽ hoạt động lại bình thường';
+
+        swal({
+            title: `${title}`,
+            text: `${text}`,
+            showCancelButton: true,
+            closeOnConfirm: false,
+            animation: "slide-from-top",
+        },
+        function(inputValue){
+            if (inputValue === null) return false;
+            if (!inputValue) return false;
+            
+            $.ajax({
+                url: `${window.location.origin}/admin/lock/shop`,
+                type: "put", 
+                dataType: "json",
+                data: {
+                    shopId: shopId,
+                    status: status
+                },
+                success:function(data){ 
+                    if (data.state == 1) {
+                        swal("Nice!", "Thành công", "success");
+                        window.location.href = "/admin/profile/shop";
+                    }
+                    if (data.state == 0) {
+                        alert('Thất bại - Không nhận được dữ liệu');
+                    }
+                    if (data.state == -1) {
+                        alert('Thất bại - Lỗi hệ thống');
+                    }
+                },
+                error: function(err) {
+                    alert('fail');
+                }
+            });
+        });
+    })
 })

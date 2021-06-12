@@ -185,6 +185,42 @@ function insertShop(values) {
     })
     .catch(error => {return error;});
 }
+
+function getShop(value) {
+    const sql = "SELECT * FROM shop ORDER BY created_at";
+
+    return db.simpleQuery(sql, value)
+    .then(res => {
+        if (res.rowCount > 0)
+        return res.rows;
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function getShopById(value) {
+    const sql = "SELECT * FROM shop WHERE id = $1";
+
+    return db.simpleQuery(sql, value)
+    .then(res => {
+        if (res.rowCount > 0)
+        return res.rows;
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function updateShopStatus(values) {
+    const sql = "UPDATE shop SET status = $1 WHERE id = $2";
+
+    return db.excuteQuery(sql, values)
+    .then(res => {
+        if (res.rowCount > 0)
+        return true;
+        return false;
+    })
+    .catch(error => {return error;});
+}
 /*=====================================*/ 
 
 /*
@@ -423,8 +459,21 @@ function insertUserAddressBook(values) {
     .catch(error => {return error;});
 }
 
-function getUserAddressBookExist(value) {
-    const sql = 'SELECT * FROM addressbook WHERE user_id = $1';
+function insertShopAddressBook(values) {
+    const sql = 'INSERT INTO addressbook(user_id, shop_id, province_id, fullname, phone, isdefault) VALUES ($1, $2, $3, $4, $5, $6)';
+
+    return db.excuteQuery(sql, values)
+    .then(res => {
+        if (res.rowCount > 0)
+            return true;
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function getUserAddressBookExist(role, value) {
+    const col = role == 1 ? 'user_id' : 'shop_id';
+    const sql = `SELECT * FROM addressbook WHERE ${col} = $1`;
 
     return db.simpleQuery(sql, value)
     .then(res => {
@@ -450,6 +499,18 @@ function getUserAddressBook(value) {
     .catch(error => {return error;});
 }
 
+function getShopAddressBook(value) {
+    const sql = 'select a.fullname, a.phone, a.isdefault, a.id as book_id, b.code as province_code, c.code as district_code, d.code as ward_code, e.name as identity_name, b.name as province_name, c.name as district_name, d.name as ward_name, e.id as identity_id from addressbook as a inner join province as b on b.id = a.province_id inner join district as c on c.id = b.district_id inner join ward as d on d.id = c.ward_id inner join identitydetail as e on e.id = d.identity_id where shop_id = $1 ORDER BY a.isdefault DESC';
+
+    return db.excuteQuery(sql, value)
+    .then(res => {
+        if (res.rowCount > 0)
+            return res.rows;
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
 function getAddressBookById(value) {
     const sql = 'select a.fullname, a.phone, a.id as book_id, b.code as province_code, c.code as district_code, d.code as ward_code, e.name as identity_name, b.name as province_name, c.name as district_name, d.name as ward_name, e.id as identity_id, b.id as province_id, c.id as district_id, d.id as ward_id from addressbook as a inner join province as b on b.id = a.province_id inner join district as c on c.id = b.district_id inner join ward as d on d.id = c.ward_id inner join identitydetail as e on e.id = d.identity_id where a.id = $1';
 
@@ -457,6 +518,18 @@ function getAddressBookById(value) {
     .then(res => {
         if (res.rowCount > 0)
             return res.rows;
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function getShopAddressBookByShopId(value) {
+    const sql = "SELECT * FROM addressbook WHERE shop_id = $1";
+
+    return db.simpleQuery(sql, value)
+    .then(res => {
+        if (res.rowCount > 0)
+            return true;
         return false;
     })
     .catch(error => {return error;});
@@ -823,7 +896,7 @@ function updateRating(values) {
 }
 
 function getUserAndProductByOrderId(value) {
-    const sql = "select d.id, e.user_id from orders as a inner join orderdetail as b on b.order_id = a.id inner join productvariant as c on c.id = b.productvariant_id inner join product as d on d.id = c.product_id inner join purchase as e on e.id = a.purchase_id where a.id = $1";
+    const sql = "select d.id, e.user_id, sum(b.amount) from orders as a inner join orderdetail as b on b.order_id = a.id inner join productvariant as c on c.id = b.productvariant_id inner join product as d on d.id = c.product_id inner join purchase as e on e.id = a.purchase_id where a.id = $1 group by e.user_id, d.id";
 
     return db.excuteQuery(sql, value)
     .then(res => {
@@ -1049,7 +1122,7 @@ function insertCateLevel(table, value) {
 }
 
 function getCategoryLevelOne() {
-    const sql = 'SELECT id, name FROM categorylevel1';
+    const sql = 'select distinct b.name, b.id from product as a inner join categorylevel1 as b on b.id = a.categorylevel1_id';
 
     return db.simpleQuery(sql)
     .then(res => {
@@ -1151,6 +1224,18 @@ function getIdVarianProduct(value) {
 
 function updateProductVariantAmount(values) {
     const sql = "UPDATE productvariant SET stockamount = $1 WHERE id = $2";
+
+    return db.excuteQuery(sql, values)
+    .then(res => {
+        if (res.rowCount > 0)
+            return true;
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function updateProductSelled(values) {
+    const sql = "update product set selled = selled + $1 WHERE id = $2";
 
     return db.excuteQuery(sql, values)
     .then(res => {
@@ -1404,7 +1489,7 @@ function updateProductVariant(values) {
 }
 
 function getProduct() {
-    const sql = 'SELECT * FROM product';
+    const sql = 'SELECT * FROM product ORDER BY status desc';
 
     return db.simpleQuery(sql)
     .then( res =>  {
@@ -1627,6 +1712,34 @@ function getShopByProductId(value) {
 
 function getShopProductById(value) {
     const sql = "select  max(d.price) as max, min(d.price) as min, b.name, b.id as product_id, c.url -> 'cover' as url, e.name as shop, avg(f.rating)::numeric(10,1) as rating from categorylevel1 as a inner join product as b on b.categorylevel1_id = a.id inner join images as c on c.product_id = b.id inner join productvariant as d on d.product_id = b.id inner join shop as e on e.id = b.shop_id inner join rating as f on f.product_id = b.id where e.id = $1 and b.status = 1 GROUP BY b.name, b.id, c.url, e.name";
+
+    return db.simpleQuery(sql, value)
+    .then( res =>  {
+        if (res.rowCount > 0)
+        {
+            return res.rows;
+        }
+        return false;
+    })
+    .catch(error => { return false;});
+}
+
+function getListNewProduct(value) {
+    const sql = "select  a.id, a.name, b.max_price, b.min_price, c.url->'cover' as cover from product a inner join (select max(price) as max_price, min(price) as min_price, product_id from productvariant group by product_id) b on a.id = b.product_id inner join images as c on c.product_id = a.id where a.status = 1 order by a.created_at desc limit 10";
+
+    return db.simpleQuery(sql, value)
+    .then( res =>  {
+        if (res.rowCount > 0)
+        {
+            return res.rows;
+        }
+        return false;
+    })
+    .catch(error => { return false;});
+}
+
+function getListSeleldProduct(value) {
+    const sql = "select  a.id, a.name, b.max_price, b.min_price, c.url->'cover' as cover, d.name as cate from product a inner join (select max(price) as max_price, min(price) as min_price, product_id from productvariant group by product_id) b on a.id = b.product_id inner join images as c on c.product_id = a.id inner join categorylevel1 as d on d.id = a.categorylevel1_id where a.status = 1 and d.id = $1 order by a.selled desc limit 10";
 
     return db.simpleQuery(sql, value)
     .then( res =>  {
@@ -2033,6 +2146,9 @@ module.exports = {
     insertAdmin,
     checkExistShopByName,
     insertShop,
+    getShop,
+    getShopById,
+    updateShopStatus,
 
     checkEmailExist,
     checkUserExist,
@@ -2049,9 +2165,12 @@ module.exports = {
     insertUserDistrict,
     insertUserProvince,
     insertUserAddressBook,
+    insertShopAddressBook,
     getUserAddressBookExist,
     getUserAddressBook,
+    getShopAddressBook,
     getAddressBookById,
+    getShopAddressBookByShopId,
     updateUserAdressBook,
     updateUserProvince,
     updateUserDistrict,
@@ -2117,10 +2236,13 @@ module.exports = {
     getProductAllById,
     getShopByProductId,
     getShopProductById,
+    getListNewProduct,
+    getListSeleldProduct,
     getCateShop,
     getProductVariant,
     getProductVariantInfo,
     updateProductVariantAmount,
+    updateProductSelled,
     updateProductVariantAmountAuto,
     deleteProduct,
     deleteProductVariant,

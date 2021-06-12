@@ -20,7 +20,7 @@ router.post("/cart/delete", authController.isAuth, authController.isUser, shopCo
 
 router.get("/checkout", authController.isAuth, authController.isUser, shopController.getCheckout);
 router.post("/checkout", authController.isAuth, authController.isUser, shopController.postCheckout);
-router.get("/checkouted", authController.isLogin, shopController.getCheckouted);
+//router.get("/checkouted", authController.isLogin, shopController.getCheckouted);
 
 // router.get("/", shopController.getShop);
 // router.post("/", shopController.postShop);
@@ -31,6 +31,13 @@ router.post("/cateFilter", shopController.postProductCateFilter);
 
 router.get("/cart/delete", authController.isLogin, shopController.getDeleteCart);
 
+//api binding adddress
+router.get("/api/book/city", authController.isAuth, shopController.getCity);
+router.get("/api/book/district/binding", authController.isAuth, shopController.getBindingDistrict);
+router.get("/api/book/ward/binding", authController.isAuth, shopController.getBindingWard);
+
+//binding cate
+router.post("/binding/cate", shopController.getProductCate);
 
 
 module.exports = router;

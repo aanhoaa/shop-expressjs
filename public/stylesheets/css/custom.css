@@ -42,6 +42,8 @@ table.table-custom {
     background: #eee;
     color: #29bd04f5;
     font-weight: 600;
+    width: fit-content;
+    padding: 0 5px;
 }
 
 .sku-product {
@@ -238,3 +240,9 @@ input[type='number'] {
   input::-webkit-inner-spin-button {
     -webkit-appearance: none;
   }
+.table {
+    margin-bottom: 0;
+}
+.panel-default {
+    margin-bottom: 10px !important;
+}

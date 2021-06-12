@@ -404,8 +404,9 @@ exports.postResendVerify = async (req, res, next) => {
 exports.isShop = async (req, res, next) => {
   const decoded = await jwtHelper.verifyToken(req.session.token, 'secret');
 
-  if (decoded.data.role == 'shop')
-    next();
+  if (decoded.data.role == 'shop') {
+      next();
+  }
   else
   return res.redirect('/');
 }

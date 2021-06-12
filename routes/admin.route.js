@@ -16,6 +16,8 @@ router.post("/category/add" , authController.isAuth, authController.isAdmin, adm
 router.put("/category/edit" , authController.isAuth, authController.isAdmin, adminController.putEditNameCategory);
 router.post("/product/edit/status" , authController.isAuth, authController.isAdmin, adminController.postEditStatusProduct);
 router.get("/profile/shop" , authController.isAuth, authController.isAdmin, adminController.getProfileShop);
+router.get("/shop/*.:shopId" , authController.isAuth, authController.isAdmin, adminController.getShopDetail);
+router.put("/lock/shop" , authController.isAuth, authController.isAdmin, adminController.putShopLock);
 router.get("/profile/user" , authController.isAuth, authController.isAdmin, adminController.getProfileUser);
 router.delete("/user/delete" , authController.isAuth, authController.isAdmin, adminController.deleteUser);
 router.get("/order" , authController.isAuth, authController.isAdmin, adminController.getOrder);

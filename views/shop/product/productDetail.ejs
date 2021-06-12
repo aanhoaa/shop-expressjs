@@ -288,7 +288,7 @@
         </div>
           <div class="container" style="max-width: 973px;">
             
-            <div id="blogSlider">
+            <div class="blogSlider" id="shopProduct">
                 <div class="MS-content">
                     <%relativeShop.forEach(item => {%>
                     <div class="item">
@@ -341,7 +341,7 @@
             </div>
               <div class="container" style="max-width: 973px;">
                 
-                <div id="blogSlider">
+                <div class="blogSlider" id="relativeProduct">
                     <div class="MS-content">
                         <%productCate2.forEach(item => {%>
                         <div class="item">
@@ -404,7 +404,11 @@
     })
     </script>
     <script>
-        $('#blogSlider').multislider({
+        $('#shopProduct').multislider({
+            duration: 750,
+            interval: 3000
+        }); 
+        $('#relativeProduct').multislider({
             duration: 750,
             interval: 3000
         }); 

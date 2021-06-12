@@ -174,8 +174,20 @@ function btnShow(e) {
               }
             })
           }
-           else
-            window.location.href = '/seller';
+           
+          if (data.state == 1) window.location.href = '/seller';
+          if (data.state == 2) {
+            Swal.fire({
+              title: `Bạn chưa có địa chỉ kho hàng. <p>Thêm địa chỉ kho hàng</p>`,
+              showDenyButton: false,
+              showCancelButton: true,
+              confirmButtonText: `Xác nhận`,
+            }).then((result) => {
+              if (result.isConfirmed) {
+                window.location.href = `/seller/profile/address-book`;
+              }
+            })
+          }
       },
       error: function() {
         alert("Bị lỗi");

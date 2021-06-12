@@ -1,6 +1,7 @@
 .content {
     background: #fff;
     margin-top: 40px;
+    max-width: 97%;
 }
 .content .title {
     margin: 20px;
@@ -10,4 +11,24 @@
 }
 .delete-user {
     cursor: pointer;
+}
+.info div, .info-content div {
+    padding: 10px;
+}
+.lock-shop {
+    cursor: pointer;
+}
+.enable {
+    background: #eee;
+    color: #29bd04f5;
+    width: fit-content;
+    font-weight: 600;
+    padding: 0px 5px;
+}
+.disable {
+    width: fit-content;
+    color: #ee4d2d;
+    background: rgba(239,71,71,.16);
+    font-weight: 600;
+    padding: 0px 5px;
 }

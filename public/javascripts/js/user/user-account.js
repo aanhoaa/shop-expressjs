@@ -37,7 +37,7 @@ function resetPassword() {
 
 function getCity(it) {
   $.ajax({
-    url: `${window.location.origin}/user/api/account/city`,
+    url: `${window.location.origin}/api/book/city`,
     method: "get",
     dataType: "json",
     success: function(data) {
@@ -71,7 +71,7 @@ function pickCity(it) {
 
     const cityId = it.value;
     $.ajax({
-        url: `${window.location.origin}/user/api/account/district/binding`,
+        url: `${window.location.origin}/api/book/district/binding`,
         method: "get",
         dataType: "json",
         data: {
@@ -103,7 +103,7 @@ function pickDistrict(it) {
   const cityId =  $(it).parent().parent().find('.city').val();
 
   $.ajax({
-      url: `${window.location.origin}/user/api/account/ward/binding`,
+      url: `${window.location.origin}/api/book/ward/binding`,
       method: "get",
       dataType: "json",
       data: {
@@ -136,7 +136,7 @@ function getAll(it) {
   //load city
   const cityID = $(it).parent().parent().find('.codecity').val();
   $.ajax({
-    url: `${window.location.origin}/user/api/account/city`,
+    url: `${window.location.origin}/api/book/city`,
     method: "get",
     dataType: "json",
     success: function(data) {
@@ -165,7 +165,7 @@ function getAll(it) {
   //load district
   const districtID = $(it).parent().parent().find('.codedistrict').val();
   $.ajax({
-    url: `${window.location.origin}/user/api/account/district/binding`,
+    url: `${window.location.origin}/api/book/district/binding`,
     method: "get",
     dataType: "json",
     data: {
@@ -198,7 +198,7 @@ function getAll(it) {
   const wardID = $(it).parent().parent().find('.codeward').val();
   console.log(wardID)
   $.ajax({
-    url: `${window.location.origin}/user/api/account/ward/binding`,
+    url: `${window.location.origin}/api/book/ward/binding`,
     method: "get",
     dataType: "json",
     data: {

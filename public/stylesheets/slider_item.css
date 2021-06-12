@@ -215,7 +215,7 @@ opacity:1;
 
 
 
-@media only screen and max-width990px{
+@media only screen and (max-width: 990px){
 .product-grid {
  margin-bottom:30px;
 }
@@ -359,4 +359,8 @@ li.dropdown:last-child .dropdown-menu li a
 .product-grid .rating {
 	margin: auto;
 	height: 40px;
+}
+.blogSlider .MS-content .item {
+    width: 250px;
+    margin: 5px 10px;
 }
