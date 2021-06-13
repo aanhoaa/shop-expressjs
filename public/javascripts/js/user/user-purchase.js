@@ -32,7 +32,8 @@ $(document).ready(function(){
                 success:function(data){ 
                     if (data.state == 1) {
                         swal("Nice!", "Hủy đơn hàng thành công", "success");
-                        window.location.href = "/user/purchase";
+                        //window.location.href = "/user/purchase";
+                        window.location.replace(data.data)
                     }
                     if (data.state == 0) alert('Lỗi hệ thống');
                     if (data.state == -1) alert('Dữ liệu trống');

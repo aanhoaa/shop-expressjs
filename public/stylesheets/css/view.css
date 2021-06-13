@@ -757,15 +757,15 @@ button:focus {
 }
 .btn-solid-primary {
   color: #fff;
-  background: #ee4d2d;
+  background: #00bcd4;
 }
 .btn--l, .btn--xl {
   min-width: 80px;
   max-width: 250px;
 }
 .btn-tinted {
-  background: rgba(255,87,34,.1);
-  border: 1px solid #ee4d2d;
+  background: #5bd6d645;
+  border: 1px solid #00bcd4;
   box-shadow: 0 1px 1px 0 rgb(0 0 0 / 3%);
 }
 .btn--l {

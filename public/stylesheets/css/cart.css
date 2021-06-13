@@ -333,6 +333,7 @@
   display: -moz-box;
   display: -ms-flexbox;
   display: flex;
+  margin-right: 20px;
 }
 ._2IDRne {
   -webkit-box-orient: vertical;
@@ -398,4 +399,21 @@
   width: 100%;
   background: -webkit-gradient(linear,left top,left bottom,from(transparent),to(rgba(0,0,0,.06)));
   background: linear-gradient(transparent,rgba(0,0,0,.06));
+}
+.cart-page-footer__gap {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+  -moz-box-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+}
+._1klFI7 {
+  display: flex;
+}
+.cart-price {
+  margin-left: 5px;
+}
+._1I3_mR {
+  font-size: 18px;
+  font-weight: 500;
 }

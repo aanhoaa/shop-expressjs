@@ -29,6 +29,10 @@
             <label for="">ID đơn hàng:</label>
            #<%-address.order_id%>
         </div>
+        <div>
+            <label for="">Phương thức thanh toán:</label>
+            <%-info.payment_id == 1 ? 'Thanh toán khi nhận hàng' : 'Thanh toán online'%>
+        </div>
         <label for="">Địa chỉ nhận hàng</label>
         <div class="address">
             <div class="name">

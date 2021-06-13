@@ -310,6 +310,7 @@ exports.getOrder = async (req, res, next) => {
           status: item.status,
           shopName: item.shop_name,
           status: item.status,
+          payment: item.payment_id,
           products: []
         })
       }

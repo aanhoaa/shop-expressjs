@@ -351,10 +351,7 @@ exports.getPurchase = async (req, res, next) => {
 
 exports.getWaitingConfirm = async (req, res, next) => {
   const data = await db.getUserInfo(2, [req.jwtDecoded.data.username]);
-  const userInfo = {
-    username: data.username,
-    gender: data.gender
-  }
+  const userInfo = req.session.Userinfo;
 
   var orderStatus = ['CHỜ XÁC NHẬN', 'CHUẨN BỊ HÀNG', 'ĐANG GIAO', 'ĐÃ GIAO', 'ĐÃ HỦY'];
   var type = req.query.type;
@@ -378,7 +375,7 @@ exports.getWaitingConfirm = async (req, res, next) => {
         type = 5;
 }
 
-  const arrData = await db.getUserPurchaseWaiting([req.session.Userinfo.id]);
+  const arrData = await db.getUserPurchaseWaiting([userInfo.id]);
   const all = [];
  if (arrData) {
   arrData.map(item => {
@@ -441,11 +438,20 @@ exports.getWaitingConfirm = async (req, res, next) => {
 
 exports.putOrderCancel = async (req, res, next) => {
   const {orderId, cancelReason} = req.body;
+  const dateFormat = require('dateformat');
+  //var total = 0;
 
   if (orderId == '' || cancelReason == '')
     return res.send({state: -1});
 
-  //update staus => -1
+  // const orderInfo = await db.getOrderDetailByOrderId([orderId]);
+  // for(let i of orderInfo) {
+  //   total += i.amount*i.price;
+  // }
+  // total += orderInfo[0].shippingfree;
+  // total = 100000;
+  
+  //update status => -1
   const update = await db.updateOrderReason([-1, cancelReason, orderId]);
   if (update != true) return res.send({state: 0});
 
@@ -454,7 +460,40 @@ exports.putOrderCancel = async (req, res, next) => {
     const updateStock = await db.updateProductVariantAmountAuto([item.amount, item.pdv_id]);
   }
 
-  res.send({state: 1});
+  // var date = new Date();
+  // var createDate = dateFormat(date, 'yyyymmddHHmmss');
+  // var ipAddr = req.headers['x-forwarded-for'] ||
+  // req.connection.remoteAddress ||
+  // req.socket.remoteAddress ||
+  // req.connection.socket.remoteAddress;
+
+  // var tmnCode = 'BVMA539M' // .ev
+  // var secretKey = 'IMMMADFCPUJPCCJYIHWVHKMGWAQULKTJ' //.ev
+  // var vnpUrl = 'http://sandbox.vnpayment.vn/merchant_webapi/merchant.html' //.ev
+  // var vnp_Params = {};
+  // vnp_Params['vnp_Version'] = '2.0.0';
+  // vnp_Params['vnp_Command'] = 'refund';
+  // vnp_Params['vnp_TmnCode'] = tmnCode;
+  // vnp_Params['vnp_TransactionType'] = '3';
+  // vnp_Params['vnp_TxnRef'] = makeid(10);
+  // vnp_Params['vnp_Amount'] = total;
+  // vnp_Params['vnp_OrderInfo'] = "Hủy bỏ đơn hàng";
+  // vnp_Params['vnp_TransDate'] = createDate;
+  // vnp_Params['vnp_CreateDate'] = createDate;
+  // vnp_Params['vnp_IpAddr'] = ipAddr;
+  // vnp_Params = sortObject(vnp_Params);
+  // var querystring = require('qs');
+  // var signData = secretKey + querystring.stringify(vnp_Params, { encode: false });
+
+  // var sha256 = require('sha256');
+
+  // var secureHash = sha256(signData);
+
+  // vnp_Params['vnp_SecureHashType'] =  'SHA256';
+  // vnp_Params['vnp_SecureHash'] = secureHash;
+  // vnpUrl += '?' + querystring.stringify(vnp_Params, { encode: true });
+
+  res.send({state: 1, data: vnpUrl});
 }
 
 exports.getOrderDetail = async (req, res, next) => {
@@ -523,4 +562,22 @@ function makeid(length) {
      result += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
   return result;
+}
+
+function sortObject(o) {
+  var sorted = {},
+      key, a = [];
+
+  for (key in o) {
+      if (o.hasOwnProperty(key)) {
+          a.push(key);
+      }
+  }
+
+  a.sort();
+
+  for (key = 0; key < a.length; key++) {
+      sorted[a[key]] = o[a[key]];
+  }
+  return sorted;
 }

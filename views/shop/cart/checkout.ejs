@@ -63,6 +63,7 @@
                 %>
                 <%data.forEach((item) => {i++;%>
                     <%ship = 0;
+                     totalShop = 0;
                     arrShop.push(item.shopId)
                     %>
                     <div class="clearfix" style="border: 1px solid rgba(0,0,0,0.09);">
@@ -111,13 +112,14 @@
 
                         <span id="payment_total"><%-VND(i.amount * i.price)%></span>
                         <%total += i.amount * i.price%>     
-                        <%ship += i.fee%>                             
+                        <%ship += i.fee%>  
+                        <%totalShop+=i.amount * i.price%>                           
                     </div>
                 </div>
                    
                 <%})%>
             </div>
-            <% totalFee += ship + total;%>
+            <% totalFee += ship;%>
             <div style="display: flex; float: right; margin: 25px;">
                 <div style="margin-right: 20px;">
                     <div> 
@@ -131,7 +133,7 @@
                     <div>
                         <%-VND(ship)%>
                     </div>
-                    <div> <%-VND(totalFee)%></div>
+                    <div> <%-VND(ship+totalShop)%></div>
                     <%arrShip.push(ship)%>
                 </div>
             </div>
@@ -147,14 +149,14 @@
        <div class="qXX2_B">
           <div>
              <div class="checkout-payment-method-view__current checkout-payment-setting">
-                <div class="checkout-payment-method-view__current-title">Phương thức thanh toán</div>
-                <div class="checkout-payment-setting__payment-methods-tab">
+                <div class="checkout-payment-method-view__current-title">Phương thức thanh toán: </div>
+                <div class="checkout-payment-setting__payment-methods-tab" style="margin-left: 10px;">
                    <span tabindex="0">
-                      <button class="product-variation">
-                         Ví AirPay
-                      </button>
-                   </span>
-                   <span tabindex="0"><button class="product-variation">Thẻ Tín dụng/Ghi nợ</button></span><span tabindex="0"><button class="product-variation" data-method=1>Thanh toán khi nhận hàng</button></span>
+                       <button class="product-variation" data-method=2>VNPay</button>
+                    </span>
+                    <span tabindex="0">
+                        <button class="product-variation" data-method=1>Thanh toán khi nhận hàng</button>
+                    </span>
                 </div>
              </div>
           </div>

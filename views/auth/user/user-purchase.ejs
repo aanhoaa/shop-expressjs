@@ -114,6 +114,7 @@
                                                    </div>
                                                 </div>
                                              </div>
+                                             <%if (item.status == 3) {%>
                                              <div class="rating">
                                                 <div class="star-rating">
                                                    <span class="fa fa-star-o" data-rating="1"></span>
@@ -124,6 +125,7 @@
                                                    <input type="hidden" name="whatever1" class="rating-value" value="<%-i.userRating%>" data-id="<%-i.ratingId%>">
                                                  </div>
                                              </div>
+                                             <%}%>
                                              <div class="_3M1Mfz">
                                                 <div><span class="_7zFjZr"><%-VND(i.price)%></span><span class="_2id4-o _3rNlHO"></span></div>
                                              </div>

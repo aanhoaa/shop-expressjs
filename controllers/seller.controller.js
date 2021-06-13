@@ -814,11 +814,21 @@ exports.putDeliveredOrder = async (req, res, next) => {
     if (orderId) {
         const info = await db.getUserAndProductByOrderId([orderId]);
         for(let i of info) {
-            const insertRating = await db.insertUserRating([i.user_id, i.id]);
-            const updateSelled = await db.updateProductSelled([i.sum, i.id]); 
+          const updateSelled = await db.updateProductSelled([i.sum, i.id]); 
         }
-        const update = await db.updateOrder([3, orderId]);
-        if (update == true) return res.send({state: 1});
+       
+        const products = await db.getOrderDetailByOrderId([orderId]);
+        var total = 0;
+        for(let i of products) {
+          total += i.amount*i.price;
+        }
+        total += products[0].shippingfee;
+        
+        //update wallet
+        const addWallet = await db.updateShopWallet(orderId, [total, req.session.shopInfo.id]);
+        const update = await db.updateOrderAndPaid([3, orderId]);
+        console.log(req.session.shopInfo.id, addWallet)
+        if (update == true && addWallet == true) {console.log('done') ; return res.send({state: 1});}
         else return res.send({state: 0});
     }
     else res.send({state: -1});

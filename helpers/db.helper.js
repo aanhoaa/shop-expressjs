@@ -221,6 +221,35 @@ function updateShopStatus(values) {
     })
     .catch(error => {return error;});
 }
+
+function checkOrderPaid(value) {
+    const sql = "SELECT * FROM orders WHERE id = $1 and paid = 0";
+
+    return db.excuteQuery(sql, value)
+    .then(res => {
+        if (res.rowCount > 0)
+        return true;
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function updateShopWallet(orderId, values) {
+    const sql = "UPDATE shop SET wallet = wallet + $1 WHERE id = $2";
+    
+    return checkOrderPaid([orderId])
+    .then(res => {
+        if (res == true) {
+            return db.excuteQuery(sql, values)
+            .then(res => {
+                if (res.rowCount > 0)
+                return true;
+                return false;
+            })
+            .catch(error => {return error;});
+        }
+    })
+}
 /*=====================================*/ 
 
 /*
@@ -681,7 +710,7 @@ function getUserPurchaseWaiting(value) {
 }
 
 function getOrderAll(value) {
-    const sql = "select a.status, a.shippingfee, c.name, c.variant, c.amount, c.price, a.shop_id , d.name as shop_name, c.cover, c.productvariant_id as pdv_id, a.id as order_id from orders as a inner join purchase as b on b.id = a.purchase_id inner join orderdetail as c on c.order_id = a.id inner join shop as d on d.id = a.shop_id order by a.id desc";
+    const sql = "select a.status, a.shippingfee, b.payment_id, c.name, c.variant, c.amount, c.price, a.shop_id , d.name as shop_name, c.cover, c.productvariant_id as pdv_id, a.id as order_id from orders as a inner join purchase as b on b.id = a.purchase_id inner join orderdetail as c on c.order_id = a.id inner join shop as d on d.id = a.shop_id order by a.id desc";
 
     return db.excuteQuery(sql, value)
     .then(res => {
@@ -933,7 +962,7 @@ function insertUserRating(values) {
             })
             .catch(error => {return error;});
         }
-        else return false;
+       // else return false;
     })
     .catch(error => {return error;});
 }
@@ -2013,7 +2042,7 @@ function deleteViolateType(value) {
     ORDER
 */
 function insertPurchase(values) {
-    const sql = 'INSERT INTO purchase(user_id, payment_id, datepurchase) VALUES ($1, $2, $3) RETURNING id';
+    const sql = 'INSERT INTO purchase(user_id, payment_id, datepurchase, payref) VALUES ($1, $2, $3, $4) RETURNING id';
 
     return db.excuteQuery(sql, values)
     .then(res => {
@@ -2068,8 +2097,24 @@ function insertAddressOrder(values) {
     .catch(error => {return error;});
 }
 
+function checkPurchasePayRef(value) {
+    const sql = "SELECT * FROM purchase WHERE payref = $1";
+
+    return db.simpleQuery(sql, value)
+    .then(res => {
+        if (res.rowCount > 0)
+            return true;
+        else return false;
+    })
+    .catch(e => {
+        console.log('err:', e);
+        return false;
+    });
+}
+
 function getOrderById(value) {
-    const sql = "SELECT * FROM orders WHERE id = $1";
+    //const sql = "SELECT * FROM orders as a inner join purchase as b on b.id = a.order_id WHERE id = $1";
+    const sql = "SELECT * FROM orders as a inner join purchase as b on b.id = a.purchase_id WHERE a.id = $1";
 
     return db.simpleQuery(sql, value)
     .then(res => {
@@ -2086,7 +2131,7 @@ function getOrderById(value) {
 function getOrderAddressById(value) {
     const sql = "select a.id as order_id, c.fullname, c.phone, c.identity, c.ward, c.district, c.province from orders as a inner join purchase as b on b.id = a.purchase_id inner join addressorder as c on b.id = c.purchase_id where a.id = $1";
 
-    return db.excuteQuery(sql, value)
+    return db.simpleQuery(sql, value)
     .then(res => {
         if (res.rowCount > 0)
         {
@@ -2098,7 +2143,7 @@ function getOrderAddressById(value) {
 }
 
 function getOrderDetailByOrderId(value) {
-    const sql = "select b.name, b.amount, b.price, b.variant, b.cover, b.productvariant_id as pdv_id from orders as a inner join orderdetail as b on a.id = b.order_id where a.id = $1";
+    const sql = "select a.shippingfee, b.name, b.amount, b.price, b.variant, b.cover, b.productvariant_id as pdv_id from orders as a inner join orderdetail as b on a.id = b.order_id where a.id = $1";
 
     return db.excuteQuery(sql, value)
     .then(res => {
@@ -2113,6 +2158,20 @@ function getOrderDetailByOrderId(value) {
 
 function updateOrder(values) {
     const sql = "UPDATE orders SET status = $1 WHERE id = $2";
+
+    return db.excuteQuery(sql, values)
+    .then(res => {
+        if (res.rowCount > 0)
+        {
+            return true;
+        }
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function updateOrderAndPaid(values) {
+    const sql = "UPDATE orders SET status = $1, paid = 1 WHERE id = $2";
 
     return db.excuteQuery(sql, values)
     .then(res => {
@@ -2149,6 +2208,7 @@ module.exports = {
     getShop,
     getShopById,
     updateShopStatus,
+    updateShopWallet,
 
     checkEmailExist,
     checkUserExist,
@@ -2278,10 +2338,12 @@ module.exports = {
     insertOrder,
     insertOrderDetail,
     insertAddressOrder,
+    checkPurchasePayRef,
     getOrderById,
     getOrderAddressById,
     getOrderDetailByOrderId,
     updateOrder,
+    updateOrderAndPaid,
     updateOrderReason,
     deleteTest
 }

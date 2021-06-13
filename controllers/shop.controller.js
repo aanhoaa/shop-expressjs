@@ -1,16 +1,15 @@
 const Product = require("../models/product.model");
 const Category = require("../models/category.model");
-const Users = require("../models/user.model");
 const Brand = require("../models/brand.model");
 const Material = require("../models/material.model");
-const Inventory = require("../models/inventory.model");
-const Order = require("../models/order.model");
-const paypal = require('paypal-rest-sdk');
 const jwtHelper = require("../helpers/jwt.helper"); 
 const db = require('../helpers/db.helper');
 var bcrypt = require("bcryptjs");
 const util = require('util')
 const fetch = require('node-fetch');
+const https = require('https');
+const querystring = require('querystring');
+const crypto = require('crypto');
 
 // exports.getIndexShop = (req, res, next) => {
 //     Order.find().then((data) => {
@@ -290,7 +289,8 @@ exports.postDeleteCart = async (req, res, next) => {
 exports.getCheckout = async (req, res, next) => {
   const addBook = await db.getUserAddressBook([req.session.Userinfo.id]);
   const data = req.session.checkout;
-  var ship = 0;
+
+  var total = 0;
   var arrData = [];
   if (data != '') {
     for(let i of data) {
@@ -347,13 +347,14 @@ exports.getCheckout = async (req, res, next) => {
         cover: item[0].cover,
         fee: fee.total  * item[0].amount
       });
+      total += fee.total  * item[0].amount + item[0].price  * item[0].amount
       return fee.total  * item[0].amount;
     })
     .catch(err => console.log(err));
       }
       
     }))
-
+  req.session.total = total;
   //console.log(util.inspect(all, {showHidden: false, depth: null}))
   req.session.order = '';
   req.session.order = all;
@@ -369,15 +370,83 @@ exports.getCheckout = async (req, res, next) => {
 }
 
 exports.postCheckout = async (req, res, next) => {
-  // check type for momo
+  const dateFormat = require('dateformat');
   const amount = req.body.arrAmount.split(",");
   const pvd = req.body.arrPVD.split(",");
   const shop_id = req.body.arrShop.split(",");
   const ship = req.body.arrShip.split(",");
   const userInfo = req.session.Userinfo;
   const paymentMethod = req.body.paymentmethod;
-  const now = new Date();
- 
+  const now = new Date(); 
+  const total = req.session.total * 100;
+
+  if (paymentMethod == 2) {
+    try {
+      //code vnpay here
+      var ipAddr = req.headers['x-forwarded-for'] ||
+      req.connection.remoteAddress ||
+      req.socket.remoteAddress ||
+      req.connection.socket.remoteAddress;
+
+      var tmnCode = 'BVMA539M' // .ev
+      var secretKey = 'sdasdasdas12312s' //.ev
+      var vnpUrl = 'http://sandbox.vnpayment.vn/paymentv2/vpcpay.html' //.ev
+      var returnUrl = 'http://localhost:3000/checkout/vnpay/returnUrl' //.ev
+
+      var date = new Date();
+
+      var createDate = dateFormat(date, 'yyyymmddHHmmss');
+      var orderId = makeid(10);
+      //var bankCode = req.body.bankCode;
+
+      var orderInfo = 'Thanh toan mua hang';
+      var orderType = '230001';
+      var locale = '';
+      if(locale === null || locale === ''){
+      locale = 'vn';
+      }
+      var currCode = 'VND';
+      var vnp_Params = {};
+      vnp_Params['vnp_Version'] = '2.0.0';
+      vnp_Params['vnp_Command'] = 'pay';
+      vnp_Params['vnp_TmnCode'] = tmnCode;
+      // vnp_Params['vnp_Merchant'] = ''
+      vnp_Params['vnp_Locale'] = locale;
+      vnp_Params['vnp_CurrCode'] = currCode;
+      vnp_Params['vnp_TxnRef'] = orderId;
+      vnp_Params['vnp_OrderInfo'] = orderInfo;
+      vnp_Params['vnp_OrderType'] = orderType;
+      vnp_Params['vnp_Amount'] = total;
+      vnp_Params['vnp_ReturnUrl'] = returnUrl;
+      vnp_Params['vnp_IpAddr'] = ipAddr;
+      vnp_Params['vnp_CreateDate'] = createDate;
+      // if(bankCode !== null && bankCode !== ''){
+      //     vnp_Params['vnp_BankCode'] = bankCode;
+      // }
+
+      vnp_Params = sortObject(vnp_Params);
+
+      var querystring = require('qs');
+      var signData = secretKey + querystring.stringify(vnp_Params, { encode: false });
+
+      var sha256 = require('sha256');
+
+      var secureHash = sha256(signData);
+
+      vnp_Params['vnp_SecureHashType'] =  'SHA256';
+      vnp_Params['vnp_SecureHash'] = secureHash;
+      vnpUrl += '?' + querystring.stringify(vnp_Params, { encode: true });
+
+      req.session.pdv = '';
+      req.session.pdv = pvd;
+      return res.redirect(vnpUrl)
+    }
+    catch (error) {
+      console.log('Error when post checkout vnpay', error);
+      return error;
+    }
+  }
+
   try {
       //update sản phẩm trong kho
       for (let pdvID of pvd) {
@@ -392,11 +461,11 @@ exports.postCheckout = async (req, res, next) => {
       }
 
       for (let pdvID of pvd) {
-        var delCart = await db.deleteCartByUser([req.session.Userinfo.id, pdvID]);
+        var delCart = await db.deleteCartByUser([userInfo.id, pdvID]);
       }
 
       //insert purchase
-      const purchase_id = await db.insertPurchase([userInfo.id, paymentMethod, now]);
+      const purchase_id = await db.insertPurchase([userInfo.id, paymentMethod, now, 0]);
       if (purchase_id != false) {
         //insert address order
         const addOrder = await db.getUserAddressBook([userInfo.id]);
@@ -409,6 +478,10 @@ exports.postCheckout = async (req, res, next) => {
         data.map(async item => {
           //save order 
           const order_id = await db.insertOrder([purchase_id, item.shopId, item.fee, now, 0]);
+          const info = await db.getUserAndProductByOrderId([order_id]);
+          for(let i of info) {
+            const insertRating = await db.insertUserRating([i.user_id, i.id]);
+          }
           item.products.map(async i => {
             //save orderdetail
             var variant = `${i.color} ${i.size}`;
@@ -430,10 +503,148 @@ exports.postCheckout = async (req, res, next) => {
   res.redirect('/user/purchase/?type=confirm');
 }
 
+exports.getCheckoutedMoMo = (req, res, next) => {
+  const param = req.query
+  var serectkey = "OLU5tyy5L35dOPdhbuZuvja0ewTyywqq"
+  var status = 0;
+  var rawSignature ="partnerCode="+param.partnerCode+"&accessKey="+param.accessKey+"&requestId="+param.requestId+"&amount="+param.amount+"&orderId="+param.orderId+"&orderInfo="+param.orderInfo+"&orderType="+param.orderType+"&transId="+param.transId+"&message="+param.message+"&localMessage="+param.localMessage+"&responseTime="+param.responseTime+"&errorCode="+param.errorCode+"&payType="+param.payType+"&extraData="+param.extraData
+    //signature
+  var signature = crypto.createHmac('sha256', serectkey)
+                  .update(rawSignature)
+                  .digest('hex');
 
+  if (signature == req.query.signature) {
+    if (param.errorCode == '0') {
+      status = 1;
+      //xử lý db 
+    }
+    else status = 0;
+  } else status = -1;
+  console.log(status)
+  res.render('./shop/cart/payment', {
+    status: status, 
+    cart: req.session.cart, 
+    userInfo: req.session.Userinfo
+  })
+}
 
+exports.postCheckoutedMoMo = (req, res, next) => {
+  console.log('POST HERE')
+  const param = req.query
+  var serectkey = "OLU5tyy5L35dOPdhbuZuvja0ewTyywqq"
+  var status = 0;
+  var rawSignature ="partnerCode="+param.partnerCode+"&accessKey="+param.accessKey+"&requestId="+param.requestId+"&amount="+param.amount+"&orderId="+param.orderId+"&orderInfo="+param.orderInfo+"&orderType="+param.orderType+"&transId="+param.transId+"&message="+param.message+"&localMessage="+param.localMessage+"&responseTime="+param.responseTime+"&errorCode="+param.errorCode+"&payType="+param.payType+"&extraData="+param.extraData
+    //signature
+  var signature = crypto.createHmac('sha256', serectkey)
+    .update(rawSignature)
+    .digest('hex');
+  
+  if (signature == req.query.signature) {
+    if (param.errorCode == '0') {
+      //update order
+    }
+    else status = 0;
+  } else status = -1;
 
+  console.log('status', status)
+}
 
+exports.getCheckoutedVNPay = async (req, res, next) => {
+  var vnp_Params = req.query;
+  var secureHash = vnp_Params['vnp_SecureHash'];
+  var status = 0;
+
+  delete vnp_Params['vnp_SecureHash'];
+  delete vnp_Params['vnp_SecureHashType'];
+
+  vnp_Params = sortObject(vnp_Params);
+  var secretKey = 'sdasdasdas12312s' //.ev
+
+  var querystring = require('qs');
+  var signData = secretKey + querystring.stringify(vnp_Params, { encode: false });
+
+  var sha256 = require('sha256');
+
+  var checkSum = sha256(signData);
+
+  if(secureHash === checkSum) {
+    //chờ deloy sẽ dùng cho route post 
+    var rspCode = vnp_Params['vnp_ResponseCode'];
+    if (rspCode == "00") {
+      const pvd = req.session.pdv;
+      const userInfo = req.session.Userinfo;
+      status = 1;
+      const now = new Date(); 
+      const checkRef = await db.checkPurchasePayRef([vnp_Params['vnp_TxnRef']]);
+      
+      if (!checkRef) {
+        //save db
+        try {
+          //update sản phẩm trong kho
+          for (let pdvID of pvd) {
+            var exist = await db.checkExistCart([userInfo.id, pdvID]);
+            if (exist == false) return res.status(500).json({err: "sản phẩm không có trong giỏ hàng"});
+            else {
+              var getStock = await db.getStockAmount([pdvID]);
+              
+              const subAmount = getStock.stockamount - exist.amount;
+              var updCart = await db.updateProductVariantAmount([subAmount, pdvID]);
+            }
+          }
+    
+          for (let pdvID of pvd) {
+            var delCart = await db.deleteCartByUser([userInfo.id, pdvID]);
+          }
+    
+          //insert purchase
+          const purchase_id = await db.insertPurchase([userInfo.id, 2, now, vnp_Params['vnp_TxnRef']]);
+          if (purchase_id != false) {
+            //insert address order
+            const addOrder = await db.getUserAddressBook([userInfo.id]);
+            if (addOrder != false) {
+              const addressOrder = [purchase_id, addOrder[0].province_name, addOrder[0].district_name, addOrder[0].ward_name, addOrder[0].identity_name, addOrder[0].fullname, addOrder[0].phone];
+              const insertAddOrd = await db.insertAddressOrder(addressOrder);
+            }
+            //insert order
+            const data = req.session.order;
+            data.map(async item => {
+              //save order 
+              const order_id = await db.insertOrder([purchase_id, item.shopId, item.fee, now, 0]);
+              
+              item.products.map(async i => {
+                //save orderdetail
+                var variant = `${i.color} ${i.size}`;
+                const orderDetail = await db.insertOrderDetail([order_id, i.pvdId, i.name, variant, i.amount, i.price, i.cover, 0]);
+              })
+              const info = await db.getUserAndProductByOrderId([order_id]);
+                for(let i of info) {
+                  const insertRating = await db.insertUserRating([userInfo.id, i.id]);
+                }
+            })
+          }
+        }
+      catch (error) {
+        console.log('Error when post checkout', error);
+        return error;
+      }
+      //update cart.length
+      const cart = await db.getCart([userInfo.id]);
+      req.session.cart = cart.length;
+
+      req.session.order = '';
+    }
+      
+    }
+    else status = 0; 
+  }
+  else status = -1;
+
+  res.render('./shop/cart/payment', {
+    status: status, 
+    cart: req.session.cart, 
+    userInfo: req.session.Userinfo
+  })
+}
 
 
 exports.postProductBuy = (req, res, next) => {
@@ -630,91 +841,6 @@ exports.getDeleteCart = (req, res, next) => {
 
 
 
-exports.getCheckouted = (req, res, next) => {
-  var promises = [];
-  const payerId = req.query.PayerID;
-  const paymentId = req.query.paymentId;
-  var total = 0;
-
-  req.session.cart.forEach((subCart) => {
-    total += parseInt(subCart.price, 10)/23000 * parseInt(subCart.amount, 10);
-  })
-
-  const execute_payment_json = {
-    "payer_id": payerId,
-    "transactions": [{
-        "amount": {
-            "currency": "USD",
-            "total": Number(total.toFixed(2).toString())
-        }
-    }]
-  };
-
-  paypal.payment.execute(paymentId, execute_payment_json, function (error, payment) {
-    if (error) 
-    {
-       res.render('cancle');
-    } 
-    else 
-    {
-        var order = new Order({
-          user: req.user._id,
-          cart: req.session.cart,
-          status: 1,
-          statusDelivery: 0,
-          statusToStore: -1
-        });
-      
-        //update data in product, inventory
-        req.session.cart.forEach((prod) => {
-          promises.push(
-            Product.findById(prod.productId, function(err, data) {
-              if (err) console.log(err);
-              else{
-                data.subId.size.forEach((subSize) => {
-                  if (prod.size === subSize.name)
-                  {
-                    subSize.color.forEach((subColor) => {
-                      if (prod.color === subColor.name)
-                      {
-                        subColor.amount -= prod.amount;
-                        data.save();
-                      }
-                    })
-                  }
-        
-                  for (let i = 0; i < data.listInventory.length; i++) {
-                    Inventory.findById(data.listInventory[i], function(err, ivent) {
-                      if (err) console.log(err);
-                      else{
-                        if (prod.size === ivent.sizeId && prod.color === ivent.colorId)
-                        {
-                          ivent.amount -= prod.amount;
-                          ivent.save();
-                        }
-                      }
-                    })
-                    
-                  }
-                })
-              }
-            })
-          )
-        })
-      
-        Promise.all(promises).then(() => 
-        order.save((err)=>{
-          if (err) throw err;
-          else
-          {
-            req.session.cart = null;
-            res.redirect('/user');
-          } 
-        })
-        );
-      }
-})
-}
 
 //magege shop
 exports.getShop = (req, res, next) => {
@@ -874,4 +1000,109 @@ exports.getProductCate = async (req, res, next) => {
     products: products,
     top: topSell,
   });
+}
+
+function MoMo() {
+  if (paymentMethod == 2) {
+    // handle momo
+    var endpoint = "https://test-payment.momo.vn/gw_payment/transactionProcessor"
+    var hostname = "https://test-payment.momo.vn"
+    var path = "/gw_payment/transactionProcessor"
+    var partnerCode = "MOMOIIQA20210611" 
+    var accessKey = "Nn42tKQPrrX98XRq"
+    var serectkey = "OLU5tyy5L35dOPdhbuZuvja0ewTyywqq"
+    var orderInfo = "pay with MoMo"
+    var returnUrl = "http://localhost:3000/checkout/returnUrl"
+    var notifyurl = "http://localhost:3000/checkout/notifyUrl "
+    var orderId = "ABB25"
+    var requestId = "ABB25"
+    var requestType = "captureMoMoWallet"
+    var extraData = "email=abc@gmail.com"
+    var strTotal = ""+total
+    
+    var rawSignature ="partnerCode="+partnerCode+"&accessKey="+accessKey+"&requestId="+requestId+"&amount="+strTotal+"&orderId="+orderId+"&orderInfo="+orderInfo+"&returnUrl="+returnUrl+"&notifyUrl="+notifyurl+"&extraData="+extraData
+    //signature
+    var signature = crypto.createHmac('sha256', serectkey)
+                    .update(rawSignature)
+                    .digest('hex');
+    console.log(signature)
+    var body = JSON.stringify({
+        partnerCode : partnerCode,
+        accessKey : accessKey,
+        requestId : requestId,
+        amount : strTotal,
+        orderId : orderId,
+        orderInfo : orderInfo,
+        returnUrl : returnUrl,
+        notifyUrl : notifyurl,
+        extraData : extraData,
+        requestType : requestType,
+        signature : signature,
+    })
+    //Create the HTTPS objects
+    var options = {
+        hostname: 'test-payment.momo.vn',
+        port: 443,
+        path: '/gw_payment/transactionProcessor',
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(body)
+        }
+    };
+
+    console.log('SENDING...')
+    var reqPay = https.request(options, (resp) => {
+        console.log(`Status: ${res.statusCode}`);
+        console.log(`Headers: ${JSON.stringify(resp.headers)}`);
+        resp.setEncoding('utf8');
+        resp.on('data', (body) => {
+          console.log('Body');
+          console.log(body);
+          console.log('payURL');
+          const payUrl = JSON.parse(body).payUrl;
+          console.log(payUrl);
+          return res.redirect(payUrl);
+        });
+        resp.on('end', () => {
+          console.log('No more data in response.');
+        });
+    });
+    reqPay.on('error', (e) => {
+        console.log(`problem with request: ${e.message}`);
+      });
+      
+      // write data to request body
+      reqPay.write(body);
+      reqPay.end();
+  }
+ 
+}
+
+function sortObject(o) {
+  var sorted = {},
+      key, a = [];
+
+  for (key in o) {
+      if (o.hasOwnProperty(key)) {
+          a.push(key);
+      }
+  }
+
+  a.sort();
+
+  for (key = 0; key < a.length; key++) {
+      sorted[a[key]] = o[a[key]];
+  }
+  return sorted;
+}
+
+function makeid(length) {
+  var result           = '';
+  var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  var charactersLength = characters.length;
+  for ( var i = 0; i < length; i++ ) {
+     result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
 }

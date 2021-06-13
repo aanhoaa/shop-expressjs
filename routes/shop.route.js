@@ -20,7 +20,9 @@ router.post("/cart/delete", authController.isAuth, authController.isUser, shopCo
 
 router.get("/checkout", authController.isAuth, authController.isUser, shopController.getCheckout);
 router.post("/checkout", authController.isAuth, authController.isUser, shopController.postCheckout);
-//router.get("/checkouted", authController.isLogin, shopController.getCheckouted);
+router.get("/checkout/momo/returnUrl", authController.isAuth, authController.isUser, shopController.getCheckoutedMoMo);
+router.post("/checkout/momo/notifyUrl ",  shopController.postCheckoutedMoMo);
+router.get("/checkout/vnpay/returnUrl", authController.isAuth, authController.isUser, shopController.getCheckoutedVNPay);
 
 // router.get("/", shopController.getShop);
 // router.post("/", shopController.postShop);

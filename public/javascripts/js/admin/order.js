@@ -22,6 +22,7 @@ $(document).ready(function(){
         }
     })
 
+    //cancel
     $(document).on('click', '.order-cancel', function(e) {
         const orderId = $(this).attr('data-id');
         swal({
