@@ -311,6 +311,7 @@ exports.getOrder = async (req, res, next) => {
           shopName: item.shop_name,
           status: item.status,
           payment: item.payment_id,
+          created: formatDate(item.created_at),
           products: []
         })
       }
@@ -469,6 +470,18 @@ function getdate(tt) {
  
   var someFormattedDate = dd + '/' + mm + '/' + y + ' ' + hour + 'h' + minutes + 'm';
   return someFormattedDate;
+}
+
+function formatDate(tt) {
+  var date = new Date(tt);
+  var MyDate = new Date(date);
+  var MyDateString;
+
+  MyDate.setDate(MyDate.getDate());
+
+  MyDateString = ('0' + MyDate.getDate()).slice(-2) + '/' + ('0' + (MyDate.getMonth()+1)).slice(-2) + '/' + MyDate.getFullYear();
+
+  return MyDateString;
 }
 
 function fn_DateCompare(DateA, DateB) {     // this function is good for dates > 01/01/1970

@@ -1,0 +1,59 @@
+<% include ../../partials/header_seller %>
+<style>
+    .wallet-container {
+        padding: 20px;
+        background: #fff;
+        -webkit-box-shadow: 0 1px 4px 0 rgb(0 0 0 / 10%);
+        box-shadow: 0 1px 4px 0 rgb(0 0 0 / 10%);
+        border-radius: 2px;
+    }
+    .content {
+        padding: 20px;
+        margin: 16px auto 0;
+        background: #fff;
+        -webkit-box-shadow: 0 1px 4px 0 rgb(0 0 0 / 10%);
+        box-shadow: 0 1px 4px 0 rgb(0 0 0 / 10%);
+        border-radius: 2px;
+        border: 1px solid #e9e9e9;
+    }
+    .surplus {
+        font-size: 20px;
+        font-weight: 600;
+    }
+    .currency {
+        margin-top: 20px;
+        font-size: 20px;
+        font-weight: 600;
+    }
+    .left {
+        padding-left: 24px;
+        border-left: 1px solid #eee;    
+    }
+    .get-pay {
+        color: #fff;
+        background: #00bcd4;
+    }
+</style>
+<div class="wallet-container clearfix">
+    <div class="col-sm-12 overview">
+        <div class="surplus">
+            Tổng quan
+        </div>
+        <div class="col-sm-12 content">
+            <div class="col-sm-6 right">
+                <div>Số dư</div>
+                <div class="currency">
+                    <%-VND(wallet)%>
+                </div>
+            </div>
+            <div class="col-sm-6 left">
+                <div>Thao tác</div>
+                <div class="currency">
+                   <button class="btn get-pay">Yêu cầu thanh toán</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<% include ../../partials/footer_admin %>

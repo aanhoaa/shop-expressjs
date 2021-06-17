@@ -210,6 +210,54 @@ function getShopById(value) {
     .catch(error => {return error;});
 }
 
+function getShopWillPay(value) {
+    const sql = "select sum(add) from (select id as order_id, add(sum(total_ord), shippingfee) from (select a.id, c.amount, c.price, total_ord(c.amount, c.price),  a.shippingfee from orders as a inner join purchase as b on b.id = a.purchase_id inner join orderdetail as c on c.order_id = a.id where a.shop_id = $1 and a.status < 3 and a.status >= 0) as a group by id, shippingfee) as a";
+
+    return db.simpleQuery(sql, value)
+    .then(res => {
+        if (res.rowCount > 0)
+        return res.rows[0];
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function getShopPaidCurrentWeek(values) {
+    const sql = "select sum(add) from (select id as order_id, add(sum(total_ord), shippingfee) from (select a.id, c.amount, c.price, total_ord(c.amount, c.price),  a.shippingfee from orders as a inner join purchase as b on b.id = a.purchase_id inner join orderdetail as c on c.order_id = a.id where a.created_at >= $1 and a.created_at <= $2 and a.shop_id = $3 and a.status = 3 ) as a group by id, shippingfee) as a";
+
+    return db.simpleQuery(sql, values)
+    .then(res => {
+        if (res.rowCount > 0)
+        return res.rows[0];
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function getShopPaidCurrentMonth(month, value) {
+    const sql = `select sum(add) from (select id as order_id, add(sum(total_ord), shippingfee) from (select a.id, c.amount, c.price, total_ord(c.amount, c.price),  a.shippingfee from orders as a inner join purchase as b on b.id = a.purchase_id inner join orderdetail as c on c.order_id = a.id where ${month} and a.shop_id = $1 and a.status = 3 ) as a group by id, shippingfee) as a`;
+
+    return db.simpleQuery(sql, value)
+    .then(res => {
+        if (res.rowCount > 0)
+        return res.rows[0];
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function getShopPaidAll(value) {
+    const sql = `select sum(add) from (select id as order_id, add(sum(total_ord), shippingfee) from (select a.id, c.amount, c.price, total_ord(c.amount, c.price),  a.shippingfee from orders as a inner join purchase as b on b.id = a.purchase_id inner join orderdetail as c on c.order_id = a.id where a.shop_id = $1 and a.status = 3 ) as a group by id, shippingfee) as a`;
+
+    return db.simpleQuery(sql, value)
+    .then(res => {
+        if (res.rowCount > 0)
+        return res.rows[0];
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
 function updateShopStatus(values) {
     const sql = "UPDATE shop SET status = $1 WHERE id = $2";
 
@@ -710,7 +758,7 @@ function getUserPurchaseWaiting(value) {
 }
 
 function getOrderAll(value) {
-    const sql = "select a.status, a.shippingfee, b.payment_id, c.name, c.variant, c.amount, c.price, a.shop_id , d.name as shop_name, c.cover, c.productvariant_id as pdv_id, a.id as order_id from orders as a inner join purchase as b on b.id = a.purchase_id inner join orderdetail as c on c.order_id = a.id inner join shop as d on d.id = a.shop_id order by a.id desc";
+    const sql = "select a.status, a.created_at, a.shippingfee, b.payment_id, c.name, c.variant, c.amount, c.price, a.shop_id , d.name as shop_name, c.cover, c.productvariant_id as pdv_id, a.id as order_id from orders as a inner join purchase as b on b.id = a.purchase_id inner join orderdetail as c on c.order_id = a.id inner join shop as d on d.id = a.shop_id order by a.id desc";
 
     return db.excuteQuery(sql, value)
     .then(res => {
@@ -734,7 +782,19 @@ function getUserByOrder(value) {
 }
 
 function getOrderByShopId(value) {
-    const sql = "select a.shop_id, a.shippingfee, d.username, d.id as user_id, b.name, b.price, b.amount, b.variant, b.cover, a.id as order_id, a.status, b.productvariant_id as pdv_id, c.payment_id, e.province, e.district from orders as a inner join orderdetail as b on b.order_id = a.id inner join purchase as c on c.id = a.purchase_id inner join users as d on d.id = c.user_id inner join addressorder as e on e.purchase_id = c.id where a.shop_id = $1 order by a.created_at desc";
+    const sql = "select a.shop_id, a.shippingfee, a.created_at, d.username, d.id as user_id, b.name, b.price, b.amount, b.variant, b.cover, a.id as order_id, a.status, b.productvariant_id as pdv_id, c.payment_id, e.province, e.district from orders as a inner join orderdetail as b on b.order_id = a.id inner join purchase as c on c.id = a.purchase_id inner join users as d on d.id = c.user_id inner join addressorder as e on e.purchase_id = c.id where a.shop_id = $1 order by a.created_at desc";
+
+    return db.excuteQuery(sql, value)
+    .then(res => {
+        if (res.rowCount > 0)
+            return res.rows;
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function getOrderWillPayByShopId(value) {
+    const sql = "select a.shop_id, a.shippingfee, a.created_at, d.username, d.id as user_id, b.name, b.price, b.amount, b.variant, b.cover, a.id as order_id, a.status, b.productvariant_id as pdv_id, c.payment_id, e.province, e.district from orders as a inner join orderdetail as b on b.order_id = a.id inner join purchase as c on c.id = a.purchase_id inner join users as d on d.id = c.user_id inner join addressorder as e on e.purchase_id = c.id where a.shop_id = $1 and a.status >= 0 and a.status < 3 order by a.created_at desc";
 
     return db.excuteQuery(sql, value)
     .then(res => {
@@ -927,10 +987,22 @@ function updateRating(values) {
 function getUserAndProductByOrderId(value) {
     const sql = "select d.id, e.user_id, sum(b.amount) from orders as a inner join orderdetail as b on b.order_id = a.id inner join productvariant as c on c.id = b.productvariant_id inner join product as d on d.id = c.product_id inner join purchase as e on e.id = a.purchase_id where a.id = $1 group by e.user_id, d.id";
 
-    return db.excuteQuery(sql, value)
+    return db.simpleQuery(sql, value)
     .then(res => {
         if (res.rowCount > 0)
             return res.rows;
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function getProductByPDVID(value) {
+    const sql = "select b.id from productvariant as a inner join product as b on b.id = a.product_id where a.id = $1";
+
+    return db.simpleQuery(sql, value)
+    .then(res => {
+        if (res.rowCount > 0)
+            return res.rows[0];
         return false;
     })
     .catch(error => {return error;});
@@ -1753,6 +1825,20 @@ function getShopProductById(value) {
     .catch(error => { return false;});
 }
 
+function getProductDetailByID(value) {
+    const sql = "select  a.id, a.name, b.max_price, b.min_price, c.url->'cover' as cover from product a inner join (select max(price) as max_price, min(price) as min_price, product_id from productvariant group by product_id) b on a.id = b.product_id inner join images as c on c.product_id = a.id where a.status = 1order by a.created_at desc";
+
+    return db.simpleQuery(sql, value)
+    .then( res =>  {
+        if (res.rowCount > 0)
+        {
+            return res.rows;
+        }
+        return false;
+    })
+    .catch(error => { return false;});
+}
+
 function getListNewProduct(value) {
     const sql = "select  a.id, a.name, b.max_price, b.min_price, c.url->'cover' as cover from product a inner join (select max(price) as max_price, min(price) as min_price, product_id from productvariant group by product_id) b on a.id = b.product_id inner join images as c on c.product_id = a.id where a.status = 1 order by a.created_at desc limit 10";
 
@@ -2200,6 +2286,25 @@ function updateOrderReason(values) {
 /*
  <==========================================================================>
 */
+/*RATING*/
+function getRating() {
+    const sql = "SELECT * FROM rating";
+
+    return db.simpleQuery(sql)
+    .then(res => {
+        if (res.rowCount > 0)
+        {
+            return res.rows;
+        }
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+/*
+ <==========================================================================>
+*/
+
 
 module.exports = {
     insertAdmin,
@@ -2207,6 +2312,10 @@ module.exports = {
     insertShop,
     getShop,
     getShopById,
+    getShopWillPay,
+    getShopPaidCurrentWeek,
+    getShopPaidCurrentMonth,
+    getShopPaidAll,
     updateShopStatus,
     updateShopWallet,
 
@@ -2246,6 +2355,7 @@ module.exports = {
     getUserPurchaseWaiting,
     getOrderAll,
     getOrderByShopId,
+    getOrderWillPayByShopId,
     getUserByOrder,
     
     checkExistCart,
@@ -2260,6 +2370,7 @@ module.exports = {
     updateUserRating,
     updateRating,
     getUserAndProductByOrderId,
+    getProductByPDVID,
     getCart,
     getCartAll,
     getCartByUserIdAndPVId,
@@ -2296,6 +2407,7 @@ module.exports = {
     getProductAllById,
     getShopByProductId,
     getShopProductById,
+    getProductDetailByID,
     getListNewProduct,
     getListSeleldProduct,
     getCateShop,
@@ -2345,5 +2457,7 @@ module.exports = {
     updateOrder,
     updateOrderAndPaid,
     updateOrderReason,
-    deleteTest
+    deleteTest,
+
+    getRating,
 }

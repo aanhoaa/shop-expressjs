@@ -29,6 +29,11 @@ router.get("/order/detail/:orderId" , authController.isAuth, authController.isSh
 router.put("/order/delivery" , authController.isAuth, authController.isShop, sellerController.putDeliveryOrder);
 router.put("/order/delivered" , authController.isAuth, authController.isShop, sellerController.putDeliveredOrder);
 
+router.get("/finance/income" , authController.isAuth, authController.isShop, sellerController.getIncome);
+router.get("/finance/wallet" , authController.isAuth, authController.isShop, sellerController.getWallet);
+
+router.post("/api/finance/income" , authController.isAuth, authController.isShop, sellerController.postBindingIncome);
+
 router.post("/profile/address/edit/:bookId", authController.isAuth, authController.isShop, sellerController.postUpdateAddressBook);
 router.post("/profile/address/delete", authController.isAuth, authController.isShop, sellerController.postDeleteAddressBook);
 router.post("/profile/address/default", authController.isAuth, authController.isShop, sellerController.postSetAddressDefault);

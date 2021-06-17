@@ -122,7 +122,7 @@ $(document).ready(function(){
           console.log(err)
           alert("Bị lỗi");
         }
-     });
+      });
     });
 
     $("input[name='group_brand[]'], input[name='group_color[]'], input[name='group_size[]'], input[name='group_rating[]'], input[name='group_price[]']").on('click', function() {

@@ -72,7 +72,7 @@ exports.getLogin = (req, res, next) => {
         else 
          res.send({ state: 1});
       } 
-      res.status(500).send({Lỗi: 'Tài khoản hoặc mật khẩu không chính xác'}); 
+      return res.status(500).send({Lỗi: 'Tài khoản hoặc mật khẩu không chính xác'}); 
     }
 
     else return res.status(500).json();

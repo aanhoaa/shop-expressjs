@@ -752,6 +752,7 @@ exports.getOrder = async (req, res, next) => {
             payment: item.payment_id,
             province: item.province,
             district: item.district,
+            created: formatDate(item.created_at),
             products: []
           })
         }
@@ -834,6 +835,227 @@ exports.putDeliveredOrder = async (req, res, next) => {
     else res.send({state: -1});
 }
 
+exports.getIncome = async (req, res, next) => {
+  var type = req.query.type;
+  var type1 = 0, type2 = 0;
+  switch(type) {
+      case 'will-pay':
+          type = 0;
+          type1 = 0;
+          type2 = 3
+          break;
+      case 'paid':
+          type = 3;
+          type1 = 2;
+          type2 = 4
+          break;
+      default:
+          type = 0;
+          type1 = 0;
+          type2 = 3;
+  } 
+  
+  const shopInfo = req.session.shopInfo;
+  const getWillPay = await db.getShopWillPay([shopInfo.id]);
+  var willPay = 0;
+  var paidThisWeek = 0;
+  var paidThisMonth = 0;
+  var paidAll = 0;
+  if (getWillPay) willPay = getWillPay.sum == null?0:getWillPay.sum; 
+  const getPaidCurrentWeek = await db.getShopPaidCurrentWeek([getMonday(new Date()), getLastSunday(new Date()), shopInfo.id]);
+  if (getPaidCurrentWeek) paidThisWeek = getPaidCurrentWeek.sum == null?0:getPaidCurrentWeek.sum;
+  const getPaidCurentMonth = await db.getShopPaidCurrentMonth(currentMonth(), [shopInfo.id]);
+  if (getPaidCurentMonth) paidThisMonth = getPaidCurentMonth.sum == null?0:getPaidCurentMonth.sum;
+  const getPaidAll = await db.getShopPaidAll([shopInfo.id]);
+  if (getPaidAll) paidAll = getPaidAll.sum == null?0:getPaidAll.sum;
+
+  //load detail
+  const arrData = await db.getOrderByShopId([shopInfo.id]);
+  var orderCount = 0;
+  const all = [];
+  arrData.map(item => {
+    if (item.status >= type1 && item.status < type2 ) {
+      const order_id = item.order_id;
+      const shop_id = item.shop_id;
+      const pdv_id = item.pdv_id;
+      if (all.findIndex(x => x.orderId == order_id) < 0){
+          orderCount++;
+        all.push({
+          orderId: order_id,
+          status: item.status,
+          username: item.username,
+          payment: item.payment_id,
+          province: item.province,
+          district: item.district,
+          created: formatDate(item.created_at),
+          products: []
+        })
+      }
+      const index = all.findIndex(x => x.orderId == order_id);
+      if(all[index].products.findIndex(x => x.pdv_id == pdv_id) < 0){
+        var getVariant = item.variant.split(' ');
+  
+        if (getVariant[0] == 'null') {
+          if (getVariant[1] == 'null') {
+            getVariant = '';
+          }
+          else getVariant.splice(0,1);
+        }
+        else {
+          if (getVariant[1] == 'null') {
+            getVariant.splice(1,1);
+          }
+        }
+
+        all[index].products.push({
+          pdv_id: pdv_id,
+          name: item.name,
+          amount: item.amount,
+          price: item.price,
+          variant: getVariant,
+          cover: item.cover,
+          fee: item.shippingfee
+        })
+      }
+    }
+  })
+
+  res.render('./admin/finance/income', {
+    seller: shopInfo,
+    willPay: willPay,
+    paidThisWeek: paidThisWeek,
+    paidThisMonth: paidThisMonth,
+    paidAll: paidAll,
+    data: all, 
+    type: type, 
+    count: orderCount
+  });
+}
+
+exports.postBindingIncome = async (req, res, next) => {
+  const option = req.body.optionSelect;
+  if (!option) return res.send({state: 0});
+
+  const shopInfo = req.session.shopInfo;
+  const getWillPay = await db.getShopWillPay([shopInfo.id]);
+  var willPay = 0;
+  var paidThisWeek = 0;
+  var paidThisMonth = 0;
+  var paidAll = 0;
+  if (getWillPay) willPay = getWillPay.sum == null?0:getWillPay.sum; 
+  const getPaidCurrentWeek = await db.getShopPaidCurrentWeek([getMonday(new Date()), getLastSunday(new Date()), shopInfo.id]);
+  if (getPaidCurrentWeek) paidThisWeek = getPaidCurrentWeek.sum == null?0:getPaidCurrentWeek.sum;
+  const getPaidCurentMonth = await db.getShopPaidCurrentMonth(currentMonth(), [shopInfo.id]);
+  if (getPaidCurentMonth) paidThisMonth = getPaidCurentMonth.sum == null?0:getPaidCurentMonth.sum;
+  const getPaidAll = await db.getShopPaidAll([shopInfo.id]);
+  if (getPaidAll) paidAll = getPaidAll.sum == null?0:getPaidAll.sum;
+
+  var type = req.query.type;
+  var date1 = '2021-1-1', date2 = '2021-1-10';
+
+  var sql = "";
+  switch(option) {
+    case '1':
+      date1 = getMonday(new Date());
+      date2 = getLastSunday(new Date());
+      break;
+    case '2':
+      var date = new Date(), y = date.getFullYear(), m = date.getMonth();
+      var firstDay = formatSQLDate(new Date(y, m, 1));
+      var lastDay = formatSQLDate(new Date(y, m + 1, 1));
+      date1 = firstDay;
+      date2 = lastDay;
+      break;
+    case '3':
+      var date = new Date(), y = date.getFullYear(), m = date.getMonth() - 3;
+      var firstDay = formatSQLDate(new Date(y, m, 1));
+      var lastDay = formatSQLDate(new Date(y, m + 4, 1));
+      console.log(firstDay, lastDay)
+      date1 = firstDay;
+      date2 = lastDay;
+      break;
+  } 
+
+    //load detail
+  const arrData = await db.getOrderByShopId([shopInfo.id]);
+  var orderCount = 0;
+  const all = [];
+  arrData.map(item => {
+    if (item.status == 3 ) { 
+      if (fn_DateCompare(formatSQLDate(item.created_at), date1) >= 0 && fn_DateCompare(formatSQLDate(item.created_at), date2) == -1) {
+      const order_id = item.order_id;
+      const shop_id = item.shop_id;
+      const pdv_id = item.pdv_id;
+      if (all.findIndex(x => x.orderId == order_id) < 0){
+          orderCount++;
+        all.push({
+          orderId: order_id,
+          status: item.status,
+          username: item.username,
+          payment: item.payment_id,
+          province: item.province,
+          district: item.district,
+          created: formatDate(item.created_at),
+          products: []
+        })
+      }
+      const index = all.findIndex(x => x.orderId == order_id);
+      if(all[index].products.findIndex(x => x.pdv_id == pdv_id) < 0){
+        var getVariant = item.variant.split(' ');
+  
+        if (getVariant[0] == 'null') {
+          if (getVariant[1] == 'null') {
+            getVariant = '';
+          }
+          else getVariant.splice(0,1);
+        }
+        else {
+          if (getVariant[1] == 'null') {
+            getVariant.splice(1,1);
+          }
+        }
+
+        all[index].products.push({
+          pdv_id: pdv_id,
+          name: item.name,
+          amount: item.amount,
+          price: item.price,
+          variant: getVariant,
+          cover: item.cover,
+          fee: item.shippingfee
+        })
+      }
+    }
+  }
+  })
+
+  res.render('./admin/finance/income', {
+    seller: shopInfo,
+    willPay: willPay,
+    paidThisWeek: paidThisWeek,
+    paidThisMonth: paidThisMonth,
+    paidAll: paidAll,
+    data: all, 
+    type: type, 
+    count: orderCount
+  });
+}
+
+exports.getWallet = async (req, res, next) => {
+  const shopInfo = req.session.shopInfo;
+  var currency = 0;
+
+  const shop = await db.getShopById([shopInfo.id]);
+  if (shop != false) {
+    currency = shop[0].wallet;
+  }
+ 
+  res.render('./admin/finance/wallet', {
+    seller: shopInfo,
+    wallet: currency
+  });
+}
+
 function makeid(length) {
     var result           = '';
     var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -858,4 +1080,78 @@ function getdate(tt) {
    
     var someFormattedDate = dd + '/' + mm + '/' + y + ' ' + hour + 'h' + minutes + 'm';
     return someFormattedDate;
+}
+
+function getMonday(d) {
+  d = new Date(d);
+  var day = d.getDay(),
+      diff = d.getDate() - day + (day == 0 ? -6:1); // adjust when day is sunday
+  
+  d.setDate(diff);
+  var dd = d.getDate();
+  var mm = d.getMonth() + 1;
+  var yy = d.getFullYear(); 
+  var someFormattedDate = yy + '-' + mm + '-' + dd;
+  return someFormattedDate;
+}
+
+function getLastSunday(d) {
+  var t = new Date(d);
+  t.setDate(t.getDate() - t.getDay() + 8);
+  var dd = t.getDate();
+  var mm = t.getMonth() + 1;
+  var yy = t.getFullYear(); 
+  var someFormattedDate = yy + '-' + mm + '-' + dd;
+  return someFormattedDate;
+}
+
+function currentMonth() {
+  var date = new Date(), y = date.getFullYear(), m = date.getMonth();
+  var firstDay = formatSQLDate(new Date(y, m, 1));
+  var lastDay = formatSQLDate(new Date(y, m + 1, 1));
+
+  var sql = `a.created_at >= ${firstDay} and a.created_at < ${lastDay}`
+  return sql;
+}
+
+function formatDate(tt) {
+  var date = new Date(tt);
+  var MyDate = new Date(date);
+  var MyDateString;
+
+  MyDate.setDate(MyDate.getDate());
+
+  MyDateString = ('0' + MyDate.getDate()).slice(-2) + '/' + ('0' + (MyDate.getMonth()+1)).slice(-2) + '/' + MyDate.getFullYear();
+
+  return MyDateString;
+}
+
+function formatSQLDate(tt) {
+  var date = new Date(tt);
+  var MyDate = new Date(date);
+  var MyDateString;
+
+  MyDate.setDate(MyDate.getDate());
+
+  MyDateString = "'" + MyDate.getFullYear() + '-' + ('0' + (MyDate.getMonth()+1)).slice(-2) + '-' + ('0' + MyDate.getDate()).slice(-2) + "'";
+
+  return MyDateString;
+}
+
+function fn_DateCompare(DateA, DateB) {     // this function is good for dates > 01/01/1970
+
+  var a = new Date(DateA);
+  var b = new Date(DateB);
+
+  var msDateA = a.getTime();
+  var msDateB = b.getTime();
+
+  if (parseFloat(msDateA) < parseFloat(msDateB))
+    return -1;  // lt
+  else if (parseFloat(msDateA) == parseFloat(msDateB))
+    return 0;  // eq
+  else if (parseFloat(msDateA) > parseFloat(msDateB))
+    return 1;  // gt
+  else
+    return null;  // error
 }

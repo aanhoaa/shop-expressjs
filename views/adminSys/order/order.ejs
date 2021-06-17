@@ -50,6 +50,7 @@
             <th>Shop</th>
             <th>Sản phẩm</th>
             <th>Tổng hóa đơn</th>
+            <th>Ngày đặt</th>
             <th>Trạng thái</th>
             <th>Thao tác</th>
         </thead>
@@ -87,6 +88,9 @@
                     <div class="payment-info">
                         <%-item.payment == 1 ? '(Thanh toán khi nhận hàng)':'(Thanh toán online)'%>
                     </div>
+                </td>
+                <td>
+                    <%-item.created%>
                 </td>
                 <td>
                     <div class="signal-order">

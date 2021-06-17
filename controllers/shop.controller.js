@@ -457,6 +457,10 @@ exports.postCheckout = async (req, res, next) => {
           
           const subAmount = getStock.stockamount - exist.amount;
           var updCart = await db.updateProductVariantAmount([subAmount, pdvID]);
+          const getProduct = await db.getProductByPDVID(pdvID);
+          if (getProduct != false) {
+            const createRating = await db.insertUserRating(userInfo.id, getProduct.id);
+          }
         }
       }
 
@@ -478,10 +482,6 @@ exports.postCheckout = async (req, res, next) => {
         data.map(async item => {
           //save order 
           const order_id = await db.insertOrder([purchase_id, item.shopId, item.fee, now, 0]);
-          const info = await db.getUserAndProductByOrderId([order_id]);
-          for(let i of info) {
-            const insertRating = await db.insertUserRating([i.user_id, i.id]);
-          }
           item.products.map(async i => {
             //save orderdetail
             var variant = `${i.color} ${i.size}`;
@@ -616,10 +616,6 @@ exports.getCheckoutedVNPay = async (req, res, next) => {
                 var variant = `${i.color} ${i.size}`;
                 const orderDetail = await db.insertOrderDetail([order_id, i.pvdId, i.name, variant, i.amount, i.price, i.cover, 0]);
               })
-              const info = await db.getUserAndProductByOrderId([order_id]);
-                for(let i of info) {
-                  const insertRating = await db.insertUserRating([userInfo.id, i.id]);
-                }
             })
           }
         }
