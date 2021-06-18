@@ -33,7 +33,6 @@ router.get('/', async function(req, res, next) {
     cf.train(train);
     let gt = cf.gt(userRecommend);
     recommendProduct = cf.recommendGT(gt, 6);
-    //console.log(result)
   }
 
   const category = await db.getCategoryLevelOne();
@@ -47,7 +46,7 @@ router.get('/', async function(req, res, next) {
   }
 
   res.render('index', { 
-    title: 'Shop', 
+    title: 'Trang chủ', 
     userInfo: userInfo, 
     cart: req.session.cart, 
     category: category,

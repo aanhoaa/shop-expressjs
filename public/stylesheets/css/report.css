@@ -50,10 +50,27 @@
 .col-sm-10{
   background-color: #fff;
   width: 83%;
+  margin-top: 10px;
 }
 
-
-
-
+.will-pay .title,
+.will-pay .value-report {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+.will-pay .miss-title {
+  margin-top: 42px;
+}
+.detail {
+  margin-top: 20px;
+  padding-left: 30px;
+}
+.detail .title-detail {
+  font-size: 25px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
 
 

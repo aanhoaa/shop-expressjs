@@ -7,6 +7,11 @@
   overflow: hidden;
   margin: 0 5%;
 }
+.frontSlider .MS-content {
+  white-space: nowrap;
+  overflow: hidden;
+  margin: 0 0%;
+}
 .blogSlider .MS-content .item {
  
   display: inline-block;
@@ -15,6 +20,20 @@
   position: relative;
   vertical-align: top;
   width: 200px;
+  margin:5px;
+  -webkit-box-shadow: 0px 0px 5px 0px rgba(204,204,204,1);
+-moz-box-shadow: 0px 0px 5px 0px rgba(204,204,204,1);
+box-shadow: 0px 0px 5px 0px rgba(204,204,204,1);
+}
+
+.frontSlider .MS-content .item {
+ 
+  display: inline-block;
+  height: 500px;
+  overflow: hidden;
+  position: relative;
+  vertical-align: top;
+  width: 100%;
   margin:5px;
   -webkit-box-shadow: 0px 0px 5px 0px rgba(204,204,204,1);
 -moz-box-shadow: 0px 0px 5px 0px rgba(204,204,204,1);
@@ -33,42 +52,53 @@ box-shadow: 0px 0px 5px 0px rgba(204,204,204,1);
 
 
 
-.blogSlider .MS-controls button {
+.blogSlider .MS-controls button,
+.frontSlider .MS-controls button {
   position: absolute;
   border: none;
   background-color: transparent;
   outline: 0;
   font-size: 50px;
   top: 95px;
-  color: rgba(0, 0, 0, 0.4);
+  color: rgb(162 144 204 / 40%);
   transition: 0.15s linear;
 }
-.blogSlider .MS-controls button:hover {
+.frontSlider .MS-controls button {
+  top: 250px;
+}
+.blogSlider .MS-controls button:hover,
+.frontSlider .MS-controls button:hover {
   color: rgba(0, 0, 0, 0.8);
 }
 @media (max-width: 992px) {
-  .blogSlider .MS-controls button {
+  .blogSlider .MS-controls button,
+  .frontSlider .MS-controls butto {
     font-size: 30px;
   }
 }
 @media (max-width: 767px) {
-  .blogSlider .MS-controls button {
+  .blogSlider .MS-controls button,
+  .frontSlider .MS-controls button {
     font-size: 20px;
   }
 }
-.blogSlider .MS-controls .MS-left {
+.blogSlider .MS-controls .MS-left,
+.frontSlider .MS-controls .MS-left {
   left: 0px;
 }
 @media (max-width: 767px) {
-  .blogSlider .MS-controls .MS-left {
+  .blogSlider .MS-controls .MS-left,
+  .frontSlider .MS-controls .MS-left {
     left: -10px;
   }
 }
-.blogSlider .MS-controls .MS-right {
+.blogSlider .MS-controls .MS-right,
+.frontSlider .MS-controls .MS-right {
   right: 0px;
 }
 @media (max-width: 767px) {
-  .blogSlider .MS-controls .MS-right {
+  .blogSlider .MS-controls .MS-right,
+  .frontSlider .MS-controls .MS-right {
     right: -10px;
   }
 }

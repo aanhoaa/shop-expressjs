@@ -323,7 +323,7 @@ opacity:1;
 {
     display:inline-block;
     line-height:40px;
-    float:left;
+    float: left;
     color:#fff;
     font-size:12px;
 }
@@ -364,3 +364,16 @@ li.dropdown:last-child .dropdown-menu li a
     width: 250px;
     margin: 5px 10px;
 }
+
+.frontSlider .MS-content .item .slide-bg img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-position: center center;
+}
+.frontSlider .MS-content .item .slide-content-outside {
+    position: absolute;
+    top: 70px;
+    right: 0px;
+    width: 100%;
+} 

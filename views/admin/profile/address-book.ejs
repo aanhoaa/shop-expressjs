@@ -9,7 +9,11 @@
        <div class="user-profile-container">
 
          <div class="add-new-address">
-            
+           <% if (!address) {%>
+            <div class="col-sm-4">
+               Chưa có địa chỉ giao hàng
+            </div>
+            <%}%>
             <button style="float: right; height: 40px;" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" onclick="getCity()">
                <svg style="display: inline-block;
                width: 1em;

@@ -11,7 +11,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.4/moment.min.js"></script>
 <script src="/javascripts/js/admin/report.js"></script>
 
-<div class="income-container">
+<div class="income-container clearfix">
     <div class="overview">
         <div class="col-sm-12" style="display: flex;">
             <div class="col-sm-3 will-pay">
@@ -20,147 +20,150 @@
                     Tổng cộng
                     
                 </div>
-                <div>
+                <div class="value-report">
                     <%- VND(parseInt(willPay))%>
                 </div>
             </div>
-            <div class="col-sm-3 will-pay">
+            <div class="col-sm-3 will-pay" style="border-left: 1px solid #eee;">
                 <div class="title">Đã thanh toán</div>
                 <div class="content">
                     Tuần này
                 </div>
-                <div>
+                <div class="value-report">
                     <%- VND(parseInt(paidThisWeek))%>
                 </div>
             </div>
             <div class="col-sm-3 will-pay">
                 <div class="title"></div>
-                <div class="content">
+                <div class="content miss-title">
                     Tháng này
                 </div>
-                <div>
+                <div class="value-report">
                     <%- VND(parseInt(paidThisMonth))%>
                 </div>
             </div>
             <div class="col-sm-3 will-pay">
                 <div class="title"></div>
-                <div class="content">
+                <div class="content miss-title">
                     Tổng cộng
                 </div>
-                <div>
+                <div class="value-report">
                     <%- VND(parseInt(paidThisMonth))%>
                 </div>
             </div>
         </div>
     </div>
-    <div class="detail">
-        <div style="margin-left: 5%;">
-            <ul class="user-option nav nav-tabs">
-               <li class="option option-my-booking is-flex nav-item <%-type == 0?'option-active':''%>">
-                   <div>
-                       <p class="hover-text my-booking"><a class="nav-link active" href="/seller/finance/income">Sẽ thanh toán</a></p>
-                   </div>
-               </li>
-               <li class="option option-favorite is-flex <%-type == 3?'option-active':''%>">
-                   <div>
-                       <p class="hover-text"><a class="nav-link" href="/seller/finance/income?type=paid">Đã thanh toán</a></p>
-                   </div>
-               </li>
-           </ul>
-           <% if (type == 3) {%>
-            <div class="container">
-                <br />
-              </div>
-            <div class="form-group" style="width: 25%;">
-              <label for=""></label>
-              <select class="form-control" name="" id="pick-option-report">
-                <option value="1">Tuần này</option>
-                <option value="2">Tháng này</option>
-                <option value="3">3 tháng trước</option>
-              </select>
-            </div>
-            <%}%>
-           <%if (data != '') {%>
-             <div class="count-order">
-                
-             </div>
-             <table id="dataTables-example" class="mdl-data-table" style="width:100%">
-                 <thead>
-                     <th>Đơn hàng</th>
-                     <th>Người mua</th>
-                     <th>Sản phẩm</th>
-                     <th>Tổng hóa đơn</th>
-                     <th>Ngày đặt</th>
-                     <th>Trạng thái</th>
-                 </thead>
-                 <tbody>
-                     <% data.forEach(item => {
-                         var total = 0;
-                      %>
-                      
-                     <tr>
-                         <td>
-                             <div>
-                                 #<%-item.orderId%>
-                             </div>
-                         </td>
-                         <td><%-item.username%></td>
-                         <td><%item.products.forEach(i => {%>
-                             <div class="order-product-list">
-                                 <div class="order-product-wrapper">
-                                     <img src="<%-i.cover%>" alt="" class="item-images">
-                                     <div class="item-product">
-                                         <div class="ct-item-product-inner">
-                                             <div class="product-info">
-                                                 <a href="/seller/order/detail/<%-item.orderId%>" class="ct-item-product-name"><%-i.name%></a>
-                                                 <div><%-i.variant == ''?'': 'Phân loại: ' + i.variant%></div>
-                                                 <div>x<%-i.amount%></div>
-                                                 <% total += i.amount*i.price + i.fee%>
-                                             </div>
+    
+</div>
+
+<div class="detail">
+    <div class="title-detail">Chi tiết</div>
+    <div style="margin-left: 5%;">
+        <ul class="user-option nav nav-tabs">
+           <li class="option option-my-booking is-flex nav-item <%-type == 0?'option-active':''%>">
+               <div>
+                   <p class="hover-text my-booking"><a class="nav-link active" href="/seller/finance/income">Sẽ thanh toán</a></p>
+               </div>
+           </li>
+           <li class="option option-favorite is-flex <%-type == 3?'option-active':''%>">
+               <div>
+                   <p class="hover-text"><a class="nav-link" href="/seller/finance/income?type=paid">Đã thanh toán</a></p>
+               </div>
+           </li>
+       </ul>
+       <% if (type == 3) {%>
+        <div class="container">
+            <br />
+          </div>
+        <div class="form-group" style="width: 25%;">
+          <label for=""></label>
+          <select class="form-control" name="" id="pick-option-report">
+            <option value="1">Tuần này</option>
+            <option value="2">Tháng này</option>
+            <option value="3">3 tháng trước</option>
+          </select>
+        </div>
+        <%}%>
+       <%if (data != '') {%>
+         <div class="count-order">
+            
+         </div>
+         <table id="dataTables-example" class="mdl-data-table" style="width:100%">
+             <thead>
+                 <th>Đơn hàng</th>
+                 <th>Người mua</th>
+                 <th>Sản phẩm</th>
+                 <th>Tổng hóa đơn</th>
+                 <th>Ngày đặt</th>
+                 <th>Trạng thái</th>
+             </thead>
+             <tbody>
+                 <% data.forEach(item => {
+                     var total = 0;
+                  %>
+                  
+                 <tr>
+                     <td>
+                         <div>
+                             #<%-item.orderId%>
+                         </div>
+                     </td>
+                     <td><%-item.username%></td>
+                     <td><%item.products.forEach(i => {%>
+                         <div class="order-product-list">
+                             <div class="order-product-wrapper">
+                                 <img src="<%-i.cover%>" alt="" class="item-images">
+                                 <div class="item-product">
+                                     <div class="ct-item-product-inner">
+                                         <div class="product-info">
+                                             <a href="/seller/order/detail/<%-item.orderId%>" class="ct-item-product-name"><%-i.name%></a>
+                                             <div><%-i.variant == ''?'': 'Phân loại: ' + i.variant%></div>
+                                             <div>x<%-i.amount%></div>
+                                             <% total += i.amount*i.price + i.fee%>
                                          </div>
                                      </div>
                                  </div>
                              </div>
-                             <%})%>
-                         </td>
-                         <td> <%-VND(total)%>
-                             <div class="payment-info">
-                                 <%-item.payment == 1 ? '(Thanh toán khi nhận hàng)':'(Thanh toán online)'%>
-                             </div>
-                         </td>
-                         <td>
-                             <%-item.created%>
-                         </td>
-                         <td>
-                             <div class="signal-order">
-                                 <%if (item.status == -1) {%>
-                                     <p class="bg-danger">Đã hủy</p>
-                                 <%}%>
-                                <%if (item.status == 0) {%>
-                                     <p class="bg-primary">Chờ xác nhận</p>
-                                 <%}%>
-                                 <%if (item.status == 1) {%>
-                                     <p class="bg-info">Chuẩn bị hàng</p>
-                                 <%}%>
-                                 <%if (item.status == 2) {%>
-                                     <p class="bg-warning">Đang giao</p>
-                                 <%}%>
-                                 <%if (item.status == 3) {%>
-                                     <p class="bg-success">Đã giao</p>
-                                 <%}%>
-                             </div>
-                         </td>
-                     </tr>
-                     <%})%>
-                 </tbody>
-             </table>
-           <%} else {%>
-             <div>
-                 Không có đơn hàng nào
-             </div>
-           <%}%>
+                         </div>
+                         <%})%>
+                     </td>
+                     <td> <%-VND(total)%>
+                         <div class="payment-info">
+                             <%-item.payment == 1 ? '(Thanh toán khi nhận hàng)':'(Thanh toán online)'%>
+                         </div>
+                     </td>
+                     <td>
+                         <%-item.created%>
+                     </td>
+                     <td>
+                         <div class="signal-order">
+                             <%if (item.status == -1) {%>
+                                 <p class="bg-danger">Đã hủy</p>
+                             <%}%>
+                            <%if (item.status == 0) {%>
+                                 <p class="bg-primary">Chờ xác nhận</p>
+                             <%}%>
+                             <%if (item.status == 1) {%>
+                                 <p class="bg-info">Chuẩn bị hàng</p>
+                             <%}%>
+                             <%if (item.status == 2) {%>
+                                 <p class="bg-warning">Đang giao</p>
+                             <%}%>
+                             <%if (item.status == 3) {%>
+                                 <p class="bg-success">Đã giao</p>
+                             <%}%>
+                         </div>
+                     </td>
+                 </tr>
+                 <%})%>
+             </tbody>
+         </table>
+       <%} else {%>
+         <div>
+             Không có đơn hàng nào
          </div>
-    </div>
+       <%}%>
+     </div>
 </div>
 
 <script>

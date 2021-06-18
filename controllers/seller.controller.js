@@ -199,6 +199,7 @@ exports.getHome = async (req, res, next) => {
 
 exports.getAddressBook = async (req, res, next) => {
   const addressDB = await db.getShopAddressBook([req.jwtDecoded.data.id]);
+
   res.render('./admin/profile/address-book', {seller: req.session.shopInfo, address: addressDB});
 }
 
@@ -738,6 +739,7 @@ exports.getOrder = async (req, res, next) => {
     const arrData = await db.getOrderByShopId([shopId]);
     var orderCount = 0;
     const all = [];
+    if (arrData.length > 0)
     arrData.map(item => {
      if (item.status == type || type == 5) {
         const order_id = item.order_id;
@@ -785,7 +787,7 @@ exports.getOrder = async (req, res, next) => {
      }
     })
   
-    res.render('./admin/order/order', {seller: req.session.shopInfo,data: all, type: type, count: orderCount});
+    res.render('./admin/order/order', {seller: req.session.shopInfo, data: all, type: type, count: orderCount});
 }
 
 exports.getOrderDetail = async (req, res, next) => {
@@ -873,6 +875,7 @@ exports.getIncome = async (req, res, next) => {
   const arrData = await db.getOrderByShopId([shopInfo.id]);
   var orderCount = 0;
   const all = [];
+  if (arrData.length > 0)
   arrData.map(item => {
     if (item.status >= type1 && item.status < type2 ) {
       const order_id = item.order_id;
