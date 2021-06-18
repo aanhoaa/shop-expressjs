@@ -9,9 +9,9 @@ const jwtHelper = require("../helpers/jwt.helper");
 const Validator = require("fastest-validator");
 
 cloudinary.config({
-    cloud_name: 'do3we3jk1',
-    api_key: 554259798325127,
-    api_secret: 'EidUs6TZ54dIS1HRxdurHuQS4hw'
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.APIKEY,
+    api_secret: process.env.APISECRET
 });
 
 // SET STORAGE
@@ -125,7 +125,8 @@ exports.postRegister = async (req, res, next) => {
       }
 }
 
-exports.getLogin = (req, res, next) => {   
+exports.getLogin = (req, res, next) => {  
+  console.log(process.env.CLOUDNAME)
     if (req.session.token) 
     res.redirect('/seller');
     else

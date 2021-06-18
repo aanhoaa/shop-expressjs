@@ -29,7 +29,6 @@ router.get("/checkout/vnpay/returnUrl", authController.isAuth, authController.is
 
 router.post("/filter", shopController.postProductFilter);
 router.post("/sortby", shopController.postProductSortBy);
-router.post("/cateFilter", shopController.postProductCateFilter);
 
 router.get("/cart/delete", authController.isLogin, shopController.getDeleteCart);
 

@@ -28,13 +28,9 @@ exports.postLogin = async (req, res, next) => {
           username: username,
           role: userPass.role
         }
-        const accessToken = await jwtHelper.generateToken(userInfo, 'secret', '1h');
-
-        //res.cookie('Token', accessToken, { maxAge: 1900000, httpOnly: true });
-        
+        const accessToken = await jwtHelper.generateToken(userInfo, process.env.SIGNATUTETOKEN, '1h');
         //use session
         req.session.token = accessToken;
-
 
         return res.status(200).json({accessToken});
       }

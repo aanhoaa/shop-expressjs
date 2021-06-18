@@ -3,14 +3,14 @@ const nodemailer = require("nodemailer");
 var transporter = nodemailer.createTransport({
     service: "Gmail",
     auth: {
-      user: "johndoestv4@gmail.com",
-      pass: "19903005"
+      user: process.env.USERNAME,
+      pass: process.env.PASSWORD
     }
 });
 
 async function sendMailVerify(token, email) {
     var mainOptions = {
-        from: "perlC SHOP",
+        from: "FUNITURE SHOP",
         to: email,
         subject: "Xác nhận tài khoản",
         text: "text ne",
@@ -24,7 +24,7 @@ async function sendMailVerify(token, email) {
 
 async function sendMailResetPassword(password, email) {
     var mainOptions = {
-        from: "perlC SHOP",
+        from: "FUNITURE SHOP",
         to: email,
         subject: "Đặt lại mật khẩu",
         text: "text ne",

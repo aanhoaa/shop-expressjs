@@ -10,7 +10,7 @@ const mongoose = require('mongoose');
 const session = require('express-session');
 const passport = require('passport');
 const flash = require('connect-flash');
-const paypal = require('paypal-rest-sdk');
+//const paypal = require('paypal-rest-sdk');
 var methodOverride = require('method-override');
 
 var indexRouter = require('./routes/index');
@@ -74,11 +74,11 @@ app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 
-paypal.configure({
-  'mode': 'sandbox',
-  'client_id': 'Af0xyWkdEZASWUXHVjwfN4huuG3r0We9C51-M6VCbksFwkfpSdVSwQ5fi8AujX1wes8jCRWZqV__g5a3',
-  'client_secret': 'EHT0qpU8-s-41oIQovicW5VbOC717NCsa6NJHcqokP5Ju_NGlhZbwcSfF8AP9jUzj2Lv5AuIkN_4hG-z'
-});
+// paypal.configure({
+//   'mode': 'sandbox',
+//   'client_id': 'Af0xyWkdEZASWUXHVjwfN4huuG3r0We9C51-M6VCbksFwkfpSdVSwQ5fi8AujX1wes8jCRWZqV__g5a3',
+//   'client_secret': 'EHT0qpU8-s-41oIQovicW5VbOC717NCsa6NJHcqokP5Ju_NGlhZbwcSfF8AP9jUzj2Lv5AuIkN_4hG-z'
+// });
 
 app.use(indexRouter);
 app.use(authRouter);

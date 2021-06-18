@@ -50,7 +50,7 @@ exports.getLogin = (req, res, next) => {
           gender: userPass.gender
         }
         
-        const accessToken = await jwtHelper.generateToken(userInfo, 'secret', '1h');
+        const accessToken = await jwtHelper.generateToken(userInfo, process.env.SIGNATUTETOKEN, '1h');
 
         req.session.token = accessToken;
 
@@ -155,7 +155,7 @@ exports.getLogin = (req, res, next) => {
             gender: 1
           };
 
-          const accessToken = await jwtHelper.generateToken(userInfo, 'secret', '1h');
+          const accessToken = await jwtHelper.generateToken(userInfo, process.env.SIGNATUTETOKEN, '1h');
           req.session.token = accessToken;
           //send mail
           mailer.sendMailVerify(confirmToken, user.email);
@@ -258,7 +258,7 @@ exports.postForgotPassword = async (req, res, next) => {
   
 exports.getVerify = async (req, res, next) => {
   var userInfo = null;
-  const decoded = await jwtHelper.verifyToken(req.session.token, 'secret');
+  const decoded = await jwtHelper.verifyToken(req.session.token, process.env.SIGNATUTETOKEN);
 
   const data = await db.getUserInfo(2, [decoded.data.username]);
 
@@ -361,7 +361,7 @@ exports.postResendVerify = async (req, res, next) => {
       // Nếu tồn tại token
       try {
         // Thực hiện giải mã token xem có hợp lệ hay không?
-        const decoded = await jwtHelper.verifyToken(tokenFromClient, 'secret');
+        const decoded = await jwtHelper.verifyToken(tokenFromClient, process.env.SIGNATUTETOKEN);
         
         // Nếu token hợp lệ, lưu thông tin giải mã được vào đối tượng req, dùng cho các xử lý ở phía sau.
         req.jwtDecoded = decoded;
@@ -383,7 +383,7 @@ exports.postResendVerify = async (req, res, next) => {
   }
 
   exports.isUser = async (req, res, next) => {
-    const decoded = await jwtHelper.verifyToken(req.session.token, 'secret');
+    const decoded = await jwtHelper.verifyToken(req.session.token, process.env.SIGNATUTETOKEN);
     const isVerified = await db.getUserInfo(2, [decoded.data.username]);
     
     if (decoded.data.role == 'user'){
@@ -402,7 +402,7 @@ exports.postResendVerify = async (req, res, next) => {
   }
 
 exports.isShop = async (req, res, next) => {
-  const decoded = await jwtHelper.verifyToken(req.session.token, 'secret');
+  const decoded = await jwtHelper.verifyToken(req.session.token, process.env.SIGNATUTETOKEN);
 
   if (decoded.data.role == 'shop') {
       next();
@@ -412,7 +412,7 @@ exports.isShop = async (req, res, next) => {
 }
 
 exports.isAdmin = async (req, res, next) => {
-  const decoded = await jwtHelper.verifyToken(req.session.token, 'secret');
+  const decoded = await jwtHelper.verifyToken(req.session.token, process.env.SIGNATUTETOKEN);
 
   if (decoded.data.role == 'admin')
     next();

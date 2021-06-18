@@ -1,7 +1,3 @@
-const Product = require("../models/product.model");
-const Category = require("../models/category.model");
-const Brand = require("../models/brand.model");
-const Material = require("../models/material.model");
 const jwtHelper = require("../helpers/jwt.helper"); 
 const db = require('../helpers/db.helper');
 var bcrypt = require("bcryptjs");
@@ -388,10 +384,10 @@ exports.postCheckout = async (req, res, next) => {
       req.socket.remoteAddress ||
       req.connection.socket.remoteAddress;
 
-      var tmnCode = 'BVMA539M' // .ev
-      var secretKey = 'sdasdasdas12312s' //.ev
+      var tmnCode = process.env.TMNCODE // .ev
+      var secretKey =  process.env.SECRETKEY//.ev
       var vnpUrl = 'http://sandbox.vnpayment.vn/paymentv2/vpcpay.html' //.ev
-      var returnUrl = 'http://localhost:3000/checkout/vnpay/returnUrl' //.ev
+      var returnUrl = process.env.RETURNURL //.ev
 
       var date = new Date();
 
@@ -558,7 +554,7 @@ exports.getCheckoutedVNPay = async (req, res, next) => {
   delete vnp_Params['vnp_SecureHashType'];
 
   vnp_Params = sortObject(vnp_Params);
-  var secretKey = 'sdasdasdas12312s' //.ev
+  var secretKey =  process.env.SECRETKEY//.ev
 
   var querystring = require('qs');
   var signData = secretKey + querystring.stringify(vnp_Params, { encode: false });
@@ -641,7 +637,6 @@ exports.getCheckoutedVNPay = async (req, res, next) => {
     userInfo: req.session.Userinfo
   })
 }
-
 
 exports.postProductBuy = (req, res, next) => {
   var productId = req.params.productId;
@@ -734,82 +729,6 @@ exports.postProductSortBy = async (req, res, next) => {
   });
 }
 
-exports.postProductCateFilter = (req, res, next) => {
-  var listProduct = [];  
-  var listBrand = [];
-  var listMaterial = [];
-  var listCate = [];
-  var cate = req.body.cate;
-  var child = req.body.child;
-
-  Brand.find().then((data) => {
-    data.forEach((item) => {
-      listBrand.push({id: item._id, name: item.name})
-    })
-  });
-
-  Material.find().then((data) => {
-    data.forEach((item) => {
-      listMaterial.push({id: item._id, name: item.name})
-    })
-  });
-
-  Category.find().then((data) => {
-    data.forEach((item) => {
-      var listChild = [];
-        item.childCateName.forEach((child) => {
-          listChild.push({id: child._id, name: child.childName})
-        })
-        listCate.push({name: item.name, id: item._id, list: listChild})
-    })
-  });
-
-    Product.find()
-    .limit(8)
-    .then(products => {
-      Product.find()
-        .limit(8)
-        .sort({"viewCounts": -1})
-        .then(products2 => {
-      
-            products2.forEach((prod) => {
-                if (prod.price > 0)
-               {
-                
-                if (prod.productType.main.id === cate)
-                {
-                  if (child)
-                  {
-                    if (prod.productType.sub.id === child)
-                    {
-                      listProduct.push(prod);
-                    }
-                  }
-                  else
-                  {
-                    listProduct.push(prod);
-                  }
-                }
-               }
-            })
-
-            res.render("./shop/product/products", {
-              title: "Trang chủ",
-              user: req.user,
-              trendings: products,
-              products: listProduct,
-              cart: req.session.cart,
-              listBrand: listBrand,
-              listMaterial: listMaterial,
-              listCate: listCate
-            });
-        });
-    })
-    .catch(err => {
-      console.log(err);
-    });
-}
-
 exports.getDeleteCart = (req, res, next) => {
  var iCart = req.query.iCart;
 
@@ -829,14 +748,6 @@ exports.getDeleteCart = (req, res, next) => {
 
  res.send({done:1});
 }
-
-
-
-
-
-
-
-
 
 //magege shop
 exports.getShop = (req, res, next) => {
