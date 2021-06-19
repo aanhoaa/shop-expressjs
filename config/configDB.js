@@ -1,11 +1,22 @@
 const { Pool } = require('pg')
 //const { Sequelize } = require('sequelize');
 
+// const pool = new Pool({
+//   user: 'postgres',
+//   host: 'localhost',
+//   database: 'shop',
+//   password: '123456',
+//   port: 5432,
+//   max: 20,
+//   idleTimeoutMillis: 30000,
+//   connectionTimeoutMillis: 2000,
+// });
+
 const pool = new Pool({
-  user: 'postgres',
-  host: 'localhost',
-  database: 'shop',
-  password: '123456',
+  user: process.env.USERDB,
+  host: process.env.HOST,
+  database: process.env.DATABASE,
+  password: process.env.PASSWORDDB,
   port: 5432,
   max: 20,
   idleTimeoutMillis: 30000,
