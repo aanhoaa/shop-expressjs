@@ -36,6 +36,7 @@ router.get('/', async function(req, res, next) {
   }
 
   const category = await db.getCategoryLevelOne();
+  console.log(category)
   const products = await db.getListNewProduct();
   const topSell = await db.getListSeleldProduct([1]);
   var recommend = [];

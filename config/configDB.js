@@ -13,14 +13,14 @@ const { Pool } = require('pg')
 // });
 
 const pool = new Pool({
-  user: process.env.USERDB,
-  host: process.env.HOST,
-  database: process.env.DATABASE,
-  password: process.env.PASSWORDDB,
+  user: 'bjxltreptrevvw',
+  host: 'ec2-35-174-35-242.compute-1.amazonaws.com',
+  database: 'deg24emmc3224h',
+  password: 'd734a9a5d1d6919d74bcd3c9896a7f1099792599da5d568044c4e4db35af9662',
   port: 5432,
   max: 20,
   idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 2000,
+  connectionTimeoutMillis: 2000, 
 });
 
 async function simpleQuery(sql, values) {
