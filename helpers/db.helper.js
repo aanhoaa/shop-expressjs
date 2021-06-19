@@ -1,5 +1,5 @@
 const db = require('../config/configDB');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 /*
 GLOBAL
