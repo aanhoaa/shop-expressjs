@@ -2,7 +2,8 @@
   "name": "shop",
   "version": "1.0.0",
   "engines": {
-    "node": "12.18.3"
+    "node": "12.18.3",
+    "npm": "7.17.0"
   },
   "private": true,
   "scripts": {
