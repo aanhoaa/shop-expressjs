@@ -33,7 +33,7 @@ router.get('/', async function(req, res, next) {
     cf.train(train);
     let gt = cf.gt(userRecommend);
     recommendProduct = cf.recommendGT(gt, 6);
-    console.log('recommendProduct', recommendProduct)
+    console.log('recommendProduct:', recommendProduct)
   }
 
   const category = await db.getCategoryLevelOne();
