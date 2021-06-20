@@ -8,7 +8,7 @@ const fs = require('fs');
 const fetch = require('node-fetch');
 
 exports.getUserProfile = async (req, res, next) => {
-  const data = await db.getUserInfo(2, [req.jwtDecoded.data.username]);
+  const data = await db.getUserInfo(2, [req.jwtDecoded.data.username]); 
   const userInfo = {
     username: data.username,
     gender: data.gender
