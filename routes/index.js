@@ -27,8 +27,8 @@ router.get('/', async function(req, res, next) {
         }
     })
 
-   // console.log('this is train dataset:', train);
-   // console.log('this is user data:', userRecommend)
+    console.log('this is train dataset:', train);
+    console.log('this is user data:', userRecommend)
     const cf = new CF();
     cf.train(train);
     let gt = cf.gt(userRecommend);
