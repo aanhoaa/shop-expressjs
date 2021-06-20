@@ -33,6 +33,7 @@ router.get('/', async function(req, res, next) {
     cf.train(train);
     let gt = cf.gt(userRecommend);
     recommendProduct = cf.recommendGT(gt, 6);
+    console.log('recommendProduct', recommendProduct)
   }
 
   const category = await db.getCategoryLevelOne();
@@ -44,7 +45,7 @@ router.get('/', async function(req, res, next) {
       recommend.push(item.itemId * 1)
     })
   }
-  console.log(recommend)
+  console.log('recommend', recommend)
 
   res.render('index', { 
     title: 'Trang chủ', 
