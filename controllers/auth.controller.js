@@ -50,7 +50,7 @@ exports.getLogin = (req, res, next) => {
           gender: userPass.gender
         }
         
-        const accessToken = await jwtHelper.generateToken(userInfo, process.env.SIGNATUTETOKEN, '1h');
+        const accessToken = await jwtHelper.generateToken(userInfo, process.env.SIGNATURETOKEN, '1h');
 
         req.session.token = accessToken;
 
@@ -155,7 +155,7 @@ exports.getLogin = (req, res, next) => {
             gender: 1
           };
 
-          const accessToken = await jwtHelper.generateToken(userInfo, process.env.SIGNATUTETOKEN, '1h');
+          const accessToken = await jwtHelper.generateToken(userInfo, process.env.SIGNATURETOKEN, '1h');
           req.session.token = accessToken;
           //send mail
           mailer.sendMailVerify(confirmToken, user.email);
@@ -258,7 +258,7 @@ exports.postForgotPassword = async (req, res, next) => {
   
 exports.getVerify = async (req, res, next) => {
   var userInfo = null;
-  const decoded = await jwtHelper.verifyToken(req.session.token, process.env.SIGNATUTETOKEN);
+  const decoded = await jwtHelper.verifyToken(req.session.token, process.env.SIGNATURETOKEN);
 
   const data = await db.getUserInfo(2, [decoded.data.username]);
 
@@ -361,8 +361,7 @@ exports.postResendVerify = async (req, res, next) => {
       // Nếu tồn tại token
       try {
         // Thực hiện giải mã token xem có hợp lệ hay không?
-        const decoded = await jwtHelper.verifyToken(tokenFromClient, process.env.SIGNATUTETOKEN);
-        
+        const decoded = await jwtHelper.verifyToken(tokenFromClient, process.env.SIGNATURETOKEN);
         // Nếu token hợp lệ, lưu thông tin giải mã được vào đối tượng req, dùng cho các xử lý ở phía sau.
         req.jwtDecoded = decoded;
         // Cho phép req đi tiếp sang controller.
@@ -370,7 +369,7 @@ exports.postResendVerify = async (req, res, next) => {
       } catch (error) {
         // Nếu giải mã gặp lỗi: Không đúng, hết hạn...etc:
         // Lưu ý trong dự án thực tế hãy bỏ dòng debug bên dưới, mình để đây để debug lỗi cho các bạn xem thôi
-        
+        console.log(error)
         return res.status(401).json({
           message: 'Unauthorized.',
         });
@@ -382,28 +381,28 @@ exports.postResendVerify = async (req, res, next) => {
     }
   }
 
-  exports.isUser = async (req, res, next) => {
-    const decoded = await jwtHelper.verifyToken(req.session.token, process.env.SIGNATUTETOKEN);
-    const isVerified = await db.getUserInfo(2, [decoded.data.username]);
-    
-    if (decoded.data.role == 'user'){
-      if (isVerified.isverified == 0) {
-        return res.redirect('/verify');
-      }
-      else {
-        next();
-      }
-    } 
+exports.isUser = async (req, res, next) => {
+  const decoded = await jwtHelper.verifyToken(req.session.token, process.env.SIGNATURETOKEN);
+  const isVerified = await db.getUserInfo(2, [decoded.data.username]);
+  
+  if (decoded.data.role == 'user'){
+    if (isVerified.isverified == 0) {
+      return res.redirect('/verify');
+    }
     else {
-      return res.status(401).json({
-      message: 'Unauthorized.',
-    });
+      next();
+    }
   } 
-  }
+  else {
+    return res.status(401).json({
+    message: 'Unauthorized.',
+  });
+} 
+}
 
 exports.isShop = async (req, res, next) => {
-  const decoded = await jwtHelper.verifyToken(req.session.token, process.env.SIGNATUTETOKEN);
-
+  const decoded = await jwtHelper.verifyToken(req.session.token, process.env.SIGNATURETOKEN);
+  console.log(decoded)
   if (decoded.data.role == 'shop') {
       next();
   }
@@ -412,7 +411,7 @@ exports.isShop = async (req, res, next) => {
 }
 
 exports.isAdmin = async (req, res, next) => {
-  const decoded = await jwtHelper.verifyToken(req.session.token, process.env.SIGNATUTETOKEN);
+  const decoded = await jwtHelper.verifyToken(req.session.token, process.env.SIGNATURETOKEN);
 
   if (decoded.data.role == 'admin')
     next();

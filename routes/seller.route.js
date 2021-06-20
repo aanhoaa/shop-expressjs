@@ -10,10 +10,10 @@ router.get("/login" , sellerController.getLogin);
 router.post("/login" , sellerController.postLogin);
 router.get("/logout" , sellerController.getLogout);
 
-router.get("/" , authController.isAuth,authController.isShop, sellerController.getHome);
+router.get("/" , authController.isAuth, authController.isShop, sellerController.getHome);
 
-router.get("/profile/address-book" , authController.isAuth,authController.isShop, sellerController.getAddressBook);
-router.post("/profile/address-book" , authController.isAuth,authController.isShop, sellerController.postAddressBook);
+router.get("/profile/address-book" , authController.isAuth, authController.isShop, sellerController.getAddressBook);
+router.post("/profile/address-book" , authController.isAuth, authController.isShop, sellerController.postAddressBook);
 
 router.get("/product/add" , authController.isAuth, authController.isShop, sellerController.getAddProduct);
 router.get("/product/add/binding/:parentId" ,authController.isAuth, authController.isShop, sellerController.getBindingCategory);

@@ -97,7 +97,7 @@ exports.postRegister = async (req, res, next) => {
               role: 'shop',
             };
   
-            const accessToken = await jwtHelper.generateToken(userInfo, 'secret', '1h');
+            const accessToken = await jwtHelper.generateToken(userInfo, process.env.SECRETKEY, '1h');
             req.session.token = accessToken;
             req.session.shopInfo = userInfo;
             //screen waiting for approve
@@ -126,7 +126,6 @@ exports.postRegister = async (req, res, next) => {
 }
 
 exports.getLogin = (req, res, next) => {  
-  console.log(process.env.CLOUDNAME)
     if (req.session.token) 
     res.redirect('/seller');
     else
@@ -148,8 +147,7 @@ exports.postLogin = async (req, res, next) => {
           role: userPass.role
         }
         req.session.shopInfo = userInfo;
-        const accessToken = await jwtHelper.generateToken(userInfo, 'secret', '1h');
-
+        const accessToken = await jwtHelper.generateToken(userInfo, process.env.SIGNATURETOKEN, '1h');
         req.session.token = accessToken;
         return res.status(200).json({accessToken});
       }

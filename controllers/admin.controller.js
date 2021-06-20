@@ -28,7 +28,7 @@ exports.postLogin = async (req, res, next) => {
           username: username,
           role: userPass.role
         }
-        const accessToken = await jwtHelper.generateToken(userInfo, process.env.SIGNATUTETOKEN, '1h');
+        const accessToken = await jwtHelper.generateToken(userInfo, process.env.SIGNATURETOKEN, '1h');
         //use session
         req.session.token = accessToken;
 
