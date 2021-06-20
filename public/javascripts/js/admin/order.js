@@ -118,7 +118,7 @@ $(document).ready(function(){
             if (!inputValue) return false;
             
             $.ajax({
-                url: `${window.location.origin}/seller/order/delivered`,
+                url: `${window.location.origin}/admin/order/delivered`,
                 type: "put", 
                 dataType: "json",
                 data: {
@@ -126,8 +126,8 @@ $(document).ready(function(){
                 },
                 success:function(data){ 
                     if (data.state == 1) {
-                        swal("Nice!", "Đơn hàng đang giao", "success");
-                        window.location.href = "/seller/order?type=delivered";
+                        swal("Nice!", "Đơn hàng đã giao", "success");
+                        window.location.href = "/admin/order?type=delivered";
                     }
                     if (data.state == 0) alert('Lỗi hệ thống');
                     if (data.state == -1) alert('Dữ liệu trống');

@@ -5,7 +5,7 @@
 <div style="margin-left: 5%;">
     <a href="/seller/order">Back</a>
     
-    <%if (info.status == -1) {%>
+    <%if (info.order_status == -1) {%>
     <div>
         Trạng thái: Đã hủy 
     </div>
@@ -13,7 +13,7 @@
         Lý do: <%-info.cancel%>
     </div>
     <%}%>
-    <%if (info.status == 3) {%>
+    <%if (info.order_status == 3) {%>
         <div>
             Trạng thái: Đã giao 
         </div>

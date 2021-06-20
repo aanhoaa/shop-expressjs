@@ -794,7 +794,7 @@ exports.getOrderDetail = async (req, res, next) => {
     const address = await db.getOrderAddressById([orderId]);
     const products = await db.getOrderDetailByOrderId([orderId])
     const orderInfo = await db.getOrderById([orderId]);
-    
+
     res.render('./admin/order/orderDetail', {
         seller: req.session.shopInfo,info: orderInfo, 
         address: address, products: products

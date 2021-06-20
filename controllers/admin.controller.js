@@ -352,7 +352,7 @@ exports.getOrderDetail = async (req, res, next) => {
   const products = await db.getOrderDetailByOrderId([orderId])
   const orderInfo = await db.getOrderById([orderId]);
   const userInfo = await db.getUserByOrder([orderId]);
-  
+
   res.render('./adminSys/order/orderDetail', {
     info: orderInfo, 
     address: address, 
@@ -377,7 +377,7 @@ exports.putCancelOrder = async (req, res, next) => {
   if (orderId == '' || cancelReason == '')
     return res.send({state: -1});
 
-  //update staus => -1
+  //update status => -1
   const update = await db.updateOrderReason([-1, cancelReason, orderId]);
   if (update != true) return res.send({state: 0});
 
@@ -388,6 +388,32 @@ exports.putCancelOrder = async (req, res, next) => {
   }
 
   res.send({state: 1});
+}
+
+exports.putDeliveredOrder = async (req, res, next) => {
+  const orderId = req.body.orderId;
+  if (orderId) {
+      const info = await db.getUserAndProductByOrderId([orderId]);
+      for(let i of info) {
+        const updateSelled = await db.updateProductSelled([i.sum, i.id]); 
+      }
+
+      const shop_id = info[0].shop_id;
+      const products = await db.getOrderDetailByOrderId([orderId]);
+      var total = 0;
+      for(let i of products) {
+        total += i.amount*i.price;
+      }
+      total += products[0].shippingfee;
+      
+      //update wallet
+      const addWallet = await db.updateShopWallet(orderId, [total, shop_id]);
+      const update = await db.updateOrderAndPaid([3, orderId]);
+      
+      if (update == true && addWallet == true) {console.log('done') ; return res.send({state: 1});}
+      else return res.send({state: 0});
+  }
+  else res.send({state: -1});
 }
 
 exports.getProfileShop = async (req, res, next) => {

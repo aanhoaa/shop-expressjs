@@ -985,7 +985,7 @@ function updateRating(values) {
 }
 
 function getUserAndProductByOrderId(value) {
-    const sql = "select d.id, e.user_id, sum(b.amount) from orders as a inner join orderdetail as b on b.order_id = a.id inner join productvariant as c on c.id = b.productvariant_id inner join product as d on d.id = c.product_id inner join purchase as e on e.id = a.purchase_id where a.id = $1 group by e.user_id, d.id";
+    const sql = "select a.shop_id, d.id, e.user_id, sum(b.amount) from orders as a inner join orderdetail as b on b.order_id = a.id inner join productvariant as c on c.id = b.productvariant_id inner join product as d on d.id = c.product_id inner join purchase as e on e.id = a.purchase_id where a.id = $1 group by e.user_id, d.id, a.shop_id";
 
     return db.simpleQuery(sql, value)
     .then(res => {
@@ -2200,7 +2200,7 @@ function checkPurchasePayRef(value) {
 
 function getOrderById(value) {
     //const sql = "SELECT * FROM orders as a inner join purchase as b on b.id = a.order_id WHERE id = $1";
-    const sql = "SELECT * FROM orders as a inner join purchase as b on b.id = a.purchase_id WHERE a.id = $1";
+    const sql = "SELECT a.status as order_status, * FROM orders as a inner join purchase as b on b.id = a.purchase_id WHERE a.id = $1";
 
     return db.simpleQuery(sql, value)
     .then(res => {

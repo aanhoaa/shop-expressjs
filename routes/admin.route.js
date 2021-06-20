@@ -24,6 +24,7 @@ router.get("/order" , authController.isAuth, authController.isAdmin, adminContro
 router.get("/order/detail/:orderId" , authController.isAuth, authController.isAdmin, adminController.getOrderDetail);
 router.put("/order/confirm" , authController.isAuth, authController.isAdmin, adminController.putConfirmOrder);
 router.put("/order/cancel" , authController.isAuth, authController.isAdmin, adminController.putCancelOrder);
+router.put("/order/delivered" , authController.isAuth, authController.isAdmin, adminController.putDeliveredOrder);
 
 
 module.exports = router;

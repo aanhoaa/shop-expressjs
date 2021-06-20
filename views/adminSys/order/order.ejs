@@ -143,9 +143,7 @@
                             </div>
                         <%}%>
                         <%if (item.status == 2) {%>
-                            <a href="/admin/order/detail/<%-item.orderId%>">
-                                <button class="btn btn-default dropdown-toggle" type="button">Chi tiết</button>
-                            </a>
+                            <button class="btn btn-default order-delivered" data-id="<%-item.orderId%>" type="button">Đã nhận hàng</button>
                         <%}%>
                         <%if (item.status == 3) {%>
                             <a href="/admin/order/detail/<%-item.orderId%>">
