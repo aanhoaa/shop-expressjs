@@ -69,7 +69,6 @@ exports.getProductDetail = async (req, res, next) => {
     else req.session.recent.unshift(productId);
   }
 
-  console.log(req.session.recent)
   var onlyOne = 1;
   var min = 0;
   var max = 0;
@@ -89,6 +88,7 @@ exports.getProductDetail = async (req, res, next) => {
     })
     
     res.render("./shop/product/productDetail", {
+      title: data[0].name || 'Sản phẩm',
       user: req.user,
       userInfo: req.session.Userinfo,
       cart: req.session.cart,

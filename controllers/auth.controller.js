@@ -67,24 +67,25 @@ exports.getLogin = (req, res, next) => {
         req.session.cart = cart.length;
 
         if (verify.isverified == 0) {
-           res.send({ state: 0});
+           return res.send({ state: 0});
         }
         else 
-         res.send({ state: 1});
+        return res.send({ state: 1});
       } 
-      return res.status(500).send({Lỗi: 'Tài khoản hoặc mật khẩu không chính xác'}); 
+      else 
+        return res.status(500).send({Lỗi: 'Tài khoản hoặc mật khẩu không chính xác'}); 
     }
 
     else return res.status(500).json();
   };
   
-  exports.getLogout = (req, res, next) => {
-    if (req.session.cart) {
-      req.session.cart = null;
-    }
-    req.session.destroy();
-    res.redirect("/");
-  };
+exports.getLogout = (req, res, next) => {
+  if (req.session.cart) {
+    req.session.cart = null;
+  }
+  req.session.destroy();
+  res.redirect("/");
+};
   
   exports.getSignUp = (req, res, next) => {
      var message = req.flash("info");

@@ -16,7 +16,12 @@ exports.getUserProfile = async (req, res, next) => {
 
   const birthday = getdate(data.birthday);
   if (data) {
-    res.render('auth/user/user-profile', {userInfo: userInfo, user: data, birthday: birthday, cart: req.session.cart});
+    res.render('auth/user/user-profile', {
+      title: 'Furniture Shop',
+      userInfo: userInfo, 
+      user: data, 
+      birthday: birthday, cart: req.session.cart
+    });
   }
 };
 
@@ -67,7 +72,11 @@ exports.getUserAddressBook = async (req, res, next) => {
 
   const addressDB = await db.getUserAddressBook([req.jwtDecoded.data.id]);
   if (data) {
-    res.render('auth/user/user-addressBook', {userInfo: userInfo, user: data, cart: req.session.cart, address: addressDB});
+    res.render('auth/user/user-addressBook', {
+      title: 'Furniture Shop',
+      userInfo: userInfo, 
+      user: data, cart: req.session.cart, address: addressDB
+    });
   }
 };
 
@@ -253,7 +262,10 @@ exports.getChangePassword = async (req, res, next) => {
     gender: data.gender
   }
 
-  res.render('auth/user/user-changePassword', {userInfo: userInfo, cart: req.session.cart, message: message});
+  res.render('auth/user/user-changePassword', {
+    title: 'Furniture Shop',
+    userInfo: userInfo, cart: req.session.cart, message: message
+  });
 }
 
 exports.postChangePassword = async (req, res, next) => {
@@ -343,6 +355,7 @@ exports.getPurchase = async (req, res, next) => {
 
   if (data) {
     res.render('auth/user/user-purchase', {
+      title: 'Furniture Shop',
       userInfo: userInfo, user: data, 
       cart: req.session.cart
     });
@@ -427,6 +440,7 @@ exports.getWaitingConfirm = async (req, res, next) => {
 
   if (data) {
     res.render('auth/user/user-purchase', {
+      title: 'Furniture Shop',
       userInfo: userInfo, user: data, 
       cart: req.session.cart,
       data: all,
