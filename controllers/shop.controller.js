@@ -55,7 +55,7 @@ exports.getProductDetail = async (req, res, next) => {
   const shop = await db.getShopByProductId([productId]);
   const relative = await db.getProductByShop([shop.id]);
   const productCate2 = await db.getProductByCateTwo(1, 1, [data[0].cate2_id]); 
-  
+
   if (!req.session.recent) {
     req.session.recent = [];
     req.session.recent.unshift(productId);
@@ -240,12 +240,42 @@ exports.postUpdateToCart = async (req, res, next) => {
 
 exports.getCart = async (req, res, next) => {
   const data = await db.getCartAll([req.session.Userinfo.id]);
+  var recommendProduct = [];
+  const userInfo = req.session.Userinfo;
+
+  const listRating = await db.getRating();
+  var train = new Array();
+  listRating.forEach(item => {
+    train.push([item.user_id, item.product_id, item.rating])
+  })
+
+  var userRecommend = new Array();
+  listRating.forEach(item => {
+      if (item.user_id == userInfo.id) {
+        userRecommend.push([item.user_id, item.product_id, item.rating]);
+      }
+  })
+
+  const cf = new CF();
+  cf.train(train);
+  let gt = cf.gt(userRecommend);
+  recommendProduct = cf.recommendGT(gt, 6);
+  const listPd = await db.getProductDetailByID();
+  var recommend = [];
+ 
+  for(let iRecommend in recommendProduct) {
+    recommendProduct[iRecommend].forEach(item => {
+      recommend.push(item.itemId * 1)
+    })
+  }
 
   res.render("./shop/cart/cart", {
     title: "Giỏ hàng",
     userInfo: req.session.Userinfo,
     cart: req.session.cart,
-    data: data
+    data: data,
+    listPd: listPd,
+    recommend: recommend
   });
 }
 

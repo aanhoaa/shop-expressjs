@@ -1826,7 +1826,7 @@ function getShopProductById(value) {
 }
 
 function getProductDetailByID(value) {
-    const sql = "select  a.id, a.name, b.max_price, b.min_price, c.url->'cover' as cover from product a inner join (select max(price) as max_price, min(price) as min_price, product_id from productvariant group by product_id) b on a.id = b.product_id inner join images as c on c.product_id = a.id where a.status = 1order by a.created_at desc";
+    const sql = "select  a.id, a.name, b.max_price, b.min_price, c.url->'cover' as cover from product a inner join (select max(price) as max_price, min(price) as min_price, product_id from productvariant group by product_id) b on a.id = b.product_id inner join images as c on c.product_id = a.id where a.status = 1 order by a.created_at desc";
 
     return db.simpleQuery(sql, value)
     .then( res =>  {

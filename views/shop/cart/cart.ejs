@@ -4,6 +4,9 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+<script src="/javascripts/assets/multislider.min.js"></script>
+<link rel="stylesheet" href="/stylesheets/multislider.css">
+<link rel="stylesheet" href="/stylesheets/slider_item.css">
 
 <div class="container">
     <div class="col-sm-12 block_cart">
@@ -141,27 +144,73 @@
                 </div>
              </div>
         </section>
-        <section class="col-sm-12 sp-lien-quan" style="padding: 0; display: flex; margin-top: 80px;">
-            <div class="col-sm-9 khoi_chua_sp_lienquan clearfix" style="padding: 0;">
-                <h5 style="margin-top:0; margin-bottom: 20px; font-size: 30px;">Sản phẩm liên quan</h5>
-                
-                <a href="/shop/product/">
-                    <div class="khoi_sp_lienquan clearfix col-sm-3" id="effect_1" style="height: 196px;">
-                        <img style="width: 100%; height: 100%;" src="/uploads/"/>
-                        <div class="khoi_sp_lienquan_info">
-                            <p></p>
-                            <p>₫</p>
-                        </div>
-                    </div>
-                </a>
-               
-            </div>
-           
-            <div class="col-sm-3 clearfix" style="padding-right: 0;">
-                
-            </div>
-          
-        </section>
+        <% if (userInfo) {%>
+            <section id="home-featured-products" class="mg-top-60 mg-bottom-60">
+             <div class="wrapper">
+                <div class="inner text-center">
+                   <div class="h2-title mg-bottom-30">
+                      <% if (recommend.length > 0) {%>
+                        <h2 class="title--default">Sản phẩm dành cho bạn</h2>
+                        <%}%>
+                   </div>
+                   <div class="featured-products">
+                      <div class="grid">
+                       <div class="blogSlider" id="productNew">
+                           <div class="MS-content">
+                           <%if (listPd) {
+                             listPd.forEach(item => {
+                                   if (recommend.indexOf(item.id) > -1) { 
+                           %>
+     
+                             <div class="item">
+                                 <div class="product-grid">
+                                     <div class="product-image">
+                                         <a href="/detail/<%-item.name%>.<%-item.id%>">
+                                             <img class="pic-1" src="<%-item.cover%>">
+                                         </a>
+                                         
+                                         <!-- <span class="product-discount-label">50%</span> -->
+                                     </div>
+                                     <div class="related-product-rating">
+                                         <div class="rating">
+                                             <div class="star-rating" style="display: flex;">
+                                             <span class="fa fa-star" data-rating="1"></span>
+                                             <span class="fa fa-star" data-rating="2"></span>
+                                             <span class="fa fa-star-o" data-rating="3"></span>
+                                             <span class="fa fa-star-o" data-rating="4"></span>
+                                             <span class="fa fa-star-o" data-rating="5"></span>
+                                             <input type="hidden" name="whatever1" class="rating-value" value="<%-item.rating%>">
+                                             </div>
+                                         </div>
+                                     </div>
+                                     <div class="product-content">
+                                         <h3 class="title"><a href="#"><%-item.name%></a></h3>
+                                         <div class="price">
+                                         <%-item.min_price == item.max_price ? VND(parseInt(item.max_price)) : VND(parseInt(item.min_price)) + ' - ' + VND(parseInt(item.max_price))%>
+                                         </div>
+                                     </div>
+                                 </div>
+                             </div>
+     
+                           <%}})}%>
+                           </div>
+                            <div class="MS-controls">
+                                <button class="MS-left"><i class="fa fa-chevron-left" aria-hidden="true"></i></button>
+                                <button class="MS-right"><i class="fa fa-chevron-right" aria-hidden="true"></i></button>
+                            </div>
+                       </div>
+                      </div>
+                   </div>
+                </div>
+             </div>
+            </section>
+        <%}%>
     </div>
+    <script>
+        $('#blogSlider').multislider({
+            duration: 750,
+            interval: 3000
+        }); 
+    </script>
     <script src="/javascripts/js/cart.js"></script>
 <% include ../../partials/footer %>
