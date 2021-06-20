@@ -34,13 +34,12 @@ router.get('/', async function(req, res, next) {
     cf.train(train);
     let gt = cf.gt(userRecommend);
     recommendProduct = cf.recommendGT(gt, 6);
-    console.log('recommendProduct:', recommendProduct)
   }
 
   const category = await db.getCategoryLevelOne();
   const products = await db.getListNewProduct();
   const topSell = await db.getListSeleldProduct([1]);
-  const listProduct = await db.getProductDetailByID();
+  const listPd = await db.getProductDetailByID();
   var recommend = [];
  
   for(let iRecommend in recommendProduct) {
@@ -48,7 +47,6 @@ router.get('/', async function(req, res, next) {
       recommend.push(item.itemId * 1)
     })
   }
-  console.log('recommend', recommend)
 
   res.render('index', { 
     title: 'Trang chủ', 
@@ -57,7 +55,7 @@ router.get('/', async function(req, res, next) {
     category: category,
     products: products,
     top: topSell,
-    listProduct: listProduct,
+    listPd: listPd,
     recommend: recommend
   });
 });
