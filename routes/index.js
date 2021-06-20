@@ -44,6 +44,7 @@ router.get('/', async function(req, res, next) {
       recommend.push(item.itemId * 1)
     })
   }
+  console.log(recommend)
 
   res.render('index', { 
     title: 'Trang chủ', 
