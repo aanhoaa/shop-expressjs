@@ -218,6 +218,11 @@ table.table-custom {
     white-space: normal;
 }
 
+.name-wrap-text {
+    width: 105px;
+    white-space: normal;
+}
+
 .custom-table-product {
     padding: 8px 10px !important;
 }

@@ -271,7 +271,7 @@
  <div id="PageContainer" class="is-moved-by-drawer">
 	<section id="main-slider" style="padding-left: 15px;">
 		<div class="grid">
-			<div class="frontSlider" id="frontPage1">
+			<div class="frontSlider" id="frontPage">
 				<div class="MS-content">
 					<div class="item">
 						<div style="display: flex;">
@@ -440,7 +440,7 @@
 		<div class="wrapper">
 		   <div class="inner text-center">
 			  <div class="h2-title mg-bottom-30">
-				 <h2 class="title--default">Sản phẩm dành cho bạn</h2>
+				 <h2 class="title--default">Gợi ý cho bạn hôm nay</h2>
 			  </div>
 			  <div class="featured-products">
 				 <div class="grid">
@@ -519,8 +519,8 @@
 								   <div class="related-product-rating">
 									   <div class="rating">
 										   <div class="star-rating" style="display: flex;">
-											  <span class="fa fa-star" data-rating="1"></span>
-											  <span class="fa fa-star" data-rating="2"></span>
+											  <span class="fa fa-star-o" data-rating="1"></span>
+											  <span class="fa fa-star-o" data-rating="2"></span>
 											  <span class="fa fa-star-o" data-rating="3"></span>
 											  <span class="fa fa-star-o" data-rating="4"></span>
 											  <span class="fa fa-star-o" data-rating="5"></span>
@@ -585,8 +585,8 @@
 										   <div class="related-product-rating">
 											   <div class="rating">
 												   <div class="star-rating" style="display: flex;">
-													  <span class="fa fa-star" data-rating="1"></span>
-													  <span class="fa fa-star" data-rating="2"></span>
+													  <span class="fa fa-star-o" data-rating="1"></span>
+													  <span class="fa fa-star-o" data-rating="2"></span>
 													  <span class="fa fa-star-o" data-rating="3"></span>
 													  <span class="fa fa-star-o" data-rating="4"></span>
 													  <span class="fa fa-star-o" data-rating="5"></span>
@@ -650,7 +650,24 @@
 		  activeTab($('.nav-tabs li:first-child'));
 		  });
 	   </script>
+<script>
+	$(document).ready(function(){
 
+	var $star_rating = $('.star-rating .fa');
+
+	var SetRatingStar = function(event) {
+	return $star_rating.each(function(event) {
+		if (parseInt($(this).siblings('input.rating-value').val()) >= parseInt($(this).data('rating'))) {
+			return $(this).removeClass('fa-star-o').addClass('fa-star');
+		} else {
+			return $(this).removeClass('fa-star').addClass('fa-star-o');
+		}
+	});
+	};
+
+	SetRatingStar();
+})
+</script>
 	   <section id="home-policy" class=" mg-bottom-30 mg-top-30 pd-top-60 pd-bottom-60" style="background-image: url(https://theme.hstatic.net/1000187230/1000241027/14/bg_box.jpg?v=2476)">
 		  <div class="overlow"></div>
 		  <div class="wrapper policy-content">

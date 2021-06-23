@@ -197,16 +197,16 @@ exports.getCategory = async (req, res, next) => {
   }
   else 
     {
-      var data = await db.getCategoryLevelOne();
+      var data = await db.getCategoryLevelOneAll();
       target = -2;
     }
   
-  if (target == -1) var data = await db.getCategoryLevelOne();
-  res.render('./admin/category/category', {data: data, type: target});
+  if (target == -1) var data = await db.getCategoryLevelOneAll();
+  res.render('./admin/category/category', {data: data, type: target}); 
 }
 
 exports.getAddCategory = async (req, res, next) => {
-  const data = await db.getCategoryLevelOne();
+  const data = await db.getCategoryLevelOneAll();
 
   if (data) res.render('./admin/category/addCategory', {data: data});
   else res.status(500).json({status: 'load category fail'});
@@ -214,9 +214,9 @@ exports.getAddCategory = async (req, res, next) => {
 
 exports.postAddCategory = async (req, res, next) => {
   const {level, name, id, des} = req.body;
-
-  if (name == '')
-    return res.status(500).json({status: 'data null'});
+  console.log('level:' +level +'name:'+name+ 'id:'+ id+ 'des:'+des)
+  // if (name == '')
+  //   return res.status(500).json({status: 'data null'});
 
   if (level == 1) {
     //category level 1

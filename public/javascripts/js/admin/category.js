@@ -62,7 +62,7 @@ $( document ).ready(function() {
         const cate_name = $(this).data('name');
         const cate_id = $(this).data('id');
         const cate_des = $(this).data('des');
-        const cate_type = $(this).data('cate_type');
+        const cate_type = $(this).data('type');
         $('#cate_name').val(cate_name);
         $('#cate_id').val(cate_id);
         $('#cate_des').val(cate_des);

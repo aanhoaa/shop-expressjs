@@ -30,7 +30,7 @@
             <tr class="odd gradeX" align="center">
                 <input type="text" value="<%-item.id%>" hidden name="id" id="id">
                 <td><%-i%></td>
-                <td><%-item.name%></td>
+                <td><div class="name-wrap-text"><p><%-item.name%></p></div></td>
                 <td>
                     <div class="form-group edit-variant">
                         <input type="text" class="form-control" id="sku" 
@@ -39,8 +39,7 @@
                     </div>
                 </td>
                 <td>
-                    <%-item.attribute.Color%>, <%-item.attribute.Size%>
-                    
+                    <div class="name-wrap-text"><p><%-item.attribute.Color%>, <%-item.attribute.Size%></p></div>
                 </td>
                 <td>
                     <div class="form-group edit-variant">

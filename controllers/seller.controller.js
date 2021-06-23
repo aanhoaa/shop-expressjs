@@ -9,7 +9,7 @@ const jwtHelper = require("../helpers/jwt.helper");
 const Validator = require("fastest-validator");
 
 cloudinary.config({
-    cloud_name: process.env.CLOUD_NAME,
+    cloud_name: process.env.CLOUDNAME,
     api_key: process.env.APIKEY,
     api_secret: process.env.APISECRET
 });
@@ -378,10 +378,9 @@ const addressDB = await db.getShopAddressBook([req.jwtDecoded.data.id]);
 }
 
 exports.getAddProduct = async (req, res, next) => {
-   
-    const data = await db.getCategoryLevelOne();
-    
-    res.render('./admin/product/addProduct', {seller: req.session.shopInfo, data: data});
+  const data = await db.getCategoryHasValue();
+  
+  res.render('./admin/product/addProduct', {seller: req.session.shopInfo, data: data});
 }
 
 exports.getBindingCategory = async (req, res, next) => {
@@ -480,7 +479,7 @@ exports.postAddProduct = async (req, res, next) => {
             var productVariantId = await db.insertProductVariant(savePDV);
             
             if (productVariantId)
-                res.redirect('/seller');
+            return res.redirect('/seller');
             else res.status(500).json({status: 'Thêm thất bại'});
         })
     }
@@ -490,7 +489,7 @@ exports.postAddProduct = async (req, res, next) => {
         var productVariantId = await db.insertProductVariant(savePDV);
 
         if (productVariantId)
-            res.redirect('/seller');
+            return res.redirect('/seller');
         else res.status(500).json({status: 'Thêm thất bại'});
     }
    }

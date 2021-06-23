@@ -1234,6 +1234,30 @@ function getCategoryLevelOne() {
     .catch(error => {return error;});
 }
 
+function getCategoryLevelOneAll() {
+    const sql = "SELECT * FROM categorylevel1";
+
+    return db.simpleQuery(sql)
+    .then(res => {
+        if (res.rowCount > 0)
+            return res.rows;
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function getCategoryHasValue() {
+    const sql = "select distinct a.name, a.id from categorylevel1 as a inner join categorylevel2 as b on b.categorylevel1_id = a.id";
+
+    return db.simpleQuery(sql)
+    .then(res => {
+        if (res.rowCount > 0)
+            return res.rows;
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
 function getCategoryLevelTwoAll() {
     const sql = 'SELECT * FROM categorylevel2';
 
@@ -1840,7 +1864,7 @@ function getProductDetailByID(value) {
 }
 
 function getListNewProduct(value) {
-    const sql = "select  a.id, a.name, b.max_price, b.min_price, c.url->'cover' as cover from product a inner join (select max(price) as max_price, min(price) as min_price, product_id from productvariant group by product_id) b on a.id = b.product_id inner join images as c on c.product_id = a.id where a.status = 1 order by a.created_at desc limit 10";
+    const sql = "select  a.id, a.name, a.rating, b.max_price, b.min_price, c.url->'cover' as cover from product a inner join (select max(price) as max_price, min(price) as min_price, product_id from productvariant group by product_id) b on a.id = b.product_id inner join images as c on c.product_id = a.id where a.status = 1 order by a.created_at desc limit 10";
 
     return db.simpleQuery(sql, value)
     .then( res =>  {
@@ -1896,7 +1920,7 @@ function getProductVariant(value) {
 }
 
 function getProductVariantInfo(value) {
-    const sql = 'select a.name, a.status, c.attribute, b.sku, b.price, b.stockamount, b.id, b.w, b.l, b.h, b.weight, d.url, e.name from productvariant as b inner join product as a on b.product_id = a.id inner join variantdetail as c on c.id = b.variant_id inner join images as d on d.product_id = a.id inner join shop as e on a.shop_id = e.id where a.id = $1';
+    const sql = 'select a.name, a.status, c.attribute, b.sku, b.price, b.stockamount, b.id, b.w, b.l, b.h, b.weight, d.url, e.name as shop_name from productvariant as b inner join product as a on b.product_id = a.id inner join variantdetail as c on c.id = b.variant_id inner join images as d on d.product_id = a.id inner join shop as e on a.shop_id = e.id where a.id = $1';
 
     return db.simpleQuery(sql, value)
     .then( res =>  {
@@ -2387,6 +2411,8 @@ module.exports = {
     insertCateLevel,
     
     getCategoryLevelOne,
+    getCategoryLevelOneAll,
+    getCategoryHasValue,
     getCategoryLevelTwoAll,
     getCategoryLevelTwo,
     getCategoryLevelThree,
