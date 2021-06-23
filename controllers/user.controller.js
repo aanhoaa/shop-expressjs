@@ -441,7 +441,7 @@ exports.getWaitingConfirm = async (req, res, next) => {
   if (data) {
     res.render('auth/user/user-purchase', {
       title: 'Furniture Shop',
-      userInfo: userInfo, user: data, 
+      userInfo: userInfo,
       cart: req.session.cart,
       data: all,
       type: type,
@@ -474,40 +474,7 @@ exports.putOrderCancel = async (req, res, next) => {
     const updateStock = await db.updateProductVariantAmountAuto([item.amount, item.pdv_id]);
   }
 
-  // var date = new Date();
-  // var createDate = dateFormat(date, 'yyyymmddHHmmss');
-  // var ipAddr = req.headers['x-forwarded-for'] ||
-  // req.connection.remoteAddress ||
-  // req.socket.remoteAddress ||
-  // req.connection.socket.remoteAddress;
-
-  // var tmnCode = 'BVMA539M' // .ev
-  // var secretKey = 'IMMMADFCPUJPCCJYIHWVHKMGWAQULKTJ' //.ev
-  // var vnpUrl = 'http://sandbox.vnpayment.vn/merchant_webapi/merchant.html' //.ev
-  // var vnp_Params = {};
-  // vnp_Params['vnp_Version'] = '2.0.0';
-  // vnp_Params['vnp_Command'] = 'refund';
-  // vnp_Params['vnp_TmnCode'] = tmnCode;
-  // vnp_Params['vnp_TransactionType'] = '3';
-  // vnp_Params['vnp_TxnRef'] = makeid(10);
-  // vnp_Params['vnp_Amount'] = total;
-  // vnp_Params['vnp_OrderInfo'] = "Hủy bỏ đơn hàng";
-  // vnp_Params['vnp_TransDate'] = createDate;
-  // vnp_Params['vnp_CreateDate'] = createDate;
-  // vnp_Params['vnp_IpAddr'] = ipAddr;
-  // vnp_Params = sortObject(vnp_Params);
-  // var querystring = require('qs');
-  // var signData = secretKey + querystring.stringify(vnp_Params, { encode: false });
-
-  // var sha256 = require('sha256');
-
-  // var secureHash = sha256(signData);
-
-  // vnp_Params['vnp_SecureHashType'] =  'SHA256';
-  // vnp_Params['vnp_SecureHash'] = secureHash;
-  // vnpUrl += '?' + querystring.stringify(vnp_Params, { encode: true });
-
-  res.send({state: 1, data: vnpUrl});
+  res.send({state: 1});
 }
 
 exports.getOrderDetail = async (req, res, next) => {

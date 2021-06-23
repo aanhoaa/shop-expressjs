@@ -32,7 +32,7 @@
                 </select>
             </div>
             <div class="form-group">
-                <label>Danh mục lớn</label>
+                <label>Danh mục cấp 1</label>
                 <select class="form-control par-cate" name="cate1" required>
                     <option value="">Please Choose Category</option>
                     <%category1.forEach(cate => {%>
@@ -42,7 +42,7 @@
             </div>
 
             <div class="form-group">
-                <label>Danh mục nhỏ</label>
+                <label>Danh mục cấp 2</label>
                 <select class="form-control child-cate" name="cate2" required>
                     <option value="">Please Choose Child Category</option>   
                     <%category2.forEach(cate => {%>
@@ -72,14 +72,6 @@
                 <label>Miêu tả</label>
                 <textarea class="form-control ckeditor" rows="3" name="description" id="description" placeholder="Please Enter Product Description"></textarea>
             </div>
-            <div class="form-group">
-                <label>Nội dung</label>
-                <textarea class="form-control ckeditor" rows="3" name="content" id="content"></textarea>
-            </div>
-            <!-- <div class="form-group">
-                <label>Hình ảnh</label>
-                <input type="file" name="image_product" value="{!! old('image_product') !!}" required>
-            </div> -->
 
             <h5>File Upload & Image Preview</h5>
             <!-- Upload  -->
