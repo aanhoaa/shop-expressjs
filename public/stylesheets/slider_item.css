@@ -366,9 +366,10 @@ li.dropdown:last-child .dropdown-menu li a
 }
 
 .frontSlider .MS-content .item .slide-bg img {
+    margin-left: 10px;
     display: block;
-    width: 100%;
-    height: 100%;
+    width: 1349px;
+    height: 565px;
     background-position: center center;
 }
 .frontSlider .MS-content .item .slide-content-outside {
@@ -377,3 +378,12 @@ li.dropdown:last-child .dropdown-menu li a
     right: 0px;
     width: 100%;
 } 
+.slide-content h2,
+.slide-content h3,
+.slide-content .author {
+    color: #fff;
+}
+.strong-name {
+    font-size: 30px;
+    margin-left: 5px;
+}

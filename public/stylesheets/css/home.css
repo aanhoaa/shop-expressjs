@@ -63,7 +63,7 @@ header a.btn:hover i
 header .logo-routine img{
 	position: absolute;
 	left: 50%;
-	top: -15px;
+	top: 5px;
 	transform: translateX(-50%);
 	max-width: 270px;
 	width: 100%;

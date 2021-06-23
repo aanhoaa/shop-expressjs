@@ -23,7 +23,30 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"> </script>
 </head>
 <body id="sieu-thi-noi-that-suplo" class="template-index">
+<!-- Messenger Plugin chat Code -->
+<div id="fb-root"></div>
+<script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      xfbml            : true,
+      version          : 'v10.0'
+    });
+  };
 
+  (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = 'https://connect.facebook.net/vi_VN/sdk/xfbml.customerchat.js';
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+</script>
+
+<!-- Your Plugin chat code -->
+<div class="fb-customerchat"
+  attribution="biz_inbox"
+  page_id="106770824914989">
+</div>
     <header>
         <div class="paragraph-welcome">
             <span>ANYTHING WE CAN DO FOR YOU!!!</span>
@@ -43,7 +66,7 @@
                 </div>
                 <div class="logo-routine">
                 <a href="/">
-                    <img src="/images/logo-fashion.jpg" style="width: 155px;">
+                    <img src="/images/logo2.png" style="width: 155px;">
                 </a>
                     
                 </div>
