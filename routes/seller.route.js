@@ -34,6 +34,9 @@ router.get("/finance/wallet" , authController.isAuth, authController.isShop, sel
 
 router.post("/api/finance/income" , authController.isAuth, authController.isShop, sellerController.postBindingIncome);
 
+router.get("/sales" , authController.isAuth, authController.isShop, sellerController.getSales);
+router.post("/sales" , authController.isAuth, authController.isShop, sellerController.postSales);
+
 router.post("/profile/address/edit/:bookId", authController.isAuth, authController.isShop, sellerController.postUpdateAddressBook);
 router.post("/profile/address/delete", authController.isAuth, authController.isShop, sellerController.postDeleteAddressBook);
 router.post("/profile/address/default", authController.isAuth, authController.isShop, sellerController.postSetAddressDefault);

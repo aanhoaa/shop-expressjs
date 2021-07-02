@@ -59,7 +59,7 @@ app.use(
     saveUninitialized: true,
     resave: false,
     store: new MongoDBStore({ uri: process.env.DB, collection: 'sessions' }),
-    cookie: { maxAge: 180 * 60 * 1000 }
+    cookie: { maxAge: 540 * 60 * 1000 }
   })
 );
 
@@ -85,9 +85,11 @@ app.use(authRouter);
 app.use(shopRouter);
 app.use('/user', usersRouter);
 app.use('/seller', sellerRouter);
-app.use('/admin', adminRouter);
+app.use('/admin', adminRouter, test);
 
-
+function test(role) {
+  return true;
+}
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
@@ -102,6 +104,7 @@ app.use(function(err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   res.render('error');
+
 });
 
 module.exports = app;

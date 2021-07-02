@@ -223,6 +223,12 @@ table.table-custom {
     white-space: normal;
 }
 
+.order-wrap-text {
+    width: 187px;
+    white-space: normal;
+    word-break: break-word;
+}
+
 .custom-table-product {
     padding: 8px 10px !important;
 }

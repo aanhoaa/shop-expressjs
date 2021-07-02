@@ -31,53 +31,48 @@ exports.getLogin = (req, res, next) => {
     }
   };
   
-  exports.postLogin = async (req, res, next) => {
+exports.postLogin = async (req, res, next) => {
+  const {username, password} = req.body;
+  const data = await db.checkUserExist(2, [username]); 
+ 
+  if (data) {
+    const userPass = await db.getUserInfo(2,[username]);
+    const checkPass = await bcrypt.compare(password, userPass.password);
 
-    const {username, password} = req.body;
-   
-    const data = await db.checkUserExist(2, [username]); 
-   
-    if (data) {
-      const userPass = await db.getUserInfo(2,[username]);
-      const checkPass = await bcrypt.compare(password, userPass.password);
-      
-      if (checkPass) {
-        const userInfo = {
-          id: userPass.id,
-          username: username,
-          role: userPass.role,
-          isverified: userPass.isverified,
-          gender: userPass.gender
-        }
-        
-        const accessToken = await jwtHelper.generateToken(userInfo, process.env.SIGNATURETOKEN, '1h');
+    if (checkPass) {
+      const userInfo = {
+        id: userPass.id,
+        username: username,
+        role: userPass.role,
+        isverified: userPass.isverified,
+        gender: userPass.gender
+      }
 
-        req.session.token = accessToken;
+      const accessToken = await jwtHelper.generateToken(userInfo, process.env.SIGNATURETOKEN, '1h');
+      req.session.token = accessToken;
+      const verify = await db.getUserInfo(2, [username]);
 
-        const verify = await db.getUserInfo(2, [username]);
+      //session info
+      req.session.Userinfo = {
+        username: verify.username,
+        gender: verify.gender,
+        id: verify.id
+      }
+      //session cart
+      const cart = await db.getCart([verify.id]);
+      req.session.cart = cart.length;
 
-        //session info
-        req.session.Userinfo = {
-          username: verify.username,
-          gender: verify.gender,
-          id: verify.id
-        }
-        //session cart
-        const cart = await db.getCart([verify.id]);
-        req.session.cart = cart.length;
-
-        if (verify.isverified == 0) {
-           return res.send({ state: 0});
-        }
-        else 
-        return res.send({ state: 1});
-      } 
+      if (verify.isverified == 0) {
+        return res.send({ state: 0});
+      }
       else 
-        return res.status(500).send({Lỗi: 'Tài khoản hoặc mật khẩu không chính xác'}); 
-    }
-
-    else return res.status(500).json();
-  };
+        return res.send({ state: 1});
+    } 
+    else 
+      return res.status(500).send({Lỗi: 'Tài khoản hoặc mật khẩu không chính xác'}); 
+  }
+  else return res.status(500).json();
+};
   
 exports.getLogout = (req, res, next) => {
   if (req.session.cart) {
@@ -316,74 +311,44 @@ exports.postResendVerify = async (req, res, next) => {
     });
   };
   
-  exports.postChangePassword = (req, res, next) => {
-    bcrypt.compare(req.body.oldpass, req.user.password, function(err, result) {
-      console.log("alo?");
-      if (!result) {
-        req.flash("error", "Mật khẩu cũ không đúng!");
-        return res.redirect("back");
-      } else if (req.body.newpass != req.body.newpass2) {
-        console.log(req.body.newpass);
-        console.log(req.body.newpass2);
-        req.flash("error", "Nhập lại mật khẩu không khớp!");
-        return res.redirect("back");
-      } else {
-        bcrypt.hash(req.body.newpass, 12).then(hashPassword => {
-          req.user.password = hashPassword;
-          req.user.save();
-        });
-        req.flash("success", "Đổi mật khẩu thành công!");
-        res.redirect("/account");
-      }
-    });
-  };
 
-  exports.isAdmin = (req, res, next) => {
-    if (req.isAuthenticated()) {
-      if (req.user.role != 0) {
-        return next();
-      }
-  }
-    res.redirect("/login");
-  }
+exports.isLogin = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return next();
+}
+  res.redirect("/login");
+}
 
-  exports.isLogin = (req, res, next) => {
-    if (req.isAuthenticated()) {
-      return next();
-  }
-    res.redirect("/login");
-  }
-
-  exports.isAuth = async (req, res, next) => {
-    // Lấy token được gửi lên từ phía client, thông thường tốt nhất là các bạn nên truyền token vào header
-    //const tokenFromClient = req.body.token || req.query.token || get_cookies(req)['Token'];
-    const tokenFromClient = req.session.token;
-    if (tokenFromClient) {
-      // Nếu tồn tại token
-      try {
-        // Thực hiện giải mã token xem có hợp lệ hay không?
-        const decoded = await jwtHelper.verifyToken(tokenFromClient, process.env.SIGNATURETOKEN);
-        // Nếu token hợp lệ, lưu thông tin giải mã được vào đối tượng req, dùng cho các xử lý ở phía sau.
-        req.jwtDecoded = decoded;
-        // Cho phép req đi tiếp sang controller.
-        next();
-      } catch (error) {
-        // Nếu giải mã gặp lỗi: Không đúng, hết hạn...etc:
-        // Lưu ý trong dự án thực tế hãy bỏ dòng debug bên dưới, mình để đây để debug lỗi cho các bạn xem thôi
-        console.log(error)
-        return res.status(401).json({
-          message: 'Unauthorized.',
-        });
-      }
-    } else {
-      // Không tìm thấy token trong request
-      console.log(res.headers)
-      return res.redirect('/login');
+exports.isAuth = async (req, res, next) => {
+  // Lấy token được gửi lên từ phía client, thông thường tốt nhất là các bạn nên truyền token vào header
+  //const tokenFromClient = req.body.token || req.query.token || get_cookies(req)['Token'];
+  const tokenFromClient = req.session.token;
+  if (tokenFromClient) {
+    // Nếu tồn tại token
+    try {
+      // Thực hiện giải mã token xem có hợp lệ hay không?
+      const decoded = await jwtHelper.verifyToken(tokenFromClient, process.env.SIGNATURETOKEN);
+      // Nếu token hợp lệ, lưu thông tin giải mã được vào đối tượng req, dùng cho các xử lý ở phía sau.
+      req.jwtDecoded = decoded;
+      // Cho phép req đi tiếp sang controller.
+      next();
+    } catch (error) {
+      // Nếu giải mã gặp lỗi: Không đúng, hết hạn...etc:
+      // Lưu ý trong dự án thực tế hãy bỏ dòng debug bên dưới, mình để đây để debug lỗi cho các bạn xem thôi
+      console.log(error)
+      return res.status(401).json({
+        message: 'Unauthorized.',
+      });
     }
+  } else {
+    // Không tìm thấy token trong request
+    //console.log(res.headers)
+    return res.redirect('/login');
   }
+}
 
 exports.isUser = async (req, res, next) => {
-  const decoded = await jwtHelper.verifyToken(req.session.token, process.env.SIGNATURETOKEN);
+  const decoded = req.jwtDecoded
   const isVerified = await db.getUserInfo(2, [decoded.data.username]);
   
   if (decoded.data.role == 'user'){
@@ -402,8 +367,8 @@ exports.isUser = async (req, res, next) => {
 }
 
 exports.isShop = async (req, res, next) => {
-  const decoded = await jwtHelper.verifyToken(req.session.token, process.env.SIGNATURETOKEN);
-  console.log(decoded)
+  const decoded = req.jwtDecoded
+
   if (decoded.data.role == 'shop') {
       next();
   }
@@ -412,10 +377,103 @@ exports.isShop = async (req, res, next) => {
 }
 
 exports.isAdmin = async (req, res, next) => {
-  const decoded = await jwtHelper.verifyToken(req.session.token, process.env.SIGNATURETOKEN);
+  const decoded = req.jwtDecoded
+  var requestedUrl = req.url;
 
   if (decoded.data.role == 'admin')
     next();
   else
   return res.redirect('/');
+}
+ 
+exports.AdminProduct = async (req, res, next) => {
+  const decoded = req.jwtDecoded
+
+  if (decoded.data.role == 'admin')
+    next();
+  else
+  return res.redirect('/');
+}
+
+exports.isHomeAdmin = async (req, res, next) => {
+  const decoded = req.jwtDecoded
+
+  if (decoded.data.role == 'admin' || decoded.data.role == 'subAdmin')
+    next();
+  else
+  return res.redirect('/');
+}
+
+exports.isCategoryAdmin = async (req, res, next) => {
+  const decoded = req.jwtDecoded.data;
+  const {id, username, role, permit} = decoded;
+  if (role == 'admin' || (role == 'subAdmin' && permit.includes(4)))
+    next();
+  else
+  return res.redirect('/admin');
+}
+
+exports.checkRole = (childRole) => {
+  return (req, res, next) => {
+    const decoded = req.jwtDecoded.data; 
+    const role = decoded.role;
+    const permit = decoded.permit;
+  
+    var transCode = 0;
+    switch (childRole) {
+      case 'VIEW PRODUCT':
+        transCode = 1;
+        break;
+      case 'REPORT PRODUCT':
+        transCode = 2;
+        break;
+      case 'APPROVE PRODUCT':
+        transCode = 3;
+        break;
+      case 'CREATE CATEGORY':
+        transCode = 4;
+        break;
+      case 'VIEW CATEGORY':
+        transCode = 5;
+        break;
+      case 'EDIT CATEGORY':
+        transCode = 6;
+        break;
+      case 'VIEW ORDER':
+        transCode = 7;
+        break;
+      case 'CONFIRM ORDER':
+        transCode = 8;
+        break;
+      case 'CONFIRM SUCCESS ORDER':
+        transCode = 9;
+        break;
+      case 'CANCEL ORDER':
+        transCode = 10;
+        break;
+      case 'CREATE EMPLOYEE':
+        transCode = 11;
+        break;
+      case 'VIEW EMPLOYEE':
+        transCode = 12;
+        break;
+      case 'EDIT EMPLOYEE':
+        transCode = 13;
+        break;
+      case 'DELETE EMPLOYEE':
+        transCode = 14;
+        break;
+      case 'CREATE PERMISSTION':
+        transCode = 15;
+        break;
+    }
+  
+    if (role == 'admin' || (role == 'subAdmin' && permit.includes(transCode)))
+      next();
+    else
+    return res.status(401).json({
+      message: 'Unauthorized.',
+    });
+  }
+  //next();
 }

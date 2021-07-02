@@ -63,10 +63,7 @@ module.exports = function () {
                 similarUsers[similarUserList[j].userId] += similarUserList[j].feature * listenList[i].feature;
             }
         }
-        console.log('alreadyIn:', alreadyIn)
-        console.log('similarUsers:', similarUsers)
-        //alreadyIn[1]
-        //alreadyIn[2]
+
         let relatedUsers = [];
         for (let userId in similarUsers)
             relatedUsers.push({id: userId, score: similarUsers[userId]});

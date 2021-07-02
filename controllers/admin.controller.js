@@ -23,14 +23,24 @@ exports.postLogin = async (req, res, next) => {
       const checkPass = await bcrypt.compare(password, userPass.password);
       
       if (checkPass) {
+        var arrPerBefore = [];
+        const getInfo = await db.getAdminDetailInfo([userPass.id]);
+        if (getInfo.length > 0) {
+          arrPerBefore = getInfo.map(item => {if (item.status ==1) return item.code}).filter(i => {return i !=undefined})
+        }
+
         const userInfo = {
           id: userPass.id,
           username: username,
-          role: userPass.role
+          role: userPass.role,
+          permit: arrPerBefore
         }
+
         const accessToken = await jwtHelper.generateToken(userInfo, process.env.SIGNATURETOKEN, '1h');
         //use session
         req.session.token = accessToken;
+        if (userInfo.id == 1) req.session.permit = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15];
+        else req.session.permit = userInfo.permit;
 
         return res.status(200).json({accessToken});
       }
@@ -84,7 +94,7 @@ exports.getHome = async (req, res, next) => {
         }
     }
 
-   res.render('./adminSys/index', {data: oData})
+   res.render('./adminSys/index', {permit: req.session.permit, data: oData})
 }
 
 exports.getViewProduct = async (req, res, next) => {
@@ -457,6 +467,268 @@ exports.getProfileUser = async (req, res, next) => {
   catch (error) {
     console.log(error)
   }
+}
+
+exports.getProfileEmployee= async (req, res, next) => {
+  try {
+    const data = await db.getAdmin(); 
+    res.render('./adminSys/profile/profile-employee', {data: data});  
+  }
+  catch (error) {
+    console.log(error)
+  }
+}
+
+exports.postProfileEmployee = async (req, res, next) => {
+    const {username, password, fullname, phone, email, permission} = req.body;
+    if (username == '' || password == '' || fullname == "" || phone == '' || email == "")
+      res.status(500).json({state: 'Dữ liệu trống'});
+    
+    try {
+      const hash = bcrypt.hashSync(password, 10);
+    //insert admin return id
+    const insertAdmin = await db.insertAdmin([username, hash, fullname, email, phone, 'subAdmin']);
+
+    //insert adminpermission return id
+    const inserAdminPer = await db.insertAdminPermission(['subAdmin']);
+    //insert adminrole 
+    const insertAdminRole = await db.insertAdminRole([insertAdmin, inserAdminPer]);
+
+      if (permission.length > 0) {
+        for (let i of permission) {
+          var permissionName = "";
+          var act_name = "";
+          switch (i) {
+            case '1':
+              permissionName = 'VIEW PRODUCT';
+              act_name = "VIEW";
+              break;
+            case '2':
+              permissionName = 'REPORT PRODUCT';
+              act_name = "REPORT";
+              break;
+            case '3':
+              permissionName = 'APPROVE PRODUCT';
+              act_name = "APPROVE";
+              break;
+            case '4':
+              permissionName = 'CREATE CATEGORY';
+              act_name = "CREATE";
+              break;
+            case '5':
+              permissionName = 'VIEW CATEGORY';
+              act_name = "VIEW";
+              break;
+            case '6':
+              permissionName = 'EDIT CATEGORY';
+              act_name = "EDIT";
+              break;
+            case '7':
+              permissionName = 'VIEW ORDER';
+              act_name = "VIEW";
+              break;
+            case '8':
+              permissionName = 'CONFIRM ORDER';
+              act_name = "CONFIRM";
+              break;
+            case '9':
+              permissionName = 'CONFIRM SUCCESS ORDER';
+              act_name = "CONFIRM";
+              break;
+            case '10':
+              permissionName = 'CANCEL ORDER';
+              act_name = "CANCEL";
+              break;
+            case '11':
+              permissionName = 'CREATE EMPLOYEE';
+              act_name = "CREATE";
+              break;
+            case '12':
+              permissionName = 'VIEW EMPLOYEE';
+              act_name = "VIEW";
+              break;
+            case '13':
+              permissionName = 'EDIT EMPLOYEE';
+              act_name = "EDIT";
+              break;
+            case '14':
+              permissionName = 'DELETE EMPLOYEE';
+              act_name = "DELETE";
+              break;
+            case '15':
+              permissionName = 'CREATE PERMISSTION';
+              act_name = "CREATE";
+              break;
+          }
+
+          //insert adminperdetail
+          const insertAdminPerDetail = await db.insertAdminPerDetail([inserAdminPer, permissionName, act_name, i, 1]);
+        }
+      }
+    }
+    catch (error) {
+      console.log('fail as insert subadmin', error)
+      return error;
+    } 
+
+    res.redirect('/admin/profile/employee');
+    
+}
+
+exports.getDetailEmployee = async (req, res, next) => {
+  const adminId = req.params.employeeId;
+  
+  try {
+    const getInfo = await db.getAdminDetailInfo([adminId]);
+    var arrPerBefore = [];
+    var arrUnPerBefore = [];
+    
+    if (getInfo.length > 0) {
+      getInfo.forEach(item => {
+        if (item.status == 1) {
+          arrPerBefore.push(item.code);
+        }
+        else arrUnPerBefore.push(item.code)
+      })
+    }
+
+    res.render('./adminSys/profile/profile-detail-employee', {
+      data: getInfo[0],
+      arrPerBefore: arrPerBefore
+    });  
+  } catch (error) {
+    console.log('err at getDetailEmplyee', error);
+    return error;
+  }
+}
+
+exports.postDetailEmployee = async (req, res, next) => {
+  const adminId = req.params.employeeId;
+  const {fullname, email, phone, permission} = req.body;
+
+  if (fullname == "" || phone == '' || email == "")
+      res.status(500).json({state: 'Dữ liệu trống'});
+    
+    try {
+      const getInfo = await db.getAdminDetailInfo([adminId]);
+      var arrPerBefore = [];
+      var arrUnPerBefore = [];
+
+      if (getInfo.length > 0) {
+        var adminper_id = getInfo[0].adminper_id;
+        getInfo.forEach(item => {
+          if (item.status == 1) {
+            arrPerBefore.push({code: item.code, id: item.id});
+          }
+          else arrUnPerBefore.push({code: item.code, id: item.id})
+        })
+      }
+
+      if (permission != undefined) {
+        for (let i of permission) {
+          var permissionName = "";
+          var act_name = "";
+          switch (i) {
+            case '1':
+              permissionName = 'VIEW PRODUCT';
+              act_name = "VIEW";
+              break;
+            case '2':
+              permissionName = 'REPORT PRODUCT';
+              act_name = "REPORT";
+              break;
+            case '3':
+              permissionName = 'APPROVE PRODUCT';
+              act_name = "APPROVE";
+              break;
+            case '4':
+              permissionName = 'CREATE CATEGORY';
+              act_name = "CREATE";
+              break;
+            case '5':
+              permissionName = 'VIEW CATEGORY';
+              act_name = "VIEW";
+              break;
+            case '6':
+              permissionName = 'EDIT CATEGORY';
+              act_name = "EDIT";
+              break;
+            case '7':
+              permissionName = 'VIEW ORDER';
+              act_name = "VIEW";
+              break;
+            case '8':
+              permissionName = 'CONFIRM ORDER';
+              act_name = "CONFIRM";
+              break;
+            case '9':
+              permissionName = 'CONFIRM SUCCESS ORDER';
+              act_name = "CONFIRM";
+              break;
+            case '10':
+              permissionName = 'CANCEL ORDER';
+              act_name = "CANCEL";
+              break;
+            case '11':
+              permissionName = 'CREATE EMPLOYEE';
+              act_name = "CREATE";
+              break;
+            case '12':
+              permissionName = 'VIEW EMPLOYEE';
+              act_name = "VIEW";
+              break;
+            case '13':
+              permissionName = 'EDIT EMPLOYEE';
+              act_name = "EDIT";
+              break;
+            case '14':
+              permissionName = 'DELETE EMPLOYEE';
+              act_name = "DELETE";
+              break;
+            case '15':
+              permissionName = 'CREATE PERMISSTION';
+              act_name = "CREATE";
+              break;
+          }
+         
+          if (arrPerBefore.some(ele => ele.code == i) == false && arrUnPerBefore.some(ele => ele.code == i) == false){
+              //insert adminperdetail
+              const insertAdminPerDet = await db.insertAdminPerDetail([adminper_id, permissionName, act_name, i, 1]);
+            }
+          else 
+          if (arrUnPerBefore.some(ele => ele.code == i) == true) {
+            //update adminperdetail
+            var id = arrUnPerBefore.find(ele => ele.code == i).id;
+            const update = await db.updateAdminPerDetail([id, 1]);
+          }
+          else {
+            var removeIndex = arrPerBefore.map(function(item) { return item.code }).indexOf(Number(i));
+            arrPerBefore.splice(removeIndex, 1);
+          }
+        }
+      }
+
+      if (arrPerBefore.length > 0) {
+        for(let i of arrPerBefore) {
+          var iid = i.id;
+          const iupdate = await db.updateAdminPerDetail([iid, 0]);
+        }
+      }
+    } catch (error) {
+      console.log('fail as update subadmin', error)
+      return error;
+    } 
+
+    res.redirect('/admin/profile/employee');
+}
+
+exports.getCheckUserName= async (req, res, next) => {
+ 
+    const username = req.query.username;
+    const check = await db.checkAdminExist([username]);
+    
+    if (check == false) return res.send({state: 0});
+    return res.send({state: 1}); 
 }
 
 exports.deleteUser = async (req, res, next) => {

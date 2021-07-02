@@ -35,7 +35,7 @@ router.get('/', async function(req, res, next) {
     let gt = cf.gt(userRecommend);
     recommendProduct = cf.recommendGT(gt, 6);
   }
-
+console.log('res', recommendProduct)
   const category = await db.getCategoryLevelOne();
   const products = await db.getListNewProduct();
   const topSell = await db.getListSeleldProduct([1]);
@@ -47,7 +47,7 @@ router.get('/', async function(req, res, next) {
       recommend.push(item.itemId * 1)
     })
   }
-  console.log(products)
+ // console.log(recommend)
 
   res.render('index', { 
     title: 'Trang chủ', 

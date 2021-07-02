@@ -99,7 +99,9 @@
           </span>
       </div>
       
-        <div class="panel-group" id="accordion">
+        
+      <div class="panel-group" id="accordion">
+        <% if (permit.includes(4) || permit.includes(5)) {%>
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4 class="panel-title">
@@ -111,20 +113,26 @@
             <div id="cate" class="panel-collapse collapse" data-parent="#accordion">
                 <div class="panel-body">
                     <table class="table">
+                        <%if (permit.includes(5)) {%>
                         <tr>
                             <td>
                                 <span class="fas fa-list text-danger"></span><a href="/admin/category">&ensp;Danh sách danh mục</a>
                             </td>
                         </tr>
+                        <%}%>
+                        <%if (permit.includes(4)) {%>
                         <tr>
                             <td>
                                 <span class="fas fa-pencil-alt text-success"></span><a href="/admin/category/add">&ensp;Thêm Danh Mục</a>
                             </td>
                         </tr>
+                        <%}%>
                     </table>
                 </div>
             </div>
         </div>
+        <%}%>
+        <% if (permit.includes(1)) {%>
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4 class="panel-title">
@@ -146,6 +154,7 @@
                 </div>
             </div>
         </div>
+        <%}%>
         <!-- <div class="panel panel-default">
             <div class="panel-heading">
                 <h4 class="panel-title">
@@ -234,6 +243,8 @@
                 </div>
             </div>
         </div> -->
+        
+        <% if (permit.includes(7)) {%>
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4 class="panel-title">
@@ -255,6 +266,7 @@
                 </div>
             </div>
         </div>
+        <%}%>
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4 class="panel-title">
@@ -275,6 +287,11 @@
                         <tr>
                             <td>
                                 <span class="fas fa-list text-danger"></span><a href="/admin/profile/user">&ensp;Hồ Sơ Người dùng</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="fas fa-list text-danger"></span><a href="/admin/profile/employee">&ensp;Hồ Sơ Nhân viên</a>
                             </td>
                         </tr>
                     </table>

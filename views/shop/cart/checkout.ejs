@@ -34,111 +34,121 @@
 
     <div class="border-cart" style="box-shadow: 0 1px 3px 0 rgba(0,0,0,.2);">
                 
-                <% if (data) 
-                    { 
-                        if (data.length >= 1) {%>
-                <div class="khoimenu_title" style="display: flex; border-bottom: solid 1px #b1b1b1;">
-                    <div class="col-sm-4">
-                        <label class="khoimenu_title_text">Sản phẩm</label>
-                    </div>
-                    <div class="col-sm-2">
-                        <label class="khoimenu_title_text">Đơn giá</label>
-                    </div>
-                    <div class="col-sm-2">
-                        <label class="khoimenu_title_text">Số lượng</label>
-                    </div>
-                    <div class="col-sm-2">
-                        <label class="khoimenu_title_text">Thành tiền</label>
-                    </div>
-                </div>
-                <%var i = 0;
-                var a = '';
-                var total = 0;
-                var ship = 0;
-                var arrAmount = [];
-                var arrPVD = [];
-                var arrShop = [];
-                var arrShip = [];
-                var totalFee = 0;
-                %>
-                <%data.forEach((item) => {i++;%>
-                    <%ship = 0;
-                     totalShop = 0;
-                    arrShop.push(item.shopId)
-                    %>
-                    <div class="clearfix" style="border: 1px solid rgba(0,0,0,0.09);">
-                    <div>
-                        <div class="col-sm-12 shop-name">
-                            <div class="_3xIZfd">
-                                <div class="_1tj6iU">
-                                   
-                                   <div class="_2zTpu5">
-                                     <img src="/images/boy.png" alt="" width="20px" height="20px">
-                                   </div>
-                                   <div class="_2tDqUs"><%-item.shopName%></div>
-                                </div>
-                             </div>
-                        </div>
-                <%item.products.forEach(i => {%>
-                    <%
-                    arrAmount.push(i.amount);
-                    arrPVD.push(i.pvdId);
-                    %>
-                <div class="khoimenu" style="display: flex; padding: 15px 0; border-bottom: solid 1px #e4e4e4;">
-                    <div class="col-sm-4" style="display: flex;">
-                        <img class="hinhsanpham" src="<%-i.cover%>" alt="" >
-                        <div class="product_info">
-                            <label class="product_info_text"><%-i.name%> </label>
-                            <small class="product_info_small">(<%-i.color%> <%-i.size%>)</small>
-                        </div>
-                    </div>
- 
-                    <div class="col-sm-2">
-                        
-                        <span><%-VND(parseInt(i.price))%></span>
-                        <input type="hidden" class="price" value="">
-                    </div>
-                    <div class="col-sm-2">
-                        <div class="input-group get-info">
-                            <span class="input-group-btn">
-                                <%-i.amount%>
-                            </span>
-                            <input type="hidden" value="<%-item.color%>" class="color">
-                            <input type="hidden" value="<%-item.size%>" class="size">
-                            <input type="hidden" value="<%-item.id%>" class="pvid">
-                        </div>
-                    </div>
-                    <div class="col-sm-2">
-
-                        <span id="payment_total"><%-VND(i.amount * i.price)%></span>
-                        <%total += i.amount * i.price%>     
-                        <%ship += i.fee%>  
-                        <%totalShop+=i.amount * i.price%>                           
-                    </div>
-                </div>
-                   
-                <%})%>
+        <% if (data) 
+            { 
+                if (data.length >= 1) {%>
+        <div class="khoimenu_title" style="display: flex; border-bottom: solid 1px #b1b1b1;">
+            <div class="col-sm-4">
+                <label class="khoimenu_title_text">Sản phẩm</label>
             </div>
-            <% totalFee += ship;%>
-            <div style="display: flex; float: right; margin: 25px;">
-                <div style="margin-right: 20px;">
-                    <div> 
-                        Phí vận chuyển
-                    </div>
-                    <div>
-                        Tổng tiền sản phẩm
-                    </div>
-                </div>
-                <div>
-                    <div>
-                        <%-VND(ship)%>
-                    </div>
-                    <div> <%-VND(ship+totalShop)%></div>
-                    <%arrShip.push(ship)%>
-                </div>
+            <div class="col-sm-2">
+                <label class="khoimenu_title_text">Đơn giá</label>
+            </div>
+            <div class="col-sm-2">
+                <label class="khoimenu_title_text">Số lượng</label>
+            </div>
+            <div class="col-sm-2">
+                <label class="khoimenu_title_text">Thành tiền</label>
             </div>
         </div>
-                <%})%>
+        <%var i = 0;
+        var a = '';
+        var total = 0;
+        var ship = 0;
+        var arrAmount = [];
+        var arrPVD = [];
+        var arrShop = [];
+        var arrShip = [];
+        var totalFee = 0;
+        %>
+        <%data.forEach((item) => {i++;%>
+            <%ship = 0;
+                totalShop = 0;
+            arrShop.push(item.shopId)
+            %>
+            <div class="clearfix" style="border: 1px solid rgba(0,0,0,0.09);">
+            <div>
+                <div class="col-sm-12 shop-name">
+                    <div class="_3xIZfd">
+                        <div class="_1tj6iU">
+                            
+                            <div class="_2zTpu5">
+                                <img src="/images/boy.png" alt="" width="20px" height="20px">
+                            </div>
+                            <div class="_2tDqUs"><%-item.shopName%></div>
+                        </div>
+                        </div>
+                </div>
+        <%item.products.forEach(i => {%>
+            <%
+            arrAmount.push(i.amount);
+            arrPVD.push(i.pvdId);
+            %>
+        <div class="khoimenu product-shop">
+            <div class="col-sm-4" style="display: flex;">
+                <img class="hinhsanpham" src="<%-i.cover%>" alt="" >
+                <div class="product_info">
+                    <label class="product_info_text"><%-i.name%> </label>
+                    <small class="product_info_small">(<%-i.color%> <%-i.size%>)</small>
+                </div>
+            </div>
+
+            <div class="col-sm-2">
+                
+                <span><%-VND(parseInt(i.price))%></span>
+                <input type="hidden" class="price" value="">
+            </div>
+            <div class="col-sm-2">
+                <div class="input-group get-info">
+                    <span class="input-group-btn">
+                        <%-i.amount%>
+                    </span>
+                    <input type="hidden" value="<%-item.color%>" class="color">
+                    <input type="hidden" value="<%-item.size%>" class="size">
+                    <input type="hidden" value="<%-item.id%>" class="pvid">
+                </div>
+            </div>
+            <div class="col-sm-2">
+
+                <span id="payment_total"><%-VND(i.amount * i.price)%></span>
+                <%total += i.amount * i.price%>     
+                <%ship += i.fee%>  
+                <%totalShop+=i.amount * i.price%>                           
+            </div>
+        </div>
+            
+        <%})%>
+    </div>
+    <div class="shop-voucher col-sm-12 clearfix">
+        <div class="col-sm-6 voucher" style="display: flex; float: right;">
+            <div class="col-sm-6 title-voucher">
+                <p>Voucher của shop</p>
+            </div>
+            <div class="col-sm-6 btn-voucher">
+               <button style="float: right;" class="btn btn-primary"> Chọn voucher</button>
+            </div>
+        </div>
+    </div>
+    <% totalFee += ship;%>
+    <div style="display: flex; float: right; margin: 25px;">
+        <div style="margin-right: 20px;">
+            <div> 
+                Phí vận chuyển
+            </div>
+            <div>
+                Tổng tiền sản phẩm
+            </div>
+        </div>
+        <div>
+            <div>
+                <%-VND(ship)%>
+            </div>
+            <div> <%-VND(ship+totalShop)%></div>
+            <%arrShip.push(ship)%>
+        </div>
+    </div>
+        </div>
+        <%})%>
            
             <%}}%>
            

@@ -6,7 +6,7 @@
 
 <script src="/javascripts/js/admin/order.js"></script>
 
-<div style="margin-left: 5%;">
+<div>
    <ul class="user-option nav nav-tabs">
       <li class="option option-my-booking is-flex nav-item <%-type == 5? 'option-active': ''%>">
           <div>
@@ -74,7 +74,9 @@
                                 <div class="ct-item-product-inner">
                                     <div class="product-info">
                                         <a href="/seller/order/detail/<%-item.orderId%>" class="ct-item-product-name"><%-i.name%></a>
-                                        <div><%-i.variant == ''?'': 'Phân loại: ' + i.variant%></div>
+                                        <div class="order-wrap-text">
+                                            <p><%-i.variant == ''?'': 'Phân loại: ' + i.variant%></p>
+                                        </div>
                                         <div>x<%-i.amount%></div>
                                         <% total += i.amount*i.price + i.fee%>
                                     </div>

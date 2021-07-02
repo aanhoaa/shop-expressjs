@@ -162,38 +162,39 @@ exports.getLogout = (req, res, next) => {
 }
 
 exports.getHome = async (req, res, next) => {
-    const shopId = req.jwtDecoded.data.id;
-    var oData = new Array;
-    const data = await db.getProductSeller([shopId]);
+  res.render('./admin/dashboard')
+    // const shopId = req.jwtDecoded.data.id;
+    // var oData = new Array;
+    // const data = await db.getProductSeller([shopId]);
 
-    for(let i = 0; i< data.length; i++) {
-        var info = await db.getProductVariantInfo([data[i].id]);
-        var violate = '';
-        if (data[i].status == -1) {
-            violate = await db.getProductViolate([data[i].id]);
-        }
-        if (violate != '') {
-            var time = violate[0].updated_at.toString();
+    // for(let i = 0; i< data.length; i++) {
+    //     var info = await db.getProductVariantInfo([data[i].id]);
+    //     var violate = '';
+    //     if (data[i].status == -1) {
+    //         violate = await db.getProductViolate([data[i].id]);
+    //     }
+    //     if (violate != '') {
+    //         var time = violate[0].updated_at.toString();
             
-            oData.push(
-                {
-                    name: data[i].name, sku: data[i].sku, classify: info, 
-                    id: data[i].id, status: data[i].status,
-                    vname: violate[0].name, vreason: violate[0].reason, 
-                    vsuggestion: violate[0].suggestion, vtime: getdate(time.substring(0, time.length-1))
-                }
-            )
-        }
-        else {
-            oData.push({
-                name: data[i].name, sku: data[i].sku, 
-                classify: info, id: data[i].id, 
-                status: data[i].status
-            })
-        }
+    //         oData.push(
+    //             {
+    //                 name: data[i].name, sku: data[i].sku, classify: info, 
+    //                 id: data[i].id, status: data[i].status,
+    //                 vname: violate[0].name, vreason: violate[0].reason, 
+    //                 vsuggestion: violate[0].suggestion, vtime: getdate(time.substring(0, time.length-1))
+    //             }
+    //         )
+    //     }
+    //     else {
+    //         oData.push({
+    //             name: data[i].name, sku: data[i].sku, 
+    //             classify: info, id: data[i].id, 
+    //             status: data[i].status
+    //         })
+    //     }
             
-    }
-    res.render('./admin/index', {seller: req.session.shopInfo, data: oData})
+    // }
+    // res.render('./admin/index', {seller: req.session.shopInfo, data: oData})
 }
 
 exports.getAddressBook = async (req, res, next) => {
@@ -393,6 +394,28 @@ exports.getBindingCategory = async (req, res, next) => {
     })
 
     res.send(JSON.stringify(bind));
+}
+
+exports.getSales = async (req, res, next) => {
+  const data = await db.getCategoryLevelTwoByShop([req.session.shopInfo.id])
+//check db để set status khi hết ngày - nhập code => check ngày kết thúc
+  res.render('./admin/sales/sales', {seller: req.session.shopInfo, data: data});
+}
+
+exports.postSales = async (req, res, next) => {
+  const data = req.body;
+  
+  if (category == "" || discount == "" || dateStart == "" || dateEnd == "" || code == "")
+  res.status(500).json({status: 'Sale data field missing'});
+
+  try {
+    const insert = await db.insertVoucher([category, req.session.shopInfo.id, code, 1, discount, timestart, timeend]);
+    if (insert == true) return res.redirect('/seller/sales');
+    else res.status(500).json({status: 'Insert db fail!!!'});
+  } catch (error) {
+    console.log('err at create sales', error);
+    return error;
+  }
 }
 
 exports.postAddProduct = async (req, res, next) => {

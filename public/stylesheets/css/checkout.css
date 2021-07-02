@@ -1775,3 +1775,26 @@ border-color: rgba(0,0,0,.09)!important;
 ._2bGakT, ._2tDqUs, ._18HTrf {
   margin: 0 0 0 8px;
 }
+
+.shop-voucher {
+  /*border-bottom: 1px dashed rgba(0,0,0,.09);*/
+  border-bottom: solid 1px #e4e4e4;
+  padding: 15px;
+}
+.shop-voucher .btn-voucher button {
+  float: right;
+  line-height: 21px;
+}
+.product-shop {
+  display: flex;
+  padding: 15px 0;
+  border-bottom: 1px dashed rgba(0,0,0,.09);
+  margin-bottom: 0;
+}
+.shop-voucher .btn-voucher,
+.shop-voucher .title-voucher{
+  height: 35px;
+}
+.shop-voucher .title-voucher p {
+  line-height: 35px;
+}

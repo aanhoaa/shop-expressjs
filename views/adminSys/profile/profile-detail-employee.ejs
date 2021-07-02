@@ -1,0 +1,142 @@
+<% include ../../partials/header_admin %>
+<link rel="stylesheet" href="/stylesheets/css/admin_profile.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+<script src="/javascripts/js/admin/employee.js"></script>
+
+<div class="container">
+    <div class="list-category">
+        Trang chủ
+    </div>
+    <div class="content clearfix">
+        
+        <div class="col-sm-12 create" style="display: flex;">
+            <div class="col-sm-6 title">
+                Chi tiết nhân viên
+            </div>
+        </div>
+        
+        <% if (data) {%>
+        <div class="row-permission">
+            <form action="" method="POST">
+                <div class="modal-body">
+                 
+                    <div class="">
+                        <label class="user-label" for="username"> Tên đăng nhập: </label>
+                        <input disabled type="text" class="form-control user-form" value="<%-data.username%>">
+                    </div>
+        
+                    <div class="form-group">
+                        <label class="user-label" for="fullname"> Họ tên: </label>
+                        <input id="fullname" name="fullname" type="text" class="form-control user-form" value="<%-data.fullname%>" required>
+                    </div>
+        
+                    <div class="form-group">
+                        <label class="user-label" for="phone"> Số điện thoại liên hệ: </label>
+                        <input id="phone" name="phone" type="text" class="form-control user-form" value="<%-data.phone%>" required>
+                    </div>
+        
+                    <div class="form-group">
+                        <label class="user-label" for="email"> Email: </label>
+                        <input id="email" name="email" type="email" class="form-control user-form" value="<%-data.email%>" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="user-label" for="fullname"> Phân quyền sử dụng</label>
+                    </div>
+                    <div class="col-sm-12" style="display: flex;">
+                        <div class="form-group col-sm-6">
+                            <label for="">Quản lý sản phẩm</label>
+                            <div>
+                                <input name="permission" type="checkbox" class="" value="1" <%-arrPerBefore.includes(1) ? 'checked' : ''%>>
+                                <label for="">Xem danh sách sản phẩm</label>
+                            </div>
+                            <div>
+                                <input id="fullname" name="permission" type="checkbox" class="" value="2" <%-arrPerBefore.includes(2) ? 'checked' : ''%>>
+                                <label for="">Báo sản phẩm vi phạm</label>
+                            </div>
+                            <div>
+                                <input id="fullname" name="permission" type="checkbox" class="" value="3" <%-arrPerBefore.includes(3) ? 'checked' : ''%>>
+                                <label for="">Phê duyệt sản phẩm</label>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label for="">Quản lý danh mục</label>
+                            <div>
+                                <input id="fullname" name="permission" type="checkbox" class="" value="4" <%-arrPerBefore.includes(4) ? 'checked' : ''%>>
+                                <label for="">Tạo danh mục</label>
+                            </div>
+                            <div>
+                                <input id="fullname" name="permission" type="checkbox" class="" value="5" <%-arrPerBefore.includes(5) ? 'checked' : ''%>>
+                                <label for="">Xem danh sách danh mục</label>
+                            </div>
+                            <div>
+                                <input id="fullname" name="permission" type="checkbox" class="" value="6" <%-arrPerBefore.includes(6) ? 'checked' : ''%>>
+                                <label for="">Chỉnh sửa danh mục</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group col-sm-6">
+                            <label for="">Quản lý đơn hàng</label>
+                            <div>
+                                <input id="fullname" name="permission" type="checkbox" class="" value="7" <%-arrPerBefore.includes(7) ? 'checked' : ''%>>
+                                <label for="">Xem đơn hàng</label>
+                            </div>
+                            <div>
+                                <input id="fullname" name="permission" type="checkbox" class="" value="8" <%-arrPerBefore.includes(8) ? 'checked' : ''%>>
+                                <label for="">Xác nhận đơn hàng</label>
+                            </div>
+                            <div>
+                                <input id="fullname" name="permission" type="checkbox" class="" value="9" <%-arrPerBefore.includes(9) ? 'checked' : ''%>>
+                                <label for="">Xác nhận giao hàng</label>
+                            </div>
+                            <div>
+                                <input id="fullname" name="permission" type="checkbox" class="" value="10" <%-arrPerBefore.includes(10) ? 'checked' : ''%>>
+                                <label for="">Hủy đơn hàng</label>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <div>
+                                <label for="">Quản lý nhân viên</label>
+                                <div>
+                                    <input id="fullname" name="permission" type="checkbox" class="" value="11" <%-arrPerBefore.includes(11) ? 'checked' : ''%>>
+                                    <label for="">Thêm nhân viên mới</label>
+                                </div>
+                                <div>
+                                    <input id="fullname" name="permission" type="checkbox" class="" value="12" <%-arrPerBefore.includes(12) ? 'checked' : ''%>>
+                                    <label for="">Xem danh sách nhân viên</label>
+                                </div>
+                                <div>
+                                    <input id="fullname" name="permission" type="checkbox" class="" value="13" <%-arrPerBefore.includes(13) ? 'checked' : ''%>>
+                                    <label for="">Chỉnh sửa thông tin</label>
+                                </div>
+                                <div>
+                                    <input id="fullname" name="permission" type="checkbox" class="" value="14" <%-arrPerBefore.includes(14) ? 'checked' : ''%>>
+                                    <label for="">Xóa nhân viên</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group col-sm-6">
+                            <div>
+                                <label for="">Quản lý phân quyền</label>
+                                <div>
+                                    <input id="fullname" name="permission" type="checkbox" class="" value="15" <%-arrPerBefore.includes(15) ? 'checked' : ''%>>
+                                    <label for="">Tạo phân quyền</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                </div>
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-primary" id="createEmp">Cập nhật</button>
+                </div>
+                </form>
+        </div>
+        <%}%>
+    </div>
+</div>
+
+<% include ../../partials/footer_admin %>

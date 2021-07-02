@@ -1,0 +1,14 @@
+.dashboard {
+    background: #fff;
+    text-align: center;
+}
+.dashboard h3 {
+    color: #007bff;
+}
+.dashboard .inner {
+    padding: 10px 0;
+}
+.dashboard p {
+    margin: 0;
+    color: #000;
+}

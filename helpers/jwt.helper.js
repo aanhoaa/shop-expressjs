@@ -15,7 +15,8 @@ let generateToken = (user, secretSignature, tokenLife) => {
       username: user.username,
       role: user.role,
       isverified: user.isverified,
-      gender: user.gender
+      gender: user.gender,
+      permit: user.permit
     }
     // Thực hiện ký và tạo token
     jwt.sign(

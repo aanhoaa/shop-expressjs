@@ -287,48 +287,11 @@ $(document).ready(function(){
         var productId = $(this).attr('data-productId');
         var size = $(this).attr('data-size');
         var color = $(this).attr('data-color');
-      console.log(12)
-        $('.act-update').css('display','block')
-
-        // if(parseInt(gia_ban, 0) >= parseInt(gia_von, 0))
-        // {
-        //   $.ajax({
-        //     url: `${window.location.origin}/admin/product/setPrice`,
-        //     type: "post", // phương thức gửi dữ liệu.
-        //     dataType: "json",
-        //     data: {
-        //           price: gia_ban,
-        //           productId: productId,
-        //           size: size,
-        //           color: color
-        //       },
-        //     success:function(data){ //dữ liệu nhận về
-        //          //console.log(data);
-        //         swal({
-        //         title: "Success!",
-        //         text: "Cập nhật giá bán thành công!",
-        //         icon: "success",
-        //         button: "Aww yiss!",
-        //       });
-        //     },
-        //     error: function() {
-        //       alert("Bị lỗi");
-        //     }
-        //  });
-        // }
-        // else
-        // {
-        //   swal({
-        //     title: "Error!",
-        //     text: "Giá bán phải lớn hơn giá vốn!",
-        //     icon: "error",
-        //     button: "Aww yiss!",
-        //   });
-        // }
-        
+     
+        $('.act-update').css('display','block') 
     });
 
-  $('#timepicker, #timepicker1').timepicker();
+  //$('#timepicker, #timepicker1').timepicker();
 
   function generate(n) {
           var add = 1, max = 12 - add;   // 12 is the min safe number Math.random() can generate without it starting to pad the end with zeros.   

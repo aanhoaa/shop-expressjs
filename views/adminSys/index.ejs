@@ -26,56 +26,11 @@
 
 <div id="tab1" class="tab-option">
    
-    <div style="margin-left: 2%;">
+    <div>
         <div class="col-lg-12">
             <h1 class="page-header">Product
                 <small>List</small>
             </h1>
-        </div>
-    
-        <div class="modal fade" id="inputPro" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h5 class="modal-title" id="myModalLabel">Thêm mới dữ liệu sản phẩm</h5>
-              </div>
-              <div class="modal-body" style="overflow: hidden;">
-                    <div class="card bg-light mt-3">
-                        <div class="card-header">
-                            
-                        </div>
-                        <div class="card-body">
-                            <form action="{{ route('importPro') }}" method="POST" enctype="multipart/form-data">
-                                <input type="hidden" name="_token" value="{!! csrf_token() !!}">
-                                <div class="form-group col-sm-12">
-                                    <label class="supplier_block_text">Danh Mục Sản Phẩm</label>
-                                    <select class="form-control" name="category" required>
-                                        <option value="" disabled="disabled">Please Choose Category</option>
-                                        @foreach ($category as $row)
-                                          <option value="{!! $row['id'] !!}">{!! $row['name'] !!}</option>
-                                        @endforeach 
-                                    </select>
-                                </div>
-                                
-                                <p style="margin-left: 20px; display: block;">
-                                    Chú ý:<br>
-                                    - Chuyển đổi file nhập dưới dạng .XLS hoặc .XLSX trước tải dữ liệu.<br>
-                                    - File nhập có dung lượng tối đa là 2MB và 500 bản ghi. 
-                                </p>
-                                <input type="file" name="file" class="form-control">
-                                <br>
-                                <button class="btn btn-success">Import Product Data</button>
-                            </form>
-                        </div>
-                    </div>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
-              </div>
-            </div>
-          </div>
         </div>
     
         <!-- /.col-lg-12 -->
@@ -123,7 +78,9 @@
                                     <%}%>
                                 </div>
                                 <div>
-                                    <p><%-item.name%></p>
+                                    <div class="name-wrap-text">
+                                        <p><%-item.name%></p>
+                                    </div>
                                 </div>
                                 <div class="sku-product">
                                     <p>SKU sản phẩm:  <%-item.sku==''?'--':item.sku%></p>
@@ -132,13 +89,14 @@
                        </div>
                     </td>
                     <td>
-                        <p><%-item.classify[0].name%></p>
+                        <div class="name-wrap-text">
+                            <p><%-item.classify[0].name%></p>
+                        </div>
                     </td>
                     <td> 
                         <%if (item.classify) {%>
                             <%item.classify.forEach(it => {%>
-                                <div>
-                                    
+                                <div class="name-wrap-text">
                                     <% if (it.attribute.key) {%>
                                         <p>--</p>
                                     <%} else if (it.attribute.Color && !it.attribute.Size){%>
@@ -178,7 +136,6 @@
                             </button>
                            <ul class="dropdown-menu action-product" aria-labelledby="dropdownMenu1">
                               <li><a href="admin/product/view/<%-item.id%>">Xem</a></li>
-                              <li><a href="seller/product/edit/variant/">Cập nhật biến thể</a></li>
                             </ul>
                           </div>
                     </td>
@@ -191,7 +148,7 @@
     </div>
 </div>
 <div id="tab2" class="tab-option">
-    <div style="margin-left: 2%;">
+    <div>
     
         <!-- /.col-lg-12 -->
         <table id="dataTables-example" class="mdl-data-table" style="width:100%">
@@ -240,7 +197,7 @@
                                     <%-item.status == 0?'<p class="hidden-product">Đã ẩn</p>': '<p class="show-product">Đang bán</p>'%>
                                     <%}%>
                                 </div>
-                                <div>
+                                <div class="name-wrap-text">
                                     <p><%-item.name%></p>
                                 </div>
                                 <div class="sku-product">
@@ -250,12 +207,14 @@
                        </div>
                     </td>
                     <td>
-                        <p><%-item.classify[0].name%></p>
+                        <div class="name-wrap-text">
+                            <p><%-item.classify[0].name%></p>
+                        </div>
                     </td>
                     <td> 
                         <%if (item.classify) {%>
                         <%item.classify.forEach(it => {%>
-                            <div>
+                            <div class="name-wrap-text">
                                 
                                 <% if (it.attribute.key) {%>
                                     <p>--</p>
@@ -314,7 +273,7 @@
     </div>
 </div>
 <div id="tab3" class="tab-option">
-    <div style="margin-left: 2%;">
+    <div>
     
         <!-- /.col-lg-12 -->
         <table id="dataTables-example" class="mdl-data-table" style="width:100%">
@@ -364,7 +323,9 @@
                                     <%}%>
                                 </div>
                                 <div>
-                                    <p><%-item.name%></p>
+                                    <div class="name-wrap-text">
+                                        <p><%-item.name%></p>
+                                    </div>
                                 </div>
                                 <div class="sku-product">
                                     <p>SKU sản phẩm:  <%-item.sku==''?'--':item.sku%></p>
@@ -373,12 +334,14 @@
                        </div>
                     </td>
                     <td>
-                        <p><%-item.classify[0].name%></p>
+                        <div class="name-wrap-text">
+                            <p><%-item.classify[0].name%></p>
+                        </div>
                     </td>
                     <td> 
                         <%if (item.classify) {%>
                         <%item.classify.forEach(it => {%>
-                            <div>
+                            <div class="name-wrap-text">
                                 
                                 <% if (it.attribute.key) {%>
                                     <p>--</p>

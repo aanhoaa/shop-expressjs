@@ -74,3 +74,25 @@
 }
 
 
+/*sales css*/
+.add-new {
+  float: right;
+  margin: 20px;
+}
+.pick-date {
+  margin: 10px;
+}
+.pick-category {
+  margin: 10px;
+}
+.pick-category select{
+ width: 60%;
+ margin-left: 16px;
+}
+.pick-discount {
+  margin: 10px;
+}
+.pick-discount input {
+  width: 60%;
+  margin-left: 16px;
+}

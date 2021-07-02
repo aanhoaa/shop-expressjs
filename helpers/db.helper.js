@@ -128,38 +128,99 @@ function getAll(table, column, value) {
 admin
 */
 function checkAdminExist(value) {
-    const sql = 'SELECT * FROM admin WHERE username=$1';
+    const sql = 'SELECT * FROM admin WHERE username = $1';
 
     return db.simpleQuery(sql, value)
     .then(res => {
-        if (res.rows[0])
+        if (res.rowCount > 0)
             return true;
         else return false;
     })
     .catch(error => {return error;});
 }
+
 function insertAdmin(values) {
-    const sql = 'INSERT INTO admin(username, password, email) VALUES($1, $2, $3)';
+    const sql = 'INSERT INTO admin(username, password, fullname, email, phone, role) VALUES($1, $2, $3, $4, $5, $6) RETURNING id';
     
-    return checkAdminExist([values[0]])
-    .then(data => {
-        if (!data) {
-            values[1] =  bcrypt.hashSync(values[1], 10);
-            return db.excuteQuery(sql, values)
-            .then(res => {
-                if (res.rowCount > 0)
-                    return true;
-                return false;
-            })
-            .catch(error => {return error;});
-        }
-        else {
-            return ({
-                type: 0,
-                message: "user exist"
-            })
-        }
+    return db.excuteQuery(sql, values)
+    .then(res => {
+        if (res.rowCount > 0)
+        return res.rows[0].id;
+        return false;
     })
+    .catch(error => {return error;});
+}
+
+function insertAdminPermission(value) {
+    const sql = "INSERT INTO adminpermission(name) VALUES($1) RETURNING id";
+
+    return db.excuteQuery(sql, value)
+    .then(res => {
+        if (res.rowCount > 0)
+        return res.rows[0].id;
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function insertAdminRole(value) {
+    const sql = "INSERT INTO adminRole(admin_id, adminper_id) VALUES($1, $2)";
+
+    return db.excuteQuery(sql, value)
+    .then(res => {
+        if (res.rowCount > 0)
+        return true;
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function insertAdminPerDetail(values) {
+    const sql = "INSERT INTO adminPerDetail(adminper_id, permission, act_name, act_code, status) VALUES($1, $2, $3, $4, $5)";
+
+    return db.excuteQuery(sql, values)
+    .then(res => {
+        if (res.rowCount > 0)
+        return true;
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function updateAdminPerDetail(values) {
+    const sql = "UPDATE adminPerDetail SET status = $2 WHERE id = $1";
+
+    return db.excuteQuery(sql, values)
+    .then(res => {
+        if (res.rowCount > 0)
+        return true;
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function getAdmin(value) {
+    const sql = "SELECT * FROM admin WHERE id != 1";
+
+    return db.simpleQuery(sql, value)
+    .then(res => {
+        if (res.rowCount > 0)
+            return res.rows;
+        else return false;
+    })
+    .catch(error => { return false;}); 
+}
+
+function getAdminDetailInfo(value) {
+    const sql = "select a.id, a.act_code as code, a.status, b.id as adminper_id, b.name as role_name, d.username, d.fullname, d.email, d.phone from adminperdetail a join adminpermission b on b.id = a.adminper_id join adminrole c on c.adminper_id = a.adminper_id join admin d on d.id = c.admin_id where d.id = $1";
+
+    return db.simpleQuery(sql, value)
+    .then(res => {
+        if (res.rowCount > 0)
+            return res.rows;
+        else return false;
+    })
+    .catch(error => { return false;}); 
 }
 
 function checkExistShopByName(value) {
@@ -1282,6 +1343,18 @@ function getCategoryLevelTwo(value) {
     .catch(error => {return -1;});
 }
 
+function getCategoryLevelTwoByShop(value) {
+    const sql = "SELECT DISTINCT a.id, a.name FROM categorylevel2 as a inner join product as b on b.categorylevel2_id = a.id WHERE b.shop_id = $1";
+
+    return db.simpleQuery(sql, value)
+    .then(res => {
+        if (res.rowCount > 0)
+            return res.rows;
+        return false;
+    })
+    .catch(error => {return -1;});
+}
+
 function getCategoryLevelThree(value) {
     const sql = 'SELECT id, name FROM categorylevel3 WHERE categorylevel2_id = $1';
 
@@ -2329,9 +2402,33 @@ function getRating() {
  <==========================================================================>
 */
 
+/*VOUCHER*/
+function insertVoucher(values) {
+    const sql = "INSERT INTO voucher(categorylevel2_id, shop_id, code, status, discount, timestart, timeend) values($1, $2, $3, $4, $5, $6, $7)";
+
+    return db.excuteQuery(sql)
+    .then(res => {
+        if (res.rowCount > 0)
+        return true;
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+/*
+ <==========================================================================>
+*/
 
 module.exports = {
     insertAdmin,
+    insertAdminPermission,
+    insertAdminRole,
+    insertAdminPerDetail,
+    updateAdminPerDetail,
+    checkAdminExist,
+    getAdmin,
+    getAdminDetailInfo,
+
     checkExistShopByName,
     insertShop,
     getShop,
@@ -2415,6 +2512,7 @@ module.exports = {
     getCategoryHasValue,
     getCategoryLevelTwoAll,
     getCategoryLevelTwo,
+    getCategoryLevelTwoByShop,
     getCategoryLevelThree,
 
     insertProduct,
@@ -2486,4 +2584,6 @@ module.exports = {
     deleteTest,
 
     getRating,
+
+    insertVoucher,
 }
