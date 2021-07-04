@@ -2404,12 +2404,60 @@ function getRating() {
 
 /*VOUCHER*/
 function insertVoucher(values) {
-    const sql = "INSERT INTO voucher(categorylevel2_id, shop_id, code, status, discount, timestart, timeend) values($1, $2, $3, $4, $5, $6, $7)";
+    const sql = "INSERT INTO voucher(categorylevel2_id, shop_id, name, code, status, discount, timestart, timeend) values($1, $2, $3, $4, $5, $6, $7, $8)";
 
-    return db.excuteQuery(sql)
+    return db.excuteQuery(sql, values)
     .then(res => {
         if (res.rowCount > 0)
         return true;
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function getVoucher(value) {
+    const sql = "select a.id as voucher_id, a.name, a.timestart as timestart, a.timeend, a.code, a.discount, a.status, b.name as catename from voucher a join categorylevel2 b on b.id = a.categorylevel2_id join shop c on c.id = a.shop_id where c.id = $1";
+
+    return db.simpleQuery(sql, value)
+    .then(res => {
+        if (res.rowCount > 0)
+        {
+            return res.rows;
+        }
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function updateVoucher(status, values) {
+    var sql = "";
+    switch(status) {
+    case 1: 
+        sql = "UPDATE voucher SET name = $1, timestart = $2, timeend = $3, categorylevel2_id = $4, discount = $5 WHERE id = $6";
+        break;
+    case 2: 
+        sql = "UPDATE voucher SET name = $1, timeend = $2, categorylevel2_id = $3 WHERE id = $4";
+        break;
+    }
+
+    return db.excuteQuery(sql, values)
+    .then(res => {
+        if (res.rowCount > 0)
+        return true;
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function getVoucherByID(values) {
+    const sql = "select a.id as voucher_id, a.categorylevel2_id as cate_id, a.name, a.timestart as timestart, a.timeend, a.code, a.discount, a.status, b.name as catename from voucher a join categorylevel2 b on b.id = a.categorylevel2_id join shop c on c.id = a.shop_id where c.id = $1 AND a.id = $2";
+
+    return db.simpleQuery(sql, values)
+    .then(res => {
+        if (res.rowCount > 0)
+        {
+            return res.rows;
+        }
         return false;
     })
     .catch(error => {return error;});
@@ -2586,4 +2634,7 @@ module.exports = {
     getRating,
 
     insertVoucher,
+    getVoucher,
+    updateVoucher,
+    getVoucherByID,
 }

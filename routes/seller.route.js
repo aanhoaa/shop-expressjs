@@ -36,6 +36,8 @@ router.post("/api/finance/income" , authController.isAuth, authController.isShop
 
 router.get("/sales" , authController.isAuth, authController.isShop, sellerController.getSales);
 router.post("/sales" , authController.isAuth, authController.isShop, sellerController.postSales);
+router.get("/sales/*.:voucherId" , authController.isAuth, authController.isShop, sellerController.getEditSales);
+router.post("/sales/*.:voucherId" , authController.isAuth, authController.isShop, sellerController.postEditSales);
 
 router.post("/profile/address/edit/:bookId", authController.isAuth, authController.isShop, sellerController.postUpdateAddressBook);
 router.post("/profile/address/delete", authController.isAuth, authController.isShop, sellerController.postDeleteAddressBook);

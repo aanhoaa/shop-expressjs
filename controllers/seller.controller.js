@@ -397,25 +397,78 @@ exports.getBindingCategory = async (req, res, next) => {
 }
 
 exports.getSales = async (req, res, next) => {
-  const data = await db.getCategoryLevelTwoByShop([req.session.shopInfo.id])
+  const data = await db.getCategoryLevelTwoByShop([req.session.shopInfo.id]);
+  const getVoucher = await db.getVoucher([req.session.shopInfo.id]);
+
 //check db để set status khi hết ngày - nhập code => check ngày kết thúc
-  res.render('./admin/sales/sales', {seller: req.session.shopInfo, data: data});
+  res.render('./admin/sales/sales', {seller: req.session.shopInfo, data: data, voucher: getVoucher});
 }
 
 exports.postSales = async (req, res, next) => {
   const data = req.body;
   
-  if (category == "" || discount == "" || dateStart == "" || dateEnd == "" || code == "")
-  res.status(500).json({status: 'Sale data field missing'});
+  if (data.name == "" || data.category == "" || data.discount == "" || data.dateStart == "" || data.dateEnd == "" || data.code == "")
+  return res.status(500).json({status: 'Sale data field missing'});
 
   try {
-    const insert = await db.insertVoucher([category, req.session.shopInfo.id, code, 1, discount, timestart, timeend]);
+    const insert = await db.insertVoucher([data.category, req.session.shopInfo.id, data.name, data.code, 1, data.discount, data.dateStart, data.dateEnd]);
     if (insert == true) return res.redirect('/seller/sales');
     else res.status(500).json({status: 'Insert db fail!!!'});
   } catch (error) {
     console.log('err at create sales', error);
     return error;
   }
+}
+
+exports.getEditSales = async (req, res, next) => {
+  const voucherId = req.params.voucherId;
+  const data = await db.getCategoryLevelTwoByShop([req.session.shopInfo.id]);
+  const getVoucher = await db.getVoucherByID([req.session.shopInfo.id, voucherId]);
+  var now = Date.now();
+  var status = 0;
+  var statusStart = fn_DateCompare(now, getVoucher[0].timestart)
+  var statusEnd = fn_DateCompare(now, getVoucher[0].timeend)
+  if (statusStart < 0 ) status = 1; //chưa diễn ra
+  else if (statusEnd < 0) status = 0; // đang
+  else status = -1; // đã hết
+
+  res.render('./admin/sales/sales-edit', {
+    seller: req.session.shopInfo, 
+    data: data,
+    voucher: getVoucher,
+    status: status
+  });
+}
+
+exports.postEditSales = async (req, res, next) => {
+  const voucherId = req.params.voucherId;
+  const data = req.body;
+  const getVoucher = await db.getVoucherByID([req.session.shopInfo.id, voucherId]);
+  var now = Date.now();
+  var status = 0;
+  var statusStart = fn_DateCompare(now, getVoucher[0].timestart)
+  var statusEnd = fn_DateCompare(now, getVoucher[0].timeend)
+  if (statusStart < 0 ) status = 1; //chưa diễn ra
+  else if (statusEnd < 0) status = 0; // đang
+  else status = -1; // đã hết
+
+  if (status == 1) {
+    if (data.name == "" || data.category == "" || data.discount == "" || data.dateStart == "" || data.dateEnd == "")
+    return res.status(500).json({status: 'Sale data field missing'});
+
+    const update1 = await db.updateVoucher(1, [data.name, data.dateStart, data.dateEnd, data.category, data.discount, voucherId]);
+    return res.redirect('/seller/sales/');
+  }
+
+  if (status == 0) {
+    if (data.name == "" || data.category == "" || data.dateEnd == "")
+    return res.status(500).json({status: 'Sale data field missing'});
+
+    const update2 = await db.updateVoucher(2, [data.name, data.dateEnd, data.category, voucherId]);
+    return res.redirect('/seller/sales/');
+  }
+
+  if (status == -1) return res.redirect('/seller/sales/');
 }
 
 exports.postAddProduct = async (req, res, next) => {
@@ -1145,6 +1198,7 @@ function formatDate(tt) {
 
   MyDate.setDate(MyDate.getDate());
 
+
   MyDateString = ('0' + MyDate.getDate()).slice(-2) + '/' + ('0' + (MyDate.getMonth()+1)).slice(-2) + '/' + MyDate.getFullYear();
 
   return MyDateString;
@@ -1178,4 +1232,23 @@ function fn_DateCompare(DateA, DateB) {     // this function is good for dates >
     return 1;  // gt
   else
     return null;  // error
+}
+
+function getDate(tt) {
+  var date = new Date(tt);
+  var MyDate = new Date(date);
+  var MyDateString;
+
+  MyDate.setDate(MyDate.getDate());
+  var hour = MyDate.getHours();
+  var minutes = MyDate.getMinutes();
+  var end = 'AM';
+  if (hour > 11) {
+    end = 'PM';
+    hour -= 12;
+  }
+ 
+  MyDateString = ('0' + MyDate.getDate()).slice(-2) + '/' + ('0' + (MyDate.getMonth()+1)).slice(-2) + '/' + MyDate.getFullYear() + ' '+ hour + ':' + minutes + ' ' + end;
+
+  return MyDateString;
 }
