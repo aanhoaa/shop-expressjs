@@ -78,60 +78,67 @@
                                 <%item.products.forEach(i => {%>
                                     <div class="FswepX">
                                        <div>
-                                          <span class="_2WGfBS">
-                                             <div class="_3Nbzgs">
-                                                <div class="_3-E1pP">
-                                                   <div class="shopee-image__wrapper">
-                                                      <div class="shopee-image__place-holder">
-                                                         <svg enable-background="new 0 0 15 15" viewBox="0 0 15 15" x="0" y="0" class="shopee-svg-icon icon-loading-image">
-                                                            <g>
-                                                               <rect fill="none" height="8" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" width="10" x="1" y="4.5"></rect>
-                                                               <line fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="1" x2="11" y1="6.5" y2="6.5"></line>
-                                                               <rect fill="none" height="3" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" width="3" x="11" y="6.5"></rect>
-                                                               <line fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="1" x2="11" y1="14.5" y2="14.5"></line>
-                                                               <line fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="6" x2="6" y1=".5" y2="3"></line>
-                                                               <line fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="3.5" x2="3.5" y1="1" y2="3"></line>
-                                                               <line fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="8.5" x2="8.5" y1="1" y2="3"></line>
-                                                            </g>
-                                                         </svg>
+                                          <a class="link-detail-order" href="/user/purchase/order/<%-item.orderId%>">
+                                             <span class="_2WGfBS">
+                                                <div class="_3Nbzgs">
+                                                   <div class="_3-E1pP">
+                                                      <div class="shopee-image__wrapper">
+                                                         <div class="shopee-image__place-holder">
+                                                            <svg enable-background="new 0 0 15 15" viewBox="0 0 15 15" x="0" y="0" class="shopee-svg-icon icon-loading-image">
+                                                               <g>
+                                                                  <rect fill="none" height="8" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" width="10" x="1" y="4.5"></rect>
+                                                                  <line fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="1" x2="11" y1="6.5" y2="6.5"></line>
+                                                                  <rect fill="none" height="3" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" width="3" x="11" y="6.5"></rect>
+                                                                  <line fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="1" x2="11" y1="14.5" y2="14.5"></line>
+                                                                  <line fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="6" x2="6" y1=".5" y2="3"></line>
+                                                                  <line fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="3.5" x2="3.5" y1="1" y2="3"></line>
+                                                                  <line fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="8.5" x2="8.5" y1="1" y2="3"></line>
+                                                               </g>
+                                                            </svg>
+                                                         </div>
+                                                         <div class="shopee-image__content" style="background-image: url(<%-i.cover%>);">
+                                                            <div class="shopee-image__content--blur"> </div>
+                                                         </div>
                                                       </div>
-                                                      <div class="shopee-image__content" style="background-image: url(<%-i.cover%>);">
-                                                         <div class="shopee-image__content--blur"> </div>
+                                                   </div>
+                                                   <div class="_-5JMmO">
+                                                      <div>
+                                                         <div class="_31sWbC"><span class="_18b78C"><%-i.name%></span></div>
+                                                      </div>
+                                                      <div>
+                                                         <div class="_1TLPCK"><%-i.variant == ''?'': 'Phân loại hàng: ' + i.variant%>
+   
+                                                         </div>
+                                                         <div class="aQNMRY">x<%-i.amount%></div>
                                                       </div>
                                                    </div>
                                                 </div>
-                                                <div class="_-5JMmO">
+                                                <%if (item.status == 3) {%>
+                                                <div class="rating">
+                                                   <div class="star-rating">
+                                                      <span class="fa fa-star-o" data-rating="1"></span>
+                                                      <span class="fa fa-star-o" data-rating="2"></span>
+                                                      <span class="fa fa-star-o" data-rating="3"></span>
+                                                      <span class="fa fa-star-o" data-rating="4"></span>
+                                                      <span class="fa fa-star-o" data-rating="5"></span>
+                                                      <input type="hidden" name="whatever1" class="rating-value" value="<%-i.userRating%>" data-id="<%-i.ratingId%>">
+                                                    </div>
+                                                </div>
+                                                <%}%>
+                                                <div class="_3M1Mfz">
                                                    <div>
-                                                      <div class="_31sWbC"><span class="_18b78C"><%-i.name%></span></div>
-                                                   </div>
-                                                   <div>
-                                                      <div class="_1TLPCK"><%-i.variant == ''?'': 'Phân loại hàng: ' + i.variant%>
-
-                                                      </div>
-                                                      <div class="aQNMRY">x<%-i.amount%></div>
+                                                      <% if (i.discount > 0) { %>
+                                                         <span class="_7zFjZr"><%-VND(i.price)%></span>
+                                                      <%}%>
+                                                      <span class="_2id4-o _3rNlHO"><%-VND(i.price - i.price*(i.discount/100))%></span>
                                                    </div>
                                                 </div>
-                                             </div>
-                                             <%if (item.status == 3) {%>
-                                             <div class="rating">
-                                                <div class="star-rating">
-                                                   <span class="fa fa-star-o" data-rating="1"></span>
-                                                   <span class="fa fa-star-o" data-rating="2"></span>
-                                                   <span class="fa fa-star-o" data-rating="3"></span>
-                                                   <span class="fa fa-star-o" data-rating="4"></span>
-                                                   <span class="fa fa-star-o" data-rating="5"></span>
-                                                   <input type="hidden" name="whatever1" class="rating-value" value="<%-i.userRating%>" data-id="<%-i.ratingId%>">
-                                                 </div>
-                                             </div>
-                                             <%}%>
-                                             <div class="_3M1Mfz">
-                                                <div><span class="_7zFjZr"><%-VND(i.price)%></span><span class="_2id4-o _3rNlHO"></span></div>
-                                             </div>
-                                          </span>
+                                             </span>
+                                          </a>
                                        </div>
                                        <div class="_1YJXa6"></div>
                                     </div>
-                                    <%total+= (i.price)*i.amount%>
+                                    <%total+= (i.price)*i.amount - (i.price)*i.amount*i.discount/100%>
                                 <%})%>
                                  </div>
                              

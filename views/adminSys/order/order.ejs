@@ -73,12 +73,12 @@
                             <div class="item-product">
                                 <div class="ct-item-product-inner">
                                     <div class="product-info">
-                                        <a href="/seller/order/detail/<%-item.orderId%>" class="ct-item-product-name"><%-i.name%></a>
+                                        <a href="/admin/order/detail/<%-item.orderId%>" class="ct-item-product-name"><%-i.name%></a>
                                         <div class="order-wrap-text">
                                             <p><%-i.variant == ''?'': 'Phân loại: ' + i.variant%></p>
                                         </div>
                                         <div>x<%-i.amount%></div>
-                                        <% total += i.amount*i.price + i.fee%>
+                                        <% total += (i.amount*i.price - i.amount*i.price*i.discount/100) + i.fee%>
                                     </div>
                                 </div>
                             </div>

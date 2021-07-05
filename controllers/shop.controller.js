@@ -294,6 +294,7 @@ exports.getCartInfo = async (req, res, next) => {
   const addBook = await db.getUserAddressBookExist(1, [req.session.Userinfo.id]);
   if (addBook == true) {
     req.session.checkout = data.pvd;
+    req.session.voucher = "";
     return res.send({state: 1, amount: amount, price: price, book: 1});
   }
   else return res.send({state: 1, amount: amount, price: price, book: 0});
@@ -327,18 +328,25 @@ exports.getCheckout = async (req, res, next) => {
   }
 
   const all = [];
-    const a = await Promise.all(arrData.map(async item => {
-      const shop_id = item[0].shop_id;
-      const pvd_id = item[0].pvd_id;
-      if (all.findIndex(x => x.shopId == shop_id) < 0){
-        all.push({
-          shopId: shop_id,
-          shopName: item[0].shop,
-          fee: 0,
-          products: []
-        })
-      }
-      const index = all.findIndex(x => x.shopId == shop_id);
+  const a = await Promise.all(arrData.map(async item => {
+  const shop_id = item[0].shop_id;
+  const pvd_id = item[0].pvd_id;
+  var voucher = "";
+  if (all.findIndex(x => x.shopId == shop_id) < 0){
+    if (req.session.voucher) {
+      const index = req.session.voucher.findIndex(i => Number(i.shopId) == Number(shop_id));
+      if (index > -1) voucher = req.session.voucher[index];
+    }
+    
+    all.push({
+      shopId: shop_id,
+      shopName: item[0].shop,
+      fee: 0,
+      products: [],
+      voucher: voucher
+    })
+  }
+  const index = all.findIndex(x => x.shopId == shop_id);
       if(all[index].products.findIndex(x => x.pvdId == pvd_id) < 0){
         const shopBook = await db.getShopAddressBook([shop_id]);
         //ship
@@ -509,10 +517,13 @@ exports.postCheckout = async (req, res, next) => {
         data.map(async item => {
           //save order 
           const order_id = await db.insertOrder([purchase_id, item.shopId, item.fee, now, 0]);
+          var discount = 0;
+          if (item.voucher) discount = item.voucher.discount;
           item.products.map(async i => {
             //save orderdetail
             var variant = `${i.color} ${i.size}`;
-            const orderDetail = await db.insertOrderDetail([order_id, i.pvdId, i.name, variant, i.amount, i.price, i.cover, 0]);
+            
+            const orderDetail = await db.insertOrderDetail([order_id, i.pvdId, i.name, variant, i.amount, i.price, i.cover, discount]);
             
           })
         })
@@ -641,11 +652,12 @@ exports.getCheckoutedVNPay = async (req, res, next) => {
             data.map(async item => {
               //save order 
               const order_id = await db.insertOrder([purchase_id, item.shopId, item.fee, now, 0]);
-              
+              var discount = 0;
+              if (item.voucher) discount = item.voucher.discount;
               item.products.map(async i => {
                 //save orderdetail
                 var variant = `${i.color} ${i.size}`;
-                const orderDetail = await db.insertOrderDetail([order_id, i.pvdId, i.name, variant, i.amount, i.price, i.cover, 0]);
+                const orderDetail = await db.insertOrderDetail([order_id, i.pvdId, i.name, variant, i.amount, i.price, i.cover, discount]);
               })
             })
           }
@@ -976,6 +988,35 @@ exports.getProductCate = async (req, res, next) => {
   });
 }
 
+exports.getCheckVoucher = async (req, res, next) => {
+  const shopId = req.query.shopId;
+  const code = req.query.code;
+  const total = req.query.total;
+
+  const check = await db.checkVoucher([code, shopId]);
+
+    if (check != false) { //voucher đúng
+      if (req.session.voucher) { //đã tồn tại
+        //check pos 
+        const index = req.session.voucher.findIndex(i => Number(i.shopId) == Number(shopId));
+        if (index > -1) {
+          //đã tồn tại thì update
+          req.session.voucher[index].discount = check.discount;
+        }
+        //thêm mới
+        else {
+          req.session.voucher.push({shopId: shopId, discount: check.discount, code: code});
+        }
+      }
+      else {
+        req.session.voucher = [];
+        req.session.voucher.push({shopId: Number(shopId), discount: check.discount, code: code});
+      }
+      
+      return res.send({data: 1, discount: total*(check.discount/100)*-1, total: total - total*(check.discount/100)});
+    } else return res.send({data: 0});
+}
+
 function MoMo() {
   if (paymentMethod == 2) {
     // handle momo
@@ -1052,6 +1093,8 @@ function MoMo() {
   }
  
 }
+
+
 
 function sortObject(o) {
   var sorted = {},

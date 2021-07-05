@@ -37,6 +37,9 @@ router.get("/api/book/city", authController.isAuth, shopController.getCity);
 router.get("/api/book/district/binding", authController.isAuth, shopController.getBindingDistrict);
 router.get("/api/book/ward/binding", authController.isAuth, shopController.getBindingWard);
 
+//api checkvoucher
+router.get("/api/check-voucher", authController.isAuth, shopController.getCheckVoucher);
+
 //binding cate
 router.post("/binding/cate", shopController.getProductCate);
 

@@ -1798,3 +1798,36 @@ border-color: rgba(0,0,0,.09)!important;
 .shop-voucher .title-voucher p {
   line-height: 35px;
 }
+.list-voucher {
+  padding: 5px;
+  border: 1px solid #000;
+}
+.sale-off {
+  border: 1px dotted #00bcd4;
+  text-align: center;
+  height: 30px;
+  margin: auto;
+}
+.sale-off span {
+  line-height: 30px;
+  padding: 10px;
+  color: #00bcd4;
+}
+.title-voucher i {
+  color: green;
+}
+.apply-voucher {
+  display: flex;
+  float: right;
+}
+.apply-voucher input {
+  margin: 0 10px;
+}
+.btn-voucher {
+  display: flex;
+  padding: 0;
+}
+.SALES {
+  grid-row-start: 15;
+  grid-row-end: 16;
+}

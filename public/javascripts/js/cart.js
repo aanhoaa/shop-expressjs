@@ -176,24 +176,6 @@ $(document).ready(function(){
       });
   })
   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   var gColor = '';
 
   $(document).on('click', '.product_details_color .color_bind', function(e) {

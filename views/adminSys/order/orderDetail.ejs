@@ -55,7 +55,9 @@
             </thead>
             <tbody>
                 <%var i = 0;
-                  var total = 0; 
+                  var total = 0;
+                  var totalVoucher = 0;
+                  var voucher = 0; 
                 %>
                 <%products.forEach(item => { i++;%>
                 <tr>
@@ -91,29 +93,35 @@
                     <td><%-VND(item.price)%></td>
                     <td><%-item.amount%></td>
                     <td><%-VND(item.price * item.amount)%></td>
-                    <%total += item.price * item.amount%>
+                    <%
+                        voucher += item.price * item.amount*item.discount/100;
+                        totalVoucher += item.price * item.amount - voucher;
+                        total += item.price * item.amount;
+                    %>
                 </tr>
                 <%})%>
             </tbody>
         </table>
         <div style="display: flex; float: right; margin: 25px;">
             <div style="margin-right: 20px;">
-                <div>
-                    Phí vận chuyển
-                </div>
-                <div>
+                <div class="order-detail">
                     Tổng tiền sản phẩm
                 </div>
-                <div>
+                <div class="order-detail">
+                    Voucher giảm giá
+                </div>
+                <div class="order-detail">
+                    Phí vận chuyển
+                </div>
+                <div class="order-detail">
                     Doanh thu
                 </div>
             </div>
             <div>
-                <div><%-VND(info.shippingfee)%></div>
-                <div>
-                   <%-VND(total)%>
-                </div>
-                <div class="income"><%-VND(total + info.shippingfee)%></div>
+                <div class="order-detail"><%-VND(total)%></div>
+                <div class="order-detail"><%-VND(-voucher)%></div>
+                <div class="order-detail"><%-VND(info.shippingfee)%></div>
+                <div class="order-detail income"><%-VND(totalVoucher + info.shippingfee)%></div>
             </div>
         </div>
     </div>  

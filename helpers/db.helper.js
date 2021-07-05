@@ -272,7 +272,7 @@ function getShopById(value) {
 }
 
 function getShopWillPay(value) {
-    const sql = "select sum(add) from (select id as order_id, add(sum(total_ord), shippingfee) from (select a.id, c.amount, c.price, total_ord(c.amount, c.price),  a.shippingfee from orders as a inner join purchase as b on b.id = a.purchase_id inner join orderdetail as c on c.order_id = a.id where a.shop_id = $1 and a.status < 3 and a.status >= 0) as a group by id, shippingfee) as a";
+    const sql = "select sum(add) from ( select id as order_id, add(sum(totalwithdis), shippingfee) from ( select a.id, c.amount, c.price, totalwithdis(c.amount, c.price, c.discount),  a.shippingfee from orders as a inner join purchase as b on b.id = a.purchase_id inner join orderdetail as c on c.order_id = a.id where a.shop_id = $1 and a.status < 3 and a.status >= 0) as a group by id, shippingfee) as a";
 
     return db.simpleQuery(sql, value)
     .then(res => {
@@ -807,7 +807,7 @@ function deleteUserIdentityDetail(value) {
 
 //user-purchase
 function getUserPurchaseWaiting(value) {
-    const sql = "select a.status, a.id as order_id, a.shippingfee as ship, a.status, c.name, c.variant, c.amount, c.price, a.shop_id , d.name as shop_name, c.cover, c.productvariant_id as pdv_id, f.rating, f.id as p_id, g.rating as user_rating, g.id as user_rating_id from orders as a inner join purchase as b on b.id = a.purchase_id inner join orderdetail as c on c.order_id = a.id inner join shop as d on d.id = a.shop_id inner join productvariant as e on e.id = c.productvariant_id inner join product as f on f.id = e.product_id inner join rating as g on g.user_id = b.user_id and g.product_id = e.product_id where b.user_id = $1 order by a.created_at desc";
+    const sql = "select a.status, a.id as order_id, a.shippingfee as ship, a.status, c.name, c.variant, c.amount, c.price, c.discount, a.shop_id , d.name as shop_name, c.cover, c.productvariant_id as pdv_id, f.rating, f.id as p_id, g.rating as user_rating, g.id as user_rating_id from orders as a inner join purchase as b on b.id = a.purchase_id inner join orderdetail as c on c.order_id = a.id inner join shop as d on d.id = a.shop_id inner join productvariant as e on e.id = c.productvariant_id inner join product as f on f.id = e.product_id inner join rating as g on g.user_id = b.user_id and g.product_id = e.product_id where b.user_id = $1 order by a.created_at desc";
 
     return db.excuteQuery(sql, value)
     .then(res => {
@@ -819,7 +819,7 @@ function getUserPurchaseWaiting(value) {
 }
 
 function getOrderAll(value) {
-    const sql = "select a.status, a.created_at, a.shippingfee, b.payment_id, c.name, c.variant, c.amount, c.price, a.shop_id , d.name as shop_name, c.cover, c.productvariant_id as pdv_id, a.id as order_id from orders as a inner join purchase as b on b.id = a.purchase_id inner join orderdetail as c on c.order_id = a.id inner join shop as d on d.id = a.shop_id order by a.id desc";
+    const sql = "select a.status, a.created_at, a.shippingfee, b.payment_id, c.name, c.variant, c.amount, c.price, c.discount, a.shop_id , d.name as shop_name, c.cover, c.productvariant_id as pdv_id, a.id as order_id from orders as a inner join purchase as b on b.id = a.purchase_id inner join orderdetail as c on c.order_id = a.id inner join shop as d on d.id = a.shop_id order by a.id desc";
 
     return db.excuteQuery(sql, value)
     .then(res => {
@@ -843,7 +843,7 @@ function getUserByOrder(value) {
 }
 
 function getOrderByShopId(value) {
-    const sql = "select a.shop_id, a.shippingfee, a.created_at, d.username, d.id as user_id, b.name, b.price, b.amount, b.variant, b.cover, a.id as order_id, a.status, b.productvariant_id as pdv_id, c.payment_id, e.province, e.district from orders as a inner join orderdetail as b on b.order_id = a.id inner join purchase as c on c.id = a.purchase_id inner join users as d on d.id = c.user_id inner join addressorder as e on e.purchase_id = c.id where a.shop_id = $1 order by a.created_at desc";
+    const sql = "select a.shop_id, a.shippingfee, a.created_at, d.username, d.id as user_id, b.name, b.price, b.amount, b.variant, b.cover, b.discount, a.id as order_id, a.status, b.productvariant_id as pdv_id, c.payment_id, e.province, e.district from orders as a inner join orderdetail as b on b.order_id = a.id inner join purchase as c on c.id = a.purchase_id inner join users as d on d.id = c.user_id inner join addressorder as e on e.purchase_id = c.id where a.shop_id = $1 order by a.created_at desc";
 
     return db.excuteQuery(sql, value)
     .then(res => {
@@ -1209,45 +1209,6 @@ function cateDelete(value) {
     })
 }
 
-function getListCateParents() {
-    return getList('categoryparents')
-    .then(data => {
-        return data;
-    })
-    .catch(error => {return error;});
-}
-
-function getListCateChildren(value) {
-    return getList('categorychildren', value)
-    .then(data => {
-        return data;
-    })
-    .catch(error => {return error;});
-}
-
-function childCateInsert(values) {
-    const sql = 'INSERT INTO categorychildren(categoryparents_id, name, description) VALUES($1, $2, $3)';
-
-    return checkById('categoryparents', [values[0]])
-    .then(data => {
-        if (data) {
-            return db.excuteQuery(sql, values)
-            .then(res => {
-                if (res.rowCount > 0)
-                    return 'Add category child success!!!';
-                return 'false';
-            })
-            .catch(error => {return error;});
-        }
-        else {
-            return ({
-               // type: TYPE,
-                message: "category not exist"
-            })
-        }
-    })
-}
-
 function insertCateLevel(table, value) {
     var cateId = '';
     switch(table) {
@@ -1353,6 +1314,18 @@ function getCategoryLevelTwoByShop(value) {
         return false;
     })
     .catch(error => {return -1;});
+}
+
+function getCategoryLevelTwoByPdv(value) {
+    const sql = "SELECT a.id FROM categorylevel2 a join product b on b.categorylevel2_id = a.id join productvariant c on c.product_id = b.id WHERE c.id = $1";
+
+    return db.simpleQuery(sql, value)
+    .then(res => {
+        if (res.rowCount > 0)
+            return res.rows[0];
+        return false;
+    })
+    .catch(error => {return false;});
 }
 
 function getCategoryLevelThree(value) {
@@ -2326,7 +2299,7 @@ function getOrderAddressById(value) {
 }
 
 function getOrderDetailByOrderId(value) {
-    const sql = "select a.shippingfee, b.name, b.amount, b.price, b.variant, b.cover, b.productvariant_id as pdv_id from orders as a inner join orderdetail as b on a.id = b.order_id where a.id = $1";
+    const sql = "select a.shippingfee, b.discount, b.name, b.amount, b.price, b.variant, b.cover, b.productvariant_id as pdv_id from orders as a inner join orderdetail as b on a.id = b.order_id where a.id = $1";
 
     return db.excuteQuery(sql, value)
     .then(res => {
@@ -2410,6 +2383,18 @@ function insertVoucher(values) {
     .then(res => {
         if (res.rowCount > 0)
         return true;
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function checkVoucher(values) {
+    const sql = "SELECT discount FROM voucher WHERE code = $1 AND shop_id = $2 AND NOW() + interval '7 hours' between timestart and timeend";
+
+    return db.simpleQuery(sql, values)
+    .then(res => {
+        if (res.rowCount > 0)
+        return res.rows[0];
         return false;
     })
     .catch(error => {return error;});
@@ -2549,9 +2534,6 @@ module.exports = {
     insertCategoryLevelTwo,
     updateCategorylevel1,
     cateDelete,
-    getListCateParents,
-    getListCateChildren,
-    childCateInsert,
     childCateUpdate,
     insertCateLevel,
     
@@ -2561,6 +2543,7 @@ module.exports = {
     getCategoryLevelTwoAll,
     getCategoryLevelTwo,
     getCategoryLevelTwoByShop,
+    getCategoryLevelTwoByPdv,
     getCategoryLevelThree,
 
     insertProduct,
@@ -2634,6 +2617,7 @@ module.exports = {
     getRating,
 
     insertVoucher,
+    checkVoucher,
     getVoucher,
     updateVoucher,
     getVoucherByID,

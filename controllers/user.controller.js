@@ -431,7 +431,8 @@ exports.getWaitingConfirm = async (req, res, next) => {
           rating: item.rating,
           p_id: item.p_id,
           userRating: item.user_rating,
-          ratingId: item.user_rating_id
+          ratingId: item.user_rating_id,
+          discount: item.discount
         })
       }
     }
@@ -487,12 +488,12 @@ exports.getOrderDetail = async (req, res, next) => {
   const address = await db.getOrderAddressById([orderId]);
   const products = await db.getOrderDetailByOrderId([orderId])
   const orderInfo = await db.getOrderById([orderId]);
-    
-    res.render('./auth/user/user-order', {
-      info: orderInfo, address: address, products: products,
-      userInfo: userInfo, user: data, 
-      cart: req.session.cart,
-    });
+ 
+  res.render('./auth/user/user-order', {
+    info: orderInfo, address: address, products: products,
+    userInfo: userInfo, user: data, 
+    cart: req.session.cart,
+  });
 }
 
 exports.putUserRating = async (req, res, next) => {

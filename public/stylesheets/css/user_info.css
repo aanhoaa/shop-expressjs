@@ -1094,3 +1094,13 @@ html[xmlns] .clearfix {
 ._3M1Mfz {
     width: 70px;
 }
+._7zFjZr {
+    text-decoration-line: line-through;
+    color: #000;
+    opacity: .26;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.link-detail-order:hover {
+    text-decoration: none;
+}

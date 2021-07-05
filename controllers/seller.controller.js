@@ -162,39 +162,39 @@ exports.getLogout = (req, res, next) => {
 }
 
 exports.getHome = async (req, res, next) => {
-  res.render('./admin/dashboard')
-    // const shopId = req.jwtDecoded.data.id;
-    // var oData = new Array;
-    // const data = await db.getProductSeller([shopId]);
+  //res.render('./admin/dashboard')
+    const shopId = req.jwtDecoded.data.id;
+    var oData = new Array;
+    const data = await db.getProductSeller([shopId]);
 
-    // for(let i = 0; i< data.length; i++) {
-    //     var info = await db.getProductVariantInfo([data[i].id]);
-    //     var violate = '';
-    //     if (data[i].status == -1) {
-    //         violate = await db.getProductViolate([data[i].id]);
-    //     }
-    //     if (violate != '') {
-    //         var time = violate[0].updated_at.toString();
+    for(let i = 0; i< data.length; i++) {
+        var info = await db.getProductVariantInfo([data[i].id]);
+        var violate = '';
+        if (data[i].status == -1) {
+            violate = await db.getProductViolate([data[i].id]);
+        }
+        if (violate != '') {
+            var time = violate[0].updated_at.toString();
             
-    //         oData.push(
-    //             {
-    //                 name: data[i].name, sku: data[i].sku, classify: info, 
-    //                 id: data[i].id, status: data[i].status,
-    //                 vname: violate[0].name, vreason: violate[0].reason, 
-    //                 vsuggestion: violate[0].suggestion, vtime: getdate(time.substring(0, time.length-1))
-    //             }
-    //         )
-    //     }
-    //     else {
-    //         oData.push({
-    //             name: data[i].name, sku: data[i].sku, 
-    //             classify: info, id: data[i].id, 
-    //             status: data[i].status
-    //         })
-    //     }
+            oData.push(
+                {
+                    name: data[i].name, sku: data[i].sku, classify: info, 
+                    id: data[i].id, status: data[i].status,
+                    vname: violate[0].name, vreason: violate[0].reason, 
+                    vsuggestion: violate[0].suggestion, vtime: getdate(time.substring(0, time.length-1))
+                }
+            )
+        }
+        else {
+            oData.push({
+                name: data[i].name, sku: data[i].sku, 
+                classify: info, id: data[i].id, 
+                status: data[i].status
+            })
+        }
             
-    // }
-    // res.render('./admin/index', {seller: req.session.shopInfo, data: oData})
+    }
+    res.render('./admin/index', {seller: req.session.shopInfo, data: oData})
 }
 
 exports.getAddressBook = async (req, res, next) => {
@@ -855,7 +855,8 @@ exports.getOrder = async (req, res, next) => {
             price: item.price,
             variant: getVariant,
             cover: item.cover,
-            fee: item.shippingfee
+            fee: item.shippingfee,
+            discount: item.discount
           })
         }
      }
@@ -991,7 +992,8 @@ exports.getIncome = async (req, res, next) => {
           price: item.price,
           variant: getVariant,
           cover: item.cover,
-          fee: item.shippingfee
+          fee: item.shippingfee,
+          discount: item.discount
         })
       }
     }
@@ -1047,7 +1049,6 @@ exports.postBindingIncome = async (req, res, next) => {
       var date = new Date(), y = date.getFullYear(), m = date.getMonth() - 3;
       var firstDay = formatSQLDate(new Date(y, m, 1));
       var lastDay = formatSQLDate(new Date(y, m + 4, 1));
-      console.log(firstDay, lastDay)
       date1 = firstDay;
       date2 = lastDay;
       break;
@@ -1099,7 +1100,8 @@ exports.postBindingIncome = async (req, res, next) => {
           price: item.price,
           variant: getVariant,
           cover: item.cover,
-          fee: item.shippingfee
+          fee: item.shippingfee,
+          discount: item.discount
         })
       }
     }

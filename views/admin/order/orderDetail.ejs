@@ -50,6 +50,8 @@
             <tbody>
                 <%var i = 0;
                   var total = 0; 
+                  var totalVoucher = 0;
+                  var voucher = 0;
                 %>
                 <%products.forEach(item => { i++;%>
                 <tr>
@@ -85,7 +87,11 @@
                     <td><%-VND(item.price)%></td>
                     <td><%-item.amount%></td>
                     <td><%-VND(item.price * item.amount)%></td>
-                    <%total += item.price * item.amount%>
+                    <%
+                        voucher += item.price * item.amount*item.discount/100;
+                        totalVoucher += item.price * item.amount - voucher;
+                        total += item.price * item.amount;
+                    %>
                 </tr>
                 <%})%>
             </tbody>
@@ -96,6 +102,9 @@
                     Tổng tiền sản phẩm
                 </div>
                 <div class="order-detail">
+                    Voucher giảm giá
+                </div>
+                <div class="order-detail">
                     Phí vận chuyển
                 </div>
                 <div class="order-detail">
@@ -104,10 +113,11 @@
             </div>
             <div>
                 <div class="order-detail"><%-VND(total)%></div>
+                <div class="order-detail"><%-VND(-voucher)%></div>
                 <div class="order-detail">
                     <%-VND(info.shippingfee)%>
                  </div>
-                 <div class="order-detail total"><%-VND(total + info.shippingfee)%></div>
+                 <div class="order-detail total"><%-VND(totalVoucher + info.shippingfee)%></div>
             </div>
         </div>
     </div>  

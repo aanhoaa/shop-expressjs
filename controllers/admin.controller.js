@@ -344,6 +344,7 @@ exports.getOrder = async (req, res, next) => {
           variant: getVariant,
           cover: item.cover,
           fee: item.shippingfee,
+          discount: item.discount
         })
       }
     }
@@ -412,7 +413,7 @@ exports.putDeliveredOrder = async (req, res, next) => {
       const products = await db.getOrderDetailByOrderId([orderId]);
       var total = 0;
       for(let i of products) {
-        total += i.amount*i.price;
+        total += i.amount*i.price - i.amount*i.price*i.discount/100;
       }
       total += products[0].shippingfee;
       
@@ -420,7 +421,7 @@ exports.putDeliveredOrder = async (req, res, next) => {
       const addWallet = await db.updateShopWallet(orderId, [total, shop_id]);
       const update = await db.updateOrderAndPaid([3, orderId]);
       
-      if (update == true && addWallet == true) {console.log('done') ; return res.send({state: 1});}
+      if (update == true && addWallet == true) {return res.send({state: 1});}
       else return res.send({state: 0});
   }
   else res.send({state: -1});

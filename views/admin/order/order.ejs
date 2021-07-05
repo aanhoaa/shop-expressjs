@@ -76,7 +76,7 @@
                                         <a href="/seller/order/detail/<%-item.orderId%>" class="ct-item-product-name"><%-i.name%></a>
                                         <div><%-i.variant == ''?'': 'Phân loại: ' + i.variant%></div>
                                         <div>x<%-i.amount%></div>
-                                        <% total += i.amount*i.price + i.fee%>
+                                        <% total += (i.amount*i.price - i.amount*i.price*i.discount/100) + i.fee%>
                                     </div>
                                 </div>
                             </div>
