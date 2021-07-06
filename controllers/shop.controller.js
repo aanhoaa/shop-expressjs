@@ -7,13 +7,17 @@ const https = require('https');
 const querystring = require('querystring');
 const crypto = require('crypto');
 const CF = require('../helpers/cf')
-
+const cf =  require('../helpers/collaborativeFiltering');
 // exports.getIndexShop = (req, res, next) => {
 //     Order.find().then((data) => {
 //       console.log(data)
 //     })
 //     res.render('index', { title: 'Shop', user: req.user, cart: req.session.cart });
 // }
+
+exports.getProductsBySearch = async (req, res, next) => {
+  
+}
 
 exports.getProducts = async (req, res, next) => {
   const cateOneID = req.params.cateOneId;
