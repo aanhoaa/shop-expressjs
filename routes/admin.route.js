@@ -5,6 +5,7 @@ const adminController = require("../controllers/admin.controller");
 
 router.use(function (req, res, next) {
     res.locals.permit = req.session.permit;
+    res.locals.admin = req.session.admin;
     next();
 });
 
@@ -13,7 +14,10 @@ router.get("/login" , adminController.getLogin);
 router.post("/login" , adminController.postLogin);
 router.get("/logout" , adminController.getLogout);
 
-router.get("/" , authController.isAuth, authController.checkRole('VIEW PRODUCT'), adminController.getHome);
+router.get("/dashboard" , authController.isAuth, authController.checkRole('VIEW PRODUCT'), adminController.getDashboard);
+router.get("/" , authController.isAuth, authController.checkRole('VIEW PRODUCT'), adminController.getDashboard);
+
+router.get("/product" , authController.isAuth, authController.checkRole('VIEW PRODUCT'), adminController.getHome);
 router.get("/product/view/:productId" , authController.isAuth, authController.checkRole('VIEW PRODUCT'), adminController.getViewProduct);
 router.post("/product/view/:productId" , authController.isAuth, authController.isAdmin, adminController.postViewProduct);
 router.get("/category" , authController.isAuth, authController.checkRole('VIEW CATEGORY'), adminController.getCategory); 
@@ -36,5 +40,5 @@ router.get("/order/detail/:orderId" , authController.isAuth, authController.isAd
 router.put("/order/confirm" , authController.isAuth, authController.isAdmin, adminController.putConfirmOrder);
 router.put("/order/cancel" , authController.isAuth, authController.isAdmin, adminController.putCancelOrder);
 router.put("/order/delivered" , authController.isAuth, authController.isAdmin, adminController.putDeliveredOrder);
-
+router.get("/sales" , authController.isAuth, authController.isAdmin, adminController.getSales)
 module.exports = router;

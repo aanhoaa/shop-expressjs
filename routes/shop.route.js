@@ -3,7 +3,7 @@ var router = express.Router();
 const shopController = require("../controllers/shop.controller");
 const authController = require("../controllers/auth.controller");
 
-router.get("/recommend", shopController.getProductsBySearch);
+router.get("/search", shopController.getProductsBySearch);
 
 router.get("/product/*.:cateOneId", shopController.getProducts);
 router.get("/cate/*.:cateTwoId", shopController.getProductsCateTwo);

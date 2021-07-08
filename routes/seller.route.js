@@ -10,7 +10,11 @@ router.get("/login" , sellerController.getLogin);
 router.post("/login" , sellerController.postLogin);
 router.get("/logout" , sellerController.getLogout);
 
-router.get("/" , authController.isAuth, authController.isShop, sellerController.getHome);
+router.get("/dashboard" , authController.isAuth, authController.isShop, sellerController.getDashBoard);
+router.get("/" , authController.isAuth, authController.isShop, sellerController.getDashBoards);
+
+
+router.get("/product" , authController.isAuth, authController.isShop, sellerController.getHome);
 
 router.get("/profile/address-book" , authController.isAuth, authController.isShop, sellerController.getAddressBook);
 router.post("/profile/address-book" , authController.isAuth, authController.isShop, sellerController.postAddressBook);

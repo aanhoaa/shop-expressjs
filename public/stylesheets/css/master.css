@@ -6,8 +6,20 @@
   height: 650px;
   overflow-y: scroll;
   overflow-x: hidden;
+  bottom: 0;
+  float: none;
+  left: 0;
+  position: fixed !important;
+  top: 0;
+  padding: 5px;
 }
-
+.content-wrap {
+  margin-left: 16%;
+  padding: 0;
+}
+.admin_block .panel-body {
+  padding: 3px;
+}
 .panel-default > .panel-heading{
   background-color: #212120;
   padding: 0 5px;
@@ -162,3 +174,7 @@
   background-color: #1c2630 !important;
 }
 
+/*css dashboard*/
+.content-wrapper-dash {
+  margin-left: 1.5%;
+}

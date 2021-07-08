@@ -144,6 +144,10 @@ $("#them_gio_hang").click(function(event) {
         }, 5000);
     
 });
+$(".btn-search").click(function(event) {
+  const query = $('#search-text').val();
+  window.location.href = `/search?q=${query}`
+});
 
 
 $('.image_gallery').click(function(event) {

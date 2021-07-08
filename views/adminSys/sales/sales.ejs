@@ -1,0 +1,88 @@
+
+<% include ../../partials/header_admin %>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.0/moment.min.js"></script>
+<script src="/javascripts/assets/bootstrap-datetimepicker.js"></script>
+<script src="/javascripts/assets/bootstrap-datetimepicker.min.js"></script>
+<link rel="stylesheet" href="/stylesheets/css/report.css">
+<link rel="stylesheet" href="/stylesheets/css/sales_bootstrap.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+    <%
+      function getDate(tt) {
+        var date = new Date(tt);
+        var MyDate = new Date(date);
+        var MyDateString;
+      
+        MyDate.setDate(MyDate.getDate());
+        var hour = MyDate.getHours();
+        var minutes = MyDate.getMinutes();
+        var end = 'AM';
+        if (hour > 11) {
+          end = 'PM';
+          hour -= 12;
+        }
+      
+        MyDateString = ('0' + MyDate.getDate()).slice(-2) + '/' + ('0' + (MyDate.getMonth()+1)).slice(-2) + '/' + MyDate.getFullYear() + ' '+ hour + ':' + minutes + ' ' + end;
+      
+        return MyDateString;
+      }
+    %>
+    <div class="list-category">
+        <a href="/admin">Trang chủ</a> > Khuyến mãi
+    </div>
+
+    <div class="content">
+        <table id="dataTables-example" class="mdl-data-table" style="width:100%">
+            <thead>
+                <tr align="center">
+                    <th style="padding: 8px 5px;">STT</th>
+                    <th style="padding: 8px 0;">Mã voucher</th>
+                    <th>Tên chương trình KM</th>
+                    <th>
+                      Thời gian diễn ra
+                      
+                    </th>
+                   
+                    <th>Danh mục áp dụng</th>
+                    <th>Discount</th>
+                    <th>Tình trạng</th>
+                    <th>Nhà bán</th>
+                </tr>
+            </thead>
+            <tbody>
+            <% if (voucher) {
+              var i = 0;
+              voucher.forEach(item => {i++;
+            %>
+              <tr>
+                <td><%-i%></td>
+                <td><%-item.code%></td>
+                <td>
+                  <div class="name-wrap-text">
+                    <p style="margin: 0;"><%-item.name%></p>
+                  </div>
+                </td>
+                <td>
+                  <div>
+                    <%-getDate(item.timestart)%> 
+                  </div>
+                  <span>-</span>
+                  <div>
+                    <%-getDate(item.timeend)%>
+                  </div>
+                </td>
+                
+                <td>Tất cả sản phẩm</td>
+                <td><%-item.discount%>%</td>
+                <td><p style="margin: 0;">Đang diễn ra</p></td>
+                <td>
+                    <%-item.shop_name%>
+                </td>
+              </tr>
+            <%})}%>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<% include ../../partials/footer_admin %>

@@ -161,8 +161,58 @@ exports.getLogout = (req, res, next) => {
     res.redirect('/');
 }
 
+exports.getDashBoard = (req, res, next) => {
+  res.render('./admin/dashboard')
+}
+
+exports.getDashBoards = async (req, res, next) => {
+  const getOrderStatus = await db.getDashBoardSeller([req.session.shopInfo.id]);
+  const getProductStatus = await db.getCountProductByShop([req.session.shopInfo.id]);
+  const getSale = await db.getCountVoucherByShop([req.session.shopInfo.id]);
+  const getWallet = await db.getWalletByShop([req.session.shopInfo.id]);
+  var orderWait = 0, orderPre = 0, orderDeli = 0, orderCancel = 0;
+  var productOut = 0, productSell = 0;
+  var sale = 0;
+  var wallet = 0;
+
+  if (getOrderStatus) {
+    getOrderStatus.forEach(item => {
+      if (item.status == -1) orderCancel = item.count;
+      if (item.status == 0) orderWait = item.count;
+      if (item.status == 1) orderPre = item.count;
+      if (item.status == 3) orderDeli = item.count;
+    })
+  }
+
+  if (getProductStatus) {
+    getProductStatus.forEach(item => {
+      if (item.totalrows < 1) productOut++;
+    })
+    productSell = getProductStatus.length;
+  }
+
+  if (getSale) {
+    sale = Number(getSale[0].sale);
+  }
+  
+  if (getWallet) {
+    wallet = getWallet.wallet;
+  }
+
+  res.render('./admin/dashboards', {
+    seller: req.session.shopInfo, 
+    orderWait: orderWait,
+    orderPre: orderPre,
+    orderDeli: orderDeli,
+    orderCancel: orderCancel,
+    productOut: productOut,
+    productSell: productSell,
+    sale: sale,
+    wallet: wallet
+  })
+}
+
 exports.getHome = async (req, res, next) => {
-  //res.render('./admin/dashboard')
     const shopId = req.jwtDecoded.data.id;
     var oData = new Array;
     const data = await db.getProductSeller([shopId]);

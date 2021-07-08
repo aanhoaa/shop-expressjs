@@ -124,6 +124,145 @@ function getAll(table, column, value) {
     })
     .catch(error => {return error;});
 }
+
+function getProductBySearch(value) {
+    const sql = `select id, name from product where name @@ plainto_tsquery($1) and status = 1`;
+
+    return db.simpleQuery(sql, value)
+    .then(res => {
+        if (res.rowCount > 0)
+            return res.rows;
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function getProductInfoByID(value) {
+    const sql = "select  a.id, a.name, b.max_price, b.min_price, c.url->'cover' as cover from product a inner join (select max(price) as max_price, min(price) as min_price, product_id from productvariant group by product_id) b on a.id = b.product_id inner join images as c on c.product_id = a.id where a.status = 1 and a.id = $1";
+
+    return db.simpleQuery(sql, value)
+    .then( res =>  {
+        if (res.rowCount > 0)
+        {
+            return res.rows;
+        }
+        return false;
+    })
+    .catch(error => { return false;});
+}
+
+function getProductDetailBySeach(value) {
+    const sql = "select  a.id, a.name, b.max_price, b.min_price, c.url->'cover' as cover from product a inner join (select max(price) as max_price, min(price) as min_price, product_id from productvariant group by product_id) b on a.id = b.product_id inner join images as c on c.product_id = a.id where a.status = 1 and a.name @@ plainto_tsquery($1)";
+
+    return db.simpleQuery(sql, value)
+    .then( res =>  {
+        if (res.rowCount > 0)
+        {
+            return res.rows;
+        }
+        return false;
+    })
+    .catch(error => { return false;});
+}
+
+function getDashBoardSeller(value) {
+    const sql = "select status, count(status) from orders where shop_id = $1 and now() between deliverytime and deliverytime + interval '336 hours' GROUP BY status;";
+
+    return db.simpleQuery(sql, value)
+    .then( res =>  {
+        if (res.rowCount > 0)
+        {
+            return res.rows;
+        }
+        return false;
+    })
+    .catch(error => { return false;});
+}
+
+function getCountProductByShop(value) {
+    const sql = "select product_id, COUNT(*) AS TotalRows from productvariant a join product b on b.id = a.product_id where b.status = 1 and b.shop_id = $1 group by product_id";
+
+    return db.simpleQuery(sql, value)
+    .then( res =>  {
+        if (res.rowCount > 0)
+        {
+            return res.rows;
+        }
+        return false;
+    })
+    .catch(error => { return false;});
+}
+
+function getCountVoucherByShop(value) {
+    const sql = "select count(id) as sale from voucher where now() between timestart and timeend and shop_id = $1";
+
+    return db.simpleQuery(sql, value)
+    .then( res =>  {
+        if (res.rowCount > 0)
+        {
+            return res.rows;
+        }
+        return false;
+    })
+    .catch(error => { return false;});
+}
+
+function getWalletByShop(value) {
+    const sql = "SELECT wallet FROM shop WHERE id = $1";
+
+    return db.simpleQuery(sql, value)
+    .then( res =>  {
+        if (res.rowCount > 0)
+        {
+            return res.rows[0];
+        }
+        return false;
+    })
+    .catch(error => { return false;});
+}
+
+function getDashBoardAdmin(value) {
+    const sql = "select status, count(status) from orders where now() between deliverytime and deliverytime + interval '336 hours' GROUP BY status;";
+
+    return db.simpleQuery(sql, value)
+    .then( res =>  {
+        if (res.rowCount > 0)
+        {
+            return res.rows;
+        }
+        return false;
+    })
+    .catch(error => { return false;});
+}
+
+function getCountProductByAdmin(value) {
+    const sql = "select product_id, COUNT(*) AS TotalRows from productvariant a join product b on b.id = a.product_id where b.status = 1 group by product_id";
+
+    return db.simpleQuery(sql, value)
+    .then( res =>  {
+        if (res.rowCount > 0)
+        {
+            return res.rows;
+        }
+        return false;
+    })
+    .catch(error => { return false;});
+}
+
+function getCountVoucherByAdmin(value) {
+    const sql = "select count(id) as sale from voucher where now() between timestart and timeend";
+
+    return db.simpleQuery(sql, value)
+    .then( res =>  {
+        if (res.rowCount > 0)
+        {
+            return res.rows;
+        }
+        return false;
+    })
+    .catch(error => { return false;});
+}
+
 /*
 admin
 */
@@ -201,6 +340,18 @@ function updateAdminPerDetail(values) {
 
 function getAdmin(value) {
     const sql = "SELECT * FROM admin WHERE id != 1";
+
+    return db.simpleQuery(sql, value)
+    .then(res => {
+        if (res.rowCount > 0)
+            return res.rows;
+        else return false;
+    })
+    .catch(error => { return false;}); 
+}
+
+function getSaleByAdmin(value) {
+    const sql = "select a.*, b.name as shop_name from voucher a join shop b on b.id = a.shop_id where now() between timestart and timeend";
 
     return db.simpleQuery(sql, value)
     .then(res => {
@@ -1895,6 +2046,20 @@ function getShopProductById(value) {
     .catch(error => { return false;});
 }
 
+function getProductInfoByID(value) {
+    const sql = "select  a.id, a.name, b.max_price, b.min_price, c.url->'cover' as cover from product a inner join (select max(price) as max_price, min(price) as min_price, product_id from productvariant group by product_id) b on a.id = b.product_id inner join images as c on c.product_id = a.id where a.status = 1 and a.id = $1";
+
+    return db.simpleQuery(sql, value)
+    .then( res =>  {
+        if (res.rowCount > 0)
+        {
+            return res.rows;
+        }
+        return false;
+    })
+    .catch(error => { return false;});
+}
+
 function getProductDetailByID(value) {
     const sql = "select  a.id, a.name, b.max_price, b.min_price, c.url->'cover' as cover from product a inner join (select max(price) as max_price, min(price) as min_price, product_id from productvariant group by product_id) b on a.id = b.product_id inner join images as c on c.product_id = a.id where a.status = 1 order by a.created_at desc";
 
@@ -2453,6 +2618,17 @@ function getVoucherByID(values) {
 */
 
 module.exports = {
+    getProductBySearch,
+    getProductDetailBySeach,
+
+    getDashBoardSeller,
+    getCountProductByShop,
+    getCountVoucherByShop,
+    getWalletByShop,
+    getDashBoardAdmin,
+    getCountProductByAdmin,
+    getCountVoucherByAdmin,
+
     insertAdmin,
     insertAdminPermission,
     insertAdminRole,
@@ -2460,6 +2636,7 @@ module.exports = {
     updateAdminPerDetail,
     checkAdminExist,
     getAdmin,
+    getSaleByAdmin,
     getAdminDetailInfo,
 
     checkExistShopByName,
@@ -2562,6 +2739,7 @@ module.exports = {
     getProductAllById,
     getShopByProductId,
     getShopProductById,
+    getProductInfoByID,
     getProductDetailByID,
     getListNewProduct,
     getListSeleldProduct,

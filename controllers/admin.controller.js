@@ -35,7 +35,7 @@ exports.postLogin = async (req, res, next) => {
           role: userPass.role,
           permit: arrPerBefore
         }
-
+        req.session.admin = userInfo;
         const accessToken = await jwtHelper.generateToken(userInfo, process.env.SIGNATURETOKEN, '1h');
         //use session
         req.session.token = accessToken;
@@ -55,6 +55,48 @@ exports.getLogout = (req, res, next) => {
     res.redirect('/');
   }
   else res.redirect('/');
+}
+
+exports.getDashboard = async (req, res, next) => {
+  const getOrderStatus = await db.getDashBoardAdmin();
+  const getProductStatus = await db.getCountProductByAdmin();
+  const getSale = await db.getCountVoucherByAdmin();
+
+  var orderWait = 0, orderPre = 0, orderDeli = 0, orderCancel = 0;
+  var productOut = 0, productSell = 0;
+  var sale = 0;
+  var wallet = 0;
+
+  if (getOrderStatus) {
+    getOrderStatus.forEach(item => {
+      if (item.status == -1) orderCancel = item.count;
+      if (item.status == 0) orderWait = item.count;
+      if (item.status == 1) orderPre = item.count;
+      if (item.status == 3) orderDeli = item.count;
+    })
+  }
+
+  if (getProductStatus) {
+    getProductStatus.forEach(item => {
+      if (item.totalrows < 1) productOut++;
+    })
+    productSell = getProductStatus.length;
+  }
+
+  if (getSale) {
+    sale = Number(getSale[0].sale);
+  }
+  
+  res.render('./adminSys/dashboard', {
+    orderWait: orderWait,
+    orderPre: orderPre,
+    orderDeli: orderDeli,
+    orderCancel: orderCancel,
+    productOut: productOut,
+    productSell: productSell,
+    sale: sale,
+    wallet: wallet
+  })
 }
 
 exports.getHome = async (req, res, next) => {
@@ -468,6 +510,12 @@ exports.getProfileUser = async (req, res, next) => {
   catch (error) {
     console.log(error)
   }
+}
+
+exports.getSales = async (req, res, next) => {
+  const data = await db.getSaleByAdmin();
+
+  res.render('./adminSys/sales/sales', {voucher: data}); 
 }
 
 exports.getProfileEmployee= async (req, res, next) => {

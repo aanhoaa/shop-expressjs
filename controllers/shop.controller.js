@@ -16,8 +16,15 @@ const cf =  require('../helpers/collaborativeFiltering');
 // }
 
 exports.getProductsBySearch = async (req, res, next) => {
-  
-}
+  const query = req.query.q;
+  const result = await db.getProductDetailBySeach([query]);
+  console.log(result)
+  res.render('./shop/product/productSearch', {
+    userInfo: req.session.Userinfo,
+    cart: req.session.cart,
+    product: result
+  })
+} 
 
 exports.getProducts = async (req, res, next) => {
   const cateOneID = req.params.cateOneId;

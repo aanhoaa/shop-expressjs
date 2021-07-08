@@ -1,0 +1,193 @@
+
+<% include ../../partials/header_sellera %>
+
+    <%
+      function getDate(tt) {
+        var date = new Date(tt);
+        var MyDate = new Date(date);
+        var MyDateString;
+      
+        MyDate.setDate(MyDate.getDate());
+        var hour = MyDate.getHours();
+        var minutes = MyDate.getMinutes();
+        var end = 'AM';
+        if (hour > 11) {
+          end = 'PM';
+          hour -= 12;
+        }
+      
+        MyDateString = ('0' + MyDate.getDate()).slice(-2) + '/' + ('0' + (MyDate.getMonth()+1)).slice(-2) + '/' + MyDate.getFullYear() + ' '+ hour + ':' + minutes + ' ' + end;
+      
+        return MyDateString;
+      }
+    %>
+    <div class="list-category">
+        <a href="/seller">Trang chủ</a> > Khuyến mãi
+    </div>
+
+    <div class="add-new">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+           Tạo mới
+          </button>
+    </div>
+    <div class="content">
+        <table id="dataTables-example" class="mdl-data-table" style="width:100%">
+            <thead>
+                <tr align="center">
+                    <th style="padding: 8px 5px;">STT</th>
+                    <th style="padding: 8px 0;">Mã voucher</th>
+                    <th>Tên chương trình KM</th>
+                    <th>
+                      Thời gian diễn ra
+                      
+                    </th>
+                   
+                    <th>Danh mục áp dụng</th>
+                    <th>Discount</th>
+                    <th>Tình trạng</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+            <% if (voucher) {
+              var i = 0;
+              voucher.forEach(item => {i++;
+            %>
+              <tr>
+                <td><%-i%></td>
+                <td><%-item.code%></td>
+                <td>
+                  <div class="name-wrap-text">
+                    <p style="margin: 0;"><%-item.name%></p>
+                  </div>
+                </td>
+                <td>
+                  <div>
+                    <%-getDate(item.timestart)%> 
+                  </div>
+                  <span>-</span>
+                  <div>
+                    <%-getDate(item.timeend)%>
+                  </div>
+                </td>
+                
+                <td><%-item.catename%></td>
+                <td><%-item.discount%>%</td>
+                <td><p style="margin: 0;">Đang diễn ra</p></td>
+                <td>
+                  <div class="dropdown">
+                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                      Tùy chọn
+                      <!-- <span class="caret"></span> -->
+                    </button>
+                   <ul class="dropdown-menu action-product" aria-labelledby="dropdownMenu1">
+                      <li><a href="/seller/sales/<%-item.name%>.<%-item.voucher_id%>">Chỉnh sửa</a></li>
+                      <li><a href="/seller/order/detail/">Xóa</a></li>
+                    </ul>
+                </div>
+                </td>
+              </tr>
+            <%})}%>
+            </tbody>
+        </table>
+    </div>
+</div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Tạo mới khuyến mãi</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+       <form action="" method="POST">
+        <div class="modal-body">
+          <div class="form-group" style="margin-left: 10px;">
+            <label for="">Tên chương trình khuyến mãi</label>
+            <input type="text" class="form-control" name="name" required style="margin-left: 16px; width: 90%"> 
+          </div>
+            <div class="pick-date clearfix">
+                <label for="">Thời gian diễn ra khuyến mãi: </label>
+               <div class="col-sm-12">
+                   <div class="row" style="display: flex;">
+                      <div class='col-sm-5'>
+                          <div>Ngày bắt đầu: </div>
+                         <div class="form-group">
+                            <div class='input-group date picker1' id='datetimepicker1' data-target-input="nearest">
+                               <input type="text" class="form-control col-md-6 datetimepicker-input assessment-date-keypress" data-target="#datetimepicker1" data-toggle="picker1" autocomplete="off" required name="dateStart"/>
+                               <span class="input-group-addon">
+                               <span class="glyphicon glyphicon-calendar"></span>
+                               </span>
+                            </div>
+                         </div>
+                      </div>
+   
+                      <div class='col-sm-5'>
+                       <div>Ngày kết thúc: </div>
+                       <div class="form-group">
+                          <div class='input-group date picker2' id='datetimepicker2' data-target-input="nearest">
+                           <input type="text" class="form-control col-md-6 datetimepicker-input assessment-date-keypress" data-target="#datetimepicker2" data-toggle="picker2" autocomplete="off" required name="dateEnd"/>
+                             <span class="input-group-addon">
+                             <span class="glyphicon glyphicon-calendar"></span>
+                             </span>
+                          </div>
+                       </div>
+                    </div>
+                      <script type="text/javascript">
+                         $(function () {
+                             $('.picker1').datetimepicker();
+                             $('.picker2').datetimepicker({
+                                   useCurrent: false
+                               });
+                               $(".picker1").on("dp.change", function (e) {
+                           $('.picker2').datetimepicker('minDate', e.date);
+                           });
+                           $(".picker2").on("dp.change", function (e) {
+                               $('.picker1').datetimepicker('maxDate', e.date);
+                           });
+                               });
+                      </script>
+                   </div>
+                </div>
+            </div>
+            <div class="pick-category">
+                <label for="">Áp dụng cho danh mục:</label>
+                <select name="category" id="" class="form-control">
+                <% if (data.length > 0) {
+                    data.forEach(item => { %>
+              
+                   <option value="<%-item.id%>"><%-item.name%></option>
+               
+               <%})} else {%>
+                   <option value="">Chưa có sản phẩm</option>
+               <%}%>
+           </select>
+            </div>
+            <div class="pick-discount">
+                <label for="">Phần trăm giảm</label>
+                <input type="number" class="form-control" name="discount" required>
+            </div>
+            <div class="pick-discount">
+              <label for="">Mã CODE</label>
+              <input type="text" class="form-control" name="code" required>
+            </div>
+           </div>
+           <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save changes</button>
+          </div>
+       </form>
+        
+      </div>
+    </div>
+
+<% include ../../partials/footer_sellera %>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.0/moment.min.js"></script>
+<script src="/javascripts/assets/bootstrap-datetimepicker.js"></script>
+<script src="/javascripts/assets/bootstrap-datetimepicker.min.js"></script>
+<link rel="stylesheet" href="/stylesheets/css/report.css">
+<link rel="stylesheet" href="/stylesheets/css/sales_bootstrap.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
