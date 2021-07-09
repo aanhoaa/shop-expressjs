@@ -149,7 +149,7 @@ $(document).ready(function(){
         var group_color = $("input[name='group_color[]']:checked").val();
         var group_size =  $("input[name='group_size[]']:checked").val();
         var category_id = $("#category_id").val();
-
+      
         $.ajax({
           url: `${window.location.origin}/filter`,
           type: "POST", // phương thức gửi dữ liệu.

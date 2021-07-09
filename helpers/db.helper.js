@@ -1880,7 +1880,7 @@ function getProductByShop(value) {
     .catch(error => { return false;});  
 }
 
-function getProductByCateOne(price, rating, value) {
+function getProductByCateOne(city, price, rating, value) {
     var sortBy = 'min';
     var filter_price = 'd.price > 0';
     var filter_rating = 'b.rating >= 0';
@@ -1929,7 +1929,10 @@ function getProductByCateOne(price, rating, value) {
             break;
     }
 
-    const sql = `select max(d.price) as max, min(d.price) as min, b.name, b.id as product_id, c.url -> 'cover' as url, e.name as shop, avg(b.rating)::numeric(10,1) as rating , b.created_at from categorylevel1 as a inner join product as b on b.categorylevel1_id = a.id inner join images as c on c.product_id = b.id inner join productvariant as d on d.product_id = b.id inner join shop as e on e.id = b.shop_id where a.id = $1 and b.status = 1 AND ${filter_price} AND ${filter_rating} GROUP BY b.name, b.id, c.url, e.name, b.created_at order by ${sortBy}`;
+    if (city > 0) city = `AND g.code::integer = ${city}`;
+    else city = '';
+  
+    const sql = `select max(d.price) as max, min(d.price) as min, b.name, b.id as product_id, c.url -> 'cover' as url, e.name as shop, avg(b.rating)::numeric(10,1) as rating , b.created_at from categorylevel1 as a inner join product as b on b.categorylevel1_id = a.id inner join images as c on c.product_id = b.id inner join productvariant as d on d.product_id = b.id inner join shop as e on e.id = b.shop_id inner join addressbook as f on f.shop_id = e.id inner join province as g on g.id = f.province_id WHERE a.id = $1 and b.status = 1 AND ${filter_price} AND ${filter_rating} AND f.isdefault = 1 ${city} GROUP BY b.name, b.id, c.url, e.name, b.created_at order by ${sortBy} `;
    
     return db.simpleQuery(sql, value)
     .then( res =>  {
@@ -1942,7 +1945,7 @@ function getProductByCateOne(price, rating, value) {
     .catch(error => { return false;});
 }
 
-function getProductByCateTwo(price, rating, value) {
+function getProductByCateTwo(city, price, rating, value) {
     var sortBy = 'min';
     var filter_price = 'd.price > 0';
     var filter_rating = 'b.rating >= 0';
@@ -1991,7 +1994,10 @@ function getProductByCateTwo(price, rating, value) {
             break;
     }
 
-    const sql = `select  a.name as cate2_name, max(d.price) as max, min(d.price) as min, b.name, b.id as product_id, c.url -> 'cover' as url, e.name as shop, avg(b.rating)::numeric(10,1) as rating from categorylevel2 as a inner join product as b on b.categorylevel2_id = a.id inner join images as c on c.product_id = b.id inner join productvariant as d on d.product_id = b.id inner join shop as e on e.id = b.shop_id where a.id = $1 and b.status = 1 AND ${filter_price} AND ${filter_rating} GROUP BY a.name, b.name, b.id, c.url, e.name, b.created_at order by ${sortBy}`;
+    if (city > 0) city = `AND g.code::integer = ${city}`;
+    else city = '';
+
+    const sql = `select  a.name as cate2_name, max(d.price) as max, min(d.price) as min, b.name, b.id as product_id, c.url -> 'cover' as url, e.name as shop, avg(b.rating)::numeric(10,1) as rating from categorylevel2 as a inner join product as b on b.categorylevel2_id = a.id inner join images as c on c.product_id = b.id inner join productvariant as d on d.product_id = b.id inner join shop as e on e.id = b.shop_id inner join addressbook as f on f.shop_id = e.id inner join province as g on g.id = f.province_id WHERE a.id = $1 and b.status = 1 AND ${filter_price} AND ${filter_rating} AND f.isdefault = 1 ${city} GROUP BY a.name, b.name, b.id, c.url, e.name, b.created_at order by ${sortBy}`;
 
     return db.simpleQuery(sql, value)
     .then( res =>  {

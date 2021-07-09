@@ -416,6 +416,16 @@
     padding: 5px 10px;
   }
 
+  .share_block .share_block_text a{
+    color: unset;
+    margin-left: 15px;
+  }
+
+  .share_block .share_block_text i{
+    color: #385898;
+    font-size: 30px;
+  }
+
   .shipping_block .shipping_block_under_line{
     border-bottom: 1px gray solid;
     padding: auto;

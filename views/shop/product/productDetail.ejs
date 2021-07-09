@@ -59,7 +59,7 @@
             </div>
             <div style="border-bottom: 1px #80808042 dashed; margin: 5px;"></div>
             <h5 style="margin-top: 15px;">
-                <span class="product_details_price_zero"><%-max==min?max:`${VND(parseInt(min))} - ${VND(parseInt(max))}`%></span>
+                <span class="product_details_price_zero"><%-max==min?VND(Number(max)):`${VND(Number(min))} - ${VND(Number(max))}`%></span>
                 <span class="product_details_price_one"></span>
             </h5>
             <div class="product_details_description">
@@ -161,7 +161,8 @@
         </div>
         <div class="col-sm-3">
             <div class="share_block">
-                <h5 class="share_block_text" style="margin-top: 16px;">Chia Sẻ:</h5>
+                <h5 class="share_block_text" style="margin-top: 10px; margin-bottom: 10px;">Chia Sẻ: <a href="https://www.facebook.com/sharer.php?u=/https://funiture-app.herokuapp.com/detail/<%-data[0].name%>.<%-data[0].product_id%>"><i class="fab fa-facebook"></i></a></h5>
+                
             </div>
             <div class="shipping_block">
                 <h5 class="shipping_block_text" style="margin-top: 16px;">Sản phẩm này sẽ tới tay bạn chỉ trong 3-5 ngày làm việc</h5>
@@ -182,7 +183,7 @@
                         </div>
                         <div class="shipping_block_info">
                             <h5>Chất lượng đảm bảo</h5>
-                            <p>Top 10 thương hiệu uy tín 2019</p>
+                            <p>Top 10 thương hiệu uy tín 2021</p>
                         </div>
                     </li>
                     <li class="shipping_block_li">

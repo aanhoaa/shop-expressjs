@@ -73,14 +73,14 @@ $(document).ready(function(){
             $('.notifi-miss').remove();
         }
         else {
-            console.log('out event')
+            //console.log('out event')
             $('.quantity').html('');
             $('.product_details_price_zero').show();
             $('.product_details_price_one').html('');
             return;
         }
 
-        console.log('call ajax')
+        //console.log('call ajax')
             const productId = document.getElementById('product_id').value;
             const quantity = document.getElementById('quantity').value;
             //ajax here
@@ -102,7 +102,7 @@ $(document).ready(function(){
                         $('#quantity').attr('max', data.stock);
                         $('.cpAMpZ').show();
                         $('.product_details_price_zero').hide();
-                        $('.product_details_price_one').html(`${data.price}₫`);
+                        $('.product_details_price_one').html(`${Number(data.price).toLocaleString('it-IT', {style : 'currency', currency : 'VND'})}`);
                     }
                    else {
                         $('.quantity').html('Hết hàng');

@@ -242,7 +242,6 @@ $(document).ready(function(){
          var color_val = $('.product_details_color .active').find('.color_child').val();
          var product_id = $('#product_id').val();
         // $('.lbl-dsb').children('input').attr('disabled','disabled');
-         console.log($('.lbl-dsb').children('input'))
           //console.log(size_val +color_val);
           //console.log(gSize);
           if (gSize === size_val)
@@ -281,7 +280,7 @@ $(document).ready(function(){
               {
                 $('.input-number').val(1);
                 $('.input-number').attr('max', data[0].amount);
-                $('.product_details_price_zero').text(data[0].price.toLocaleString() + '₫');
+                $('.product_details_price_zero').text(Number(data[0].price).toLocaleString('it-IT', {style : 'currency', currency : 'VND'}));
                 $('.quantity').text(data[0].amount + ' sản phẩm có sẵn');
                 $('#price').val(data[0].price);
                 $('#qtt').val(data[0].amount);

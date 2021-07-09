@@ -31,7 +31,37 @@ exports.getProducts = async (req, res, next) => {
   const cate1 = await db.getCategoryLevelOne();
   const cate2 = await db.getCategoryLevelTwoAll();
 
-  const product = await db.getProductByCateOne(1, 1, [cateOneID]);
+  var bind = new Array;
+  const b = await fetch('https://online-gateway.ghn.vn/shiip/public-api/master-data/province', {
+    'method': 'GET',
+    'headers': {
+      'Connection': 'keep-alive',
+      'Pragma': 'no-cache',
+      'Cache-Control': 'no-cache',
+      'Upgrade-Insecure-Requests': '1',
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36 Edg/87.0.664.66',
+      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+      'Sec-Fetch-Site': 'same-origin',
+      'Sec-Fetch-Mode': 'navigate',
+      'Sec-Fetch-User': '?1',
+      'Sec-Fetch-Dest': 'document',
+      'token': '09d8cf6a-c357-11eb-8ea7-7ad2d1e1ce1c',
+      'Accept-Language': 'vi,en-US;q=0.9,en;q=0.8',
+     // 'Cookie': x.cookie,
+      'gzip': true,
+  }
+  }).then(res => res.json())
+  .then(data => {
+    const address = data.data;
+    address.forEach(iCity => {
+    bind.push({id: iCity.ProvinceID, name: iCity.ProvinceName});
+    })
+    return bind;
+  })
+  .catch(err => console.log(err))
+
+  const product = await db.getProductByCateOne(0, 1, 1, [cateOneID]);
   res.render("./shop/product/products", {
     title: "Trang chủ",
     userInfo: req.session.Userinfo,
@@ -39,7 +69,8 @@ exports.getProducts = async (req, res, next) => {
     cate1: cate1,
     cate2: cate2,
     product: product,
-    key: cateOneID
+    key: cateOneID,
+    bind: b
   });
 }
 
@@ -47,8 +78,38 @@ exports.getProductsCateTwo = async (req, res, next) => {
   const cateTwoID = req.params.cateTwoId;
   const cate1 = await db.getCategoryLevelOne();
   const cate2 = await db.getCategoryLevelTwoAll();
+  const product = await db.getProductByCateTwo(0, 1, 1, [cateTwoID]);
 
-  const product = await db.getProductByCateTwo(1, 1, [cateTwoID]);
+  var bind = new Array;
+  const b = await fetch('https://online-gateway.ghn.vn/shiip/public-api/master-data/province', {
+    'method': 'GET',
+    'headers': {
+      'Connection': 'keep-alive',
+      'Pragma': 'no-cache',
+      'Cache-Control': 'no-cache',
+      'Upgrade-Insecure-Requests': '1',
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36 Edg/87.0.664.66',
+      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+      'Sec-Fetch-Site': 'same-origin',
+      'Sec-Fetch-Mode': 'navigate',
+      'Sec-Fetch-User': '?1',
+      'Sec-Fetch-Dest': 'document',
+      'token': '09d8cf6a-c357-11eb-8ea7-7ad2d1e1ce1c',
+      'Accept-Language': 'vi,en-US;q=0.9,en;q=0.8',
+     // 'Cookie': x.cookie,
+      'gzip': true,
+  }
+  }).then(res => res.json())
+  .then(data => {
+    const address = data.data;
+    address.forEach(iCity => {
+    bind.push({id: iCity.ProvinceID, name: iCity.ProvinceName});
+    })
+    return bind;
+  })
+  .catch(err => console.log(err))
+
   res.render("./shop/product/cate", {
     title: "Trang chủ",
     userInfo: req.session.Userinfo,
@@ -56,7 +117,8 @@ exports.getProductsCateTwo = async (req, res, next) => {
     cate1: cate1,
     cate2: cate2,
     product: product,
-    key: cateTwoID
+    key: cateTwoID,
+    bind: b
   });
 }
 
@@ -754,10 +816,41 @@ exports.postProductFilter = async (req, res, next) => {
   const cateOneID = req.body.cateOneId;
   const optionSelect = req.body.optionSelect;
   const group_rating = req.body.group_rating;
+  const group_city = req.body.group_brand;
   const cate1 = await db.getCategoryLevelOne();
   const cate2 = await db.getCategoryLevelTwoAll();
-  const product = await db.getProductByCateOne(optionSelect, group_rating, [cateOneID]);
+  const product = await db.getProductByCateOne(group_city, optionSelect, group_rating, [cateOneID]);
  
+  var bind = new Array;
+  const b = await fetch('https://online-gateway.ghn.vn/shiip/public-api/master-data/province', {
+    'method': 'GET',
+    'headers': {
+      'Connection': 'keep-alive',
+      'Pragma': 'no-cache',
+      'Cache-Control': 'no-cache',
+      'Upgrade-Insecure-Requests': '1',
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36 Edg/87.0.664.66',
+      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+      'Sec-Fetch-Site': 'same-origin',
+      'Sec-Fetch-Mode': 'navigate',
+      'Sec-Fetch-User': '?1',
+      'Sec-Fetch-Dest': 'document',
+      'token': '09d8cf6a-c357-11eb-8ea7-7ad2d1e1ce1c',
+      'Accept-Language': 'vi,en-US;q=0.9,en;q=0.8',
+     // 'Cookie': x.cookie,
+      'gzip': true,
+  }
+  }).then(res => res.json())
+  .then(data => {
+    const address = data.data;
+    address.forEach(iCity => {
+    bind.push({id: iCity.ProvinceID, name: iCity.ProvinceName});
+    })
+    return bind;
+  })
+  .catch(err => console.log(err))
+
   res.render("./shop/product/products", {
     title: "Trang chủ",
     userInfo: req.session.Userinfo,
@@ -765,7 +858,8 @@ exports.postProductFilter = async (req, res, next) => {
     cate1: cate1,
     cate2: cate2,
     product: product,
-    key: cateOneID
+    key: cateOneID,
+    bind: b
   });
 }
 
@@ -774,7 +868,37 @@ exports.postProductSortBy = async (req, res, next) => {
   const optionSelect = req.body.optionSelect;
   const cate1 = await db.getCategoryLevelOne();
   const cate2 = await db.getCategoryLevelTwoAll();
-  const product = await db.getProductByCateOne(optionSelect, 1, [cateOneID]);
+  const product = await db.getProductByCateOne(optionSelect, 0, 1, [cateOneID]);
+
+  var bind = new Array;
+  const b = await fetch('https://online-gateway.ghn.vn/shiip/public-api/master-data/province', {
+    'method': 'GET',
+    'headers': {
+      'Connection': 'keep-alive',
+      'Pragma': 'no-cache',
+      'Cache-Control': 'no-cache',
+      'Upgrade-Insecure-Requests': '1',
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36 Edg/87.0.664.66',
+      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+      'Sec-Fetch-Site': 'same-origin',
+      'Sec-Fetch-Mode': 'navigate',
+      'Sec-Fetch-User': '?1',
+      'Sec-Fetch-Dest': 'document',
+      'token': '09d8cf6a-c357-11eb-8ea7-7ad2d1e1ce1c',
+      'Accept-Language': 'vi,en-US;q=0.9,en;q=0.8',
+     // 'Cookie': x.cookie,
+      'gzip': true,
+  }
+  }).then(res => res.json())
+  .then(data => {
+    const address = data.data;
+    address.forEach(iCity => {
+    bind.push({id: iCity.ProvinceID, name: iCity.ProvinceName});
+    })
+    return bind;
+  })
+  .catch(err => console.log(err))
  
   res.render("./shop/product/products", {
     title: "Trang chủ",
@@ -783,7 +907,8 @@ exports.postProductSortBy = async (req, res, next) => {
     cate1: cate1,
     cate2: cate2,
     product: product,
-    key: cateOneID
+    key: cateOneID,
+    bind: b
   });
 }
 
