@@ -131,7 +131,7 @@ exports.getProductDetail = async (req, res, next) => {
   const data = await db.getProductAllById([productId]);
   const shop = await db.getShopByProductId([productId]);
   const relative = await db.getProductByShop([shop.id]);
-  const productCate2 = await db.getProductByCateTwo(1, 1, [data[0].cate2_id]); 
+  const productCate2 = await db.getProductByCateTwo(0, 1, 1, [data[0].cate2_id]); 
 
   if (!req.session.recent) {
     req.session.recent = [];
@@ -177,7 +177,8 @@ exports.getProductDetail = async (req, res, next) => {
       shop: shop,
       relativeShop: relative,
       productCate2: productCate2,
-      cate2_id: data[0].cate2_id
+      cate2_id: data[0].cate2_id,
+      material: data[0].material
     })
   }
 }

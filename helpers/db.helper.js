@@ -2023,7 +2023,7 @@ function getProductByCateTwo(city, price, rating, value) {
 }
 
 function getProductAllById(value) {
-    const sql = "select a.name, a.id as product_id, a.rating, a.categorylevel2_id as cate2_id, max(b.price) as max, c.attribute->'Color' as color, c.attribute->'Size' as size, b.price, d.url->'cover' as cover, d.url as url from product as a inner join productvariant as b on b.product_id = a.id inner join variantdetail as c on c.id = b.variant_id inner join images as d on d.product_id = a.id where a.id = $1 and a.status = 1 group by a.name, a.id, c.attribute, b.price, d.url";
+    const sql = "select a.name, a.material, a.id as product_id, a.rating, a.categorylevel2_id as cate2_id, max(b.price) as max, c.attribute->'Color' as color, c.attribute->'Size' as size, b.price, d.url->'cover' as cover, d.url as url from product as a inner join productvariant as b on b.product_id = a.id inner join variantdetail as c on c.id = b.variant_id inner join images as d on d.product_id = a.id where a.id = $1 and a.status = 1 group by a.name, a.id, c.attribute, b.price, d.url";
 
     return db.simpleQuery(sql, value)
     .then( res =>  {
