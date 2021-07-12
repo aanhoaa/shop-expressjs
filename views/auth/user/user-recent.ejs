@@ -28,12 +28,7 @@
          <div class="user-item">
             <div><a href="/user/recent" class="selected">Sản phẩm đã xem</a></div>
          </div>
-         <div class="user-item">
-            <div>Nhận xét sản phẩm đã mua</div>
-         </div>
-         <div class="user-item">
-            <div>Sản phẩm mua sau</div>
-         </div>
+
       </div>
 
       <div class="khoi_sp" style="height: 200px; width: 65%; margin-left: 20px;">
@@ -43,7 +38,7 @@
             <% if (data.length > 0) {
                 data.forEach(item => {
             %>
-            <div class="khoi col-sm-3" style="max-width: 20% !important;">
+            <div class="khoi col-sm-3" style="max-width: 20% !important; padding-right: 0;">
                 <div class="card" style="border-color: white; line-height: 0.5;">
                     <div class="khoi_image" style="position: relative; height: 102px;">
                         <img class="card-img-top hinhsanpham" src="<%-item.cover%>" alt="Card image cap" style="width: 100%">            
