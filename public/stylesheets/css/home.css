@@ -526,7 +526,8 @@ html[xmlns] .clearfix {
 
 /* custom product */
 .product-list-detail {
-    margin-top: 10px;
+	margin-top: 10px;
+	box-shadow: 0 0.0625rem 0.125rem 0 rgb(0 0 0 / 10%);
 }
 .related-product-info {
     padding-bottom: 5px;

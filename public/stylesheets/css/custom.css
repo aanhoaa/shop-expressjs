@@ -92,7 +92,13 @@ table.table-custom {
 .is-flex {
     display: flex;
 }
-
+.opt-all {
+    position: fixed;
+    width: 81%;
+    right: 19px;
+    bottom: 0;
+    background: #fff;
+}
 .show-opt {
     padding: 10px;
     border: 1px solid #666;
@@ -234,7 +240,7 @@ table.table-custom {
 }
 
 .action-product {
-    min-width: 145px !important;
+    min-width: 124px !important;
 }
 
 .product-act {

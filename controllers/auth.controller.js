@@ -336,6 +336,7 @@ exports.isAuth = async (req, res, next) => {
       // Nếu giải mã gặp lỗi: Không đúng, hết hạn...etc:
       // Lưu ý trong dự án thực tế hãy bỏ dòng debug bên dưới, mình để đây để debug lỗi cho các bạn xem thôi
       console.log(error)
+      req.session.destroy();
       return res.status(401).json({
         message: 'Unauthorized.',
       });

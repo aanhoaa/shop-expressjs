@@ -7,6 +7,10 @@
 <link rel="stylesheet" href="/stylesheets/css/report.css">
 <link rel="stylesheet" href="/stylesheets/css/sales_bootstrap.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+<script src="/javascripts/js/admin/report.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+  
     <%
       function getDate(tt) {
         var date = new Date(tt);
@@ -37,7 +41,7 @@
           </button>
     </div>
     <div class="content">
-        <table id="dataTables-example" class="mdl-data-table" style="width:100%">
+        <table id="dataTables-example" class="mdl-data-table" style="width:96%">
             <thead>
                 <tr align="center">
                     <th style="padding: 8px 5px;">STT</th>
@@ -77,9 +81,17 @@
                   </div>
                 </td>
                 
-                <td><%-item.catename%></td>
+                <td>Tất cả sản phẩm</td>
                 <td><%-item.discount%>%</td>
-                <td><p style="margin: 0;">Đang diễn ra</p></td>
+                <td>
+                  <p style="margin: 0;">
+                    <% if (item.status == -1){%>
+                      Đã kết thúc
+                    <%} else {%>
+                      <%-Date.now() < item.timestart ? 'Sắp diễn ra' : Date.now() > item.timestart && Date.now() < item.timeend ? 'Đang diễn ra':'Đã kết thúc'%>
+                    <%}%>
+                  </p>
+                </td>
                 <td>
                   <div class="dropdown">
                     <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -87,8 +99,13 @@
                       <span class="caret"></span>
                     </button>
                    <ul class="dropdown-menu action-product" aria-labelledby="dropdownMenu1">
+                    <% if ((Date.now() > item.timestart && Date.now() < item.timeend) || (Date.now() < item.timestart)){%>
+                      <% if (item.status != -1) {%>
+                        <li><a href="" class="finish-voucher" data-id="<%-item.voucher_id%>">Kết thúc</a></li>
+                      <%}%>
+                    <%}%>
                       <li><a href="/seller/sales/<%-item.name%>.<%-item.voucher_id%>">Chỉnh sửa</a></li>
-                      <li><a href="/seller/order/detail/">Xóa</a></li>
+                      <li><a href="" class="delete-voucher" data-id="<%-item.voucher_id%>">Xóa</a></li>
                     </ul>
                 </div>
                 </td>
@@ -161,13 +178,15 @@
             <div class="pick-category">
                 <label for="">Áp dụng cho danh mục:</label>
                 <select name="category" id="" class="form-control">
-                <% if (data.length > 0) {
-                    data.forEach(item => { %>
+                  
+                <% if (data.length > 0) { %>
+                  <option value="0">Tất cả sản phẩm</option>
+                  <%  data.forEach(item => { %>
               
                    <option value="<%-item.id%>"><%-item.name%></option>
                
                <%})} else {%>
-                   <option value="">Chưa có sản phẩm</option>
+                <option value="0">Tất cả sản phẩm</option>
                <%}%>
            </select>
             </div>
@@ -181,8 +200,8 @@
             </div>
            </div>
            <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary">Save changes</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+            <button type="submit" class="btn btn-primary">Lưu</button>
           </div>
        </form>
         

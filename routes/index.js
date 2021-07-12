@@ -56,7 +56,7 @@ router.get('/', async function(req, res, next) {
   }
   const category = await db.getCategoryLevelOne();
   const products = await db.getListNewProduct();
-  const topSell = await db.getListSeleldProduct([1]);
+  const topSell = await db.getListSeleldProduct([2]);
   const listPd = await db.getProductDetailByID();
 
   res.render('index', { 

@@ -49,7 +49,7 @@
     <div class="row" style="width: 1300px; margin: 0">
         <div class="col-sm-12 clearfix">
             <div class="box" style="width: unset;">
-                <div class="list col-sm-3" style="float: left;/*margin-right: 50px; margin-left: 70px; */margin-top: 86px;">
+                <div class="list col-sm-3" style="float: left; margin-top: 50px;">
                     <div class="categories">
                         <div class="menu-feature">
                             <div class="menu-block menu-has-child">
@@ -234,7 +234,7 @@
                         <div class="filter_material">
                             <h5 class="filter_material_text">Đánh giá</h5>
                             <div class="filter_material_box">
-                                <ul class="filter_price_ul clearfix">
+                                <ul class="filter_price_ul clearfix" style="padding-left: 0;">
                                     <li class="child_filter_brand_checkbox">
                                         <div class="checkboxFive">
                                             <input type="checkbox" value="9" id="cb_rating1" name="group_rating[]"/>
@@ -392,7 +392,7 @@
                             </div>
                             <div class="div_number_products">
                                 <input type="hidden" id="category_id" value="<%-key%>">
-                                <h5 style="float: left;">Tìm thấy <span id="count_product"></span> sản phẩm</h5>
+                                <h5 style="float: left;">Tìm thấy <%-product != ''? product.length : ''%> sản phẩm</h5>
                             </div>
                             <div class="custom_select_box">
                                 <select class="custom-select" id="SortBy" style="float: right;">
@@ -402,68 +402,64 @@
                                     <option value="3">Mới nhất</option>
                                     <option value="4">Cũ nhất</option>
                                 </select>
-                                <label class="lable-sort-by" style="float: right;">Sort By</label>
+                                <label class="lable-sort-by" style="float: right;">Sắp xếp theo</label>
                             </div>
                         </div>
                     </div>
-                    <div class="khoi_sp" style="height: 200px;">
-                        
-                        <!-- <a href="{!! url('view',[$row->id]) !!}"> -->
+                    <div class="khoi_sp clearfix">
+                            
                         <%if (product != '') { product.forEach(item => {%>
                             
                             <div class="khoi col-sm-3">
-                                <div class="card" style="border-color: white; line-height: 0.5;">
-                                    <div class="khoi_image" style="position: relative;">
-                                        <img class="card-img-top hinhsanpham" src="<%-item.url%>" alt="Card image cap">
-                                       
-                                        <!--<img src="{!! asset('sale.png') !!}" alt="" style="position: absolute; top: 7px; left: -5px; width: 61px; height: 30px;"> 
-                                        <label style="position: absolute; top: 16px; left: 10px; font-weight: 501; color: #fff">
-                                        </label>-->
-                                       
-                                        
-                                    </div>
-                                    <ul class="social" id="social">
-                                        <li><a href="/detail/<%-give(item.name)%>.<%-item.product_id%>" data-tip="Quick View"><i class="fa fa-eye"></i></a></li>
-                                        <li><a href="#" data-tip="Add to Wishlist"><i class="fa fa-shopping-bag"></i></a></li>
-                                        <li><a href="#" data-tip="Add to Cart"><i class="fa fa-shopping-cart"></i></a></li>
-                                    </ul>
-                                    <div class="product-list-detail">
-                                        <span class="category-name"></span> 
-                                        <div class="related-product-info">
-                                           <div class="related-product-title"><a href="/detail/<%-give(item.name)%>.<%-item.product_id%>" title="Giường Đôi Zago Omega King" class="product-item-name">
-                                              <%-item.name%>
-                                              </a>
-                                           </div>
-                                           <div class="related-product-rating col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                            <div class="rating">
-                                                <div class="star-rating">
-                                                   <span class="fa fa-star-o" data-rating="1"></span>
-                                                   <span class="fa fa-star-o" data-rating="2"></span>
-                                                   <span class="fa fa-star-o" data-rating="3"></span>
-                                                   <span class="fa fa-star-o" data-rating="4"></span>
-                                                   <span class="fa fa-star-o" data-rating="5"></span>
-                                                   <input type="hidden" name="whatever1" class="rating-value" value="<%-item.rating%>">
+                                <a href="/detail/<%-give(item.name)%>.<%-item.product_id%>" class="clearfix">
+                                    <div class="card" style="border-color: white; line-height: 0.5;">
+                                        <div class="khoi_image" style="position: relative;">
+                                            <img class="card-img-top hinhsanpham" src="<%-item.url%>" alt="Card image cap">
+                                        </div>
+                                      
+                                        <div class="product-list-detail">
+                                            <span class="category-name"></span> 
+                                            <div class="related-product-info">
+                                               <div class="related-product-title">
+                                                   
+                                               </div>
+                                               <div class="related-product-rating col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                <div class="rating col-sm-8">
+                                                    <div class="star-rating">
+                                                       <span class="fa fa-star-o" data-rating="1"></span>
+                                                       <span class="fa fa-star-o" data-rating="2"></span>
+                                                       <span class="fa fa-star-o" data-rating="3"></span>
+                                                       <span class="fa fa-star-o" data-rating="4"></span>
+                                                       <span class="fa fa-star-o" data-rating="5"></span>
+                                                       <input type="hidden" name="whatever1" class="rating-value" value="<%-item.rating%>">
+                                                     </div>
                                                  </div>
-                                             </div>
-                                           </div>
-                                        </div>
-                                        <div class="related-product-price price-block">
-                                           <div class="col-price">
-                                              <p class="current-price"><%-item.max==item.min? item.max : `${item.min} - ${item.max}` %> ₫</p>
-                                           </div>
-                                           <div class="col-brand">
-                                              <div class="brand-image-wp"><a href="/thuong-hieu/zago" title="ZAGO"><img src="https://cdn.fitin.vn/cms-ecom/images/2020/03/06/zago-1583491970.png" alt="ZAGO" class="brand-image"></a></div>
-                                           </div>
-                                        </div>
-                                        <div class="block-tags">
-                                           <div class="row"></div>
-                                        </div>
-                                     </div>
-                                </div>
+
+                                                 <div class="selled col-sm-4" style="padding: 0;">
+                                                     
+                                                     <%
+                                                     const found = count.find(element => element.product_id == item.product_id);
+                                                     %>
+                                                     <% if (found != undefined) {%>
+                                                        <span style="line-height: 32px; font-weight: 100;">Đã bán: <%-found.totalrows%></span>
+                                                    <%}%> 
+                                                 </div>
+                                               </div>
+                                            </div>
+                                            <div class="related-product-price price-block">
+                                               <div class="col-price">
+                                                  <p class="current-price"><%-item.max==item.min? VND(Number(item.max)) : `${VND(Number(item.min))} - ${VND(Number(item.max))}` %></p>
+                                               </div>
+                                               <div class="col-brand">
+                                                  <div class="brand-image-wp"><a href="/thuong-hieu/zago" title="ZAGO"><img src="https://cdn.fitin.vn/cms-ecom/images/2020/03/06/zago-1583491970.png" alt="ZAGO" class="brand-image"></a></div>
+                                               </div>
+                                            </div>
+                                         </div>
+                                    </div>
+                                </a>
                             </div>
                         <%})}%>
-                            <!-- </a> -->
-                          
+                                        
                     </div>
                     </div>
                 </div>

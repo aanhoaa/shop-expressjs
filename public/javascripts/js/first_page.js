@@ -88,6 +88,7 @@ $(document).ready(function(){
     $('#SortBy').change(function(e) {
       var val = $("#SortBy option:selected").val();
       var category_id = $("#category_id").val();
+      
       e.preventDefault();
       $.ajax({
         url: `${window.location.origin}/sortby`,

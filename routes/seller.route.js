@@ -42,6 +42,8 @@ router.get("/sales" , authController.isAuth, authController.isShop, sellerContro
 router.post("/sales" , authController.isAuth, authController.isShop, sellerController.postSales);
 router.get("/sales/*.:voucherId" , authController.isAuth, authController.isShop, sellerController.getEditSales);
 router.post("/sales/*.:voucherId" , authController.isAuth, authController.isShop, sellerController.postEditSales);
+router.put("/api/sales/update" , authController.isAuth, authController.isShop, sellerController.postUpdateSale);
+router.delete("/api/sales/delete" , authController.isAuth, authController.isShop, sellerController.postDeleteSale);
 
 router.post("/profile/address/edit/:bookId", authController.isAuth, authController.isShop, sellerController.postUpdateAddressBook);
 router.post("/profile/address/delete", authController.isAuth, authController.isShop, sellerController.postDeleteAddressBook);

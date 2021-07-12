@@ -23,15 +23,6 @@
     <form action="" method="POST" name="frmEditProduct" enctype="multipart/form-data">
         <div class="col-lg-7" style="padding-bottom:120px">
             <div class="form-group">
-                <label>Thương hiệu</label>
-                <select class="form-control" name="brand">
-                    <option value="">Please Choose Brand</option>
-                   
-                        <option value=""></option> 
-                  
-                </select>
-            </div>
-            <div class="form-group">
                 <label>Danh mục cấp 1</label>
                 <select class="form-control par-cate" name="cate1" required>
                     <option value="">Please Choose Category</option>
@@ -56,7 +47,11 @@
                 <select class="form-control" name="material" required>
                     <option value="">Please Choose Material</option>
                    
-                      <option value="test" selected >test</option>
+                    <option value="Vải" <%-material == 'Vải' ? 'selected' : ''%>>Vải</option>
+                    <option value="Gỗ công nghiệp" <%-material == 'Gỗ công nghiệp' ? 'selected' : ''%>>Gỗ công nghiệp</option>
+                    <option value="Gỗ tự nhiên" <%-material == 'Gỗ tự nhiên' ? 'selected' : ''%>>Gỗ tự nhiên</option>
+                    <option value="Cao su tổng hợp" <%-material == 'Cao su tổng hợp' ? 'selected' : ''%>>Cao su tổng hợp</option>
+                    <option value="Cao su thiên nhiên" <%-material == 'Cao su thiên nhiên' ? 'selected' : ''%>>Cao su thiên nhiên</option>
                    
                 </select>
             </div>

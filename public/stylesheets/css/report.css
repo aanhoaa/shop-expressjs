@@ -78,6 +78,7 @@
 .add-new {
   float: right;
   margin: 20px;
+  margin-right: 45px;
 }
 .pick-date {
   margin: 10px;

@@ -474,6 +474,7 @@ exports.getEditSales = async (req, res, next) => {
   const voucherId = req.params.voucherId;
   const data = await db.getCategoryLevelTwoByShop([req.session.shopInfo.id]);
   const getVoucher = await db.getVoucherByID([req.session.shopInfo.id, voucherId]);
+  console.log(voucherId)
   var now = Date.now();
   var status = 0;
   var statusStart = fn_DateCompare(now, getVoucher[0].timestart)
@@ -527,13 +528,13 @@ exports.postAddProduct = async (req, res, next) => {
     const price = 0;
     const stock = 0;
     const status = 0;
-    const {brand, cate1, cate2, material, name, sku, description, size, color} = req.body;
+    const {cate1, cate2, material, name, sku, description, size, color} = req.body;
     var arrSize, arrColor;
     var arrVariantId = [];
     const imgCover = req.files.path;
 
     //check before save db
-    if (brand == '' || cate1 == '' || cate2 == '' || name == '' || material == '' || imgCover == '')
+    if (cate1 == '' || cate2 == '' || name == '' || material == '' || imgCover == '')
         return res.status(500).json();
 
     if (size != '' || color != '') {
@@ -605,8 +606,8 @@ exports.postAddProduct = async (req, res, next) => {
             var productVariantId = await db.insertProductVariant(savePDV);
             
             if (productVariantId)
-            return res.redirect('/seller');
-            else res.status(500).json({status: 'Thêm thất bại'});
+             return res.redirect(`/seller/product/edit/variant/productId`);
+            else return res.status(500).json({status: 'Thêm thất bại'});
         })
     }
     else {
@@ -615,10 +616,26 @@ exports.postAddProduct = async (req, res, next) => {
         var productVariantId = await db.insertProductVariant(savePDV);
 
         if (productVariantId)
-            return res.redirect('/seller');
-        else res.status(500).json({status: 'Thêm thất bại'});
+          return res.redirect(`/seller/product/edit/variant/productId`);
+        else return res.status(500).json({status: 'Thêm thất bại'});
     }
    }
+}
+
+exports.postUpdateSale = async (req, res, next) => {
+  const id = req.body.id;
+  const updateVoucher = await db.updateVoucherByShop([id, req.session.shopInfo.id]);
+
+  if (updateVoucher == true) return res.send({state: 1});
+  else return res.send({state: 0});
+}
+
+exports.postDeleteSale = async (req, res, next) => {
+  const id = req.body.id;
+  const deleteVoucher = await db.deleteVoucherByShop([id, req.session.shopInfo.id]);
+
+  if (deleteVoucher == true) return res.send({state: 1});
+  else return res.send({state: 0});
 }
 
 exports.getEditProduct = async (req, res, next) => {
@@ -668,7 +685,8 @@ exports.getEditProduct = async (req, res, next) => {
         size: strSize, 
         color: strColor,
         imgCover: img[0].url.cover,
-        imgSub: arrImgSub
+        imgSub: arrImgSub,
+        material: productInfo[0].material
     }); 
 }
 
@@ -732,7 +750,7 @@ exports.postEditProduct = async (req, res, next) => {
 
    const updateImg = await db.updateImages([imgUpdate, productId]);
     
-    if (update && updateImg) res.redirect('/seller');
+    if (update && updateImg) res.redirect('/seller/product');
     else return res.status(500).json();
 }
 

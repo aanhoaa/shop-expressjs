@@ -194,7 +194,7 @@ function getCountProductByShop(value) {
 }
 
 function getCountVoucherByShop(value) {
-    const sql = "select count(id) as sale from voucher where now() between timestart and timeend and shop_id = $1";
+    const sql = "select count(id) as sale from voucher where now() between timestart and timeend and shop_id = $1 AND status <> -1";
 
     return db.simpleQuery(sql, value)
     .then( res =>  {
@@ -250,7 +250,7 @@ function getCountProductByAdmin(value) {
 }
 
 function getCountVoucherByAdmin(value) {
-    const sql = "select count(id) as sale from voucher where now() between timestart and timeend";
+    const sql = "select count(id) as sale from voucher where now() between timestart and timeend AND status <> -1";
 
     return db.simpleQuery(sql, value)
     .then( res =>  {
@@ -263,6 +263,19 @@ function getCountVoucherByAdmin(value) {
     .catch(error => { return false;});
 }
 
+function getCountProductSelled(value) {
+    const sql = "select product_id, COUNT(*) AS TotalRows , c.id from ( select d.id product_id, a.amount from orderdetail a join orders b on b.id = a.order_id join productvariant c on c.id = a.productvariant_id join product d on d.id = c.product_id where b.status = 3 and d.status = 1 ) e join product b on b.id = e.product_id join categorylevel1 c on c.id = b.categorylevel1_id group by product_id, c.id";
+
+    return db.simpleQuery(sql, value)
+    .then( res =>  {
+        if (res.rowCount > 0)
+        {
+            return res.rows;
+        }
+        return false;
+    })
+    .catch(error => { return false;});
+}
 /*
 admin
 */
@@ -662,7 +675,6 @@ function updateUserPasswordByEmail(values) {
     })
     .catch(error => {return error;});
 }
-
 
 function deleteUser(value) {
     const sql = 'DELETE FROM users WHERE id = $1';
@@ -1933,7 +1945,7 @@ function getProductByCateOne(city, price, rating, value) {
     else city = '';
   
     const sql = `select max(d.price) as max, min(d.price) as min, b.name, b.id as product_id, c.url -> 'cover' as url, e.name as shop, avg(b.rating)::numeric(10,1) as rating , b.created_at from categorylevel1 as a inner join product as b on b.categorylevel1_id = a.id inner join images as c on c.product_id = b.id inner join productvariant as d on d.product_id = b.id inner join shop as e on e.id = b.shop_id inner join addressbook as f on f.shop_id = e.id inner join province as g on g.id = f.province_id WHERE a.id = $1 and b.status = 1 AND ${filter_price} AND ${filter_rating} AND f.isdefault = 1 ${city} GROUP BY b.name, b.id, c.url, e.name, b.created_at order by ${sortBy} `;
-   
+   console.log(sql)
     return db.simpleQuery(sql, value)
     .then( res =>  {
         if (res.rowCount > 0)
@@ -2095,7 +2107,7 @@ function getListNewProduct(value) {
 }
 
 function getListSeleldProduct(value) {
-    const sql = "select  a.id, a.name, b.max_price, b.min_price, c.url->'cover' as cover, d.name as cate from product a inner join (select max(price) as max_price, min(price) as min_price, product_id from productvariant group by product_id) b on a.id = b.product_id inner join images as c on c.product_id = a.id inner join categorylevel1 as d on d.id = a.categorylevel1_id where a.status = 1 and d.id = $1 order by a.selled desc limit 10";
+    const sql = "select  a.id , a.name, b.max_price, b.min_price, c.url->'cover' as cover, d.name as cate , f.TotalRows from product a join (select max(price) as max_price, min(price) as min_price, product_id from productvariant group by product_id) b on a.id = b.product_id join images as c on c.product_id = a.id join categorylevel1 as d on d.id = a.categorylevel1_id join ( select product_id, COUNT(*) AS TotalRows from ( select d.id product_id, a.amount from orderdetail a join orders b on b.id = a.order_id join productvariant c on c.id = a.productvariant_id join product d on d.id = c.product_id where b.status = 3 and d.status = 1 ) e join product b on b.id = e.product_id group by product_id ) f on f.product_id = a.id where a.status = 1 and d.id = $1 order by a.selled desc limit 10";
 
     return db.simpleQuery(sql, value)
     .then( res =>  {
@@ -2572,7 +2584,7 @@ function checkVoucher(values) {
 }
 
 function getVoucher(value) {
-    const sql = "select a.id as voucher_id, a.name, a.timestart as timestart, a.timeend, a.code, a.discount, a.status, b.name as catename from voucher a join categorylevel2 b on b.id = a.categorylevel2_id join shop c on c.id = a.shop_id where c.id = $1";
+    const sql = "select a.id as voucher_id, a.name, a.timestart as timestart, a.timeend, a.code, a.discount, a.status from voucher a join shop c on c.id = a.shop_id where c.id = $1";
 
     return db.simpleQuery(sql, value)
     .then(res => {
@@ -2606,7 +2618,7 @@ function updateVoucher(status, values) {
 }
 
 function getVoucherByID(values) {
-    const sql = "select a.id as voucher_id, a.categorylevel2_id as cate_id, a.name, a.timestart as timestart, a.timeend, a.code, a.discount, a.status, b.name as catename from voucher a join categorylevel2 b on b.id = a.categorylevel2_id join shop c on c.id = a.shop_id where c.id = $1 AND a.id = $2";
+    const sql = "select a.id as voucher_id, a.categorylevel2_id as cate_id, a.name, a.timestart as timestart, a.timeend, a.code, a.discount, a.status from voucher a join shop c on c.id = a.shop_id where c.id = $1 AND a.id = $2";
 
     return db.simpleQuery(sql, values)
     .then(res => {
@@ -2614,6 +2626,30 @@ function getVoucherByID(values) {
         {
             return res.rows;
         }
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function updateVoucherByShop(values) {
+    const sql = "UPDATE voucher SET status = -1 WHERE id = $1 AND shop_id = $2";
+
+    return db.excuteQuery(sql, values)
+    .then(res => {
+        if (res.rowCount > 0)
+        return true;
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function deleteVoucherByShop(values) {
+    const sql = "DELETE FROM voucher WHERE id = $1 and shop_id = $2";
+
+    return db.excuteQuery(sql, values)
+    .then(res => {
+        if (res.rowCount > 0)
+        return true;
         return false;
     })
     .catch(error => {return error;});
@@ -2634,6 +2670,7 @@ module.exports = {
     getDashBoardAdmin,
     getCountProductByAdmin,
     getCountVoucherByAdmin,
+    getCountProductSelled,
 
     insertAdmin,
     insertAdminPermission,
@@ -2805,4 +2842,6 @@ module.exports = {
     getVoucher,
     updateVoucher,
     getVoucherByID,
+    updateVoucherByShop,
+    deleteVoucherByShop
 }

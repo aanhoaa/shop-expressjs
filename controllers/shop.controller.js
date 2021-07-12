@@ -62,6 +62,8 @@ exports.getProducts = async (req, res, next) => {
   .catch(err => console.log(err))
 
   const product = await db.getProductByCateOne(0, 1, 1, [cateOneID]);
+  const count = await db.getCountProductSelled();
+  
   res.render("./shop/product/products", {
     title: "Trang chủ",
     userInfo: req.session.Userinfo,
@@ -70,7 +72,8 @@ exports.getProducts = async (req, res, next) => {
     cate2: cate2,
     product: product,
     key: cateOneID,
-    bind: b
+    bind: b,
+    count: count
   });
 }
 
@@ -118,7 +121,8 @@ exports.getProductsCateTwo = async (req, res, next) => {
     cate2: cate2,
     product: product,
     key: cateTwoID,
-    bind: b
+    bind: b,
+    count: count
   });
 }
 
@@ -820,6 +824,7 @@ exports.postProductFilter = async (req, res, next) => {
   const cate1 = await db.getCategoryLevelOne();
   const cate2 = await db.getCategoryLevelTwoAll();
   const product = await db.getProductByCateOne(group_city, optionSelect, group_rating, [cateOneID]);
+  const count = await db.getCountProductSelled();
  
   var bind = new Array;
   const b = await fetch('https://online-gateway.ghn.vn/shiip/public-api/master-data/province', {
@@ -859,7 +864,8 @@ exports.postProductFilter = async (req, res, next) => {
     cate2: cate2,
     product: product,
     key: cateOneID,
-    bind: b
+    bind: b,
+    count: count
   });
 }
 
@@ -868,8 +874,9 @@ exports.postProductSortBy = async (req, res, next) => {
   const optionSelect = req.body.optionSelect;
   const cate1 = await db.getCategoryLevelOne();
   const cate2 = await db.getCategoryLevelTwoAll();
-  const product = await db.getProductByCateOne(optionSelect, 0, 1, [cateOneID]);
-
+  const product = await db.getProductByCateOne(0, optionSelect, 1, [cateOneID]);
+  const count = await db.getCountProductSelled();
+console.log(cateOneID, optionSelect)
   var bind = new Array;
   const b = await fetch('https://online-gateway.ghn.vn/shiip/public-api/master-data/province', {
     'method': 'GET',
@@ -908,7 +915,8 @@ exports.postProductSortBy = async (req, res, next) => {
     cate2: cate2,
     product: product,
     key: cateOneID,
-    bind: b
+    bind: b,
+    count: count
   });
 }
 
@@ -1073,7 +1081,8 @@ fetch(`https://online-gateway.ghn.vn/shiip/public-api/master-data/ward?district_
 exports.getProductCate = async (req, res, next) => {
   const id = req.body.cate;
   var userInfo = null;
-
+  var recommendProduct = [];
+  
   if (req.session.Userinfo) {
     userInfo = req.session.Userinfo;
 
@@ -1085,32 +1094,44 @@ exports.getProductCate = async (req, res, next) => {
       train.push([item.user_id, item.product_id, item.rating])
     })
 
-    var userRecommend = new Array();
-    listRating.forEach(item => {
-        if (item.user_id == userInfo.id) {
-          userRecommend.push([item.user_id, item.product_id, item.rating]);
-        }
+    // var userRecommend = new Array();
+    // listRating.forEach(item => {
+    //     if (item.user_id == userInfo.id) {
+    //       userRecommend.push([item.user_id, item.product_id, item.rating]);
+    //     } 
+    // })
+
+    var result = {};
+    var result2 = {};
+    train.forEach(value => {
+      if (!result[value[0]]) {
+        result[value[0]] = {};
+      }
+      result[value[0]][value[1]] = { rating: Number(value[2])};
+
+      if (!result2[value[1]]) {
+        result2[value[1]] = {};
+      }
+      result2[value[1]][value[0]] = { rating: Number(value[2])};
     })
 
-    //console.log('this is train dataset:', train);
-    //console.log('this is user data:', userRecommend)
-    const cf = new CF();
-    cf.train(train);
-    let gt = cf.gt(userRecommend);
-    recommendProduct = cf.recommendGT(gt, 6);
+    const ratingsGroupedByUser = result;
+    const ratingsGroupedByMovie = result2;
+    
+    const cfItemBasedRecommendation = CF.predictWithCfItemBased(
+      ratingsGroupedByUser, 
+      ratingsGroupedByMovie,
+      userInfo.id
+    ); 
+    recommendProduct = cfItemBasedRecommendation.map(item => {
+        return item.productId;
+    })
   }
 
   const category = await db.getCategoryLevelOne();
   const products = await db.getListNewProduct();
   const topSell = await db.getListSeleldProduct([id]);
   const listPd = await db.getProductDetailByID();
-  var recommend = [];
- 
-  for(let iRecommend in recommendProduct) {
-    recommendProduct[iRecommend].forEach(item => {
-      recommend.push(item.itemId * 1)
-    })
-  }
 
   res.render('index', { 
     title: 'Trang chủ', 
@@ -1120,7 +1141,7 @@ exports.getProductCate = async (req, res, next) => {
     products: products,
     top: topSell,
     listPd: listPd,
-    recommend: recommend
+    recommend: recommendProduct
   });
 }
 
