@@ -54,9 +54,14 @@
         <div class="col-sm-5 product_details">
             <h3 class="product_details_name"><%-data[0].name%></h3>
             <div class="product_details_block_info" style="display: flex;">
-                <span style="flex: 3.45;">Mã sản phẩm: SM116</span>
-                <span style="flex: 3.3;">Chất liệu: <%-material%></span>
-                <span style="flex: 3.3;">Shop cung cấp: <a href="/shop/<%-shop.shop_name%>.<%-shop.id%>"><%-shop.shop_name%></a></span>
+                <div class="rows" style="width: 40%;">
+                    <span style="flex: 3.45;">Mã sản phẩm: <%-data[0].sku%></span>
+                    <span style="flex: 3.3;">Chất liệu: <%-material%></span>
+                </div>
+                <div class="rows" style="margin-left: 50px;">
+                   
+                    <span style="flex: 3.3;">Shop cung cấp: <a href="/shop/<%-shop.shop_name%>.<%-shop.id%>"><%-shop.shop_name%></a></span>
+                </div>
                 
             </div>
             <div style="border-bottom: 1px #80808042 dashed; margin: 5px;"></div>
@@ -65,9 +70,56 @@
                 <span class="product_details_price_one"></span>
             </h5>
             <div class="product_details_description">
-                <span></span>
+                <button type="button" class="btn" data-toggle="modal" data-target="#exampleModal" style="background: #607d8b; color: #fff">
+                    Mã giảm giá của shop
+                  </button>
             </div>
             <div style="border-bottom: 1px #80808042 dashed; margin: 5px;"></div>
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Mã giảm giá của shop</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>
+                    <div class="modal-body">
+                        <% if (voucher.length > 0) {%>
+                            <% voucher.forEach(item => {%>
+                                <div class="row" style="margin-left: 0; border: 1px #80808042 dashed; margin-bottom: 10px; margin-right: 0px;">
+                                    <div class="right" style="width: 40%;">
+                                         <div style="margin-top: 5px;">
+                                            <%-item.name%>
+                                         </div>
+                                         <div>
+                                             <p style="margin-bottom: 5px; font-size: 13px; color: rgba(0,0,0,.54);">HSD: <%-getDate(item.timeend)%></p>
+                                         </div>
+                                    </div>
+                                    <div class="center" style="width: 15%;">
+                                        <div style="margin-top: 5px;">
+                                            Giảm <%-item.discount%>%
+                                        </div>
+                                    </div>
+                                    <div class="left" style="width: 45%; padding-left: 10px; margin-top: 5px;">
+                                        Mã voucher: <strong><%-item.code%></strong>
+                                    </div>
+                                 </div>
+                            <%})%>
+                        <%} else {%>
+                            Không có voucher nào
+                        <%}%>
+
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                    </div>
+                </div>
+                </div>
+            </div>
+            <!--END Modal-->
+
             <% var arrColor = [];
                var arrSize = [];
             %>
@@ -227,7 +279,9 @@
         </div>
         <div class="arcodion_content">
             <div class="arcodion_content_description collapse show" id="content_description" data-parent="#accordion_collapse">
-                
+                <div>
+                    <%-data[0].description%>
+                </div>
             </div>
             
             <div class="arcodion_content_shipping collapse" id="content_shipping" data-parent="#accordion_collapse">
@@ -340,7 +394,7 @@
     <%}%>
     <% if (productCate2 != '') {%>
         <div class="container clearfix">
-          <div class="khoi_chua_sp_lienquan clearfix" style="display: block;">
+          <div class="khoi_chua_sp_lienquan clearfix" style="display: block; margin-top: 20px; margin-bottom: 50px;">
               <h5 style="margin-left: 10px; margin-bottom: 20px; font-size: 30px;">Sản phẩm tương tự</h5>
             <div>
                 <a href="/cate/<%-productCate2[0].cate2_name%>.<%-cate2_id%>">Xem tất cả</a>

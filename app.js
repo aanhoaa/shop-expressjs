@@ -59,7 +59,7 @@ app.use(
     saveUninitialized: true,
     resave: false,
     store: new MongoDBStore({ uri: process.env.DB, collection: 'sessions' }),
-    cookie: { maxAge: 540 * 60 * 1000 }
+    cookie: { maxAge: 5400 * 60 * 1000 }
   })
 );
 

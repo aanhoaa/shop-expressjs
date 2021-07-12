@@ -21,13 +21,6 @@ router.get('/', async function(req, res, next) {
       train.push([item.user_id, item.product_id, item.rating])
     })
 
-    // var userRecommend = new Array();
-    // listRating.forEach(item => {
-    //     if (item.user_id == userInfo.id) {
-    //       userRecommend.push([item.user_id, item.product_id, item.rating]);
-    //     }
-    // })
-
     var result = {};
     var result2 = {};
     train.forEach(value => {

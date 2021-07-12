@@ -97,7 +97,7 @@ exports.postRegister = async (req, res, next) => {
               role: 'shop',
             };
   
-            const accessToken = await jwtHelper.generateToken(userInfo, process.env.SECRETKEY, '1h');
+            const accessToken = await jwtHelper.generateToken(userInfo, process.env.SIGNATURETOKEN, '1h');
             req.session.token = accessToken;
             req.session.shopInfo = userInfo;
             //screen waiting for approve
@@ -147,7 +147,7 @@ exports.postLogin = async (req, res, next) => {
           role: userPass.role
         }
         req.session.shopInfo = userInfo;
-        const accessToken = await jwtHelper.generateToken(userInfo, process.env.SIGNATURETOKEN, '1h');
+        const accessToken = await jwtHelper.generateToken(userInfo, process.env.SIGNATURETOKEN, '2h');
         req.session.token = accessToken;
         return res.status(200).json({accessToken});
       }
@@ -569,7 +569,7 @@ exports.postAddProduct = async (req, res, next) => {
     const savePD = [cate1, cate2, shopId, name , description, status, material, sku];
     const productId = await db.insertProduct(savePD);
 
-   if (productId) {
+   if (productId != false) {
     //save to images
     const saveImgCover =  await cloudinary.v2.uploader.upload(req.files['image_product'][0].path);
     const imgCover = saveImgCover.secure_url;
@@ -606,7 +606,7 @@ exports.postAddProduct = async (req, res, next) => {
             var productVariantId = await db.insertProductVariant(savePDV);
             
             if (productVariantId)
-             return res.redirect(`/seller/product/edit/variant/productId`);
+             return res.redirect(`/seller/product/edit/variant/${productId}`);
             else return res.status(500).json({status: 'Thêm thất bại'});
         })
     }

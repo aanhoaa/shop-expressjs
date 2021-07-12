@@ -132,6 +132,7 @@ exports.getLogout = (req, res, next) => {
       repassword: req.body.repassword
     }
     const getCheck = await check(user);
+    
     if (getCheck == true) {
       //save to db
       //const save = await db.insertUser(Object.values(user));
@@ -255,7 +256,6 @@ exports.postForgotPassword = async (req, res, next) => {
 exports.getVerify = async (req, res, next) => {
   var userInfo = null;
   const decoded = await jwtHelper.verifyToken(req.session.token, process.env.SIGNATURETOKEN);
-
   const data = await db.getUserInfo(2, [decoded.data.username]);
 
   if (data.isverified == 1) {
@@ -274,6 +274,12 @@ exports.postVerify = async (req, res, next) => {
   const data = await db.getUserInfo(2, [req.jwtDecoded.data.username]);
   if (data) {
     if (verifyCode == data.tokenconfirm) {
+      //session info
+      req.session.Userinfo = {
+        username: data.username,
+        gender: data.gender,
+        id: data.id
+      }
       //change status
       const updateVer = await db.updateUserIsverified(data.id);
       if (updateVer == true) return res.redirect('/');

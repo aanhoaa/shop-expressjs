@@ -100,12 +100,11 @@
                         </div>
                         <%} else {%>
                             <div class="dropdown show">
-                                <a id="auser" href="/user" dropdown-toggle><img src="<%-userInfo.gender == 1?'/images/man.png': '/images/girl.png'%>" alt="" style="width: 28.05px; height: 29.2px; margin-left: 21px; margin-top: 6px;">
+                                <a id="auser" href="/user/account/profile" dropdown-toggle><img src="<%-userInfo.gender == 1?'/images/man.png': '/images/girl.png'%>" alt="" style="width: 28.05px; height: 29.2px; margin-left: 21px; margin-top: 6px;">
                                 </a>
                                 <span><%-userInfo.username%></span>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                     <a class="dropdown-item" href="/user/account/profile">Tài khoản</a>
-                                    <a class="dropdown-item" href="#">Another action</a>
                                     <a class="dropdown-item" href="/logout">Đăng xuất</a>
                                 </div>
                             </div>
@@ -193,6 +192,25 @@
              give = function(data) {
                 return data.split(' ').join('-');
             }
+
+             getDate = function(tt) {
+                var date = new Date(tt);
+                var MyDate = new Date(date);
+                var MyDateString;
+              
+                MyDate.setDate(MyDate.getDate());
+                var hour = MyDate.getHours();
+                var minutes = MyDate.getMinutes();
+                var end = 'AM';
+                if (hour > 11) {
+                  end = 'PM';
+                  hour -= 12;
+                }
+               
+                MyDateString = ('0' + MyDate.getDate()).slice(-2) + '/' + ('0' + (MyDate.getMonth()+1)).slice(-2) + '/' + MyDate.getFullYear() + ' '+ hour + ':' + minutes + ' ' + end;
+              
+                return MyDateString;
+              }
         %>
     </header>  
     <script>

@@ -68,7 +68,7 @@ function updateVariant() {
             if (data.state == 1) {
               Swal.fire('Saved!', '', 'success');
             setTimeout(function(){ 
-              window.location.href = '/seller'; 
+              window.location.href = '/seller/product'; 
             }, 1000);
             }
             else alert('Lỗi')
@@ -104,7 +104,7 @@ function btnCancel() {
   }) 
   .then((result) => {
     if (result.isConfirmed) {
-     window.location.href = "/seller"
+     window.location.href = "/seller/product"
     }
   })
 }
@@ -144,7 +144,7 @@ function btnShow(e) {
                   })
                 }
                else
-                window.location.href = '/seller';
+                window.location.href = '/seller/product';
           },
           error: function() {
             alert("Bị lỗi");
@@ -175,7 +175,7 @@ function btnShow(e) {
             })
           }
            
-          if (data.state == 1) window.location.href = '/seller';
+          if (data.state == 1) window.location.href = '/seller/product';
           if (data.state == 2) {
             Swal.fire({
               title: `Bạn chưa có địa chỉ kho hàng. <p>Thêm địa chỉ kho hàng</p>`,
