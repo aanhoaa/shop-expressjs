@@ -44,13 +44,21 @@ router.get('/', async function(req, res, next) {
       userInfo.id
     ); 
     recommendProduct = cfItemBasedRecommendation.map(item => {
-        return item.productId;
+        return Number(item.productId);
     })
   }
   const category = await db.getCategoryLevelOne();
   const products = await db.getListNewProduct();
   const topSell = await db.getListSeleldProduct([2]);
   const listPd = await db.getProductDetailByID();
+  var isHasProduct = 0;
+
+  for(let i of listPd) {
+    if (recommendProduct.indexOf(i.id) > -1) isHasProduct++;
+    if (isHasProduct > 0) {
+      break;
+    }
+  }
 
   res.render('index', { 
     title: 'Trang chủ', 
@@ -60,6 +68,7 @@ router.get('/', async function(req, res, next) {
     products: products,
     top: topSell,
     listPd: listPd,
+    isHasProduct: isHasProduct,
     recommend: recommendProduct
   });
 });

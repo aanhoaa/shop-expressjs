@@ -435,7 +435,7 @@
 			 </div>
 		  </div>
 	   </section>
-	   <% if (recommend.length > 0) {%>
+	   <% if (recommend.length > 0 && isHasProduct > 0) {%>
 	   <section id="home-featured-products" class="mg-top-60 mg-bottom-60">
 		<div class="wrapper">
 		   <div class="inner text-center">
@@ -448,7 +448,7 @@
 					  <div class="MS-content">
 					  <%if (listPd) {
 						listPd.forEach(item => {
-							  if (recommend.indexOf(item.id) > -1) { 
+							if (recommend.indexOf(item.id) > -1) { 
 					  %>
 
 						<div class="item">

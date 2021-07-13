@@ -52,7 +52,9 @@
                     <option value="Gỗ tự nhiên" <%-material == 'Gỗ tự nhiên' ? 'selected' : ''%>>Gỗ tự nhiên</option>
                     <option value="Cao su tổng hợp" <%-material == 'Cao su tổng hợp' ? 'selected' : ''%>>Cao su tổng hợp</option>
                     <option value="Cao su thiên nhiên" <%-material == 'Cao su thiên nhiên' ? 'selected' : ''%>>Cao su thiên nhiên</option>
-                   
+                    <option value="Nhựa" <%-material == 'Nhựa' ? 'selected' : ''%>>Nhựa</option>
+                    <option value="Nhựa" <%-material == 'Composite' ? 'selected' : ''%>>Composite</option>
+                    <option value="Kim loại" <%-material == 'Kim loại' ? 'selected' : ''%>>Kim loại</option>
                 </select>
             </div>
             <div class="form-group">
@@ -65,7 +67,7 @@
             </div>
             <div class="form-group">
                 <label>Miêu tả</label>
-                <textarea class="form-control ckeditor" rows="3" name="description" id="description" placeholder="Please Enter Product Description"></textarea>
+                <textarea class="form-control ckeditor" rows="3" name="description" id="description" placeholder="Please Enter Product Description"><%-description%></textarea>
             </div>
 
             <h5>File Upload & Image Preview</h5>
@@ -96,15 +98,7 @@
         </div>
         <div class="col-md-1"></div>
         <div class="col-md-3">
-            <!-- @for($i = 1; $i <= 3 ; $i++)
-            <div class="form-group image_block" style="margin-top: 10px;">
-                <label>Product Image Detail</label>
-                <div class="custom-file">
-                    <input type="file" class="custom-file-input" name="image_product_multiple[]" id="validatedCustomFile" required>
-                    <label class="custom-file-label" required for="validatedCustomFile">Choose file...</label>
-                </div>
-            </div>
-            @endfor -->
+
             <%var i = 0;%>
             <%imgSub.forEach(item => { i++;
                 if (item != '') {

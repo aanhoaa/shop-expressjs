@@ -616,7 +616,7 @@ exports.postAddProduct = async (req, res, next) => {
         var productVariantId = await db.insertProductVariant(savePDV);
 
         if (productVariantId)
-          return res.redirect(`/seller/product/edit/variant/productId`);
+        return res.redirect(`/seller/product/edit/variant/${productId}`);
         else return res.status(500).json({status: 'Thêm thất bại'});
     }
    }
@@ -686,7 +686,8 @@ exports.getEditProduct = async (req, res, next) => {
         color: strColor,
         imgCover: img[0].url.cover,
         imgSub: arrImgSub,
-        material: productInfo[0].material
+        material: productInfo[0].material,
+        description: productInfo[0].description
     }); 
 }
 

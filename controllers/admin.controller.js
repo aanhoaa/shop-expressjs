@@ -118,12 +118,12 @@ exports.getHome = async (req, res, next) => {
 
             oData.push(
                 {
-                    name: data[i].name, sku: data[i].sku, 
-                    update: pTimeUpdate, classify: info, 
-                    id: data[i].id, status: data[i].status,
-                    vname: violate[0].name, vreason: violate[0].reason, 
-                    vstatus: pVioStatus,
-                    vsuggestion: violate[0].suggestion, vtime: getdate(time)
+                  name: data[i].name, sku: data[i].sku, 
+                  update: pTimeUpdate, classify: info, 
+                  id: data[i].id, status: data[i].status,
+                  vname: violate[0].name, vreason: violate[0].reason, 
+                  vstatus: pVioStatus,
+                  vsuggestion: violate[0].suggestion, vtime: getdate(time)
                 }
             )
         }
