@@ -132,7 +132,7 @@ exports.getProductDetail = async (req, res, next) => {
   const data = await db.getProductAllById([productId]);
   const shop = await db.getShopByProductId([productId]);
   const relative = await db.getProductByShop([shop.id]);
-  const productCate2 = await db.getProductByCateTwo(0, 1, 1, [data[0].cate2_id]); 
+  const productCate2 = await db.getProductByCateTwos([data[0].cate2_id, shop.id])
   const getVoucher = await db.getVoucherActiveByShop([shop.id]);
   const shopAddress = await db.getShopAddressBook([shop.id]);
   

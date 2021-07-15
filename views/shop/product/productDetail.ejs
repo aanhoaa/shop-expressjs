@@ -352,7 +352,9 @@
                   
                   <div class="blogSlider" id="shopProduct">
                       <div class="MS-content">
-                          <%relativeShop.forEach(item => {%>
+                          <%relativeShop.forEach(item => {
+                            if (data[0].product_id != item.product_id) {
+                            %>
                           <div class="item">
                                <div class="product-grid">
                                    <div class="product-image">
@@ -382,7 +384,7 @@
                                   </div>
                               </div>
                           </div>
-                          <%})%>
+                          <%}})%>
                       </div>
                        <div class="MS-controls">
                            <button class="MS-left"><i class="fa fa-chevron-left" aria-hidden="true"></i></button>
@@ -395,7 +397,7 @@
           </div>
     </section>
     <%}%>
-    <% if (productCate2 != '') {%>
+    <% if (productCate2.length > 0) {%>
         <div class="container clearfix">
           <div class="khoi_chua_sp_lienquan clearfix" style="display: block; margin-top: 20px; margin-bottom: 50px;">
               <h5 style="margin-left: 10px; margin-bottom: 20px; font-size: 30px;">Sản phẩm tương tự</h5>
@@ -406,37 +408,39 @@
                 
                 <div class="blogSlider" id="relativeProduct">
                     <div class="MS-content">
-                        <%productCate2.forEach(item => {%>
+                        <%productCate2.forEach(item => {
+                            if (data[0].product_id != item.product_id) {
+                        %>
                         <div class="item">
-                             <div class="product-grid">
-                                 <div class="product-image">
-                                     <a href="/detail/<%-item.name%>.<%-item.product_id%>">
-                                         <img class="pic-1" src="<%-item.url%>">
-                                     </a>
-                                     <span class="product-new-label">Hot</span>
-                                     <!-- <span class="product-discount-label">50%</span> -->
-                                </div>
-                                <div class="related-product-rating">
-                                    <div class="rating">
-                                        <div class="star-rating" style="display: flex;">
-                                           <span class="fa fa-star-o" data-rating="1"></span>
-                                           <span class="fa fa-star-o" data-rating="2"></span>
-                                           <span class="fa fa-star-o" data-rating="3"></span>
-                                           <span class="fa fa-star-o" data-rating="4"></span>
-                                           <span class="fa fa-star-o" data-rating="5"></span>
-                                           <input type="hidden" name="whatever1" class="rating-value" value="<%-item.rating%>">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="product-content">
-                                    <h3 class="title"><a href="#"><%-item.name%></a></h3>
-                                    <div class="price">
-                                         <%-VND(parseInt(item.max))%>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <%})%>
+                            <div class="product-grid">
+                                <div class="product-image">
+                                    <a href="/detail/<%-item.name%>.<%-item.product_id%>">
+                                        <img class="pic-1" src="<%-item.url%>">
+                                    </a>
+                                    <span class="product-new-label">Hot</span>
+                                    <!-- <span class="product-discount-label">50%</span> -->
+                               </div>
+                               <div class="related-product-rating">
+                                   <div class="rating">
+                                       <div class="star-rating" style="display: flex;">
+                                          <span class="fa fa-star-o" data-rating="1"></span>
+                                          <span class="fa fa-star-o" data-rating="2"></span>
+                                          <span class="fa fa-star-o" data-rating="3"></span>
+                                          <span class="fa fa-star-o" data-rating="4"></span>
+                                          <span class="fa fa-star-o" data-rating="5"></span>
+                                          <input type="hidden" name="whatever1" class="rating-value" value="<%-item.rating%>">
+                                       </div>
+                                   </div>
+                               </div>
+                               <div class="product-content">
+                                   <h3 class="title"><a href="#"><%-item.name%></a></h3>
+                                   <div class="price">
+                                        <%-VND(parseInt(item.max))%>
+                                   </div>
+                               </div>
+                           </div>
+                       </div>
+                        <%}})%>
                     </div>
                      <div class="MS-controls">
                          <button class="MS-left"><i class="fa fa-chevron-left" aria-hidden="true"></i></button>

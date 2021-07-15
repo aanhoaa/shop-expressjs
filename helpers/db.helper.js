@@ -2022,6 +2022,20 @@ function getProductByCateTwo(city, price, rating, value) {
     .catch(error => { return false;});
 }
 
+function getProductByCateTwos(values) {
+    const sql = "select  a.name as cate2_name, max(d.price) as max, min(d.price) as min, b.name, b.id as product_id, c.url -> 'cover' as url, e.name as shop, avg(b.rating)::numeric(10,1) as rating, e.id as shop_id from categorylevel2 as a inner join product as b on b.categorylevel2_id = a.id inner join images as c on c.product_id = b.id inner join productvariant as d on d.product_id = b.id inner join shop as e on e.id = b.shop_id WHERE a.id = $1 and b.status = 1 and e.id <> $2 GROUP BY a.name, b.name, b.id, c.url, e.name, b.created_at , e.id"
+
+    return db.simpleQuery(sql, values)
+    .then( res =>  {
+        if (res.rowCount > 0)
+        {
+            return res.rows;
+        }
+        return false;
+    })
+    .catch(error => { return false;});
+}
+
 function getProductAllById(value) {
     const sql = "select a.name, a.sku, a.material, a.description, a.id as product_id, a.rating, a.categorylevel2_id as cate2_id, max(b.price) as max, c.attribute->'Color' as color, c.attribute->'Size' as size, b.price, d.url->'cover' as cover, d.url as url from product as a inner join productvariant as b on b.product_id = a.id inner join variantdetail as c on c.id = b.variant_id inner join images as d on d.product_id = a.id where a.id = $1 and a.status = 1 group by a.name, a.id, c.attribute, b.price, d.url";
 
@@ -2792,6 +2806,7 @@ module.exports = {
     getProductByShop,
     getProductByCateOne,
     getProductByCateTwo,
+    getProductByCateTwos,
     getProductAllById,
     getShopByProductId,
     getShopProductById,
