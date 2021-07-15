@@ -569,10 +569,13 @@ html[xmlns] .clearfix {
 }
 .price-block .current-price {
     font-size: 14px;
-    margin-right: 10px;
     font-weight: 700;
-    margin-bottom: 5px;
-    text-align: left;
+	text-align: left;
+	margin-bottom: 0;
+    width: 11.9em;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 .product-list-item .price-block .price {
     color: #4b4343;
@@ -581,7 +584,7 @@ html[xmlns] .clearfix {
     opacity: .65;
 }
 .price-block .col-brand {
-    width: 35%;
+    width: 20%;
 }
 .price-block img {
     width: auto;

@@ -82,6 +82,7 @@ exports.getProductsCateTwo = async (req, res, next) => {
   const cate1 = await db.getCategoryLevelOne();
   const cate2 = await db.getCategoryLevelTwoAll();
   const product = await db.getProductByCateTwo(0, 1, 1, [cateTwoID]);
+  const count = await db.getCountProductSelled();
 
   var bind = new Array;
   const b = await fetch('https://online-gateway.ghn.vn/shiip/public-api/master-data/province', {
