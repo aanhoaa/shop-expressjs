@@ -1945,7 +1945,7 @@ function getProductByCateOne(city, price, rating, value) {
     else city = '';
   
     const sql = `select max(d.price) as max, min(d.price) as min, b.name, b.id as product_id, c.url -> 'cover' as url, e.name as shop, avg(b.rating)::numeric(10,1) as rating , b.created_at from categorylevel1 as a inner join product as b on b.categorylevel1_id = a.id inner join images as c on c.product_id = b.id inner join productvariant as d on d.product_id = b.id inner join shop as e on e.id = b.shop_id inner join addressbook as f on f.shop_id = e.id inner join province as g on g.id = f.province_id WHERE a.id = $1 and b.status = 1 AND ${filter_price} AND ${filter_rating} AND f.isdefault = 1 ${city} GROUP BY b.name, b.id, c.url, e.name, b.created_at order by ${sortBy} `;
-   console.log(sql)
+
     return db.simpleQuery(sql, value)
     .then( res =>  {
         if (res.rowCount > 0)

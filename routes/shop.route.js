@@ -34,9 +34,9 @@ router.post("/sortby", shopController.postProductSortBy);
 router.get("/cart/delete", authController.isLogin, shopController.getDeleteCart);
 
 //api binding adddress
-router.get("/api/book/city", authController.isAuth, shopController.getCity);
-router.get("/api/book/district/binding", authController.isAuth, shopController.getBindingDistrict);
-router.get("/api/book/ward/binding", authController.isAuth, shopController.getBindingWard);
+router.get("/api/book/city", shopController.getCity);
+router.get("/api/book/district/binding", shopController.getBindingDistrict);
+router.get("/api/book/ward/binding", shopController.getBindingWard);
 
 //api checkvoucher
 router.get("/api/check-voucher", authController.isAuth, shopController.getCheckVoucher);

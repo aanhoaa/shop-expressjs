@@ -7,7 +7,6 @@ function updateProfile() {
   }
 }
 
-
 function resetPassword() {
     $.ajax({
         url: `${window.location.origin}/user/account/reset`,
@@ -261,7 +260,7 @@ function deleteBook(it) {
         error: function() {
           alert("Bị lỗi");
         }
-     });
+       });
     } else if (result.isDenied) {
       Swal.fire('Changes are not saved', '', 'info')
     }
@@ -284,4 +283,33 @@ function setDefault(it) {
       alert("Bị lỗi");
     }
  });
+}
+
+function checkShipping(it) {
+  const userDistrictCode = $('#district-check').val();
+  const userWardCode = $('#ward-check').val();
+  const shopCode = $('#district-root').val();
+  $.ajax({
+    url: `https://online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/fee?service_id=53320&insurance_value=500000&from_district_id=${shopCode}&to_district_id=${userDistrictCode}&to_ward_code=${userWardCode}&height=${12}&length=${12}&weight=${12}&width=${120}`,
+    type: "get",
+    headers: {
+      'Pragma': 'no-cache',
+      'Cache-Control': 'no-cache',
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+      'token': '09d8cf6a-c357-11eb-8ea7-7ad2d1e1ce1c',
+      'Accept-Language': 'vi,en-US;q=0.9,en;q=0.8',
+     // 'Cookie': x.cookie,
+      'gzip': true,
+  },
+    dataType: "json",
+    data: {
+      },
+    success:function(data){ 
+        console.log(data)
+    },
+    error: function() {
+      alert("Bị lỗi");
+    }
+   });
 }

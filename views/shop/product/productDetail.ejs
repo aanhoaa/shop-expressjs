@@ -17,6 +17,7 @@
 <script src="/javascripts/assets/multislider.min.js"></script>
 <link rel="stylesheet" href="/stylesheets/multislider.css">
 <link rel="stylesheet" href="/stylesheets/slider_item.css">
+<script src="/javascripts/js/user/user-account.js"></script>
 
 <div class="container" style="margin: 60px auto 0px; max-width: 1300px;">
     <div class="row">
@@ -53,16 +54,17 @@
         </div>
         <div class="col-sm-5 product_details">
             <h3 class="product_details_name"><%-data[0].name%></h3>
-            <div class="product_details_block_info" style="display: flex;">
-                <div class="rows" style="width: 40%;">
-                    <span style="flex: 3.45;">Mã sản phẩm: <%-data[0].sku%></span>
-                    <span style="flex: 3.3;">Chất liệu: <%-material%></span>
+            <div class="product_details_block_info" >
+                <div class="rows">
+                    <span>Mã sản phẩm: <%-data[0].sku==''? '' : data[0].sku%></span>
+                    <span style="float: right; width: 55%;">Chất liệu: <%-material%></span>
                 </div>
-                <div class="rows" style="margin-left: 50px;">
+                <div class="rows" >
                    
-                    <span style="flex: 3.3;">Shop cung cấp: <a href="/shop/<%-shop.shop_name%>.<%-shop.id%>"><%-shop.shop_name%></a></span>
+                    <span>Shop cung cấp: <a href="/shop/<%-shop.shop_name%>.<%-shop.id%>"><%-shop.shop_name%></a></span>
+                    <span style="float: right; width: 55%;">Gửi từ: <%-shopAddress.district_name + ', ' + shopAddress.province_name%></span>
                 </div>
-                
+                <input type="text" hidden id="district-root" value="<%-shopAddress.district_code%>">
             </div>
             <div style="border-bottom: 1px #80808042 dashed; margin: 5px;"></div>
             <h5 style="margin-top: 15px;">
@@ -73,9 +75,10 @@
                 <button type="button" class="btn" data-toggle="modal" data-target="#exampleModal" style="background: #607d8b; color: #fff">
                     Mã giảm giá của shop
                   </button>
+            
             </div>
             <div style="border-bottom: 1px #80808042 dashed; margin: 5px;"></div>
-            <!-- Modal -->
+            <!-- Modal Voucher-->
             <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                 <div class="modal-content">

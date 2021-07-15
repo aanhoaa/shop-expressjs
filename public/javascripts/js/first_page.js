@@ -77,7 +77,8 @@ $(document).ready(function(){
               $(".khoi_sp").empty();
               $(".khoi_sp").append($(data).find('.khoi_sp').children());
               $("#category_id").val($(data).find('#category_id').val());
-              $("#count_product").text($(data).find('.khoi_sp').children().length);
+              $$("#count_product").empty();
+              $("#count_product").text($(data).find('#count_product').text());
           },
           error: function() {
             alert("Bị lỗi");
@@ -99,6 +100,7 @@ $(document).ready(function(){
           cateOneId: category_id
           },
         success:function(data){ //dữ liệu nhận về
+
             $(".khoi_sp").empty();
             $(".khoi_sp").append($(data).find('.khoi_sp').children());
             $("#count_product").text($(data).find('.khoi_sp').children().length);
@@ -167,7 +169,9 @@ $(document).ready(function(){
            // console.log(data)
               $(".khoi_sp").empty();
               $(".khoi_sp").append($(data).find('.khoi_sp').children());
-              $("#count_product").text($(data).find('.khoi_sp').children().length);
+              $("#count_product").empty();
+              $("#count_product").text($(data).find('#count_product').text());
+              
               var $star_rating = $('.star-rating .fa');
 
             var SetRatingStar = function(event) {

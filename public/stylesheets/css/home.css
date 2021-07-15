@@ -544,6 +544,7 @@ html[xmlns] .clearfix {
 .related-product-title {
 	margin-bottom: 10px;
 	text-align: center;
+	height: 37px;
 }
 .related-product-info .product-item-name {
     font-weight: 600;
