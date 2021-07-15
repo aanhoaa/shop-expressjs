@@ -42,10 +42,11 @@ function updateVariant() {
   }
 
   Swal.fire({
-    title: 'Do you want to save the changes?',
-    showDenyButton: true,
+    title: 'Bạn có muốn thay đổi?',
+    showDenyButton: false,
     showCancelButton: true,
-    confirmButtonText: `Save`,
+    confirmButtonText: `Lưu`,
+    cancelButtonText: `Hủy `,
     denyButtonText: `Don't save`,
   }).then((result) => {
     /* Read more about isConfirmed, isDenied below */

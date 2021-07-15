@@ -229,6 +229,9 @@ table.table-custom {
     white-space: normal;
 }
 
+.name-product {
+    width: 170px;
+}
 .order-wrap-text {
     width: 187px;
     white-space: normal;

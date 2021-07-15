@@ -660,6 +660,7 @@
 .cate-active .menu-content-show{
 	opacity: 1;
 	height: auto;
+	padding-left: 10px;
 }
 .child_filter_city_checkbox {
 	padding: 0 !important;

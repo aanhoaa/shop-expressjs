@@ -192,10 +192,10 @@ exports.getShopProduct = async (req, res, next) => {
   const shopId = req.params.shopId;
   const data = await db.getShopProductById([shopId]); 
   const arrData = await db.getCateShop([shopId]);
+  const shop = await db.getShopById([shopId]);
   
-  console.log(arrData)
   res.render("./shop/product/shop", {
-    title: "Trang chủ",
+    title: shop[0].name,
     userInfo: req.session.Userinfo,
     cart: req.session.cart,
     product: data,

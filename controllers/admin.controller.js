@@ -135,7 +135,7 @@ exports.getHome = async (req, res, next) => {
               })
         }
     }
-
+    
    res.render('./adminSys/index', {permit: req.session.permit, data: oData})
 }
 

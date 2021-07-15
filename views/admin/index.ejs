@@ -124,7 +124,7 @@
                                     <%-item.status == 0?'<p class="hidden-product">Đã ẩn</p>': '<p class="show-product">Đang bán</p>'%>
                                     <%}%>
                                 </div>
-                                <div class="name-wrap-text">
+                                <div class="name-wrap-text name-product">
                                     <p><%-item.name%></p>
                                 </div>
                                 <div class="sku-product">
@@ -254,7 +254,7 @@
                                     <%-item.status == 0?'<p class="hidden-product">Đã ẩn</p>': '<p class="show-product">Đang bán</p>'%>
                                     <%}%>
                                 </div>
-                                <div class="name-wrap-text">
+                                <div class="name-wrap-text name-product">
                                     <p><%-item.name%></p>
                                 </div>
                                 <div class="sku-product">
@@ -320,6 +320,10 @@
                               <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu action-product" aria-labelledby="dropdownMenu1">
+
+                              <% if (item.status == 1) {%>
+                                <li><a href="/detail/<%-item.name%>.<%-item.id%>" target="_blank">Xem trước</a></li>
+                              <%}%>
                               <li><a href="" onclick="btnShow(this)" data-id="<%-item.id%>" data-status="<%-item.status%>"><%-item.status == 0? 'Hiển thị' : 'Ẩn'%></a></li>
                               <li><a href="/seller/product/edit/<%-item.id%>">Sửa</a></li>
                               <li><a href="/seller/product/edit/variant/<%-item.id%>">Cập nhật biến thể</a></li>
@@ -384,7 +388,7 @@
                                     <%-item.status == 0?'<p class="hidden-product">Đã ẩn</p>': '<p class="show-product">Đang bán</p>'%>
                                     <%}%>
                                 </div>
-                                <div class="name-wrap-text">
+                                <div class="name-wrap-text name-product">
                                     <p><%-item.name%></p>
                                 </div>
                                 <div class="sku-product">

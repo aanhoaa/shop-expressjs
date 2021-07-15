@@ -2065,7 +2065,7 @@ function getShopByProductId(value) {
 }
 
 function getShopProductById(value) {
-    const sql = "select  max(d.price) as max, min(d.price) as min, b.name, b.id as product_id, c.url -> 'cover' as url, e.name as shop, avg(f.rating)::numeric(10,1) as rating from categorylevel1 as a inner join product as b on b.categorylevel1_id = a.id inner join images as c on c.product_id = b.id inner join productvariant as d on d.product_id = b.id inner join shop as e on e.id = b.shop_id inner join rating as f on f.product_id = b.id where e.id = $1 and b.status = 1 GROUP BY b.name, b.id, c.url, e.name";
+    const sql = "select  max(d.price) as max, min(d.price) as min, b.name, b.id as product_id, c.url -> 'cover' as url, e.name as shop from categorylevel1 as a inner join product as b on b.categorylevel1_id = a.id inner join images as c on c.product_id = b.id inner join productvariant as d on d.product_id = b.id inner join shop as e on e.id = b.shop_id where e.id = $1 and b.status = 1 GROUP BY b.name, b.id, c.url, e.name";
 
     return db.simpleQuery(sql, value)
     .then( res =>  {

@@ -78,7 +78,7 @@
                                     <%}%>
                                 </div>
                                 <div>
-                                    <div class="name-wrap-text">
+                                    <div class="name-wrap-text name-product">
                                         <p><%-item.name%></p>
                                     </div>
                                 </div>
@@ -90,7 +90,7 @@
                     </td>
                     <td>
                         <div class="name-wrap-text">
-                            <p><%-item.classify[0].name%></p>
+                            <p><%-item.classify[0].shop_name%></p>
                         </div>
                     </td>
                     <td> 
@@ -197,7 +197,7 @@
                                     <%-item.status == 0?'<p class="hidden-product">Đã ẩn</p>': '<p class="show-product">Đang bán</p>'%>
                                     <%}%>
                                 </div>
-                                <div class="name-wrap-text">
+                                <div class="name-wrap-text name-product">
                                     <p><%-item.name%></p>
                                 </div>
                                 <div class="sku-product">
@@ -208,7 +208,7 @@
                     </td>
                     <td>
                         <div class="name-wrap-text">
-                            <p><%-item.classify[0].name%></p>
+                            <p><%-item.classify[0].shop_name%></p>
                         </div>
                     </td>
                     <td> 
@@ -260,7 +260,7 @@
                             </button>
                            <ul class="dropdown-menu action-product" aria-labelledby="dropdownMenu1">
                               <li><a href="admin/product/view/<%-item.id%>">Xem</a></li>
-                              <li><a href="seller/product/edit/variant/">Cập nhật biến thể</a></li>
+                             
                             </ul>
                           </div>
                     </td>
@@ -323,7 +323,7 @@
                                     <%}%>
                                 </div>
                                 <div>
-                                    <div class="name-wrap-text">
+                                    <div class="name-wrap-text name-product">
                                         <p><%-item.name%></p>
                                     </div>
                                 </div>
@@ -335,7 +335,7 @@
                     </td>
                     <td>
                         <div class="name-wrap-text">
-                            <p><%-item.classify[0].name%></p>
+                            <p><%-item.classify[0].shop_name%></p>
                         </div>
                     </td>
                     <td> 
@@ -387,7 +387,7 @@
                             </button>
                            <ul class="dropdown-menu action-product" aria-labelledby="dropdownMenu1">
                               <li><a href="admin/product/view/<%-item.id%>">Xem</a></li>
-                              <li><a href="seller/product/edit/variant/">Cập nhật biến thể</a></li>
+                              
                             </ul>
                           </div>
                     </td>
