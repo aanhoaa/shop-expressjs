@@ -499,10 +499,23 @@ exports.getOrderDetail = async (req, res, next) => {
 exports.putUserRating = async (req, res, next) => {
   const {rating, r_id} = req.body;
   if (rating == '' || r_id == '') return res.send({state: 0});
+  
+  try {
+    const update = await db.updateUserRating([rating, r_id]);
+  
+    if (update != false) {
+      const getRating = await db.getAVGRating([update.product_id]);
+      if (getRating != false) {
+        var updateRatingProduct = await db.updateProductRating([Number(getRating[0].round), update.product_id]);
+        if (updateRatingProduct == true) return res.send({state: 1});
+        else res.send({state: -1});
+      }
+    }
 
-  const update = await db.updateUserRating([rating, r_id]);
-  if (update == true) return res.send({state: 1});
-  else res.send({state: -1});
+  } catch (err) {
+    return err;
+  }
+  
 }
 
 exports.getProductRecent = async (req, res, next) => {

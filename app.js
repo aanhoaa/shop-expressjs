@@ -56,10 +56,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(
   session({
     secret: 'anonymous',
-    saveUninitialized: true,
+    saveUninitialized: false,
     resave: false,
     store: new MongoDBStore({ uri: process.env.DB, collection: 'sessions' }),
-    cookie: { maxAge: 5400 * 60 * 1000 }
+    cookie: { maxAge: 1080 * 60 * 1000 }
   })
 );
 

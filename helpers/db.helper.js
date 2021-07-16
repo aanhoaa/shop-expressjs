@@ -1185,12 +1185,12 @@ function deleteCartByUser(value) {
 
 
 function updateUserRating(values) {
-    const sql = "UPDATE rating SET rating = $1 WHERE id = $2 ";
+    const sql = "UPDATE rating SET rating = $1 WHERE id = $2 RETURNING product_id";
 
     return db.excuteQuery(sql, values)
     .then(res => {
         if (res.rowCount > 0)
-            return true;
+            return res.rows[0];
         return false;
     })
     .catch(error => {return error;});
@@ -2555,7 +2555,7 @@ function updateOrderReason(values) {
 */
 /*RATING*/
 function getRating() {
-    const sql = "SELECT * FROM rating";
+    const sql = "SELECT a.* FROM rating a join product b on b.id = a.product_id where b.status = 1";
 
     return db.simpleQuery(sql)
     .then(res => {
@@ -2568,6 +2568,32 @@ function getRating() {
     .catch(error => {return error;});
 }
 
+function getAVGRating(value) {
+    const sql = "SELECT round(avg(a.rating), 2) FROM rating a join product b on b.id = a.product_id where b.status = 1 and b.id = $1";
+
+    return db.simpleQuery(sql, value)
+    .then(res => {
+    if (res.rowCount > 0)
+    {
+        return res.rows;
+    }
+    return false;
+    })
+    .catch(error => {return error;});
+}
+function updateProductRating(values) {
+    const sql = "UPDATE product set rating = $1 where id = $2";
+
+    return db.excuteQuery(sql, values)
+    .then(res => {
+        if (res.rowCount > 0)
+        {
+            return true;
+        }
+        return false;
+    })
+    .catch(error => {return error;});
+}
 /*
  <==========================================================================>
 */
@@ -2864,6 +2890,8 @@ module.exports = {
     deleteTest,
 
     getRating,
+    getAVGRating,
+    updateProductRating,
 
     insertVoucher,
     checkVoucher,
