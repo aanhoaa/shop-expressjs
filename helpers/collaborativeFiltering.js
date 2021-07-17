@@ -88,8 +88,8 @@ return predictedRatings.map(i => {
 function predictWithCfItemBased(ratingsGroupedByUser, ratingsGroupedByMovie, userId) {
   const { itemUser } = getMatrices(ratingsGroupedByUser, ratingsGroupedByMovie, userId);
   const { matrix, movieIds, userIndex } = itemUser;
-//console.log('matri item', getUserRatingsRowVector(matrix, userIndex))
-  const test = getUserRatingsRowVector(matrix, userIndex);
+  //console.log('matri item', getUserRatingsRowVector(matrix, userIndex))
+  const oriRatingMatrix = getUserRatingsRowVector(matrix, userIndex);
   //console.log(test)
   const matrixNormalized = meanNormalizeByRowVector(matrix);
   //console.log('matrixNormalized item-item:', matrixNormalized)
@@ -102,7 +102,7 @@ function predictWithCfItemBased(ratingsGroupedByUser, ratingsGroupedByMovie, use
   let score;
   if (rating === 0) {
     score = getPredictedRating(
-      test, 
+      oriRatingMatrix, 
       userRatingsRowVector,
       cosineSimilarityRowVector
     );
@@ -118,7 +118,7 @@ function predictWithCfItemBased(ratingsGroupedByUser, ratingsGroupedByMovie, use
 
   var listpredictedRatings = [];
   for(let i = 0; i<predictedRatings.length; i++) {
-    if (test[i] === -1)
+    if (oriRatingMatrix[i] === -1)
     listpredictedRatings.push(predictedRatings[i])
   }
   return common.sortByScore(listpredictedRatings);
@@ -158,7 +158,7 @@ function predictWithCfItemBasedItem(ratingsGroupedByUser, ratingsGroupedByMovie,
 }
 
 function getPredictedRating(ratingsRowVectorOrigin, ratingsRowVector, cosineSimilarityRowVector) {
-  const N = 5;
+  const N = 2;
   //console.log(cosineSimilarityRowVector)
   const neighborSelection = cosineSimilarityRowVector
     // keep track of rating and similarity
@@ -170,14 +170,12 @@ function getPredictedRating(ratingsRowVectorOrigin, ratingsRowVector, cosineSimi
     // N neighbors
     .slice(0, N);
   //console.log('neighborSelection:', neighborSelection)
-  var i = 0;
-  const numerator = neighborSelection.reduce((result, value) => { i++;
-    if (i >= 3) return result;
+
+  const numerator = neighborSelection.reduce((result, value) => { 
     return result + value.similarity * value.rating;
   }, 0);
-  var j = 0;
-  const denominator = neighborSelection.reduce((result, value) => {j++;
-    if (j >= 3) return result;
+
+  const denominator = neighborSelection.reduce((result, value) => {
     return result + math.abs(value.similarity);
   }, 0);
 

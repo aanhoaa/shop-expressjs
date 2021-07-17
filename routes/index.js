@@ -36,11 +36,11 @@ router.get('/', async function(req, res, next) {
     })
 
     const ratingsGroupedByUser = result;
-    const ratingsGroupedByMovie = result2;
+    const ratingsGroupedByProduct = result2;
     
     const cfItemBasedRecommendation = CF.predictWithCfItemBased(
       ratingsGroupedByUser, 
-      ratingsGroupedByMovie,
+      ratingsGroupedByProduct,
       userInfo.id
     ); 
     recommendProduct = cfItemBasedRecommendation.map(item => {
