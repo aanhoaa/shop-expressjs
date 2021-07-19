@@ -36,7 +36,7 @@
 <header>
     <%
         VND = function(num) {
-            return num.toLocaleString('it-IT', {style : 'currency', currency : 'VND'});
+            return Number(num).toLocaleString('it-IT', {style : 'currency', currency : 'VND'});
         }
     %>
   
@@ -185,6 +185,11 @@
                         <tr>
                             <td>
                                 <span class="fas fa-list text-danger"></span><a href="/seller/finance/income">&ensp;Thống Kê Doanh Thu</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="fas fa-list text-danger"></span><a href="/seller/finance/analyst">&ensp;Phân tích bán hàng</a>
                             </td>
                         </tr>
                         <tr>

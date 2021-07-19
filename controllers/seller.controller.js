@@ -1189,6 +1189,17 @@ exports.postBindingIncome = async (req, res, next) => {
   });
 }
 
+exports.getAnalyst = async (req, res, next) => {
+  const shopInfo = req.session.shopInfo;
+  const data = await db.getShopAnalyst([shopInfo.id]);
+  const view = await db.getProductViewByShop([shopInfo.id]);
+  res.render('./admin/finance/analyst', {
+    seller: shopInfo,
+    data: data,
+    view: view
+  });
+}
+
 exports.getWallet = async (req, res, next) => {
   const shopInfo = req.session.shopInfo;
   var currency = 0;
@@ -1203,6 +1214,7 @@ exports.getWallet = async (req, res, next) => {
     wallet: currency
   });
 }
+
 
 function makeid(length) {
     var result           = '';

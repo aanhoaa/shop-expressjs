@@ -34,6 +34,7 @@ router.put("/order/delivery" , authController.isAuth, authController.isShop, sel
 router.put("/order/delivered" , authController.isAuth, authController.isShop, sellerController.putDeliveredOrder);
 
 router.get("/finance/income" , authController.isAuth, authController.isShop, sellerController.getIncome);
+router.get("/finance/analyst" , authController.isAuth, authController.isShop, sellerController.getAnalyst);
 router.get("/finance/wallet" , authController.isAuth, authController.isShop, sellerController.getWallet);
 
 router.post("/api/finance/income" , authController.isAuth, authController.isShop, sellerController.postBindingIncome);

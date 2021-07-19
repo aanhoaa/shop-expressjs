@@ -1,0 +1,202 @@
+<% include ../../partials/header_seller %>
+
+<ul class="user-option nav nav-tabs">
+    <li class="option option-my-booking is-flex nav-item">
+        <div>
+            <p class="hover-text my-booking"><a class="nav-link active" href="#tab1">Theo doanh thu</a></p>
+        </div>
+    </li>
+    <li class="option option-favorite is-flex">
+        <div>
+            <p class="hover-text"><a class="nav-link" href="#tab2">Theo sản phẩm đã bán</a></p>
+        </div>
+    </li>
+    <li class="option option-setting is-flex">
+        <div>
+            <p class="hover-text"><a class="nav-link" href="#tab3">Theo lượt xem</a></p>
+        </div>
+    </li>
+</ul>
+
+<div id="tab1" class="tab-option">
+   <div>
+       <!-- /.col-lg-12 -->
+   <table id="dataTables-example" class="mdl-data-table" style="width:100%">
+    <thead>
+        <tr align="center">
+            <th class="custom-table-product">Thứ tự</th>
+            <th>Thông tin sản phẩm</th>
+            <th>Tổng doanh thu</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% if (data) { var i = 0;%>
+       <%data.forEach(item => { i++;%>
+        <tr class="odd gradeX" align="center">
+            <td class="custom-table-product"><%-i%></td>
+            <td>
+               <div style="display: flex;">
+                    <div class="show-img-product">
+                        <img src="<%-item.cover%>" alt="">
+                        <div class="<%-item.status == 1? '':'product-banned'%>">
+                            <i data-v-39f338ef="" class="shop-icon banned-icon">
+                                <%if (item.status == 0) {%>
+                                    <svg class="svg-icon" viewBox="0 0 20 20">
+                                        <path d="M14.776,10c0,0.239-0.195,0.434-0.435,0.434H5.658c-0.239,0-0.434-0.195-0.434-0.434s0.195-0.434,0.434-0.434h8.684C14.581,9.566,14.776,9.762,14.776,10 M18.25,10c0,4.558-3.693,8.25-8.25,8.25c-4.557,0-8.25-3.691-8.25-8.25c0-4.557,3.693-8.25,8.25-8.25C14.557,1.75,18.25,5.443,18.25,10 M17.382,10c0-4.071-3.312-7.381-7.382-7.381C5.929,2.619,2.619,5.93,2.619,10c0,4.07,3.311,7.382,7.381,7.382C14.07,17.383,17.382,14.07,17.382,10"></path>
+                                    </svg>
+                                <%}%>
+                            </i>
+                        </div>
+                    </div>
+                    <div class="info-product">
+                        <div class="info-status">
+                            <%-item.status == 0?'<p class="hidden-product">Đã ẩn</p>': '<p class="show-product">Đang bán</p>'%>
+                        </div>
+                        <div class="name-wrap-text name-product">
+                            <p><%-item.name%></p>
+                        </div>
+                        <div class="sku-product">
+                            <p>SKU sản phẩm:  <%-item.sku==''?'--':item.sku%></p>
+                        </div>
+                    </div>
+               </div>
+            </td>
+            <td>
+                <%-VND(item.sum)%>
+            </td>
+        </tr>
+        
+       <%})%>
+       <%}%>
+    </tbody>
+    </table>
+   </div>
+</div>
+<div id="tab2" class="tab-option">
+    <div>
+        <!-- /.col-lg-12 -->
+    <table id="dataTables-example" class="mdl-data-table" style="width:100%">
+     <thead>
+         <tr align="center">
+             <th class="custom-table-product">Thứ tự</th>
+             <th>Thông tin sản phẩm</th>
+             <th>Sản phẩm đã bán</th>
+         </tr>
+     </thead>
+     <tbody>
+         <% if (data) { var i = 0;%>
+        <%data.forEach(item => { i++;%>
+         <tr class="odd gradeX" align="center">
+             <td class="custom-table-product"><%-i%></td>
+             <td>
+                <div style="display: flex;">
+                     <div class="show-img-product">
+                         <img src="<%-item.cover%>" alt="">
+                         <div class="<%-item.status == 1? '':'product-banned'%>">
+                             <i data-v-39f338ef="" class="shop-icon banned-icon">
+                                 <%if (item.status == 0) {%>
+                                     <svg class="svg-icon" viewBox="0 0 20 20">
+                                         <path d="M14.776,10c0,0.239-0.195,0.434-0.435,0.434H5.658c-0.239,0-0.434-0.195-0.434-0.434s0.195-0.434,0.434-0.434h8.684C14.581,9.566,14.776,9.762,14.776,10 M18.25,10c0,4.558-3.693,8.25-8.25,8.25c-4.557,0-8.25-3.691-8.25-8.25c0-4.557,3.693-8.25,8.25-8.25C14.557,1.75,18.25,5.443,18.25,10 M17.382,10c0-4.071-3.312-7.381-7.382-7.381C5.929,2.619,2.619,5.93,2.619,10c0,4.07,3.311,7.382,7.381,7.382C14.07,17.383,17.382,14.07,17.382,10"></path>
+                                     </svg>
+                                 <%}%>
+                             </i>
+                         </div>
+                     </div>
+                     <div class="info-product">
+                         <div class="info-status">
+                             <%-item.status == 0?'<p class="hidden-product">Đã ẩn</p>': '<p class="show-product">Đang bán</p>'%>
+                         </div>
+                         <div class="name-wrap-text name-product">
+                             <p><%-item.name%></p>
+                         </div>
+                         <div class="sku-product">
+                             <p>SKU sản phẩm:  <%-item.sku==''?'--':item.sku%></p>
+                         </div>
+                     </div>
+                </div>
+             </td>
+             <td>
+                 <%-item.selled%>
+             </td>
+         </tr>
+         
+        <%})%>
+        <%}%>
+     </tbody>
+     </table>
+    </div>
+</div>
+<div id="tab3" class="tab-option">
+    <div>
+        <!-- /.col-lg-12 -->
+    <table id="dataTables-example" class="mdl-data-table" style="width:100%">
+     <thead>
+         <tr align="center">
+             <th class="custom-table-product">Thứ tự</th>
+             <th>Thông tin sản phẩm</th>
+             <th>Tổng lượt xem</th>
+         </tr>
+     </thead>
+     <tbody>
+         <% if (view) { var i = 0;%>
+        <%view.forEach(item => { i++;%>
+         <tr class="odd gradeX" align="center">
+             <td class="custom-table-product"><%-i%></td>
+             <td>
+                <div style="display: flex;">
+                     <div class="show-img-product">
+                         <img src="<%-item.cover%>" alt="">
+
+                     </div>
+                     <div class="info-product">
+                         <div class="info-status">
+                             <%-item.status == 0?'<p class="hidden-product">Đã ẩn</p>': '<p class="show-product">Đang bán</p>'%>
+                         </div>
+                         <div class="name-wrap-text name-product">
+                             <p><%-item.name%></p>
+                         </div>
+                         <div class="sku-product">
+                             <p>SKU sản phẩm:  <%-item.sku==''?'--':item.sku%></p>
+                         </div>
+                     </div>
+                </div>
+             </td>
+             <td>
+                 <%-item.view%>
+             </td>
+         </tr>
+         
+        <%})%>
+        <%}%>
+     </tbody>
+     </table>
+    </div>
+</div>
+
+<script src="/javascripts/js/admin/adminOption.js"></script>
+<script>
+    $(document).ready(function() {
+     
+     // Cấu hình các nhãn phân trang
+     $('.mdl-data-table').dataTable( {
+         "language": {
+         "sProcessing":   "Đang xử lý...",
+         "sLengthMenu":   "Xem _MENU_ mục",
+         "sZeroRecords":  "Không tìm thấy dòng nào phù hợp",
+         "sInfo":         "Đang xem _START_ đến _END_ trong tổng số _TOTAL_ mục",
+         "sInfoEmpty":    "Đang xem 0 đến 0 trong tổng số 0 mục",
+         "sInfoFiltered": "(được lọc từ _MAX_ mục)",
+         "sInfoPostFix":  "",
+         "sSearch":       "Tìm:",
+         "sUrl":          "",
+         "oPaginate": {
+             "sFirst":    "Đầu",
+             "sPrevious": "Trước",
+             "sNext":     "Tiếp",
+             "sLast":     "Cuối"
+             }
+         }
+     } );
+     }); 
+</script>
+<% include ../../partials/footer_admin %>

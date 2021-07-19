@@ -436,7 +436,7 @@ function getShopById(value) {
 }
 
 function getShopWillPay(value) {
-    const sql = "select sum(add) from ( select id as order_id, add(sum(totalwithdis), shippingfee) from ( select a.id, c.amount, c.price, totalwithdis(c.amount, c.price, c.discount),  a.shippingfee from orders as a inner join purchase as b on b.id = a.purchase_id inner join orderdetail as c on c.order_id = a.id where a.shop_id = $1 and a.status < 3 and a.status >= 0) as a group by id, shippingfee) as a";
+    const sql = "select sum(add) from ( select id as order_id, add(sum(totalwithdis), 0) from ( select a.id, c.amount, c.price, totalwithdis(c.amount, c.price, c.discount),  a.shippingfee from orders as a inner join purchase as b on b.id = a.purchase_id inner join orderdetail as c on c.order_id = a.id where a.shop_id = $1 and a.status < 3 and a.status >= 0) as a group by id, shippingfee) as a";
 
     return db.simpleQuery(sql, value)
     .then(res => {
@@ -522,6 +522,30 @@ function updateShopWallet(orderId, values) {
             .catch(error => {return error;});
         }
     })
+}
+
+function getShopAnalyst(value) {
+    const sql = "select b.id, COUNT(amount) AS selled, sum(income), b.name, b.sku, b.status, d.url -> 'cover' as cover from ( select d.id product_id, a.amount, totalwithdis(a.amount, a.price, a.discount) as income, b.shippingfee from orderdetail a join orders b on b.id = a.order_id join productvariant c on c.id = a.productvariant_id join product d on d.id = c.product_id where b.status = 3  and d.shop_id = $1) e join product b on b.id = e.product_id join categorylevel1 c on c.id = b.categorylevel1_id join images d on d.product_id = e.product_id group by b.id, amount, b.name, b.sku, b.status, d.url -> 'cover'";
+
+    return db.simpleQuery(sql, value)
+    .then(res => {
+        if (res.rowCount > 0)
+        return res.rows;
+        return false;
+    })
+    .catch(error => {return error;}); 
+}
+
+function getProductViewByShop(value) {
+    const sql = "select a.id, a.name, a.view, a.sku, b.url ->'cover' as cover from product a join images b on b.product_id = a.id where a.status = 1 and a.shop_id = $1";
+
+    return db.simpleQuery(sql, value)
+    .then(res => {
+        if (res.rowCount > 0)
+        return res.rows;
+        return false;
+    })
+    .catch(error => {return error;});
 }
 /*=====================================*/ 
 
@@ -1572,6 +1596,18 @@ function updateProductSelled(values) {
     const sql = "update product set selled = selled + $1 WHERE id = $2";
 
     return db.excuteQuery(sql, values)
+    .then(res => {
+        if (res.rowCount > 0)
+            return true;
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
+function updateProductView(value) {
+    const sql = "update product set view = view + 1 WHERE id = $1";
+
+    return db.excuteQuery(sql, value)
     .then(res => {
         if (res.rowCount > 0)
             return true;
@@ -2745,6 +2781,8 @@ module.exports = {
     getShopPaidAll,
     updateShopStatus,
     updateShopWallet,
+    getShopAnalyst,
+    getProductViewByShop,
 
     checkEmailExist,
     checkUserExist,
@@ -2845,6 +2883,7 @@ module.exports = {
     getProductVariantInfo,
     updateProductVariantAmount,
     updateProductSelled,
+    updateProductView,
     updateProductVariantAmountAuto,
     deleteProduct,
     deleteProductVariant,

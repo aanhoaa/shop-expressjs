@@ -135,6 +135,7 @@ exports.getProductDetail = async (req, res, next) => {
   const productCate2 = await db.getProductByCateTwos([data[0].cate2_id, shop.id])
   const getVoucher = await db.getVoucherActiveByShop([shop.id]);
   const shopAddress = await db.getShopAddressBook([shop.id]);
+  const update = await db.updateProductView([productId]);
   
   if (!req.session.recent) {
     req.session.recent = [];
