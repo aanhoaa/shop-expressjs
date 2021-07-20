@@ -351,7 +351,7 @@ function approve(it) {
           {
             Swal.fire('Đã phê duyệt', '', 'success');
             setTimeout(function(){ 
-              window.location.href = '/admin'; 
+              window.location.href = '/admin/product'; 
             }, 900);
           }
     },

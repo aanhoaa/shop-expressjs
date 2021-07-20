@@ -459,6 +459,18 @@ function getShopPaidCurrentWeek(values) {
     .catch(error => {return error;});
 }
 
+function getIncomeByDate(values) {
+    const sql = "select sum(add) from ( select id as order_id, add(sum(total_ord), 0) from ( select a.id, c.amount, c.price, total_ord(c.amount, c.price),  a.shippingfee from orders as a inner join purchase as b on b.id = a.purchase_id inner join orderdetail as c on c.order_id = a.id where  a.updated_at > $1 and a.updated_at < $2 and a.shop_id = $3 and a.status = 3 ) as a group by id, shippingfee) as a"
+
+    return db.simpleQuery(sql, values)
+    .then(res => {
+        if (res.rowCount > 0)
+        return res.rows[0];
+        return false;
+    })
+    .catch(error => {return error;});
+}
+
 function getShopPaidCurrentMonth(month, value) {
     const sql = `select sum(add) from (select id as order_id, add(sum(total_ord), shippingfee) from (select a.id, c.amount, c.price, total_ord(c.amount, c.price),  a.shippingfee from orders as a inner join purchase as b on b.id = a.purchase_id inner join orderdetail as c on c.order_id = a.id where ${month} and a.shop_id = $1 and a.status = 3 ) as a group by id, shippingfee) as a`;
 
@@ -2777,6 +2789,7 @@ module.exports = {
     getShopById,
     getShopWillPay,
     getShopPaidCurrentWeek,
+    getIncomeByDate,
     getShopPaidCurrentMonth,
     getShopPaidAll,
     updateShopStatus,

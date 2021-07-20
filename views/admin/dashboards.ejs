@@ -270,8 +270,15 @@
     </section>
     <!-- /.content -->
 </div>
-
+<input type="text" value="<%-data_income%>" id="income">
 <script>
+  var da = $('#income').val().split(',');
+  var b =  da.map(i => {
+    if (i == '') i = null;
+    else i = Number(i);
+    return i;
+  })
+
   Highcharts.chart('container', {
     chart: {
         type: 'spline'
@@ -288,11 +295,11 @@
     },
     yAxis: {
         title: {
-            text: 'Temperature'
+            text: 'Số tiền'
         },
         labels: {
             formatter: function () {
-                return this.value + '°';
+                return this.value + 'đ';
             }
         }
     },
@@ -310,11 +317,11 @@
         }
     },
     series: [{
-        name: 'Tokyo',
+        name: 'Doanh thu ',
         marker: {
             symbol: 'square'
         },
-        data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2]
+        data: b
 
     }]
 });

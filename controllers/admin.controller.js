@@ -192,7 +192,9 @@ exports.getViewProduct = async (req, res, next) => {
         color: strColor,
         imgCover: img[0].url.cover,
         imgSub: arrImgSub,
-        violate: violateType
+        violate: violateType,
+        material: productInfo[0].material,
+        description: productInfo[0].description
     }); 
 }
 
@@ -227,7 +229,7 @@ exports.postViewProduct = async (req, res, next) => {
     const savePDV = await db.insertProductViolate([productId, saveInfo, violateType]);
     if (savePDV == true) {
       var updateDB = await db.updateProductStatus([-1, productId]);
-      if (updateDB == true) res.redirect('/admin');
+      if (updateDB == true) res.redirect('/admin/product/#tab4');
       else res.status(500).json();
     }
     else res.status(500).json();
@@ -832,9 +834,9 @@ function fn_DateCompare(DateA, DateB) {     // this function is good for dates >
   var a = new Date(DateA);
   var b = new Date(DateB);
 
-  var msDateA = a.getTime();
+  var msDateA = a.getTime() + 5000;
   var msDateB = b.getTime();
-
+  
   if (parseFloat(msDateA) < parseFloat(msDateB))
     return -1;  // lt
   else if (parseFloat(msDateA) == parseFloat(msDateB))

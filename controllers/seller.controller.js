@@ -199,6 +199,20 @@ exports.getDashBoards = async (req, res, next) => {
     wallet = getWallet.wallet;
   }
 
+  var data_income = [];
+  for (let i = 1; i < 9; i++) {
+    const getPaidCurrentWeek = await db.getIncomeByDate([getLastDate(new Date(), i), getLastDate(new Date(), i+1), req.session.shopInfo.id]);
+    if (i == 8) break;
+    
+    data_income.push(Number(getPaidCurrentWeek.sum))
+    if (getLastDate(new Date(), i) == getdateNow(new Date())) break;
+  }
+
+ 
+  for (let i = 0; i < 7; i++) {
+    if (data_income[i] == undefined) data_income[i] = null;
+  }
+
   res.render('./admin/dashboards', {
     seller: req.session.shopInfo, 
     orderWait: orderWait,
@@ -208,7 +222,8 @@ exports.getDashBoards = async (req, res, next) => {
     productOut: productOut,
     productSell: productSell,
     sale: sale,
-    wallet: wallet
+    wallet: wallet,
+    data_income: data_income
   })
 }
 
@@ -1242,6 +1257,22 @@ function getdate(tt) {
     return someFormattedDate;
 }
 
+function getdateNow(tt) {
+  var date = new Date(tt);
+  var newdate = new Date(date);
+
+  newdate.setDate(newdate.getDate());
+  
+  var dd = newdate.getDate();
+  var mm = newdate.getMonth() + 1;
+  var y = newdate.getFullYear();
+  var hour = date.getHours();
+  var minutes = date.getMinutes();
+ 
+  var someFormattedDate = y + '-' + mm + '-' + dd;
+  return someFormattedDate;
+}
+
 function getMonday(d) {
   d = new Date(d);
   var day = d.getDay(),
@@ -1258,6 +1289,16 @@ function getMonday(d) {
 function getLastSunday(d) {
   var t = new Date(d);
   t.setDate(t.getDate() - t.getDay() + 8);
+  var dd = t.getDate();
+  var mm = t.getMonth() + 1;
+  var yy = t.getFullYear(); 
+  var someFormattedDate = yy + '-' + mm + '-' + dd;
+  return someFormattedDate;
+}
+
+function getLastDate(d, i) {
+  var t = new Date(d);
+  t.setDate(t.getDate() - t.getDay() + i);
   var dd = t.getDate();
   var mm = t.getMonth() + 1;
   var yy = t.getFullYear(); 

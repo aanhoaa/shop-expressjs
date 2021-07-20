@@ -129,63 +129,75 @@ exports.getProductsCateTwo = async (req, res, next) => {
 
 exports.getProductDetail = async (req, res, next) => {
   const productId = req.params.productId;
-  const data = await db.getProductAllById([productId]);
-  const shop = await db.getShopByProductId([productId]);
-  const relative = await db.getProductByShop([shop.id]);
-  const productCate2 = await db.getProductByCateTwos([data[0].cate2_id, shop.id])
-  const getVoucher = await db.getVoucherActiveByShop([shop.id]);
-  const shopAddress = await db.getShopAddressBook([shop.id]);
-  const update = await db.updateProductView([productId]);
-  
-  if (!req.session.recent) {
-    req.session.recent = [];
-    req.session.recent.unshift(productId);
-  }
-  else {
-    const index = req.session.recent.indexOf(productId);
-    
-    if (index > -1){
-      req.session.recent.splice(index, 1);
-      req.session.recent.unshift(productId);
-    }
-    else req.session.recent.unshift(productId);
-  }
-
-  var onlyOne = 1;
-  var min = 0;
-  var max = 0;
- 
-  if (data == false) return res.redirect('/');
-  else {
-    if (data.length == 1) {
-      if (data[0].size == null && data[0].color == null) 
-        onlyOne = 0;
-    }
-    min = data[0].max;
-    data.forEach(i => {
-      if (i.max > max)
-      max = i.max;
-      if (i.max < min)
-        min = i.max;
-    })
-    
-    res.render("./shop/product/productDetail", {
-      title: data[0].name || 'Sản phẩm',
+  try {
+    const data = await db.getProductAllById([productId]);
+    if (data == false) return res.render("./shop/product/404", {
+      title:  'Sản phẩm',
       user: req.user,
       userInfo: req.session.Userinfo,
-      cart: req.session.cart,
-      data: data,
-      only: onlyOne,
-      min: min,
-      max: max,
-      shop: shop,
-      relativeShop: relative,
-      productCate2: productCate2,
-      cate2_id: data[0].cate2_id,
-      material: data[0].material,
-      voucher: getVoucher,
-      shopAddress: shopAddress[0]
+      cart: req.session.cart
     })
+
+    const shop = await db.getShopByProductId([productId]);
+    const relative = await db.getProductByShop([shop.id]);
+    const productCate2 = await db.getProductByCateTwos([data[0].cate2_id, shop.id])
+    const getVoucher = await db.getVoucherActiveByShop([shop.id]);
+    const shopAddress = await db.getShopAddressBook([shop.id]);
+    const update = await db.updateProductView([productId]);
+
+    if (!req.session.recent) {
+      req.session.recent = [];
+      req.session.recent.unshift(productId);
+    }
+    else {
+      const index = req.session.recent.indexOf(productId);
+      
+      if (index > -1){
+        req.session.recent.splice(index, 1);
+        req.session.recent.unshift(productId);
+      }
+      else req.session.recent.unshift(productId);
+    }
+
+    var onlyOne = 1;
+    var min = 0;
+    var max = 0;
+  
+    if (data == false) return res.redirect('/');
+    else {
+      if (data.length == 1) {
+        if (data[0].size == null && data[0].color == null) 
+          onlyOne = 0;
+      }
+      min = data[0].max;
+      data.forEach(i => {
+        if (i.max > max)
+        max = i.max;
+        if (i.max < min)
+          min = i.max;
+      })
+      
+      res.render("./shop/product/productDetail", {
+        title: data[0].name || 'Sản phẩm',
+        user: req.user,
+        userInfo: req.session.Userinfo,
+        cart: req.session.cart,
+        data: data,
+        only: onlyOne,
+        min: min,
+        max: max,
+        shop: shop,
+        relativeShop: relative,
+        productCate2: productCate2,
+        cate2_id: data[0].cate2_id,
+        material: data[0].material,
+        voucher: getVoucher,
+        shopAddress: shopAddress[0]
+      })
+    }
+  } catch (err) {
+    console.log(err)
+    return err;
   }
 }
 

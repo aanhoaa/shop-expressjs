@@ -322,7 +322,7 @@
                             <ul class="dropdown-menu action-product" aria-labelledby="dropdownMenu1">
 
                               <% if (item.status == 1) {%>
-                                <li><a href="/detail/<%-item.name%>.<%-item.id%>" target="_blank">Xem trước</a></li>
+                                <li><a href="/detail/<%-give(item.name)%>.<%-item.id%>" target="_blank">Xem trước</a></li>
                               <%}%>
                               <li><a href="" onclick="btnShow(this)" data-id="<%-item.id%>" data-status="<%-item.status%>"><%-item.status == 0? 'Hiển thị' : 'Ẩn'%></a></li>
                               <li><a href="/seller/product/edit/<%-item.id%>">Sửa</a></li>

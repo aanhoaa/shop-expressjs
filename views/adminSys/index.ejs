@@ -135,7 +135,7 @@
                               <span class="caret"></span>
                             </button>
                            <ul class="dropdown-menu action-product" aria-labelledby="dropdownMenu1">
-                              <li><a href="admin/product/view/<%-item.id%>">Xem</a></li>
+                              <li><a href="/admin/product/view/<%-item.id%>">Xem</a></li>
                             </ul>
                           </div>
                     </td>
@@ -259,7 +259,7 @@
                               <span class="caret"></span>
                             </button>
                            <ul class="dropdown-menu action-product" aria-labelledby="dropdownMenu1">
-                              <li><a href="admin/product/view/<%-item.id%>">Xem</a></li>
+                              <li><a href="/admin/product/view/<%-item.id%>">Xem</a></li>
                              
                             </ul>
                           </div>
@@ -386,7 +386,7 @@
                               <span class="caret"></span>
                             </button>
                            <ul class="dropdown-menu action-product" aria-labelledby="dropdownMenu1">
-                              <li><a href="admin/product/view/<%-item.id%>">Xem</a></li>
+                              <li><a href="/admin/product/view/<%-item.id%>">Xem</a></li>
                               
                             </ul>
                           </div>
@@ -457,11 +457,11 @@
                                         <p><%-item.name%></p>
                                     </div>
                                 </div>
-                                <div class="sku-product">
+                                <div class="sku-product name-wrap-text">
                                     <p>SKU sản phẩm:  <%-item.sku==''?'--':item.sku%></p>
                                 </div>
                                 <div>
-                                    Shop: <%-item.classify[0].name%>
+                                    Shop: <%-item.classify[0].shop_name%>
                                 </div>
                             </div>
                        </div>
@@ -508,7 +508,7 @@
                               <span class="caret"></span>
                             </button>
                            <ul class="dropdown-menu action-product" aria-labelledby="dropdownMenu1">
-                              <li><a href="admin/product/view/<%-item.id%>">Xem</a></li>
+                              <li><a href="/admin/product/view/<%-item.id%>">Xem</a></li>
                               <li><a href="seller/product/edit/variant/">Cập nhật biến thể</a></li>
                             </ul>
                         </div>
