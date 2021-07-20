@@ -120,6 +120,20 @@
             </div>
     </form>
 </div>
+<script>
+    function readMainURL(input) {
+       if (input.files && input.files[0]) {
+           var reader = new FileReader();
+
+           reader.onload = function (e) {
+               $('#blah')
+                .attr('src', e.target.result);
+           };
+
+           reader.readAsDataURL(input.files[0]);
+       }
+   }
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js"></script>
 <script src="/javascripts/assets/bootstrap-tagsinput.min.js"></script>
 <% include ../../partials/footer_admin %>
