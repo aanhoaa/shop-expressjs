@@ -59,6 +59,7 @@ exports.getLogout = (req, res, next) => {
 
 exports.getDashboard = async (req, res, next) => {
   const getOrderStatus = await db.getDashBoardAdmin();
+  const getOrderWait = await db.getDashBoardAdminByOrderWait();
   const getProductStatus = await db.getCountProductByAdmin();
   const getSale = await db.getCountVoucherByAdmin();
 
@@ -76,6 +77,7 @@ exports.getDashboard = async (req, res, next) => {
     })
   }
 
+  orderWait = getOrderWait[0].count;
   if (getProductStatus) {
     getProductStatus.forEach(item => {
       if (item.totalrows < 1) productOut++;

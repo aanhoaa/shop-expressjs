@@ -235,6 +235,20 @@ function getDashBoardAdmin(value) {
     .catch(error => { return false;});
 }
 
+function getDashBoardAdminByOrderWait(value) {
+    const sql = "select status, count(status) from orders where status = 0 GROUP BY status;";
+
+    return db.simpleQuery(sql, value)
+    .then( res =>  {
+        if (res.rowCount > 0)
+        {
+            return res.rows;
+        }
+        return false;
+    })
+    .catch(error => { return false;});
+}
+
 function getCountProductByAdmin(value) {
     const sql = "select product_id, COUNT(*) AS TotalRows from productvariant a join product b on b.id = a.product_id where b.status = 1 group by product_id";
 
@@ -2769,6 +2783,7 @@ module.exports = {
     getCountVoucherByShop,
     getWalletByShop,
     getDashBoardAdmin,
+    getDashBoardAdminByOrderWait,
     getCountProductByAdmin,
     getCountVoucherByAdmin,
     getCountProductSelled,
