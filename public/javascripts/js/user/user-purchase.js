@@ -22,7 +22,7 @@ $(document).ready(function(){
             if (!inputValue) return false;
             
             $.ajax({
-                url: `${window.location.origin}/user/purchase/?type=cancel`,
+                url: `${window.location.origin}/user/purchase/cancel`,
                 type: "put", 
                 dataType: "json",
                 data: {
@@ -32,8 +32,8 @@ $(document).ready(function(){
                 success:function(data){ 
                     if (data.state == 1) {
                         swal("Nice!", "Hủy đơn hàng thành công", "success");
-                        //window.location.href = "/user/purchase";
-                        window.location.replace(data.data)
+                        window.location.href = "/user/purchase/?type=cancel";
+                        //window.location.replace(data.data)
                     }
                     if (data.state == 0) alert('Lỗi hệ thống');
                     if (data.state == -1) alert('Dữ liệu trống');
