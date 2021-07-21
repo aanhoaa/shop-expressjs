@@ -22,7 +22,7 @@ $(document).ready(function(){
         }
     })
 
-    //cancel
+    //cancel => admin
     $(document).on('click', '.order-cancel', function(e) {
         const orderId = $(this).attr('data-id');
         swal({
@@ -56,6 +56,51 @@ $(document).ready(function(){
                     if (data.state == 1) {
                         swal("Nice!", "Hủy đơn hàng thành công", "success");
                         window.location.href = "/admin/order";
+                    }
+                    if (data.state == 0) alert('Lỗi hệ thống');
+                    if (data.state == -1) alert('Dữ liệu trống');
+                },
+                error: function(err) {
+                    alert('fail');
+                }
+            });
+          });
+    })
+
+    //cancel => seller
+    $(document).on('click', '.order-cancel-seller', function(e) {
+        const orderId = $(this).attr('data-id');
+        swal({
+            title: "Hủy đơn hàng",
+            text: "Lý do hủy đơn hàng này:",
+            type: "input",
+            showCancelButton: true,
+            closeOnConfirm: false,
+            animation: "slide-from-top",
+            inputPlaceholder: "Lý do"
+          },
+          function(inputValue){
+            if (inputValue === null) return false;
+            
+            if (inputValue === "") {
+              swal.showInputError("Cần thông tin hủy đơn hàng!");
+              return false
+            }
+            
+            if (!inputValue) return false;
+            
+            $.ajax({
+                url: `${window.location.origin}/seller/order/cancel`,
+                type: "put", 
+                dataType: "json",
+                data: {
+                    orderId: orderId,
+                    cancelReason: inputValue
+                },
+                success:function(data){ 
+                    if (data.state == 1) {
+                        swal("Nice!", "Hủy đơn hàng thành công", "success");
+                        window.location.href = "/seller/order";
                     }
                     if (data.state == 0) alert('Lỗi hệ thống');
                     if (data.state == -1) alert('Dữ liệu trống');

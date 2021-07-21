@@ -996,6 +996,24 @@ exports.putDeliveredOrder = async (req, res, next) => {
     else res.send({state: -1});
 }
 
+exports.putCancelOrder = async (req, res, next) => {
+  const {orderId, cancelReason} = req.body;
+
+  if (orderId == '' || cancelReason == '')
+    return res.send({state: -1});
+
+  //update status => -1
+  const update = await db.updateOrderReason([-1, cancelReason, orderId]);
+  if (update != true) return res.send({state: 0});
+
+  const getPdvId = await db.getOrderDetailByOrderId([orderId]);
+  for (item of getPdvId) {
+    const updateStock = await db.updateProductVariantAmountAuto([item.amount, item.pdv_id]);
+  }
+
+  res.send({state: 1});
+}
+
 exports.getIncome = async (req, res, next) => {
   var type = req.query.type;
   var type1 = 0, type2 = 0;

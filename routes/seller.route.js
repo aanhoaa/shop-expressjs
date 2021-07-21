@@ -32,6 +32,7 @@ router.get("/order" , authController.isAuth, authController.isShop, sellerContro
 router.get("/order/detail/:orderId" , authController.isAuth, authController.isShop, sellerController.getOrderDetail);
 router.put("/order/delivery" , authController.isAuth, authController.isShop, sellerController.putDeliveryOrder);
 router.put("/order/delivered" , authController.isAuth, authController.isShop, sellerController.putDeliveredOrder);
+router.put("/order/cancel" , authController.isAuth, authController.isShop, sellerController.putCancelOrder);
 
 router.get("/finance/income" , authController.isAuth, authController.isShop, sellerController.getIncome);
 router.get("/finance/analyst" , authController.isAuth, authController.isShop, sellerController.getAnalyst);

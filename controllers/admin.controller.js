@@ -439,7 +439,6 @@ exports.putCancelOrder = async (req, res, next) => {
   const getPdvId = await db.getOrderDetailByOrderId([orderId]);
   for (item of getPdvId) {
     const updateStock = await db.updateProductVariantAmountAuto([item.amount, item.pdv_id]);
-    console.log(item.amount)
   }
 
   res.send({state: 1});
