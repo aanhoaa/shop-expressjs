@@ -989,7 +989,7 @@ exports.putDeliveredOrder = async (req, res, next) => {
         //update wallet
         const addWallet = await db.updateShopWallet(orderId, [total, req.session.shopInfo.id]);
         const update = await db.updateOrderAndPaid([3, orderId]);
-        console.log(req.session.shopInfo.id, addWallet)
+       // console.log(req.session.shopInfo.id, addWallet)
         if (update == true && addWallet == true) {console.log('done') ; return res.send({state: 1});}
         else return res.send({state: 0});
     }

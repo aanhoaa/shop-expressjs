@@ -506,6 +506,7 @@
 						<div class="MS-content">
 						<%if (products) {
 							products.forEach(item => {
+								if (recommend.includes(item.id) == false) {
 						%>
 							<div class="item">
 								<div class="product-grid">
@@ -536,7 +537,7 @@
 								   </div>
 							   </div>
 						   </div>
-						<%})}%>
+						<%}})}%>
 						</div>
 						 <div class="MS-controls">
 							 <button class="MS-left"><i class="fa fa-chevron-left" aria-hidden="true"></i></button>

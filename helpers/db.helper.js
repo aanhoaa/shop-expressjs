@@ -2155,7 +2155,7 @@ function getProductInfoByID(value) {
 }
 
 function getProductDetailByID(value) {
-    const sql = "select  a.id, a.name, b.max_price, b.min_price, c.url->'cover' as cover from product a inner join (select max(price) as max_price, min(price) as min_price, product_id from productvariant group by product_id) b on a.id = b.product_id inner join images as c on c.product_id = a.id where a.status = 1 order by a.created_at desc";
+    const sql = "select  a.id, a.name, a.rating, b.max_price, b.min_price, c.url->'cover' as cover from product a inner join (select max(price) as max_price, min(price) as min_price, product_id from productvariant group by product_id) b on a.id = b.product_id inner join images as c on c.product_id = a.id where a.status = 1 order by a.created_at desc";
 
     return db.simpleQuery(sql, value)
     .then( res =>  {
@@ -2169,7 +2169,7 @@ function getProductDetailByID(value) {
 }
 
 function getListNewProduct(value) {
-    const sql = "select  a.id, a.name, a.rating, b.max_price, b.min_price, c.url->'cover' as cover from product a inner join (select max(price) as max_price, min(price) as min_price, product_id from productvariant group by product_id) b on a.id = b.product_id inner join images as c on c.product_id = a.id where a.status = 1 order by a.created_at desc limit 10";
+    const sql = "select  a.id, a.name, a.rating, b.max_price, b.min_price, c.url->'cover' as cover from product a inner join (select max(price) as max_price, min(price) as min_price, product_id from productvariant group by product_id) b on a.id = b.product_id inner join images as c on c.product_id = a.id where a.status = 1 order by a.created_at desc limit 15";
 
     return db.simpleQuery(sql, value)
     .then( res =>  {
@@ -2183,7 +2183,7 @@ function getListNewProduct(value) {
 }
 
 function getListSeleldProduct(value) {
-    const sql = "select  a.id , a.name, b.max_price, b.min_price, c.url->'cover' as cover, d.name as cate , f.TotalRows from product a join (select max(price) as max_price, min(price) as min_price, product_id from productvariant group by product_id) b on a.id = b.product_id join images as c on c.product_id = a.id join categorylevel1 as d on d.id = a.categorylevel1_id join ( select product_id, COUNT(*) AS TotalRows from ( select d.id product_id, a.amount from orderdetail a join orders b on b.id = a.order_id join productvariant c on c.id = a.productvariant_id join product d on d.id = c.product_id where b.status = 3 and d.status = 1 ) e join product b on b.id = e.product_id group by product_id ) f on f.product_id = a.id where a.status = 1 and d.id = $1 order by a.selled desc limit 10";
+    const sql = "select  a.id , a.rating, a.name, b.max_price, b.min_price, c.url->'cover' as cover, d.name as cate , f.TotalRows from product a join (select max(price) as max_price, min(price) as min_price, product_id from productvariant group by product_id) b on a.id = b.product_id join images as c on c.product_id = a.id join categorylevel1 as d on d.id = a.categorylevel1_id join ( select product_id, COUNT(*) AS TotalRows from ( select d.id product_id, a.amount from orderdetail a join orders b on b.id = a.order_id join productvariant c on c.id = a.productvariant_id join product d on d.id = c.product_id where b.status = 3 and d.status = 1 ) e join product b on b.id = e.product_id group by product_id ) f on f.product_id = a.id where a.status = 1 and d.id = $1 order by a.selled desc limit 10";
 
     return db.simpleQuery(sql, value)
     .then( res =>  {
@@ -2612,6 +2612,20 @@ function updateOrderReason(values) {
     })
     .catch(error => {return error;});
 }
+
+function getDataForRating(value) {
+    const sql = "select d.id, e.user_id from orders a join orderdetail b on b.order_id = a.id join productvariant c on c.id = b.productvariant_id join product d on d.id = c.product_id join purchase e on e.id = a.purchase_id where a.id = $1";
+
+    return db.simpleQuery(sql, value)
+    .then(res => {
+        if (res.rowCount > 0)
+        {
+            return res.rows;
+        }
+        return false;
+    })
+    .catch(error => {return error;});
+}
 /*
  <==========================================================================>
 */
@@ -2954,6 +2968,7 @@ module.exports = {
     updateOrder,
     updateOrderAndPaid,
     updateOrderReason,
+    getDataForRating,
     deleteTest,
 
     getRating,
