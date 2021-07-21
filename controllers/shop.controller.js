@@ -562,10 +562,10 @@ exports.postCheckout = async (req, res, next) => {
           
           const subAmount = getStock.stockamount - exist.amount;
           var updCart = await db.updateProductVariantAmount([subAmount, pdvID]);
-          // const getProduct = await db.getProductByPDVID([pdvID]);
-          // if (getProduct != false) {
-          //   const createRating = await db.insertUserRating([userInfo.id, getProduct.id]);
-          // }
+          const getProduct = await db.getProductByPDVID([pdvID]);
+          if (getProduct != false) {
+            const createRating = await db.insertUserRating([userInfo.id, getProduct.id]);
+          }
         }
       }
 
@@ -697,10 +697,10 @@ exports.getCheckoutedVNPay = async (req, res, next) => {
               
               const subAmount = getStock.stockamount - exist.amount;
               var updCart = await db.updateProductVariantAmount([subAmount, pdvID]);
-              // const getProduct = await db.getProductByPDVID([pdvID]);
-              // if (getProduct != false) {
-              //   const createRating = await db.insertUserRating([userInfo.id, getProduct.id]);
-              // }
+              const getProduct = await db.getProductByPDVID([pdvID]);
+              if (getProduct != false) {
+                const createRating = await db.insertUserRating([userInfo.id, getProduct.id]);
+              }
             }
           }
     

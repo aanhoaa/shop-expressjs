@@ -472,7 +472,10 @@ exports.putDeliveredOrder = async (req, res, next) => {
       const dataR = await db.getDataForRating([orderId]);
       for(let i of dataR) {
         
-        const createRating = await db.insertUserRating([i.user_id, i.id]);
+        const getR = await db.getRatingByUserProd([i.user_id, i.id]);
+        
+        if (getR.rating == 0)
+          var createRating = await db.updateRatingByUserProd([i.user_id, i.id]);
         const getRating = await db.getAVGRating([i.id]);
         if (getRating != false) {
         var updateRatingProduct = await db.updateProductRating([Number(getRating[0].round), i.id]);

@@ -388,7 +388,8 @@ exports.getWaitingConfirm = async (req, res, next) => {
         type = 5;
 }
 
-  const arrData = await db.getUserPurchaseWaiting([userInfo.id]);
+  var arrData = await db.getUserPurchaseWaiting([userInfo.id]);
+  //else arrData = await db.getUserPurchaseWaitingNoRate([userInfo.id]);
   const all = [];
  if (arrData) {
   arrData.map(item => {
