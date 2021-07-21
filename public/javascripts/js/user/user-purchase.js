@@ -22,7 +22,7 @@ $(document).ready(function(){
             if (!inputValue) return false;
             
             $.ajax({
-                url: `${window.location.origin}/user/purchase/cancel`,
+                url: `${window.location.origin}/user/purchase/?type=cancel`,
                 type: "put", 
                 dataType: "json",
                 data: {
